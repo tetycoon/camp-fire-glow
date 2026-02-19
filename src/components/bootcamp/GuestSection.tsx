@@ -1,11 +1,15 @@
 import React from "react";
-import { Users, Star } from "lucide-react";
+import { Users, Star, Mic2 } from "lucide-react";
 
 const GuestSection: React.FC = () => {
   return (
-    <section className="section-border py-24 px-4 bg-muted/20">
-      <div className="max-w-5xl mx-auto text-center">
-        <p className="font-body text-xs tracking-[0.3em] text-primary uppercase font-semibold mb-3">Special Sessions</p>
+    <section className="section-border py-24 px-4 relative overflow-hidden">
+      <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, hsl(222 40% 7%), hsl(222 47% 5%))" }} />
+      <div className="absolute inset-0 grid-bg opacity-20" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] rounded-full blur-3xl pointer-events-none" style={{ background: "radial-gradient(ellipse, hsl(265 85% 65% / 0.08), transparent 70%)" }} />
+
+      <div className="max-w-5xl mx-auto text-center relative z-10">
+        <div className="section-label mb-4 mx-auto w-fit">🎤 Special Sessions</div>
         <h2 className="font-display text-3xl sm:text-5xl font-bold text-foreground mb-6">
           Guest <span className="text-gradient">Expert Sessions</span>
         </h2>
@@ -13,22 +17,29 @@ const GuestSection: React.FC = () => {
           Learn directly from industry leaders and AI practitioners. Our guest sessions bring real-world insights from professionals working at the forefront of artificial intelligence.
         </p>
 
-        <div className="card-glow rounded-3xl p-10 sm:p-14 relative overflow-hidden">
-          <div className="absolute top-4 left-6 text-primary/20 font-display text-8xl font-black leading-none">"</div>
+        <div className="rounded-3xl p-10 sm:p-14 relative overflow-hidden"
+          style={{ background: "linear-gradient(135deg, hsl(265 85% 65% / 0.1), hsl(199 100% 55% / 0.05), hsl(222 40% 8%))", border: "1px solid hsl(265 85% 65% / 0.3)", boxShadow: "0 0 60px hsl(265 85% 65% / 0.1)" }}>
+          <div className="absolute top-4 left-6" style={{ color: "hsl(265 85% 65% / 0.3)", fontSize: "8rem", fontFamily: "Orbitron", fontWeight: 900, lineHeight: 1 }}>"</div>
+          <div className="absolute bottom-4 right-6" style={{ color: "hsl(265 85% 65% / 0.15)", fontSize: "8rem", fontFamily: "Orbitron", fontWeight: 900, lineHeight: 1 }}>"</div>
+
           <div className="relative z-10">
+            <div className="w-14 h-14 rounded-2xl icon-box-purple flex items-center justify-center mx-auto mb-6">
+              <Mic2 className="w-7 h-7 text-purple-400" />
+            </div>
             <p className="font-body text-lg sm:text-xl text-foreground/90 leading-relaxed mb-8 italic">
               Exclusive interactions with AI industry experts, startup founders, and tech leaders who share their journey and insights.
             </p>
-            <div className="flex items-center justify-center gap-3">
+            <div className="flex items-center justify-center gap-4 flex-wrap">
               <div className="flex -space-x-3">
-                {[0,1,2,3,4].map(i => (
-                  <div key={i} className="w-9 h-9 rounded-full bg-gradient-to-br from-primary/80 to-secondary/80 border-2 border-card flex items-center justify-center">
-                    <Users className="w-4 h-4 text-primary-foreground" />
+                {[0, 1, 2, 3, 4].map(i => (
+                  <div key={i} className="w-10 h-10 rounded-full border-2 flex items-center justify-center"
+                    style={{ background: `linear-gradient(135deg, hsl(${199 + i * 13} 100% 55%), hsl(265 85% 65%))`, borderColor: "hsl(222 40% 8%)" }}>
+                    <Users className="w-4 h-4" style={{ color: "hsl(222 47% 5%)" }} />
                   </div>
                 ))}
               </div>
-              <div className="flex items-center gap-1 text-primary">
-                {[0,1,2,3,4].map(i => <Star key={i} className="w-4 h-4 fill-primary" />)}
+              <div className="flex items-center gap-1">
+                {[0, 1, 2, 3, 4].map(i => <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />)}
               </div>
               <span className="font-body text-sm text-muted-foreground">Expert speakers each session</span>
             </div>
