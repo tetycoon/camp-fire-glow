@@ -45,6 +45,15 @@ const GuestSection: React.FC = () => {
             </div>
           </div>
         </div>
+
+        <div className="text-center mt-12">
+          <button
+            onClick={() => document.getElementById("register")?.scrollIntoView({ behavior: "smooth" })}
+            className="btn-glow text-primary-foreground font-display text-sm font-bold px-10 py-4 rounded-full tracking-widest"
+          >
+            🚀 SECURE YOUR SEAT
+          </button>
+        </div>
       </div>
     </section>
   );
