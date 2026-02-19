@@ -2,18 +2,53 @@ import React from "react";
 import { Calendar, Clock, Video, Award } from "lucide-react";
 
 const stats = [
-  { icon: Calendar, value: "30 Days", label: "Intensive structured learning path", color: "text-primary" },
-  { icon: Clock, value: "3 Hrs/Day", label: "10am–1pm or 6pm–9pm sessions", color: "text-secondary" },
-  { icon: Video, value: "Live Zoom", label: "Interactive sessions with real-time Q&A", color: "text-primary" },
-  { icon: Award, value: "Certificate", label: "Industry-recognized AI certification", color: "text-secondary" },
+  {
+    icon: Calendar,
+    value: "30 Days",
+    label: "Intensive structured learning path",
+    iconClass: "icon-box-cyan",
+    iconColor: "text-cyan-400",
+    valueClass: "text-gradient-cyan",
+    accent: "hsl(199 100% 55%)",
+  },
+  {
+    icon: Clock,
+    value: "3 Hrs/Day",
+    label: "10am–1pm or 6pm–9pm sessions",
+    iconClass: "icon-box-purple",
+    iconColor: "text-purple-400",
+    valueClass: "text-gradient",
+    accent: "hsl(265 85% 65%)",
+  },
+  {
+    icon: Video,
+    value: "Live Zoom",
+    label: "Interactive sessions with real-time Q&A",
+    iconClass: "icon-box-orange",
+    iconColor: "text-orange-400",
+    valueClass: "text-gradient-orange",
+    accent: "hsl(25 100% 60%)",
+  },
+  {
+    icon: Award,
+    value: "Certificate",
+    label: "Industry-recognized AI certification",
+    iconClass: "icon-box-green",
+    iconColor: "text-emerald-400",
+    valueClass: "text-gradient-green",
+    accent: "hsl(142 70% 50%)",
+  },
 ];
 
 const ProgramStructure: React.FC = () => {
   return (
-    <section className="section-border py-24 px-4 bg-muted/20">
-      <div className="max-w-7xl mx-auto">
+    <section className="section-border py-24 px-4 relative overflow-hidden">
+      <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, hsl(222 47% 5%), hsl(222 40% 7%))" }} />
+      <div className="absolute inset-0 grid-bg opacity-20" />
+
+      <div className="max-w-7xl mx-auto relative z-10">
         <div className="text-center mb-16">
-          <p className="font-body text-xs tracking-[0.3em] text-primary uppercase font-semibold mb-3">The Format</p>
+          <div className="section-label mb-4 mx-auto w-fit">⚡ The Format</div>
           <h2 className="font-display text-3xl sm:text-5xl font-bold text-foreground mb-4">
             Program <span className="text-gradient">Structure</span>
           </h2>
@@ -22,12 +57,14 @@ const ProgramStructure: React.FC = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {stats.map((s, i) => (
-            <div key={i} className="card-glow rounded-2xl p-8 text-center flex flex-col items-center gap-4">
-              <div className={`w-14 h-14 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center`}>
-                <s.icon className={`w-7 h-7 ${s.color}`} />
+            <div key={i} className="card-glow rounded-2xl p-8 text-center flex flex-col items-center gap-4 group relative overflow-hidden">
+              <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                style={{ background: `radial-gradient(circle at 50% 0%, ${s.accent}18, transparent 70%)` }} />
+              <div className={`w-14 h-14 rounded-2xl ${s.iconClass} flex items-center justify-center relative z-10`}>
+                <s.icon className={`w-7 h-7 ${s.iconColor}`} />
               </div>
-              <div className={`font-display text-2xl font-bold ${s.color}`}>{s.value}</div>
-              <p className="font-body text-xs text-muted-foreground text-center leading-relaxed">{s.label}</p>
+              <div className={`font-display text-2xl font-bold ${s.valueClass} relative z-10`}>{s.value}</div>
+              <p className="font-body text-xs text-muted-foreground text-center leading-relaxed relative z-10">{s.label}</p>
             </div>
           ))}
         </div>

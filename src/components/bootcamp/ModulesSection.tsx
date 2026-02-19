@@ -1,6 +1,18 @@
 import React from "react";
 import { Brain, MessageSquare, Bot, Lightbulb, Briefcase, GraduationCap, Globe, Shield, Wrench } from "lucide-react";
 
+const iconColors = [
+  { iconColor: "text-cyan-400", iconClass: "icon-box-cyan" },
+  { iconColor: "text-purple-400", iconClass: "icon-box-purple" },
+  { iconColor: "text-orange-400", iconClass: "icon-box-orange" },
+  { iconColor: "text-emerald-400", iconClass: "icon-box-green" },
+  { iconColor: "text-cyan-400", iconClass: "icon-box-cyan" },
+  { iconColor: "text-purple-400", iconClass: "icon-box-purple" },
+  { iconColor: "text-orange-400", iconClass: "icon-box-orange" },
+  { iconColor: "text-emerald-400", iconClass: "icon-box-green" },
+  { iconColor: "text-cyan-400", iconClass: "icon-box-cyan" },
+];
+
 const modules = [
   { icon: Brain, title: "Generative AI Fundamentals", num: "01" },
   { icon: MessageSquare, title: "Prompt Engineering", num: "02" },
@@ -15,10 +27,15 @@ const modules = [
 
 const ModulesSection: React.FC = () => {
   return (
-    <section id="modules" className="section-border py-24 px-4 bg-muted/20">
-      <div className="max-w-7xl mx-auto">
+    <section id="modules" className="section-border py-24 px-4 relative overflow-hidden">
+      <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, hsl(222 40% 6%), hsl(222 47% 5%))" }} />
+      <div className="absolute inset-0 grid-bg opacity-25" />
+      <div className="absolute top-20 right-20 w-96 h-96 rounded-full blur-3xl pointer-events-none" style={{ background: "radial-gradient(circle, hsl(265 85% 65% / 0.1), transparent 70%)" }} />
+      <div className="absolute bottom-20 left-20 w-80 h-80 rounded-full blur-3xl pointer-events-none" style={{ background: "radial-gradient(circle, hsl(25 100% 60% / 0.08), transparent 70%)" }} />
+
+      <div className="max-w-7xl mx-auto relative z-10">
         <div className="text-center mb-16">
-          <p className="font-body text-xs tracking-[0.3em] text-primary uppercase font-semibold mb-3">Curriculum</p>
+          <div className="section-label mb-4 mx-auto w-fit">📚 Curriculum</div>
           <h2 className="font-display text-3xl sm:text-5xl font-bold text-foreground mb-4">
             Core <span className="text-gradient">Modules</span>
           </h2>
@@ -26,17 +43,22 @@ const ModulesSection: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {modules.map((m, i) => (
-            <div key={i} className="card-glow rounded-2xl p-6 flex items-center gap-5 group">
-              <div className="font-display text-3xl font-black text-primary/20 group-hover:text-primary/40 transition-colors min-w-[3rem]">
-                {m.num}
+          {modules.map((m, i) => {
+            const colors = iconColors[i];
+            return (
+              <div key={i} className="card-glow rounded-2xl p-6 flex items-center gap-5 group relative overflow-hidden">
+                <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                  style={{ background: "radial-gradient(circle at 0% 50%, hsl(199 100% 55% / 0.07), transparent 60%)" }} />
+                <div className="number-tag font-display text-lg font-black text-gradient-cyan min-w-[2.5rem] text-center flex-shrink-0">
+                  {m.num}
+                </div>
+                <div className={`w-10 h-10 rounded-xl ${colors.iconClass} flex items-center justify-center flex-shrink-0`}>
+                  <m.icon className={`w-5 h-5 ${colors.iconColor}`} />
+                </div>
+                <h3 className="font-display text-xs font-bold text-foreground leading-tight group-hover:text-primary transition-colors">{m.title}</h3>
               </div>
-              <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center flex-shrink-0">
-                <m.icon className="w-5 h-5 text-primary" />
-              </div>
-              <h3 className="font-display text-xs font-bold text-foreground leading-tight">{m.title}</h3>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
