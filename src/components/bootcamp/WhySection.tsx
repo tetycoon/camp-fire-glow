@@ -85,6 +85,15 @@ const WhySection: React.FC = () => {
             <p className="font-body text-sm text-muted-foreground relative z-10">From zero to AI-powered professional in one intensive month.</p>
           </div>
         </div>
+
+        <div className="text-center mt-12">
+          <button
+            onClick={() => document.getElementById("register")?.scrollIntoView({ behavior: "smooth" })}
+            className="btn-glow text-primary-foreground font-display text-sm font-bold px-10 py-4 rounded-full tracking-widest"
+          >
+            🚀 SECURE YOUR SEAT
+          </button>
+        </div>
       </div>
     </section>
   );
