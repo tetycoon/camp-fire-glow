@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import trainerImg from "@/assets/trainer.jpg";
+import trainerImg from "@/assets/trainer-photo.png";
 
 const stats = [
   { value: 50, label: "Programs Conducted", color: "text-gradient-cyan" },
