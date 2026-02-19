@@ -14,8 +14,8 @@ const HeroSection: React.FC = () => {
         className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: `url(${heroBg})` }}
       />
-      <div className="absolute inset-0 bg-background/75" />
-      <div className="absolute inset-0 grid-bg opacity-50" />
+      <div className="absolute inset-0 bg-background/65" />
+      <div className="absolute inset-0 grid-bg opacity-30" />
 
       {/* Vivid glowing orbs */}
       <div className="absolute top-1/4 left-1/5 w-72 h-72 rounded-full blur-3xl animate-float" style={{ background: "radial-gradient(circle, hsl(199 100% 55% / 0.25), transparent 70%)" }} />
