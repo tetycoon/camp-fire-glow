@@ -74,17 +74,46 @@ const PricingSection: React.FC = () => {
           {/* Price */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-8 mb-10 relative z-10">
             <div>
-              <div className="flex items-baseline gap-3 mb-2">
-                <span className="font-display text-5xl sm:text-6xl font-black text-gradient">₹3,999</span>
-                <span className="badge-green font-body text-xs px-3 py-1 rounded-full flex items-center gap-1">
-                  <Zap className="w-3 h-3" />
-                  Early Bird
+              {/* Urgency banner */}
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-5 animate-pulse"
+                style={{ background: "hsl(0 80% 55% / 0.12)", border: "1px solid hsl(0 80% 55% / 0.3)" }}>
+                <span className="text-sm">🔥</span>
+                <span className="font-display text-xs font-bold tracking-wider" style={{ color: "hsl(0 80% 65%)" }}>
+                  EARLY BIRD OFFER — ENDS MARCH 15!
                 </span>
               </div>
+
+              <div className="flex items-baseline gap-3 mb-1">
+                <span className="font-display text-2xl text-muted-foreground/50 line-through">₹9,999</span>
+                <span className="font-display text-5xl sm:text-6xl font-black text-gradient">₹3,999</span>
+              </div>
+
+              {/* Savings badge */}
+              <div className="flex items-center gap-3 mb-3">
+                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full font-display text-xs font-bold"
+                  style={{ background: "hsl(142 70% 50% / 0.12)", border: "1px solid hsl(142 70% 50% / 0.3)", color: "hsl(142 70% 55%)" }}>
+                  <Zap className="w-3 h-3" />
+                  SAVE ₹6,000
+                </span>
+                <span className="badge-green font-body text-xs px-3 py-1 rounded-full flex items-center gap-1">
+                  <Zap className="w-3 h-3" />
+                  60% OFF
+                </span>
+              </div>
+
               <p className="font-body text-sm text-muted-foreground mt-1">Inclusive of GST • Complete 30-day program</p>
               <div className="flex items-center gap-2 mt-3">
                 <Users className="w-4 h-4 text-primary" />
                 <span className="font-body text-sm text-muted-foreground">Limited to <span className="text-primary font-semibold">100 seats</span> per batch</span>
+              </div>
+
+              {/* Deadline reminder */}
+              <div className="flex items-center gap-2 mt-3 px-4 py-2 rounded-xl"
+                style={{ background: "hsl(25 100% 60% / 0.08)", border: "1px solid hsl(25 100% 60% / 0.2)" }}>
+                <Calendar className="w-4 h-4 text-orange-400" />
+                <span className="font-body text-xs text-orange-400 font-semibold">
+                  ⏰ Price increases to ₹9,999 after March 15, 2026
+                </span>
               </div>
             </div>
 

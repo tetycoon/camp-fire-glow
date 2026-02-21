@@ -4,7 +4,7 @@ import trainerImg from "@/assets/trainer-photo.png";
 const stats = [
   { value: 50, label: "Programs Conducted", color: "text-gradient-cyan" },
   { value: 20, label: "Corporate Sectors", color: "text-gradient" },
-  { value: 100, label: "Colleges Reached", color: "text-gradient-orange" },
+  { value: 100, label: "Schools Reached", color: "text-gradient-orange" },
   { value: 5000, label: "People Impacted", color: "text-gradient-green" },
 ];
 
@@ -83,7 +83,7 @@ const TrainerSection: React.FC = () => {
             <h3 className="font-display text-2xl sm:text-3xl font-bold text-foreground mb-2">Antony Praveen</h3>
             <p className="font-body text-sm font-semibold mb-6 tracking-wider text-gradient-cyan">Founder, Tech Tycoon Digital Solutions</p>
             <p className="font-body text-muted-foreground leading-relaxed mb-10">
-              A seasoned AI trainer and digital transformation expert with a proven track record across corporate, academic, and entrepreneurial spaces. Antony has empowered thousands of individuals with cutting-edge AI skills, helping them unlock new opportunities in their careers and businesses.
+              A seasoned AI trainer and digital transformation expert with a proven track record across schools and academic institutions. Antony has empowered thousands of school students with cutting-edge AI skills, helping them excel in academics and prepare for a future powered by artificial intelligence.
             </p>
 
             <div className="grid grid-cols-2 gap-4">

@@ -1,5 +1,5 @@
 import React from "react";
-import { GraduationCap, Zap, Briefcase, Rocket, DollarSign } from "lucide-react";
+import { GraduationCap, Zap, BookOpen, Target, Compass } from "lucide-react";
 
 const benefits = [
   {
@@ -19,25 +19,25 @@ const benefits = [
     accent: "hsl(25 100% 60%)",
   },
   {
-    icon: Briefcase,
-    title: "Career Skills",
-    desc: "Build an AI-powered portfolio that stands out to top employers and recruiters.",
+    icon: BookOpen,
+    title: "Exam Preparation",
+    desc: "Use AI-powered tools to study smarter, revise faster, and ace your board exams.",
     iconClass: "icon-box-purple",
     iconColor: "text-purple-400",
     accent: "hsl(265 85% 65%)",
   },
   {
-    icon: Rocket,
-    title: "Entrepreneurship",
-    desc: "Launch AI-driven side projects and startups with confidence and a proven framework.",
+    icon: Target,
+    title: "Competitive Edge",
+    desc: "Stand out in competitive exams and college admissions with cutting-edge AI knowledge.",
     iconClass: "icon-box-green",
     iconColor: "text-emerald-400",
     accent: "hsl(142 70% 50%)",
   },
   {
-    icon: DollarSign,
-    title: "Side Hustles",
-    desc: "Monetize your AI skills through freelancing, consulting, and digital products.",
+    icon: Compass,
+    title: "Future-Ready Skills",
+    desc: "Gain essential AI literacy that prepares you for any career path you choose after school.",
     iconClass: "icon-box-cyan",
     iconColor: "text-cyan-400",
     accent: "hsl(183 100% 55%)",

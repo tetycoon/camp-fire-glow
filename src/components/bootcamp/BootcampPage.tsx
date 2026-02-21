@@ -1,6 +1,7 @@
 import React from "react";
 import Navbar from "./Navbar";
 import HeroSection from "./HeroSection";
+import VideoSection from "./VideoSection";
 import NeuralNetworkBackground from "./NeuralNetworkBackground";
 import WhySection from "./WhySection";
 import ProgramStructure from "./ProgramStructure";
@@ -9,6 +10,7 @@ import ModulesSection from "./ModulesSection";
 import AchievementsSection from "./AchievementsSection";
 import GuestSection from "./GuestSection";
 import TrainerSection from "./TrainerSection";
+import GallerySection from "./GallerySection";
 import PricingSection from "./PricingSection";
 import RegisterSection from "./RegisterSection";
 import Footer from "./Footer";
@@ -19,6 +21,7 @@ const BootcampPage: React.FC = () => {
       <NeuralNetworkBackground />
       <Navbar />
       <HeroSection />
+      <VideoSection />
       <WhySection />
       <ProgramStructure />
       <WhoCanJoin />
@@ -26,6 +29,7 @@ const BootcampPage: React.FC = () => {
       <AchievementsSection />
       <GuestSection />
       <TrainerSection />
+      <GallerySection />
       <PricingSection />
       <RegisterSection />
       <Footer />

@@ -65,14 +65,24 @@ const HeroSection: React.FC = () => {
           {[
             { value: "30", label: "Days", color: "text-gradient" },
             { value: "3hrs", label: "Per Day", color: "text-gradient-orange" },
-            { value: "9", label: "Modules", color: "text-gradient-green" },
-            { value: "₹3,999", label: "All Inclusive", color: "text-gradient-cyan" },
+            { value: "12", label: "Modules", color: "text-gradient-green" },
           ].map((stat) => (
             <div key={stat.label} className="text-center px-6 py-4 rounded-2xl" style={{ background: "hsl(222 40% 10% / 0.8)", border: "1px solid hsl(199 100% 55% / 0.15)" }}>
               <div className={`font-display text-2xl sm:text-3xl font-bold ${stat.color}`}>{stat.value}</div>
               <div className="font-body text-xs text-muted-foreground mt-1 tracking-wider uppercase">{stat.label}</div>
             </div>
           ))}
+          {/* Special pricing card */}
+          <div className="text-center px-6 py-4 rounded-2xl relative overflow-hidden" style={{ background: "linear-gradient(135deg, hsl(142 70% 50% / 0.1), hsl(199 100% 55% / 0.08))", border: "1px solid hsl(142 70% 50% / 0.3)", boxShadow: "0 0 20px hsl(142 70% 50% / 0.1)" }}>
+            <div className="flex items-baseline justify-center gap-2">
+              <span className="font-display text-base sm:text-lg text-muted-foreground/60 line-through">₹9,999</span>
+              <span className="font-display text-2xl sm:text-3xl font-bold text-gradient-cyan">₹3,999</span>
+            </div>
+            <div className="font-body text-xs text-emerald-400 mt-1 tracking-wider uppercase font-semibold">🔥 Early Bird Offer</div>
+            <div className="font-body mt-1 px-2 py-0.5 rounded-full text-[10px] font-semibold" style={{ background: "hsl(0 80% 55% / 0.15)", color: "hsl(0 80% 65%)", border: "1px solid hsl(0 80% 55% / 0.25)" }}>
+              Valid till March 15
+            </div>
+          </div>
         </div>
       </div>
 

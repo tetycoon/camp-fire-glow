@@ -1,32 +1,32 @@
 import React from "react";
-import { BookOpen, University, TrendingUp } from "lucide-react";
+import { BookOpen, FlaskConical, Rocket } from "lucide-react";
 
 const audiences = [
   {
     icon: BookOpen,
-    title: "School Students",
-    desc: "High school learners eager to get ahead with AI skills for academics and future careers.",
-    tag: "Grades 9–12",
+    title: "10th Graders",
+    desc: "Build a strong foundation in AI early and stand out in board exams and beyond.",
+    tag: "Class 10",
     iconClass: "icon-box-cyan",
     iconColor: "text-cyan-400",
     badgeClass: "badge-module",
     accent: "hsl(199 100% 55%)",
   },
   {
-    icon: University,
-    title: "College Students",
-    desc: "University students looking to boost employability and build AI-powered projects.",
-    tag: "UG / PG",
+    icon: FlaskConical,
+    title: "11th Graders",
+    desc: "Get a head-start on AI skills that complement your Science, Commerce, or Arts stream.",
+    tag: "Class 11",
     iconClass: "icon-box-purple",
     iconColor: "text-purple-400",
     badgeClass: "badge-purple",
     accent: "hsl(265 85% 65%)",
   },
   {
-    icon: TrendingUp,
-    title: "Entrepreneurs",
-    desc: "Business professionals and aspiring founders who want to leverage AI for growth.",
-    tag: "Founders & Professionals",
+    icon: Rocket,
+    title: "12th Graders",
+    desc: "Supercharge your career preparation with AI tools before entering college or the workforce.",
+    tag: "Class 12",
     iconClass: "icon-box-orange",
     iconColor: "text-orange-400",
     badgeClass: "badge-orange",
