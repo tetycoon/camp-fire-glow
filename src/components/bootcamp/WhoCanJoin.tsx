@@ -4,9 +4,9 @@ import { BookOpen, FlaskConical, Rocket } from "lucide-react";
 const audiences = [
   {
     icon: BookOpen,
-    title: "10th Graders",
+    title: "9th & 10th Graders",
     desc: "Build a strong foundation in AI early and stand out in board exams and beyond.",
-    tag: "Class 10",
+    tag: "Class 9 & 10",
     iconClass: "icon-box-cyan",
     iconColor: "text-cyan-400",
     badgeClass: "badge-module",
