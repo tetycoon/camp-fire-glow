@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Menu, X, Zap, Clock } from "lucide-react";
+import { Menu, X, Clock } from "lucide-react";
 
 // ── Countdown to Batch 1 start: April 1, 2026 ──
 const TARGET_DATE = new Date("2026-04-01T00:00:00");
@@ -91,9 +91,8 @@ const Navbar: React.FC = () => {
     <>
       {/* ── Sticky top urgency bar (desktop) ── */}
       <div
-        className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-500 ${
-          showCTA ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0 pointer-events-none"
-        }`}
+        className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-500 ${showCTA ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0 pointer-events-none"
+          }`}
         style={{
           background: "linear-gradient(90deg, hsl(199 100% 55% / 0.15), hsl(265 85% 65% / 0.12), hsl(199 100% 55% / 0.15))",
           borderBottom: "1px solid hsl(199 100% 55% / 0.3)",
@@ -128,9 +127,8 @@ const Navbar: React.FC = () => {
 
       {/* ── Main Navbar ── */}
       <nav
-        className={`fixed left-0 right-0 z-50 transition-all duration-500 backdrop-blur-md ${
-          showCTA ? "top-10" : "top-0"
-        }`}
+        className={`fixed left-0 right-0 z-50 transition-all duration-500 backdrop-blur-md ${showCTA ? "top-10" : "top-0"
+          }`}
         style={{
           background: scrolled ? "hsl(222 47% 5% / 0.95)" : "hsl(222 47% 5% / 0.75)",
           borderBottom: "1px solid hsl(199 100% 55% / 0.15)",
@@ -141,12 +139,7 @@ const Navbar: React.FC = () => {
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <div className="flex items-center gap-2">
-              <div
-                className="animate-pulse-glow rounded-full p-1.5"
-                style={{ background: "hsl(199 100% 55% / 0.15)", border: "1px solid hsl(199 100% 55% / 0.3)" }}
-              >
-                <Zap className="w-5 h-5 text-primary" />
-              </div>
+              <img src="/logo.png" alt="Tech Tycoon" className="w-8 h-8 rounded-full" />
               <span className="font-display text-sm font-bold tracking-wider text-gradient">TECH TYCOON</span>
             </div>
 
@@ -212,9 +205,8 @@ const Navbar: React.FC = () => {
 
       {/* ── Floating bottom pill (mobile only) ── */}
       <div
-        className={`fixed bottom-5 left-1/2 -translate-x-1/2 z-50 md:hidden transition-all duration-500 ${
-          showCTA ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10 pointer-events-none"
-        }`}
+        className={`fixed bottom-5 left-1/2 -translate-x-1/2 z-50 md:hidden transition-all duration-500 ${showCTA ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10 pointer-events-none"
+          }`}
       >
         <button
           onClick={() => scrollTo("register")}
