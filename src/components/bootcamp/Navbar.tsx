@@ -115,13 +115,6 @@ const Navbar: React.FC = () => {
               <CountdownTimer compact />
             </div>
           </div>
-
-          <button
-            onClick={() => scrollTo("register")}
-            className="hidden sm:block btn-glow text-primary-foreground font-display text-[0.6rem] font-bold px-4 py-1.5 rounded-full tracking-wider whitespace-nowrap animate-pulse-glow"
-          >
-            🔒 SECURE YOUR SEAT
-          </button>
         </div>
       </div>
 
