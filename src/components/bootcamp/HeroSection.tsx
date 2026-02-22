@@ -8,7 +8,7 @@ const HeroSection: React.FC = () => {
   };
 
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-4 pt-[6.25rem] overflow-hidden">
+    <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-4 pt-24 overflow-hidden">
       {/* Background */}
       <div
         className="absolute inset-0 bg-cover bg-center"
