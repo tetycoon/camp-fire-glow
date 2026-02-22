@@ -1,8 +1,10 @@
 import React from "react";
 import heroBg from "@/assets/hero-bg.jpg";
 import { ChevronDown, Sparkles } from "lucide-react";
+import { useRegisterModal } from "./RegisterModalContext";
 
 const HeroSection: React.FC = () => {
+  const { openRegisterModal } = useRegisterModal();
   const scrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
@@ -46,7 +48,7 @@ const HeroSection: React.FC = () => {
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <button
-            onClick={() => scrollTo("register")}
+            onClick={openRegisterModal}
             className="btn-glow text-primary-foreground font-display text-sm font-bold px-10 py-4 rounded-full tracking-widest w-full sm:w-auto"
           >
             🚀 REGISTER NOW

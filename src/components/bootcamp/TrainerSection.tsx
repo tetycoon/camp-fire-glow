@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import trainerImg from "@/assets/trainer-photo.png";
+import { useRegisterModal } from "./RegisterModalContext";
 
 const stats = [
   { value: 50, label: "Programs Conducted", color: "text-gradient-cyan" },
@@ -42,6 +43,7 @@ const statCardBg = [
 ];
 
 const TrainerSection: React.FC = () => {
+  const { openRegisterModal } = useRegisterModal();
   return (
     <section id="trainer" className="section-border py-24 px-4 relative overflow-hidden">
       <div className="absolute inset-0 grid-bg opacity-20" />
@@ -102,7 +104,7 @@ const TrainerSection: React.FC = () => {
 
         <div className="text-center mt-16">
           <button
-            onClick={() => document.getElementById("register")?.scrollIntoView({ behavior: "smooth" })}
+            onClick={openRegisterModal}
             className="btn-glow text-primary-foreground font-display text-sm font-bold px-10 py-4 rounded-full tracking-widest"
           >
             🚀 SECURE YOUR SEAT

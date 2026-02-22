@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Calendar, Users, CheckCircle2, Zap } from "lucide-react";
+import { useRegisterModal } from "./RegisterModalContext";
 
 const batches = [
   { id: "batch1", name: "Batch 1", dates: "April 1–30, 2026", color: "cyan" },
@@ -17,10 +18,7 @@ const features = [
 
 const PricingSection: React.FC = () => {
   const [selected, setSelected] = useState<string | null>(null);
-
-  const scrollToRegister = () => {
-    document.getElementById("register")?.scrollIntoView({ behavior: "smooth" });
-  };
+  const { openRegisterModal } = useRegisterModal();
 
   return (
     <section id="pricing" className="section-border py-24 px-4 relative overflow-hidden">
@@ -118,7 +116,7 @@ const PricingSection: React.FC = () => {
             </div>
 
             <button
-              onClick={scrollToRegister}
+              onClick={openRegisterModal}
               className="btn-glow text-primary-foreground font-display text-sm font-bold px-10 py-4 rounded-full tracking-widest whitespace-nowrap"
             >
               SECURE YOUR SEAT 🚀

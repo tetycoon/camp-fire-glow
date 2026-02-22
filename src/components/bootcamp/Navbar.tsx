@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Menu, X, Clock } from "lucide-react";
+import { useRegisterModal } from "./RegisterModalContext";
 
 // ── Countdown to Batch 1 start: April 1, 2026 ──
 const TARGET_DATE = new Date("2026-04-01T00:00:00");
@@ -72,6 +73,7 @@ const Navbar: React.FC = () => {
   const [open, setOpen] = React.useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [showCTA, setShowCTA] = useState(false);
+  const { openRegisterModal } = useRegisterModal();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -138,7 +140,7 @@ const Navbar: React.FC = () => {
 
             {/* Desktop Nav Links */}
             <div className="hidden md:flex items-center gap-6 font-body text-sm text-muted-foreground">
-              {["why", "modules", "trainer", "pricing", "register"].map((id) => (
+              {["why", "modules", "trainer", "pricing"].map((id) => (
                 <button
                   key={id}
                   onClick={() => scrollTo(id)}
@@ -148,11 +150,18 @@ const Navbar: React.FC = () => {
                   <span className="absolute -bottom-1 left-0 w-0 h-px bg-primary transition-all duration-300 group-hover:w-full" />
                 </button>
               ))}
+              <button
+                onClick={openRegisterModal}
+                className="hover:text-primary transition-colors capitalize font-medium relative group"
+              >
+                Register
+                <span className="absolute -bottom-1 left-0 w-0 h-px bg-primary transition-all duration-300 group-hover:w-full" />
+              </button>
             </div>
 
             {/* Desktop CTA */}
             <button
-              onClick={() => scrollTo("register")}
+              onClick={openRegisterModal}
               className="hidden md:flex items-center gap-2 btn-glow text-primary-foreground font-display text-xs font-bold px-5 py-2.5 rounded-full tracking-wider transition-all duration-500"
               style={{ boxShadow: showCTA ? "0 0 24px hsl(199 100% 55% / 0.5)" : undefined }}
             >
@@ -176,7 +185,7 @@ const Navbar: React.FC = () => {
             style={{ background: "hsl(222 40% 8%)", borderTop: "1px solid hsl(199 100% 55% / 0.15)" }}
           >
             <div className="flex flex-col gap-3 pt-3 font-body text-sm">
-              {["why", "modules", "trainer", "pricing", "register"].map((id) => (
+              {["why", "modules", "trainer", "pricing"].map((id) => (
                 <button
                   key={id}
                   onClick={() => scrollTo(id)}
@@ -186,7 +195,13 @@ const Navbar: React.FC = () => {
                 </button>
               ))}
               <button
-                onClick={() => scrollTo("register")}
+                onClick={() => { openRegisterModal(); setOpen(false); }}
+                className="text-left text-muted-foreground hover:text-primary transition-colors py-2 capitalize"
+              >
+                Register
+              </button>
+              <button
+                onClick={() => { openRegisterModal(); setOpen(false); }}
                 className="btn-glow text-primary-foreground font-display text-xs font-bold px-5 py-3 rounded-full tracking-wider mt-2"
               >
                 🔒 SECURE YOUR SEAT
@@ -202,7 +217,7 @@ const Navbar: React.FC = () => {
           }`}
       >
         <button
-          onClick={() => scrollTo("register")}
+          onClick={openRegisterModal}
           className="btn-glow text-primary-foreground font-display text-[0.65rem] font-bold pl-5 pr-6 py-3 rounded-full tracking-wider flex items-center gap-3 whitespace-nowrap"
           style={{ boxShadow: "0 8px 32px hsl(199 100% 55% / 0.5)" }}
         >

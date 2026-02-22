@@ -12,28 +12,31 @@ import GuestSection from "./GuestSection";
 import TrainerSection from "./TrainerSection";
 import GallerySection from "./GallerySection";
 import PricingSection from "./PricingSection";
-import RegisterSection from "./RegisterSection";
 import Footer from "./Footer";
+import RegisterModal from "./RegisterModal";
+import { RegisterModalProvider } from "./RegisterModalContext";
 
 const BootcampPage: React.FC = () => {
   return (
-    <div className="min-h-screen bg-background text-foreground overflow-x-hidden relative">
-      <NeuralNetworkBackground />
-      <Navbar />
-      <HeroSection />
-      <VideoSection />
-      <WhySection />
-      <ProgramStructure />
-      <WhoCanJoin />
-      <ModulesSection />
-      <AchievementsSection />
-      <GuestSection />
-      <TrainerSection />
-      <GallerySection />
-      <PricingSection />
-      <RegisterSection />
-      <Footer />
-    </div>
+    <RegisterModalProvider>
+      <div className="min-h-screen bg-background text-foreground overflow-x-hidden relative">
+        <NeuralNetworkBackground />
+        <Navbar />
+        <HeroSection />
+        <VideoSection />
+        <WhySection />
+        <ProgramStructure />
+        <WhoCanJoin />
+        <ModulesSection />
+        <AchievementsSection />
+        <GuestSection />
+        <TrainerSection />
+        <GallerySection />
+        <PricingSection />
+        <Footer />
+        <RegisterModal />
+      </div>
+    </RegisterModalProvider>
   );
 };
 
