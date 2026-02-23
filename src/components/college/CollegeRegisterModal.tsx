@@ -99,7 +99,7 @@ const CollegeRegisterModal: React.FC = () => {
 
         const options: RazorpayOptions = {
             key: RAZORPAY_KEY_ID,
-            amount: 399900,
+            amount: 999900,
             currency: "INR",
             name: "Tech Tycoon Digital Solutions",
             description: `AI Mastery Bootcamp 2026 — ${batchLabel}`,
@@ -249,7 +249,7 @@ const CollegeRegisterModal: React.FC = () => {
                                         <span>OPENING PAYMENT...</span>
                                     </>
                                 ) : (
-                                    <span>PROCEED TO PAYMENT — ₹3,999</span>
+                                    <span>PROCEED TO PAYMENT — ₹9,999</span>
                                 )}
                             </button>
 

@@ -82,8 +82,8 @@ const PricingSection: React.FC = () => {
               </div>
 
               <div className="flex items-baseline gap-3 mb-1">
-                <span className="font-display text-2xl text-muted-foreground/50 line-through">₹9,999</span>
-                <span className="font-display text-5xl sm:text-6xl font-black text-gradient">₹3,999</span>
+                <span className="font-display text-2xl text-muted-foreground/50 line-through">₹14,999</span>
+                <span className="font-display text-5xl sm:text-6xl font-black text-gradient">₹9,999</span>
               </div>
 
               {/* Savings badge */}
@@ -91,11 +91,11 @@ const PricingSection: React.FC = () => {
                 <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full font-display text-xs font-bold"
                   style={{ background: "hsl(142 70% 50% / 0.12)", border: "1px solid hsl(142 70% 50% / 0.3)", color: "hsl(142 70% 55%)" }}>
                   <Zap className="w-3 h-3" />
-                  SAVE ₹6,000
+                  SAVE ₹5,000
                 </span>
                 <span className="badge-green font-body text-xs px-3 py-1 rounded-full flex items-center gap-1">
                   <Zap className="w-3 h-3" />
-                  60% OFF
+                  33% OFF
                 </span>
               </div>
 
@@ -110,7 +110,7 @@ const PricingSection: React.FC = () => {
                 style={{ background: "hsl(25 100% 60% / 0.08)", border: "1px solid hsl(25 100% 60% / 0.2)" }}>
                 <Calendar className="w-4 h-4 text-orange-400" />
                 <span className="font-body text-xs text-orange-400 font-semibold">
-                  ⏰ Price increases to ₹9,999 after March 15, 2026
+                  ⏰ Price increases to ₹14,999 after March 15, 2026
                 </span>
               </div>
             </div>
