@@ -102,16 +102,28 @@ const RegisterModal: React.FC = () => {
 
         const batchLabel = batches.find(b => b.value === form.batch)?.label || form.batch;
 
-        // Capture lead as INITIATED
+        // 🔥 SEND PAGE URL & CATEGORY
+        const pageUrl = window.location.href;
+        const path = window.location.pathname.toLowerCase();
+
+        let category = "school students";
+        if (path.includes("college") || pageUrl.toLowerCase().includes("/college")) {
+            category = "college students";
+        }
+        console.log("Category detected:", category); // DEBUG
+
+        // Capture lead
         try {
             await fetch(GOOGLE_SHEET_URL, {
                 method: "POST",
-                mode: "no-cors",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    ...form,
-                    batch: batchLabel,
-                    status: "INITIATED"
+                    pageUrl,
+                    category, // 👈 ADDED BACK
+                    name: form.name,
+                    email: form.email,
+                    phone: form.phone,
+                    batch: form.batch
                 }),
             });
         } catch (error) {
@@ -140,15 +152,26 @@ const RegisterModal: React.FC = () => {
                 setSubmitted(true);
                 setLoading(false);
 
-                // Update lead as PAID
+                // Update lead on success
                 try {
+                    const pageUrl = window.location.href;
+                    const path = window.location.pathname.toLowerCase();
+
+                    let category = "school students";
+                    if (path.includes("college") || pageUrl.toLowerCase().includes("/college")) {
+                        category = "college students";
+                    }
+
                     await fetch(GOOGLE_SHEET_URL, {
                         method: "POST",
-                        mode: "no-cors",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({
-                            ...form,
-                            batch: batchLabel,
+                            pageUrl,
+                            category, // 👈 ADDED BACK
+                            name: form.name,
+                            email: form.email,
+                            phone: form.phone,
+                            batch: form.batch,
                             paymentId: response.razorpay_payment_id,
                             status: "PAID"
                         }),
