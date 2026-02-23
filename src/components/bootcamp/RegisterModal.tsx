@@ -116,6 +116,7 @@ const RegisterModal: React.FC = () => {
         try {
             await fetch(GOOGLE_SHEET_URL, {
                 method: "POST",
+                mode: "no-cors", // 👈 RE-ADDED TO FIX CORS
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     pageUrl,

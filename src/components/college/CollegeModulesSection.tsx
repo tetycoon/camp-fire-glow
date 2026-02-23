@@ -3,18 +3,18 @@ import { Brain, MessageSquare, Bot, BookOpen, Target, GraduationCap, Globe, Shie
 import { useCollegeRegisterModal } from "./CollegeRegisterModalContext";
 
 const iconColors = [
-    { iconColor: "text-cyan-400", iconClass: "icon-box-cyan" },
-    { iconColor: "text-purple-400", iconClass: "icon-box-purple" },
-    { iconColor: "text-orange-400", iconClass: "icon-box-orange" },
-    { iconColor: "text-emerald-400", iconClass: "icon-box-green" },
-    { iconColor: "text-cyan-400", iconClass: "icon-box-cyan" },
-    { iconColor: "text-purple-400", iconClass: "icon-box-purple" },
-    { iconColor: "text-orange-400", iconClass: "icon-box-orange" },
-    { iconColor: "text-emerald-400", iconClass: "icon-box-green" },
-    { iconColor: "text-cyan-400", iconClass: "icon-box-cyan" },
-    { iconColor: "text-purple-400", iconClass: "icon-box-purple" },
-    { iconColor: "text-orange-400", iconClass: "icon-box-orange" },
-    { iconColor: "text-emerald-400", iconClass: "icon-box-green" },
+    { iconColor: "text-gold", iconClass: "icon-box-gold" },
+    { iconColor: "text-amber", iconClass: "icon-box-amber" },
+    { iconColor: "text-gold", iconClass: "icon-box-gold" },
+    { iconColor: "text-amber", iconClass: "icon-box-amber" },
+    { iconColor: "text-gold", iconClass: "icon-box-gold" },
+    { iconColor: "text-amber", iconClass: "icon-box-amber" },
+    { iconColor: "text-gold", iconClass: "icon-box-gold" },
+    { iconColor: "text-amber", iconClass: "icon-box-amber" },
+    { iconColor: "text-gold", iconClass: "icon-box-gold" },
+    { iconColor: "text-amber", iconClass: "icon-box-amber" },
+    { iconColor: "text-gold", iconClass: "icon-box-gold" },
+    { iconColor: "text-amber", iconClass: "icon-box-amber" },
 ];
 
 const modules = [
@@ -273,22 +273,22 @@ const ModuleCard: React.FC<ModuleCardProps> = ({ module, colors, isOpen, onToggl
             className={`card-glow rounded-2xl overflow-hidden transition-all duration-500 cursor-pointer ${isOpen ? "col-span-1 sm:col-span-2 lg:col-span-3" : ""}`}
             onClick={onToggle}
         >
-            <div className="p-6 flex items-center gap-5 group relative">
+            <div className={`p-6 flex items-center gap-5 group relative ${isOpen ? "bg-gold/5" : ""}`}>
                 <div
                     className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-                    style={{ background: "radial-gradient(circle at 0% 50%, hsl(199 100% 55% / 0.07), transparent 60%)" }}
+                    style={{ background: "radial-gradient(circle at 0% 50%, hsl(45 100% 50% / 0.07), transparent 60%)" }}
                 />
-                <div className="number-tag font-display text-lg font-black text-gradient-cyan min-w-[2.5rem] text-center flex-shrink-0">
+                <div className="number-tag font-display text-lg font-black text-gradient-gold min-w-[2.5rem] text-center flex-shrink-0">
                     {module.num}
                 </div>
                 <div className={`w-10 h-10 rounded-xl ${colors.iconClass} flex items-center justify-center flex-shrink-0`}>
                     <module.icon className={`w-5 h-5 ${colors.iconColor}`} />
                 </div>
-                <h3 className="font-display text-xs sm:text-sm font-bold text-foreground leading-tight group-hover:text-primary transition-colors flex-1">
+                <h3 className="font-display text-xs sm:text-sm font-bold text-foreground leading-tight group-hover:text-gold transition-colors flex-1">
                     {module.title}
                 </h3>
                 <ChevronDown
-                    className={`w-5 h-5 text-muted-foreground transition-transform duration-300 flex-shrink-0 ${isOpen ? "rotate-180 text-primary" : ""}`}
+                    className={`w-5 h-5 text-muted-foreground transition-transform duration-300 flex-shrink-0 ${isOpen ? "rotate-180 text-gold" : ""}`}
                 />
             </div>
 
@@ -297,10 +297,10 @@ const ModuleCard: React.FC<ModuleCardProps> = ({ module, colors, isOpen, onToggl
                 style={{ maxHeight: isOpen ? "800px" : "0px", opacity: isOpen ? 1 : 0 }}
             >
                 <div className="px-6 pb-8 pt-2">
-                    <div className="border-t border-white/10 pt-6">
+                    <div className="border-t border-gold/10 pt-6">
                         <div className="mb-6">
                             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold mb-3"
-                                style={{ background: "hsl(199 100% 55% / 0.1)", border: "1px solid hsl(199 100% 55% / 0.25)", color: "hsl(199 100% 55%)" }}>
+                                style={{ background: "hsl(45 100% 50% / 0.1)", border: "1px solid hsl(45 100% 50% / 0.25)", color: "hsl(45 100% 55%)" }}>
                                 🎯 Goal
                             </div>
                             <p className="font-body text-sm text-muted-foreground leading-relaxed">{module.goal}</p>
@@ -309,13 +309,13 @@ const ModuleCard: React.FC<ModuleCardProps> = ({ module, colors, isOpen, onToggl
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold mb-3"
-                                    style={{ background: "hsl(265 85% 65% / 0.1)", border: "1px solid hsl(265 85% 65% / 0.25)", color: "hsl(265 85% 65%)" }}>
+                                    style={{ background: "hsl(38 100% 50% / 0.1)", border: "1px solid hsl(38 100% 50% / 0.25)", color: "hsl(38 100% 55%)" }}>
                                     📘 Skills You'll Learn
                                 </div>
                                 <ul className="space-y-2">
                                     {module.skills.map((skill, j) => (
                                         <li key={j} className="font-body text-sm text-muted-foreground flex items-start gap-2">
-                                            <span className="text-primary mt-0.5 flex-shrink-0">▸</span>
+                                            <span className="text-gold mt-0.5 flex-shrink-0">▸</span>
                                             {skill}
                                         </li>
                                     ))}
@@ -324,22 +324,22 @@ const ModuleCard: React.FC<ModuleCardProps> = ({ module, colors, isOpen, onToggl
 
                             <div>
                                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold mb-3"
-                                    style={{ background: "hsl(25 100% 60% / 0.1)", border: "1px solid hsl(25 100% 60% / 0.25)", color: "hsl(25 100% 60%)" }}>
+                                    style={{ background: "hsl(45 100% 50% / 0.1)", border: "1px solid hsl(45 100% 50% / 0.25)", color: "hsl(45 100% 55%)" }}>
                                     🧪 Activities
                                 </div>
                                 <ul className="space-y-2">
                                     {module.activities.map((activity, j) => (
                                         <li key={j} className="font-body text-sm text-muted-foreground flex items-start gap-2">
-                                            <span className="text-orange-400 mt-0.5 flex-shrink-0">▸</span>
+                                            <span className="text-amber mt-0.5 flex-shrink-0" style={{ color: "hsl(28 100% 50%)" }}>▸</span>
                                             {activity}
                                         </li>
                                     ))}
                                 </ul>
 
                                 <div className="mt-6 flex items-center gap-2 px-4 py-3 rounded-xl"
-                                    style={{ background: "hsl(142 70% 50% / 0.08)", border: "1px solid hsl(142 70% 50% / 0.2)" }}>
-                                    <span className="text-emerald-400 text-sm">✅</span>
-                                    <span className="font-body text-sm text-emerald-400 font-medium">{module.takeaway}</span>
+                                    style={{ background: "hsl(45 100% 50% / 0.08)", border: "1px solid hsl(45 100% 50% / 0.2)" }}>
+                                    <span className="text-gold text-sm">✅</span>
+                                    <span className="font-body text-sm text-gold font-medium" style={{ color: "hsl(45 100% 55%)" }}>{module.takeaway}</span>
                                 </div>
                             </div>
                         </div>
@@ -355,17 +355,17 @@ const CollegeModulesSection: React.FC = () => {
     const { openRegisterModal } = useCollegeRegisterModal();
 
     return (
-        <section id="modules" className="section-border py-24 px-4 relative overflow-hidden">
-            <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, hsl(222 40% 6%), hsl(222 47% 5%))" }} />
-            <div className="absolute inset-0 grid-bg opacity-25" />
-            <div className="absolute top-20 right-20 w-96 h-96 rounded-full blur-3xl pointer-events-none" style={{ background: "radial-gradient(circle, hsl(265 85% 65% / 0.1), transparent 70%)" }} />
-            <div className="absolute bottom-20 left-20 w-80 h-80 rounded-full blur-3xl pointer-events-none" style={{ background: "radial-gradient(circle, hsl(25 100% 60% / 0.08), transparent 70%)" }} />
+        <section id="modules" className="section-border py-24 px-4 relative overflow-hidden bg-midnight">
+            <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, hsl(224 71% 4%), hsl(224 71% 2%))" }} />
+            <div className="absolute inset-0 grid-bg opacity-10" />
+            <div className="absolute top-20 right-20 w-96 h-96 rounded-full blur-3xl pointer-events-none" style={{ background: "radial-gradient(circle, hsl(45 100% 50% / 0.05), transparent 70%)" }} />
+            <div className="absolute bottom-20 left-20 w-80 h-80 rounded-full blur-3xl pointer-events-none" style={{ background: "radial-gradient(circle, hsl(28 100% 50% / 0.05), transparent 70%)" }} />
 
             <div className="max-w-7xl mx-auto relative z-10">
                 <div className="text-center mb-16">
-                    <div className="section-label mb-4 mx-auto w-fit">📚 Curriculum</div>
+                    <div className="section-label mb-4 mx-auto w-fit border-gold/30 text-gold bg-gold/10">📚 Curriculum</div>
                     <h2 className="font-display text-3xl sm:text-5xl font-bold text-foreground mb-4">
-                        Core <span className="text-gradient">Modules</span>
+                        Core <span className="text-gradient-gold">Modules</span>
                     </h2>
                     <p className="font-body text-muted-foreground">12 comprehensive modules designed for career and business AI mastery</p>
                     <p className="font-body text-xs text-muted-foreground/60 mt-2">Click any module to see full details</p>
@@ -389,7 +389,7 @@ const CollegeModulesSection: React.FC = () => {
                 <div className="text-center mt-12">
                     <button
                         onClick={openRegisterModal}
-                        className="btn-glow text-primary-foreground font-display text-sm font-bold px-10 py-4 rounded-full tracking-widest"
+                        className="btn-gold font-display text-sm font-bold px-10 py-4 rounded-full tracking-widest"
                     >
                         🚀 SECURE YOUR SEAT
                     </button>

@@ -21,47 +21,45 @@ const CollegePricingSection: React.FC = () => {
     const { openRegisterModal } = useCollegeRegisterModal();
 
     return (
-        <section id="pricing" className="section-border py-24 px-4 relative overflow-hidden">
-            <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, hsl(222 40% 7%), hsl(222 47% 5%))" }} />
-            <div className="absolute inset-0 grid-bg opacity-20" />
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] rounded-full blur-3xl pointer-events-none" style={{ background: "radial-gradient(ellipse, hsl(199 100% 55% / 0.07), transparent 70%)" }} />
+        <section id="pricing" className="section-border py-24 px-4 relative overflow-hidden bg-midnight">
+            <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, hsl(224 71% 4%), hsl(224 71% 2%))" }} />
+            <div className="absolute inset-0 grid-bg opacity-10" />
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] rounded-full blur-3xl pointer-events-none" style={{ background: "radial-gradient(ellipse, hsl(45 100% 50% / 0.05), transparent 70%)" }} />
 
             <div className="max-w-4xl mx-auto relative z-10">
                 <div className="text-center mb-16">
-                    <div className="section-label mb-4 mx-auto w-fit">💳 Investment</div>
+                    <div className="section-label mb-4 mx-auto w-fit border-gold/30 text-gold bg-gold/10">💳 Investment</div>
                     <h2 className="font-display text-3xl sm:text-5xl font-bold text-foreground mb-4">
-                        Batches & <span className="text-gradient">Pricing</span>
+                        Batches & <span className="text-gradient-gold">Pricing</span>
                     </h2>
                 </div>
 
-                <div className="rounded-3xl p-8 sm:p-12 relative overflow-hidden"
-                    style={{ background: "linear-gradient(135deg, hsl(222 40% 10%), hsl(222 40% 7%))", border: "1px solid hsl(199 100% 55% / 0.3)", boxShadow: "0 0 60px hsl(199 100% 55% / 0.08)" }}>
-                    <div className="absolute top-0 right-0 w-64 h-64 rounded-full blur-3xl pointer-events-none" style={{ background: "radial-gradient(circle, hsl(265 85% 65% / 0.1), transparent 70%)" }} />
+                <div className="rounded-3xl p-8 sm:p-12 relative overflow-hidden card-gold backdrop-blur-md">
+                    <div className="absolute top-0 right-0 w-64 h-64 rounded-full blur-3xl pointer-events-none" style={{ background: "radial-gradient(circle, hsl(38 100% 50% / 0.1), transparent 70%)" }} />
 
                     {/* Batch selector */}
                     <div className="flex gap-4 mb-10 flex-col sm:flex-row relative z-10">
                         {batches.map((b) => {
                             const isSelected = selected === b.id;
-                            const isCyan = b.color === "cyan";
                             return (
                                 <button
                                     key={b.id}
                                     onClick={() => setSelected(b.id)}
-                                    className="flex-1 p-5 rounded-2xl transition-all text-left"
+                                    className="flex-1 p-5 rounded-2xl transition-all text-left group"
                                     style={{
                                         border: isSelected
-                                            ? `2px solid ${isCyan ? "hsl(199 100% 55%)" : "hsl(265 85% 65%)"}`
+                                            ? `2px solid hsl(45 100% 50%)`
                                             : "2px solid hsl(var(--border))",
                                         background: isSelected
-                                            ? isCyan ? "hsl(199 100% 55% / 0.1)" : "hsl(265 85% 65% / 0.1)"
+                                            ? "hsl(45 100% 50% / 0.08)"
                                             : "transparent",
                                         boxShadow: isSelected
-                                            ? isCyan ? "0 0 30px hsl(199 100% 55% / 0.2)" : "0 0 30px hsl(265 85% 65% / 0.2)"
+                                            ? "0 0 30px hsl(45 100% 50% / 0.15)"
                                             : "none",
                                     }}>
                                     <div className="flex items-center gap-3 mb-2">
-                                        <Calendar className="w-5 h-5" style={{ color: isSelected ? (isCyan ? "hsl(199 100% 55%)" : "hsl(265 85% 65%)") : "hsl(var(--muted-foreground))" }} />
-                                        <span className="font-display text-sm font-bold" style={{ color: isSelected ? (isCyan ? "hsl(199 100% 55%)" : "hsl(265 85% 65%)") : "hsl(var(--foreground))" }}>{b.name}</span>
+                                        <Calendar className="w-5 h-5" style={{ color: isSelected ? "hsl(45 100% 50%)" : "hsl(var(--muted-foreground))" }} />
+                                        <span className="font-display text-sm font-bold" style={{ color: isSelected ? "hsl(45 100% 50%)" : "hsl(var(--foreground))" }}>{b.name}</span>
                                     </div>
                                     <p className="font-body text-sm text-muted-foreground">{b.dates}</p>
                                 </button>
@@ -73,40 +71,40 @@ const CollegePricingSection: React.FC = () => {
                     <div className="flex flex-col sm:flex-row items-center justify-between gap-8 mb-10 relative z-10">
                         <div>
                             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-5 animate-pulse"
-                                style={{ background: "hsl(0 80% 55% / 0.12)", border: "1px solid hsl(0 80% 55% / 0.3)" }}>
+                                style={{ background: "hsl(45 100% 50% / 0.1)", border: "1px solid hsl(45 100% 50% / 0.3)" }}>
                                 <span className="text-sm">🔥</span>
-                                <span className="font-display text-xs font-bold tracking-wider" style={{ color: "hsl(0 80% 65%)" }}>
+                                <span className="font-display text-xs font-bold tracking-wider" style={{ color: "hsl(45 100% 60%)" }}>
                                     EARLY BIRD OFFER — ENDS MARCH 15!
                                 </span>
                             </div>
 
                             <div className="flex items-baseline gap-3 mb-1">
                                 <span className="font-display text-2xl text-muted-foreground/50 line-through">₹14,999</span>
-                                <span className="font-display text-5xl sm:text-6xl font-black text-gradient">₹9,999</span>
+                                <span className="font-display text-5xl sm:text-6xl font-black text-gradient-gold">₹9,999</span>
                             </div>
 
                             <div className="flex items-center gap-3 mb-3">
                                 <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full font-display text-xs font-bold"
-                                    style={{ background: "hsl(142 70% 50% / 0.12)", border: "1px solid hsl(142 70% 50% / 0.3)", color: "hsl(142 70% 55%)" }}>
+                                    style={{ background: "hsl(45 100% 50% / 0.12)", border: "1px solid hsl(45 100% 50% / 0.3)", color: "hsl(45 100% 55%)" }}>
                                     <Zap className="w-3 h-3" />
                                     SAVE ₹5,000
                                 </span>
-                                <span className="badge-green font-body text-xs px-3 py-1 rounded-full flex items-center gap-1">
-                                    <Zap className="w-3 h-3" />
+                                <span className="badge-green font-body text-xs px-3 py-1 rounded-full flex items-center gap-1 border-gold/30 text-gold bg-gold/10">
+                                    <Zap className="w-3 h-3 text-gold" />
                                     33% OFF
                                 </span>
                             </div>
 
                             <p className="font-body text-sm text-muted-foreground mt-1">Inclusive of GST • Complete 30-day program</p>
                             <div className="flex items-center gap-2 mt-3">
-                                <Users className="w-4 h-4 text-primary" />
-                                <span className="font-body text-sm text-muted-foreground">Limited to <span className="text-primary font-semibold">20 seats</span> per batch</span>
+                                <Users className="w-4 h-4 text-gold" style={{ color: "hsl(45 100% 50%)" }} />
+                                <span className="font-body text-sm text-muted-foreground">Limited to <span className="text-gold font-semibold" style={{ color: "hsl(45 100% 50%)" }}>20 seats</span> per batch</span>
                             </div>
 
                             <div className="flex items-center gap-2 mt-3 px-4 py-2 rounded-xl"
-                                style={{ background: "hsl(25 100% 60% / 0.08)", border: "1px solid hsl(25 100% 60% / 0.2)" }}>
-                                <Calendar className="w-4 h-4 text-orange-400" />
-                                <span className="font-body text-xs text-orange-400 font-semibold">
+                                style={{ background: "hsl(38 100% 50% / 0.08)", border: "1px solid hsl(38 100% 50% / 0.2)" }}>
+                                <Calendar className="w-4 h-4 text-amber" style={{ color: "hsl(38 100% 50%)" }} />
+                                <span className="font-body text-xs text-amber font-semibold" style={{ color: "hsl(38 100% 50%)" }}>
                                     ⏰ Price increases to ₹14,999 after March 15, 2026
                                 </span>
                             </div>
@@ -114,17 +112,17 @@ const CollegePricingSection: React.FC = () => {
 
                         <button
                             onClick={openRegisterModal}
-                            className="btn-glow text-primary-foreground font-display text-sm font-bold px-10 py-4 rounded-full tracking-widest whitespace-nowrap"
+                            className="btn-gold font-display text-sm font-bold px-10 py-4 rounded-full tracking-widest whitespace-nowrap"
                         >
                             SECURE YOUR SEAT 🚀
                         </button>
                     </div>
 
                     {/* Features */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-8 relative z-10" style={{ borderTop: "1px solid hsl(var(--border))" }}>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-8 relative z-10" style={{ borderTop: "1px solid hsl(45 100% 50% / 0.2)" }}>
                         {features.map((f, i) => (
                             <div key={i} className="flex items-center gap-3">
-                                <CheckCircle2 className={`w-4 h-4 flex-shrink-0 ${f.color}`} />
+                                <CheckCircle2 className={`w-4 h-4 flex-shrink-0 text-gold`} style={{ color: "hsl(45 100% 50%)" }} />
                                 <span className="font-body text-sm text-muted-foreground">{f.text}</span>
                             </div>
                         ))}

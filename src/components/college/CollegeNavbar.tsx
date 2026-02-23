@@ -18,7 +18,7 @@ function getTimeLeft() {
 function CountdownUnit({ value, label }: { value: number; label: string }) {
     return (
         <div className="flex flex-col items-center leading-none">
-            <span className="font-display font-black tabular-nums" style={{ fontSize: "0.7rem", color: "hsl(199 100% 65%)" }}>
+            <span className="font-display font-black tabular-nums" style={{ fontSize: "0.7rem", color: "hsl(45 100% 50%)" }}>
                 {String(value).padStart(2, "0")}
             </span>
             <span className="font-body uppercase tracking-wider" style={{ fontSize: "0.45rem", color: "hsl(var(--muted-foreground))" }}>
@@ -38,7 +38,7 @@ function CountdownTimer({ compact = false }: { compact?: boolean }) {
 
     if (compact) {
         return (
-            <span className="font-display font-black tabular-nums text-[0.65rem]" style={{ color: "hsl(199 100% 70%)" }}>
+            <span className="font-display font-black tabular-nums text-[0.65rem]" style={{ color: "hsl(45 100% 60%)" }}>
                 {t.days}d {String(t.hours).padStart(2, "0")}h {String(t.mins).padStart(2, "0")}m {String(t.secs).padStart(2, "0")}s
             </span>
         );
@@ -48,18 +48,18 @@ function CountdownTimer({ compact = false }: { compact?: boolean }) {
         <div
             className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl"
             style={{
-                background: "hsl(199 100% 55% / 0.08)",
-                border: "1px solid hsl(199 100% 55% / 0.25)",
+                background: "hsl(45 100% 50% / 0.08)",
+                border: "1px solid hsl(45 100% 50% / 0.25)",
             }}
         >
-            <Clock className="w-3 h-3 flex-shrink-0" style={{ color: "hsl(199 100% 60%)" }} />
+            <Clock className="w-3 h-3 flex-shrink-0" style={{ color: "hsl(45 100% 60%)" }} />
             <div className="flex items-center gap-1.5">
                 <CountdownUnit value={t.days} label="days" />
-                <span className="font-display font-black text-[0.6rem]" style={{ color: "hsl(199 100% 55% / 0.6)", marginBottom: "2px" }}>:</span>
+                <span className="font-display font-black text-[0.6rem]" style={{ color: "hsl(45 100% 50% / 0.6)", marginBottom: "2px" }}>:</span>
                 <CountdownUnit value={t.hours} label="hrs" />
-                <span className="font-display font-black text-[0.6rem]" style={{ color: "hsl(199 100% 55% / 0.6)", marginBottom: "2px" }}>:</span>
+                <span className="font-display font-black text-[0.6rem]" style={{ color: "hsl(45 100% 50% / 0.6)", marginBottom: "2px" }}>:</span>
                 <CountdownUnit value={t.mins} label="min" />
-                <span className="font-display font-black text-[0.6rem]" style={{ color: "hsl(199 100% 55% / 0.6)", marginBottom: "2px" }}>:</span>
+                <span className="font-display font-black text-[0.6rem]" style={{ color: "hsl(45 100% 50% / 0.6)", marginBottom: "2px" }}>:</span>
                 <CountdownUnit value={t.secs} label="sec" />
             </div>
         </div>
@@ -93,20 +93,20 @@ const CollegeNavbar: React.FC = () => {
                 className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-500 ${showCTA ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0 pointer-events-none"
                     }`}
                 style={{
-                    background: "linear-gradient(90deg, hsl(199 100% 55% / 0.15), hsl(265 85% 65% / 0.12), hsl(199 100% 55% / 0.15))",
-                    borderBottom: "1px solid hsl(199 100% 55% / 0.3)",
+                    background: "linear-gradient(90deg, hsl(45 100% 50% / 0.1), hsl(28 100% 50% / 0.08), hsl(45 100% 50% / 0.1))",
+                    borderBottom: "1px solid hsl(45 100% 50% / 0.25)",
                     backdropFilter: "blur(12px)",
                 }}
             >
                 <div className="max-w-7xl mx-auto px-4 h-10 flex items-center justify-between gap-4">
                     <div className="hidden sm:flex items-center gap-2">
-                        <span className="text-[0.65rem] font-body font-semibold uppercase tracking-widest" style={{ color: "hsl(199 100% 70%)" }}>
+                        <span className="text-[0.65rem] font-body font-semibold uppercase tracking-widest" style={{ color: "hsl(45 100% 70%)" }}>
                             ⚡ Batch 1 starts April 1 — Limited seats!
                         </span>
                     </div>
 
                     <div className="flex items-center gap-3 mx-auto sm:mx-0">
-                        <Clock className="w-3.5 h-3.5 flex-shrink-0" style={{ color: "hsl(25 100% 65%)" }} />
+                        <Clock className="w-3.5 h-3.5 flex-shrink-0" style={{ color: "hsl(45 100% 50%)" }} />
                         <span className="font-body text-[0.6rem] text-muted-foreground uppercase tracking-wider hidden sm:block">Closes in</span>
                         <CountdownTimer />
                         <div className="sm:hidden flex items-center gap-1.5">
@@ -121,16 +121,16 @@ const CollegeNavbar: React.FC = () => {
                 className={`fixed left-0 right-0 z-50 transition-all duration-500 backdrop-blur-md ${showCTA ? "top-10" : "top-0"
                     }`}
                 style={{
-                    background: scrolled ? "hsl(222 47% 5% / 0.95)" : "hsl(222 47% 5% / 0.75)",
-                    borderBottom: "1px solid hsl(199 100% 55% / 0.15)",
-                    boxShadow: scrolled ? "0 4px 30px hsl(199 100% 55% / 0.08)" : "none",
+                    background: scrolled ? "hsl(224 71% 2% / 0.95)" : "hsl(224 71% 2% / 0.75)",
+                    borderBottom: "1px solid hsl(45 100% 50% / 0.15)",
+                    boxShadow: scrolled ? "0 4px 30px hsl(45 100% 50% / 0.08)" : "none",
                 }}
             >
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex items-center justify-between h-16">
                         <div className="flex items-center gap-2">
                             <img src="/logo.png" alt="Tech Tycoon" className="w-8 h-8 rounded-full" />
-                            <span className="font-display text-sm font-bold tracking-wider text-gradient">TECH TYCOON</span>
+                            <span className="font-display text-sm font-bold tracking-wider text-gradient-gold">TECH TYCOON</span>
                         </div>
 
                         <div className="hidden md:flex items-center gap-6 font-body text-sm text-muted-foreground">
@@ -138,31 +138,33 @@ const CollegeNavbar: React.FC = () => {
                                 <button
                                     key={id}
                                     onClick={() => scrollTo(id)}
-                                    className="hover:text-primary transition-colors capitalize font-medium relative group"
+                                    className="hover:text-gold transition-colors capitalize font-medium relative group"
+                                    style={{ color: scrolled ? undefined : "hsl(var(--foreground))" }}
                                 >
                                     {id === "why" ? "About" : id.charAt(0).toUpperCase() + id.slice(1)}
-                                    <span className="absolute -bottom-1 left-0 w-0 h-px bg-primary transition-all duration-300 group-hover:w-full" />
+                                    <span className="absolute -bottom-1 left-0 w-0 h-px bg-gold transition-all duration-300 group-hover:w-full" style={{ background: "hsl(45 100% 50%)" }} />
                                 </button>
                             ))}
                             <button
                                 onClick={openRegisterModal}
-                                className="hover:text-primary transition-colors capitalize font-medium relative group"
+                                className="hover:text-gold transition-colors capitalize font-medium relative group"
+                                style={{ color: scrolled ? undefined : "hsl(var(--foreground))" }}
                             >
                                 Register
-                                <span className="absolute -bottom-1 left-0 w-0 h-px bg-primary transition-all duration-300 group-hover:w-full" />
+                                <span className="absolute -bottom-1 left-0 w-0 h-px bg-gold transition-all duration-300 group-hover:w-full" style={{ background: "hsl(45 100% 50%)" }} />
                             </button>
                         </div>
 
                         <button
                             onClick={openRegisterModal}
-                            className="hidden md:flex items-center gap-2 btn-glow text-primary-foreground font-display text-xs font-bold px-5 py-2.5 rounded-full tracking-wider transition-all duration-500"
-                            style={{ boxShadow: showCTA ? "0 0 24px hsl(199 100% 55% / 0.5)" : undefined }}
+                            className="hidden md:flex items-center gap-2 btn-gold font-display text-xs font-bold px-5 py-2.5 rounded-full tracking-wider transition-all duration-500"
+                            style={{ boxShadow: showCTA ? "0 0 24px hsl(45 100% 50% / 0.5)" : undefined }}
                         >
                             {showCTA ? "🔒 SECURE YOUR SEAT" : "REGISTER NOW"}
                         </button>
 
                         <button
-                            className="md:hidden text-muted-foreground hover:text-primary transition-colors"
+                            className="md:hidden text-muted-foreground hover:text-gold transition-colors"
                             onClick={() => setOpen(!open)}
                         >
                             {open ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -173,27 +175,27 @@ const CollegeNavbar: React.FC = () => {
                 {open && (
                     <div
                         className="md:hidden px-4 pb-4"
-                        style={{ background: "hsl(222 40% 8%)", borderTop: "1px solid hsl(199 100% 55% / 0.15)" }}
+                        style={{ background: "hsl(224 71% 4%)", borderTop: "1px solid hsl(45 100% 50% / 0.15)" }}
                     >
                         <div className="flex flex-col gap-3 pt-3 font-body text-sm">
                             {["why", "modules", "trainer", "pricing"].map((id) => (
                                 <button
                                     key={id}
                                     onClick={() => scrollTo(id)}
-                                    className="text-left text-muted-foreground hover:text-primary transition-colors py-2 capitalize"
+                                    className="text-left text-muted-foreground hover:text-gold transition-colors py-2 capitalize"
                                 >
                                     {id === "why" ? "About" : id.charAt(0).toUpperCase() + id.slice(1)}
                                 </button>
                             ))}
                             <button
                                 onClick={() => { openRegisterModal(); setOpen(false); }}
-                                className="text-left text-muted-foreground hover:text-primary transition-colors py-2 capitalize"
+                                className="text-left text-muted-foreground hover:text-gold transition-colors py-2 capitalize"
                             >
                                 Register
                             </button>
                             <button
                                 onClick={() => { openRegisterModal(); setOpen(false); }}
-                                className="btn-glow text-primary-foreground font-display text-xs font-bold px-5 py-3 rounded-full tracking-wider mt-2"
+                                className="btn-gold font-display text-xs font-bold px-5 py-3 rounded-full tracking-wider mt-2"
                             >
                                 🔒 SECURE YOUR SEAT
                             </button>
@@ -209,15 +211,15 @@ const CollegeNavbar: React.FC = () => {
             >
                 <button
                     onClick={openRegisterModal}
-                    className="btn-glow text-primary-foreground font-display text-[0.65rem] font-bold pl-5 pr-6 py-3 rounded-full tracking-wider flex items-center gap-3 whitespace-nowrap"
-                    style={{ boxShadow: "0 8px 32px hsl(199 100% 55% / 0.5)" }}
+                    className="btn-gold font-display text-[0.65rem] font-bold pl-5 pr-6 py-3 rounded-full tracking-wider flex items-center gap-3 whitespace-nowrap"
+                    style={{ boxShadow: "0 8px 32px hsl(45 100% 50% / 0.4)" }}
                 >
                     <span>🔒 SECURE YOUR SEAT</span>
                     <span
                         className="flex items-center gap-1 px-2 py-0.5 rounded-full"
-                        style={{ background: "hsl(222 47% 5% / 0.5)", border: "1px solid hsl(199 100% 55% / 0.3)" }}
+                        style={{ background: "hsl(224 71% 2% / 0.5)", border: "1px solid hsl(45 100% 50% / 0.3)" }}
                     >
-                        <Clock className="w-2.5 h-2.5" style={{ color: "hsl(25 100% 65%)" }} />
+                        <Clock className="w-2.5 h-2.5" style={{ color: "hsl(45 100% 50%)" }} />
                         <CountdownTimer compact />
                     </span>
                 </button>

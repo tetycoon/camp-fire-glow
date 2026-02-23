@@ -1,7 +1,7 @@
 import React from "react";
 import CollegeNavbar from "./CollegeNavbar";
 import CollegeHeroSection from "./CollegeHeroSection";
-import VideoSection from "../bootcamp/VideoSection";
+import CollegeVideoSection from "./CollegeVideoSection";
 import NeuralNetworkBackground from "../bootcamp/NeuralNetworkBackground";
 import CollegeWhySection from "./CollegeWhySection";
 import CollegeProgramStructure from "./CollegeProgramStructure";
@@ -10,7 +10,7 @@ import CollegeModulesSection from "./CollegeModulesSection";
 import CollegeAchievementsSection from "./CollegeAchievementsSection";
 import CollegeGuestSection from "./CollegeGuestSection";
 import CollegeTrainerSection from "./CollegeTrainerSection";
-import GallerySection from "../bootcamp/GallerySection";
+import CollegeGallerySection from "./CollegeGallerySection";
 import CollegePricingSection from "./CollegePricingSection";
 import CollegeFooter from "./CollegeFooter";
 import CollegeRegisterModal from "./CollegeRegisterModal";
@@ -19,11 +19,11 @@ import { CollegeRegisterModalProvider } from "./CollegeRegisterModalContext";
 const CollegeBootcampPage: React.FC = () => {
     return (
         <CollegeRegisterModalProvider>
-            <div className="min-h-screen bg-background text-foreground overflow-x-hidden relative">
+            <div className="min-h-screen bg-midnight text-foreground overflow-x-hidden relative">
                 <NeuralNetworkBackground />
                 <CollegeNavbar />
                 <CollegeHeroSection />
-                <VideoSection />
+                <CollegeVideoSection />
                 <CollegeWhySection />
                 <CollegeProgramStructure />
                 <CollegeWhoCanJoin />
@@ -31,7 +31,7 @@ const CollegeBootcampPage: React.FC = () => {
                 <CollegeAchievementsSection />
                 <CollegeGuestSection />
                 <CollegeTrainerSection />
-                <GallerySection />
+                <CollegeGallerySection />
                 <CollegePricingSection />
                 <CollegeFooter />
                 <CollegeRegisterModal />

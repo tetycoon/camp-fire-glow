@@ -50,19 +50,34 @@
     --purple: 265 85% 65%;
     --orange: 25 100% 60%;
     --green: 142 70% 50%;
+
+    /* Midnight Gold Theme */
+    --gold: 45 100% 50%;
+    --amber: 28 100% 50%;
+    --midnight: 224 71% 2%;
+
     --glow-cyan: 0 0 30px hsl(183 100% 55% / 0.7);
     --glow-blue: 0 0 40px hsl(199 100% 55% / 0.6);
     --glow-purple: 0 0 30px hsl(265 85% 65% / 0.6);
     --glow-orange: 0 0 30px hsl(25 100% 60% / 0.5);
+    --glow-gold: 0 0 35px hsl(45 100% 50% / 0.55);
+
     --gradient-hero: linear-gradient(135deg, hsl(199 100% 60%), hsl(265 85% 65%), hsl(183 100% 55%));
+    --gradient-gold: linear-gradient(135deg, hsl(45 100% 55%), hsl(28 100% 50%), hsl(38 100% 50%));
     --gradient-card: linear-gradient(135deg, hsl(222 40% 11%), hsl(222 40% 7%));
+    --gradient-card-gold: linear-gradient(135deg, hsl(224 20% 8%), hsl(224 20% 4%));
     --gradient-cta: linear-gradient(135deg, hsl(199 100% 55%), hsl(265 85% 65%));
+    --gradient-cta-gold: linear-gradient(135deg, hsl(45 100% 50%), hsl(28 100% 50%));
     --gradient-orange: linear-gradient(135deg, hsl(25 100% 60%), hsl(340 90% 60%));
     --gradient-green: linear-gradient(135deg, hsl(142 70% 50%), hsl(183 100% 50%));
+
     --border-glow: 1px solid hsl(199 100% 55% / 0.4);
+    --border-gold: 1px solid hsl(45 100% 50% / 0.35);
+
     --shadow-card: 0 4px 40px hsl(199 100% 50% / 0.12);
     --shadow-glow: 0 0 60px hsl(199 100% 55% / 0.35);
     --shadow-purple: 0 0 40px hsl(265 85% 65% / 0.3);
+    --shadow-gold: 0 0 50px hsl(45 100% 50% / 0.25);
   }
 }
 
@@ -80,7 +95,9 @@
     background-attachment: fixed;
   }
 
-  h1, h2, h3 {
+  h1,
+  h2,
+  h3 {
     font-family: 'Orbitron', monospace;
   }
 }
@@ -89,138 +106,203 @@
   .font-display {
     font-family: 'Orbitron', monospace;
   }
+
   .font-body {
     font-family: 'Space Grotesk', sans-serif;
   }
+
   .text-gradient {
     background: var(--gradient-hero);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
+
   .text-gradient-cyan {
     background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--cyan)));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
+
   .text-gradient-orange {
     background: var(--gradient-orange);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
+
   .text-gradient-green {
     background: var(--gradient-green);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
+
+  .text-gradient-gold {
+    background: var(--gradient-gold);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
   .card-glow {
     background: var(--gradient-card);
     border: var(--border-glow);
     box-shadow: var(--shadow-card);
-    transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   }
+
   .card-glow:hover {
     border-color: hsl(var(--primary) / 0.7);
     box-shadow: var(--shadow-glow);
     transform: translateY(-4px);
   }
+
   .card-purple {
     background: linear-gradient(135deg, hsl(265 85% 65% / 0.12), hsl(222 40% 7%));
     border: 1px solid hsl(265 85% 65% / 0.35);
     box-shadow: var(--shadow-purple);
-    transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   }
+
   .card-purple:hover {
     border-color: hsl(265 85% 65% / 0.65);
     box-shadow: 0 0 60px hsl(265 85% 65% / 0.35);
     transform: translateY(-4px);
   }
+
+  .card-gold {
+    background: var(--gradient-card-gold);
+    border: var(--border-gold);
+    box-shadow: 0 4px 30px hsl(45 100% 50% / 0.08);
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .card-gold:hover {
+    border-color: hsl(45 100% 50% / 0.6);
+    box-shadow: var(--shadow-gold);
+    transform: translateY(-4px);
+  }
+
   .card-orange {
     background: linear-gradient(135deg, hsl(25 100% 60% / 0.1), hsl(222 40% 7%));
     border: 1px solid hsl(25 100% 60% / 0.3);
     box-shadow: 0 4px 30px hsl(25 100% 60% / 0.08);
-    transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   }
+
   .card-orange:hover {
     border-color: hsl(25 100% 60% / 0.6);
     box-shadow: 0 0 50px hsl(25 100% 60% / 0.25);
     transform: translateY(-4px);
   }
-  .btn-glow {
-    background: var(--gradient-cta);
-    box-shadow: 0 0 25px hsl(199 100% 55% / 0.5), 0 0 60px hsl(265 85% 65% / 0.2);
-    transition: all 0.3s ease;
-  }
+
   .btn-glow:hover {
     box-shadow: 0 0 40px hsl(199 100% 55% / 0.7), 0 0 80px hsl(265 85% 65% / 0.3);
     transform: translateY(-2px) scale(1.02);
   }
+
+  .btn-gold {
+    background: var(--gradient-cta-gold);
+    box-shadow: 0 0 25px hsl(45 100% 50% / 0.45);
+    transition: all 0.3s ease;
+    color: hsl(224 71% 2%);
+    /* Midnight text for contrast */
+  }
+
+  .btn-gold:hover {
+    box-shadow: 0 0 45px hsl(45 100% 50% / 0.65);
+    transform: translateY(-2px) scale(1.02);
+  }
+
   .btn-orange {
     background: var(--gradient-orange);
     box-shadow: 0 0 25px hsl(25 100% 60% / 0.4);
     transition: all 0.3s ease;
   }
+
   .btn-orange:hover {
     box-shadow: 0 0 45px hsl(25 100% 60% / 0.6);
     transform: translateY(-2px) scale(1.02);
   }
+
   .grid-bg {
-    background-image: 
+    background-image:
       linear-gradient(hsl(199 100% 55% / 0.06) 1px, transparent 1px),
       linear-gradient(90deg, hsl(199 100% 55% / 0.06) 1px, transparent 1px);
     background-size: 50px 50px;
   }
+
   .section-border {
     border-top: 1px solid hsl(var(--border));
   }
+
   .glow-text {
     text-shadow: 0 0 40px hsl(199 100% 55% / 0.7), 0 0 80px hsl(265 85% 65% / 0.3);
   }
+
   .badge-module {
     background: hsl(199 100% 55% / 0.12);
     border: 1px solid hsl(199 100% 55% / 0.4);
     color: hsl(var(--primary));
   }
+
   .badge-purple {
     background: hsl(265 85% 65% / 0.15);
     border: 1px solid hsl(265 85% 65% / 0.4);
     color: hsl(var(--purple));
   }
+
   .badge-orange {
     background: hsl(25 100% 60% / 0.15);
     border: 1px solid hsl(25 100% 60% / 0.4);
     color: hsl(var(--orange));
   }
+
   .badge-green {
     background: hsl(142 70% 50% / 0.12);
     border: 1px solid hsl(142 70% 50% / 0.35);
     color: hsl(var(--green));
   }
+
   .icon-box-cyan {
     background: linear-gradient(135deg, hsl(199 100% 55% / 0.2), hsl(183 100% 55% / 0.1));
     border: 1px solid hsl(199 100% 55% / 0.35);
   }
+
   .icon-box-purple {
     background: linear-gradient(135deg, hsl(265 85% 65% / 0.2), hsl(285 80% 60% / 0.1));
     border: 1px solid hsl(265 85% 65% / 0.35);
   }
+
   .icon-box-orange {
     background: linear-gradient(135deg, hsl(25 100% 60% / 0.2), hsl(340 90% 60% / 0.1));
     border: 1px solid hsl(25 100% 60% / 0.35);
   }
+
   .icon-box-green {
     background: linear-gradient(135deg, hsl(142 70% 50% / 0.2), hsl(183 100% 50% / 0.1));
     border: 1px solid hsl(142 70% 50% / 0.35);
   }
+
+  .icon-box-gold {
+    background: linear-gradient(135deg, hsl(45 100% 50% / 0.2), hsl(38 100% 50% / 0.1));
+    border: 1px solid hsl(45 100% 50% / 0.35);
+  }
+
+  .icon-box-amber {
+    background: linear-gradient(135deg, hsl(28 100% 50% / 0.2), hsl(21 100% 50% / 0.1));
+    border: 1px solid hsl(28 100% 50% / 0.35);
+  }
+
   .number-tag {
     background: linear-gradient(135deg, hsl(199 100% 55% / 0.15), hsl(265 85% 65% / 0.1));
     border: 1px solid hsl(199 100% 55% / 0.25);
     border-radius: 0.5rem;
     padding: 0.25rem 0.5rem;
   }
+
   .section-label {
     display: inline-flex;
     align-items: center;
@@ -240,23 +322,49 @@
 
 /* Animations */
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 20px hsl(199 100% 50% / 0.3); }
-  50% { box-shadow: 0 0 40px hsl(199 100% 50% / 0.6); }
+
+  0%,
+  100% {
+    box-shadow: 0 0 20px hsl(199 100% 50% / 0.3);
+  }
+
+  50% {
+    box-shadow: 0 0 40px hsl(199 100% 50% / 0.6);
+  }
 }
 
 @keyframes shimmer {
-  0% { background-position: -200% center; }
-  100% { background-position: 200% center; }
+  0% {
+    background-position: -200% center;
+  }
+
+  100% {
+    background-position: 200% center;
+  }
 }
 
 @keyframes count-up {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .animate-float {

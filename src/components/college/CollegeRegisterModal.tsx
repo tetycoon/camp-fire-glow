@@ -112,6 +112,7 @@ const CollegeRegisterModal: React.FC = () => {
         try {
             await fetch(GOOGLE_SHEET_URL, {
                 method: "POST",
+                mode: "no-cors", // 👈 RE-ADDED TO FIX CORS
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     pageUrl,
@@ -141,7 +142,7 @@ const CollegeRegisterModal: React.FC = () => {
                 batch: batchLabel,
             },
             theme: {
-                color: "#00b4d8",
+                color: "#eab308", // Gold color for Razorpay
             },
             handler: async (response) => {
                 setPaymentId(response.razorpay_payment_id);
@@ -160,10 +161,11 @@ const CollegeRegisterModal: React.FC = () => {
 
                     await fetch(GOOGLE_SHEET_URL, {
                         method: "POST",
+                        mode: "no-cors",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({
                             pageUrl,
-                            category, // 👈 ADDED BACK
+                            category,
                             name: form.name,
                             email: form.email,
                             phone: form.phone,
@@ -193,45 +195,45 @@ const CollegeRegisterModal: React.FC = () => {
         <div
             className={`fixed inset-0 z-[100] flex items-center justify-center p-4 transition-all duration-300 ${visible ? "opacity-100" : "opacity-0"
                 }`}
-            style={{ backdropFilter: "blur(8px)", background: "hsl(222 47% 5% / 0.8)" }}
+            style={{ backdropFilter: "blur(12px)", background: "hsl(224 71% 2% / 0.85)" }}
             onClick={handleBackdropClick}
         >
             <div
                 className={`relative w-full max-w-md rounded-3xl p-8 sm:p-10 transition-all duration-300 ${visible ? "scale-100 translate-y-0" : "scale-95 translate-y-4"
                     }`}
                 style={{
-                    background: "linear-gradient(145deg, hsl(222 40% 10%), hsl(222 40% 7%))",
-                    border: "1px solid hsl(199 100% 55% / 0.25)",
-                    boxShadow: "0 0 60px hsl(199 100% 55% / 0.15), 0 25px 50px hsl(222 47% 5% / 0.5)",
+                    background: "linear-gradient(145deg, hsl(224 71% 4%), hsl(224 71% 2%))",
+                    border: "1px solid hsl(45 100% 50% / 0.25)",
+                    boxShadow: "0 0 80px hsl(45 100% 50% / 0.1), 0 25px 50px hsl(224 71% 2% / 0.5)",
                 }}
             >
                 <button
                     onClick={handleClose}
-                    className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all"
+                    className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full text-muted-foreground hover:text-gold hover:bg-gold/10 transition-all"
                 >
                     <X className="w-5 h-5" />
                 </button>
 
                 {submitted ? (
                     <div className="text-center py-6">
-                        <div className="w-20 h-20 rounded-full bg-primary/10 border border-primary/30 flex items-center justify-center mx-auto mb-6 animate-pulse-glow">
-                            <CheckCircle2 className="w-10 h-10 text-primary" />
+                        <div className="w-20 h-20 rounded-full bg-gold/10 border border-gold/30 flex items-center justify-center mx-auto mb-6 animate-pulse-glow">
+                            <CheckCircle2 className="w-10 h-10 text-gold" />
                         </div>
                         <h3 className="font-display text-2xl font-bold text-foreground mb-3">Payment Successful!</h3>
                         <p className="font-body text-muted-foreground mb-4">
                             Welcome to the AI Mastery Bootcamp 2026! You're officially enrolled.
                         </p>
                         {paymentId && (
-                            <div className="inline-block badge-module font-body text-xs px-4 py-2 rounded-full">
+                            <div className="inline-block badge-module font-body text-xs px-4 py-2 rounded-full border border-gold/20 text-gold bg-gold/5">
                                 Payment ID: {paymentId}
                             </div>
                         )}
                         <p className="font-body text-xs text-muted-foreground mt-4">
-                            A confirmation will be sent to <span className="text-primary">{form.email}</span>
+                            A confirmation will be sent to <span className="text-gold">{form.email}</span>
                         </p>
                         <button
                             onClick={handleClose}
-                            className="mt-6 font-display text-xs font-bold px-6 py-2.5 rounded-full tracking-wider border border-primary/30 text-primary hover:bg-primary/10 transition-all"
+                            className="mt-6 font-display text-xs font-bold px-6 py-2.5 rounded-full tracking-wider border border-gold/30 text-gold hover:bg-gold/10 transition-all"
                         >
                             CLOSE
                         </button>
@@ -239,9 +241,9 @@ const CollegeRegisterModal: React.FC = () => {
                 ) : (
                     <>
                         <div className="text-center mb-6">
-                            <p className="font-body text-xs tracking-[0.3em] text-primary uppercase font-semibold mb-2">Enroll Now</p>
+                            <p className="font-body text-xs tracking-[0.3em] text-gold uppercase font-bold mb-2">Enroll Now</p>
                             <h2 className="font-display text-2xl sm:text-3xl font-bold text-foreground mb-1">
-                                Register <span className="text-gradient">Now</span>
+                                Register <span className="text-gradient-gold">Now</span>
                             </h2>
                             <p className="font-body text-sm text-muted-foreground">Accelerate your career with AI mastery</p>
                         </div>
@@ -255,7 +257,7 @@ const CollegeRegisterModal: React.FC = () => {
                                     value={form.name}
                                     onChange={e => setForm({ ...form, name: e.target.value })}
                                     placeholder="Enter your full name"
-                                    className="bg-muted/50 border border-border rounded-xl px-4 py-3 font-body text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 focus:bg-primary/5 transition-all"
+                                    className="bg-muted/50 border border-border rounded-xl px-4 py-3 font-body text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-gold/50 focus:bg-gold/5 transition-all"
                                 />
                             </div>
                             <div className="flex flex-col gap-1.5">
@@ -266,7 +268,7 @@ const CollegeRegisterModal: React.FC = () => {
                                     value={form.email}
                                     onChange={e => setForm({ ...form, email: e.target.value })}
                                     placeholder="Enter your email address"
-                                    className="bg-muted/50 border border-border rounded-xl px-4 py-3 font-body text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 focus:bg-primary/5 transition-all"
+                                    className="bg-muted/50 border border-border rounded-xl px-4 py-3 font-body text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-gold/50 focus:bg-gold/5 transition-all"
                                 />
                             </div>
                             <div className="flex flex-col gap-1.5">
@@ -277,7 +279,7 @@ const CollegeRegisterModal: React.FC = () => {
                                     value={form.phone}
                                     onChange={e => setForm({ ...form, phone: e.target.value })}
                                     placeholder="Enter your phone number"
-                                    className="bg-muted/50 border border-border rounded-xl px-4 py-3 font-body text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 focus:bg-primary/5 transition-all"
+                                    className="bg-muted/50 border border-border rounded-xl px-4 py-3 font-body text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-gold/50 focus:bg-gold/5 transition-all"
                                 />
                             </div>
                             <div className="flex flex-col gap-1.5">
@@ -286,7 +288,7 @@ const CollegeRegisterModal: React.FC = () => {
                                     required
                                     value={form.batch}
                                     onChange={e => setForm({ ...form, batch: e.target.value })}
-                                    className="bg-muted/50 border border-border rounded-xl px-4 py-3 font-body text-sm text-foreground focus:outline-none focus:border-primary/50 focus:bg-primary/5 transition-all appearance-none cursor-pointer"
+                                    className="bg-muted/50 border border-border rounded-xl px-4 py-3 font-body text-sm text-foreground focus:outline-none focus:border-gold/50 focus:bg-gold/5 transition-all appearance-none cursor-pointer"
                                 >
                                     <option value="" className="bg-card">Choose your batch</option>
                                     {batches.map(b => (
@@ -298,7 +300,7 @@ const CollegeRegisterModal: React.FC = () => {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="btn-glow text-primary-foreground font-display text-sm font-bold px-8 py-4 rounded-full tracking-widest flex items-center justify-center gap-3 mt-2 disabled:opacity-70"
+                                className="btn-gold font-display text-sm font-bold px-8 py-4 rounded-full tracking-widest flex items-center justify-center gap-3 mt-2 disabled:opacity-70"
                             >
                                 {loading ? (
                                     <>
