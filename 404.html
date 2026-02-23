@@ -1,35 +1,33 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" type="image/png" href="/logo.png" />
+  <meta charset="utf-8">
   <title>AI Bootcamp</title>
-  <meta name="description" content="AI Summer Bootcamp 2026 — Master AI tools shaping tomorrow in just 30 days.">
-  <meta name="author" content="Tech Tycoon Digital Solutions" />
+  <script type="text/javascript">
+    // Single Page Apps for GitHub Pages
+    // https://github.com/rafgraph/spa-github-pages
+    // This script takes the current url and converts the path and query
+    // string into just a query string, and then redirects the browser
+    // to the new url with only a query string and hash fragment,
+    // e.g. http://www.foo.tld/one/two?a=b&c=d#qwe, becomes
+    // http://www.foo.tld/?p=/one/two&q=a=b~and~c=d#qwe
+    // Note: this script works when deployed in the root of the site,
+    // if you deploy to a subdirectory, see instructions in the repository.
+    var pathSegmentsToKeep = 0;
 
-
-
-
-  <meta property="og:type" content="website" />
-  <meta property="og:image"
-    content="https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/a41032ad-f935-45fd-9e25-ec46d01c7f5f/id-preview-217115d2--919ce958-eebf-44b3-8d50-89d545a3a825.lovable.app-1771503762684.png">
-
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:site" content="@TechTycoon" />
-  <meta name="twitter:image"
-    content="https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/a41032ad-f935-45fd-9e25-ec46d01c7f5f/id-preview-217115d2--919ce958-eebf-44b3-8d50-89d545a3a825.lovable.app-1771503762684.png">
-  <meta property="og:title" content="AI Bootcamp">
-  <meta name="twitter:title" content="AI Bootcamp">
-  <meta property="og:description" content="AI Summer Bootcamp 2026 — Master AI tools shaping tomorrow in just 30 days.">
-  <meta name="twitter:description"
-    content="AI Summer Bootcamp 2026 — Master AI tools shaping tomorrow in just 30 days.">
+    var l = window.location;
+    l.replace(
+      l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+      l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?p=/' +
+      l.pathname.split('/').slice(1 + pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
+      (l.search ? '&q=' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+      l.hash
+    );
+  </script>
 </head>
 
 <body>
-  <div id="root"></div>
-  <script type="module" src="/src/main.tsx"></script>
 </body>
 
 </html>
