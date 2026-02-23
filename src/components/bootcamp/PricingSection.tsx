@@ -102,7 +102,7 @@ const PricingSection: React.FC = () => {
               <p className="font-body text-sm text-muted-foreground mt-1">Inclusive of GST • Complete 30-day program</p>
               <div className="flex items-center gap-2 mt-3">
                 <Users className="w-4 h-4 text-primary" />
-                <span className="font-body text-sm text-muted-foreground">Limited to <span className="text-primary font-semibold">100 seats</span> per batch</span>
+                <span className="font-body text-sm text-muted-foreground">Limited to <span className="text-primary font-semibold">20 seats</span> per batch</span>
               </div>
 
               {/* Deadline reminder */}
