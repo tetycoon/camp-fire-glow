@@ -9,6 +9,8 @@ import event5 from "@/assets/event-5.jpg";
 import event6 from "@/assets/event-6.jpg";
 import event7 from "@/assets/event-7.jpg";
 import event8 from "@/assets/event-8.jpg";
+import event9 from "@/assets/event-9.jpg";
+import event10 from "@/assets/event-10.jpg";
 
 const galleryItems = [
     { src: event1, caption: "Corporate AI Training Session" },
@@ -19,6 +21,8 @@ const galleryItems = [
     { src: event6, caption: "AI Awareness Session for School Students" },
     { src: event7, caption: "Student Engagement Program" },
     { src: event8, caption: "AI-Powered Marketing Workshop" },
+    { src: event9, caption: "Interactive Q&A Session with AI Experts" },
+    { src: event10, caption: "Successful Completion of Corporate AI Training" },
 ];
 
 const GallerySection: React.FC = () => {
