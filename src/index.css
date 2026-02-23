@@ -198,6 +198,12 @@
     transform: translateY(-4px);
   }
 
+  .btn-glow {
+    background: var(--gradient-cta);
+    box-shadow: 0 0 25px hsl(199 100% 55% / 0.45);
+    transition: all 0.3s ease;
+  }
+
   .btn-glow:hover {
     box-shadow: 0 0 40px hsl(199 100% 55% / 0.7), 0 0 80px hsl(265 85% 65% / 0.3);
     transform: translateY(-2px) scale(1.02);
