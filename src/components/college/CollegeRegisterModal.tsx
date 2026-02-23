@@ -3,6 +3,7 @@ import { CheckCircle2, Loader2, ShieldCheck, X } from "lucide-react";
 import { useCollegeRegisterModal } from "./CollegeRegisterModalContext";
 
 const RAZORPAY_KEY_ID = "rzp_live_gfoS1OjC8tvWjP";
+const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbw_9GYEDncJ9HumVkKnkObd7bJqArB3iEHJHawH-06O3B5JKlnEo1YyHFNaHBQzadDFnQ/exec";
 
 const batches = [
     { value: "batch1", label: "Batch 1 — April 1–30, 2026" },
@@ -97,6 +98,22 @@ const CollegeRegisterModal: React.FC = () => {
 
         const batchLabel = batches.find(b => b.value === form.batch)?.label || form.batch;
 
+        // Capture lead as INITIATED
+        try {
+            await fetch(GOOGLE_SHEET_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    ...form,
+                    batch: batchLabel,
+                    status: "INITIATED"
+                }),
+            });
+        } catch (error) {
+            console.error("Error capturing lead:", error);
+        }
+
         const options: RazorpayOptions = {
             key: RAZORPAY_KEY_ID,
             amount: 999900,
@@ -114,10 +131,27 @@ const CollegeRegisterModal: React.FC = () => {
             theme: {
                 color: "#00b4d8",
             },
-            handler: (response) => {
+            handler: async (response) => {
                 setPaymentId(response.razorpay_payment_id);
                 setSubmitted(true);
                 setLoading(false);
+
+                // Update lead as PAID
+                try {
+                    await fetch(GOOGLE_SHEET_URL, {
+                        method: "POST",
+                        mode: "no-cors",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            ...form,
+                            batch: batchLabel,
+                            paymentId: response.razorpay_payment_id,
+                            status: "PAID"
+                        }),
+                    });
+                } catch (error) {
+                    console.error("Error updating lead status:", error);
+                }
             },
             modal: {
                 ondismiss: () => {
