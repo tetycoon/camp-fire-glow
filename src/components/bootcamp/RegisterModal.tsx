@@ -3,7 +3,7 @@ import { CheckCircle2, Loader2, ShieldCheck, X } from "lucide-react";
 import { useRegisterModal } from "./RegisterModalContext";
 
 const RAZORPAY_KEY_ID = "rzp_live_gfoS1OjC8tvWjP";
-const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbw_9GYEDncJ9HumVkKnkObd7bJqArB3iEHJHawH-06O3B5JKlnEo1YyHFNaHBQzadDFnQ/exec";
+const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbza0TcePYeUD43nKZqgdbYSkw_RHuHCj9XA5VEdivIqdaRsukqR7PSfax3hxBVzznbAUA/exec";
 
 const batches = [
     { value: "batch1", label: "Batch 1 — April 1–30, 2026" },
@@ -116,11 +116,10 @@ const RegisterModal: React.FC = () => {
         try {
             await fetch(GOOGLE_SHEET_URL, {
                 method: "POST",
-                mode: "no-cors", // 👈 RE-ADDED TO FIX CORS
+                mode: "no-cors",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    pageUrl,
-                    category, // 👈 ADDED BACK
+                    pageUrl,   // 👈 category decided from this in GAS
                     name: form.name,
                     email: form.email,
                     phone: form.phone,
@@ -146,7 +145,7 @@ const RegisterModal: React.FC = () => {
                 batch: batchLabel,
             },
             theme: {
-                color: "#00b4d8",
+                color: "#6C63FF",
             },
             handler: async (response) => {
                 setPaymentId(response.razorpay_payment_id);
@@ -257,6 +256,7 @@ const RegisterModal: React.FC = () => {
                             <div className="flex flex-col gap-1.5">
                                 <label className="font-body text-xs font-semibold text-muted-foreground uppercase tracking-wider">Full Name</label>
                                 <input
+                                    id="name"
                                     type="text"
                                     required
                                     value={form.name}
@@ -268,6 +268,7 @@ const RegisterModal: React.FC = () => {
                             <div className="flex flex-col gap-1.5">
                                 <label className="font-body text-xs font-semibold text-muted-foreground uppercase tracking-wider">Email</label>
                                 <input
+                                    id="email"
                                     type="email"
                                     required
                                     value={form.email}
@@ -279,6 +280,7 @@ const RegisterModal: React.FC = () => {
                             <div className="flex flex-col gap-1.5">
                                 <label className="font-body text-xs font-semibold text-muted-foreground uppercase tracking-wider">Phone</label>
                                 <input
+                                    id="phone"
                                     type="tel"
                                     required
                                     value={form.phone}
@@ -290,6 +292,7 @@ const RegisterModal: React.FC = () => {
                             <div className="flex flex-col gap-1.5">
                                 <label className="font-body text-xs font-semibold text-muted-foreground uppercase tracking-wider">Select Batch</label>
                                 <select
+                                    id="batch"
                                     required
                                     value={form.batch}
                                     onChange={e => setForm({ ...form, batch: e.target.value })}

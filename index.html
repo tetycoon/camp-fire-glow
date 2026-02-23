@@ -8,6 +8,7 @@
   <title>AI Bootcamp</title>
   <meta name="description" content="AI Summer Bootcamp 2026 — Master AI tools shaping tomorrow in just 30 days.">
   <meta name="author" content="Tech Tycoon Digital Solutions" />
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 
 
@@ -25,11 +26,87 @@
   <meta property="og:description" content="AI Summer Bootcamp 2026 — Master AI tools shaping tomorrow in just 30 days.">
   <meta name="twitter:description"
     content="AI Summer Bootcamp 2026 — Master AI tools shaping tomorrow in just 30 days.">
+  <script type="text/javascript">
+    // Single Page Apps for GitHub Pages
+    // https://github.com/rafgraph/spa-github-pages
+    // This script checks to see if a redirect is present in the query string
+    // and converts it back into the correct url and adds it to the
+    // browser's history using window.history.replaceState(...),
+    // which un-does the redirect made by the 404.html page
+    (function (l) {
+      if (l.search) {
+        var q = {};
+        l.search.slice(1).split('&').forEach(function (v) {
+          var a = v.split('=');
+          q[a[0]] = a.slice(1).join('=').replace(/~and~/g, '&');
+        });
+        if (q.p !== undefined) {
+          window.history.replaceState(null, null,
+            l.pathname.slice(0, -1) + (q.p || '') +
+            (q.q ? ('?' + q.q) : '') +
+            l.hash
+          );
+        }
+      }
+    }(window.location))
+  </script>
 </head>
 
 <body>
   <div id="root"></div>
   <script type="module" src="/src/main.tsx"></script>
+  <script>
+    async function submitAndPay() {
+      // 1️⃣ Get form values
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const batch = document.getElementById("batch").value;
+
+      if (!name || !email || !phone) {
+        alert("Please fill all required fields");
+        return;
+      }
+
+      // 2️⃣ Get current page URL (IMPORTANT FOR CATEGORY)
+      const pageUrl = window.location.href;
+
+      // 3️⃣ Send data to Google Apps Script
+      await fetch("https://script.google.com/macros/s/AKfycbza0TcePYeUD43nKZqgdbYSkw_RHuHCj9XA5VEdivIqdaRsukqR7PSfax3hxBVzznbAUA/exec", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          pageUrl: pageUrl,   // 👈 category decided from this
+          name: name,
+          email: email,
+          phone: phone,
+          batch: batch
+        })
+      });
+
+      // 4️⃣ Open Razorpay payment
+      const options = {
+        key: "rzp_live_gfoS1OjC8tvWjP",   // public key only
+        amount: 999900,               // ₹9,999 in paise
+        currency: "INR",
+        name: "AI Summer Bootcamp 2026",
+        description: "Bootcamp Enrollment",
+        prefill: {
+          name: name,
+          email: email,
+          contact: phone
+        },
+        theme: {
+          color: "#6C63FF"
+        }
+      };
+
+      const rzp = new Razorpay(options);
+      rzp.open();
+    }
+  </script>
 </body>
 
 </html>
