@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { CheckCircle2, Loader2, ShieldCheck, X } from "lucide-react";
 import { useRegisterModal } from "./RegisterModalContext";
 
-const RAZORPAY_KEY_ID = "rzp_live_gfoS1OjC8tvWjP";
+const RAZORPAY_KEY_ID = "rzp_test_v3gEhWzOtCcolK";
 const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycby2Z1t89c81kJNwa6Y74U0IhwossgtD8Zy0x0074ph1lyrhrkDfx9GI0RRicR0h5kL9UA/exec";
 
 const batches = [
@@ -148,38 +148,11 @@ const RegisterModal: React.FC = () => {
                 color: "#6C63FF",
             },
             handler: async (response) => {
-                setPaymentId(response.razorpay_payment_id);
+                setPaymentId(response.razorpay_payment_id || "TEST_PAYMENT_ID");
                 setSubmitted(true);
                 setLoading(false);
-
-                // Update lead on success
-                try {
-                    const pageUrl = window.location.href;
-                    const path = window.location.pathname.toLowerCase();
-
-                    let category = "school students";
-                    if (path.includes("college") || pageUrl.toLowerCase().includes("/college")) {
-                        category = "college students";
-                    }
-
-                    await fetch(GOOGLE_SHEET_URL, {
-                        method: "POST",
-                        mode: "no-cors",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                            pageUrl,
-                            category, // 👈 ADDED BACK
-                            name: form.name,
-                            email: form.email,
-                            phone: form.phone,
-                            batch: form.batch,
-                            paymentId: response.razorpay_payment_id,
-                            status: "PAID"
-                        }),
-                    });
-                } catch (error) {
-                    console.error("Error updating lead status:", error);
-                }
+                // ❌ DO NOT update sheet here
+                // ❌ DO NOT send email here
             },
             modal: {
                 ondismiss: () => {
