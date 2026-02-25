@@ -74,6 +74,7 @@
       // 3️⃣ Send data to Google Apps Script
       await fetch("https://script.google.com/macros/s/AKfycbza0TcePYeUD43nKZqgdbYSkw_RHuHCj9XA5VEdivIqdaRsukqR7PSfax3hxBVzznbAUA/exec", {
         method: "POST",
+        mode: "no-cors",
         headers: {
           "Content-Type": "application/json"
         },
@@ -100,6 +101,26 @@
         },
         theme: {
           color: "#6C63FF"
+        },
+        handler: async function (response) {
+          // Success fetch handler
+          await fetch("https://script.google.com/macros/s/AKfycbza0TcePYeUD43nKZqgdbYSkw_RHuHCj9XA5VEdivIqdaRsukqR7PSfax3hxBVzznbAUA/exec", {
+            method: "POST",
+            mode: "no-cors",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              pageUrl: window.location.href,
+              name: name,
+              email: email,
+              phone: phone,
+              batch: batch,
+              paymentId: response.razorpay_payment_id,
+              status: "PAID"
+            })
+          });
+          alert("Payment Successful! Payment ID: " + response.razorpay_payment_id);
         }
       };
 
