@@ -8,6 +8,7 @@
   <title>AI Bootcamp</title>
   <meta name="description" content="AI Summer Bootcamp 2026 — Master AI tools shaping tomorrow in just 30 days.">
   <meta name="author" content="Tech Tycoon Digital Solutions" />
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 
 
@@ -49,12 +50,64 @@
       }
     }(window.location))
   </script>
-  <script type="module" crossorigin src="/assets/index-QNtC0oR2.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-CsZqD2EU.css">
+  <script type="module" crossorigin src="/assets/index-CzUxegGh.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-D9cqnr2V.css">
 </head>
 
 <body>
   <div id="root"></div>
+  <script>
+    async function submitAndPay() {
+      // 1️⃣ Get form values
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const batch = document.getElementById("batch").value;
+
+      if (!name || !email || !phone) {
+        alert("Please fill all required fields");
+        return;
+      }
+
+      // 2️⃣ Get current page URL (IMPORTANT FOR CATEGORY)
+      const pageUrl = window.location.href;
+
+      // 3️⃣ Send data to Google Apps Script
+      await fetch("https://script.google.com/macros/s/AKfycbza0TcePYeUD43nKZqgdbYSkw_RHuHCj9XA5VEdivIqdaRsukqR7PSfax3hxBVzznbAUA/exec", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          pageUrl: pageUrl,   // 👈 category decided from this
+          name: name,
+          email: email,
+          phone: phone,
+          batch: batch
+        })
+      });
+
+      // 4️⃣ Open Razorpay payment
+      const options = {
+        key: "rzp_live_gfoS1OjC8tvWjP",   // public key only
+        amount: 999900,               // ₹9,999 in paise
+        currency: "INR",
+        name: "AI Summer Bootcamp 2026",
+        description: "Bootcamp Enrollment",
+        prefill: {
+          name: name,
+          email: email,
+          contact: phone
+        },
+        theme: {
+          color: "#6C63FF"
+        }
+      };
+
+      const rzp = new Razorpay(options);
+      rzp.open();
+    }
+  </script>
 </body>
 
 </html>
