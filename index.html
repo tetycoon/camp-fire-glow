@@ -58,6 +58,7 @@
   <div id="root"></div>
   <script>
     async function submitAndPay() {
+
       // 1️⃣ Get form values
       const name = document.getElementById("name").value.trim();
       const email = document.getElementById("email").value.trim();
@@ -69,45 +70,44 @@
         return;
       }
 
-      // 2️⃣ Get current page URL (IMPORTANT FOR CATEGORY)
+      // 2️⃣ VERY IMPORTANT: detect page URL
+      // This tells backend whether it is school or college
       const pageUrl = window.location.href;
 
-      // 3️⃣ Send data to Google Apps Script
+      // 3️⃣ Send lead data to Apps Script
       await fetch("https://script.google.com/macros/s/AKfycby2Z1t89c81kJNwa6Y74U0IhwossgtD8Zy0x0074ph1lyrhrkDfx9GI0RRicR0h5kL9UA/exec", {
         method: "POST",
-        mode: "no-cors",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          pageUrl: pageUrl,   // 👈 category decided from this
-          name: name,
-          email: email,
-          phone: phone,
-          batch: batch
+          pageUrl,
+          name,
+          email,
+          phone,
+          batch
         })
       });
 
-      // 4️⃣ Open Razorpay payment
+      // 4️⃣ Open Razorpay Checkout (TEST KEY)
       const options = {
         key: "rzp_test_v3gEhWzOtCcolK",   // ✅ TEST KEY ID ONLY
         amount: 999900,               // ₹9,999 in paise
         currency: "INR",
         name: "AI Summer Bootcamp 2026",
         description: "Bootcamp Enrollment",
+
+        handler: function () {
+          alert("Payment successful! You will receive an email shortly.");
+          // ❌ DO NOT update sheet here
+          // ❌ DO NOT send email here
+        },
+
         prefill: {
           name: name,
           email: email,
           contact: phone
         },
-        theme: {
-          color: "#6C63FF"
-        },
-        handler: function () {
-          alert("Payment successful! You will receive an email shortly.");
-          // ❌ DO NOT update sheet here
-          // ❌ DO NOT send email here
-        }
+
+        theme: { color: "#6C63FF" }
       };
 
       const rzp = new Razorpay(options);
