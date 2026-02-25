@@ -18,6 +18,7 @@ declare global {
 
 interface RazorpayOptions {
     key: string;
+    order_id?: string;
     amount: number;
     currency: string;
     name: string;
@@ -108,11 +109,11 @@ const CollegeRegisterModal: React.FC = () => {
         }
         console.log("Category detected:", category); // DEBUG
 
-        // Capture lead
+        // Capture lead and generate Razorpay Order ID
+        let result: any;
         try {
-            await fetch(GOOGLE_SHEET_URL, {
+            const response = await fetch(GOOGLE_SHEET_URL, {
                 method: "POST",
-                mode: "no-cors",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     pageUrl,   // 👈 category decided from this in GAS
@@ -122,12 +123,25 @@ const CollegeRegisterModal: React.FC = () => {
                     batch: form.batch
                 }),
             });
+
+            result = await response.json();
+
+            if (!result.success || !result.orderId) {
+                alert("Failed to create payment order. Please try again.");
+                setLoading(false);
+                return;
+            }
+
         } catch (error) {
-            console.error("Error capturing lead:", error);
+            alert("Server error. Please try again later.");
+            console.error("Error capturing lead/creating order:", error);
+            setLoading(false);
+            return;
         }
 
         const options: RazorpayOptions = {
             key: RAZORPAY_KEY_ID,
+            order_id: result.orderId,
             amount: 999900,
             currency: "INR",
             name: "Tech Tycoon Digital Solutions",
