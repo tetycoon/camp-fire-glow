@@ -118,7 +118,7 @@ const RegisterModal: React.FC = () => {
         try {
             const response = await fetch(GOOGLE_SHEET_URL, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
                 body: JSON.stringify({
                     pageUrl,   // 👈 category decided from this in GAS
                     name: form.name,
