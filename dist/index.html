@@ -59,7 +59,9 @@
   <script>
     async function submitAndPay() {
 
-      // 1️⃣ Get form values
+      // ==============================
+      // 1️⃣ GET FORM VALUES
+      // ==============================
       const name = document.getElementById("name").value.trim();
       const email = document.getElementById("email").value.trim();
       const phone = document.getElementById("phone").value.trim();
@@ -70,35 +72,59 @@
         return;
       }
 
-      // 2️⃣ VERY IMPORTANT: detect page URL
-      // This tells backend whether it is school or college
+      // ==============================
+      // 2️⃣ DETECT PAGE URL (CATEGORY)
+      // ==============================
       const pageUrl = window.location.href;
 
-      // 3️⃣ Send lead data to Apps Script
-      await fetch("https://script.google.com/macros/s/AKfycby2Z1t89c81kJNwa6Y74U0IhwossgtD8Zy0x0074ph1lyrhrkDfx9GI0RRicR0h5kL9UA/exec", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          pageUrl,
-          name,
-          email,
-          phone,
-          batch
-        })
-      });
+      // ==============================
+      // 3️⃣ CALL APPS SCRIPT
+      // → Creates Razorpay order
+      // → Saves INITIATED row
+      // ==============================
+      let result;
+      try {
+        const response = await fetch("https://script.google.com/macros/s/AKfycby2Z1t89c81kJNwa6Y74U0IhwossgtD8Zy0x0074ph1lyrhrkDfx9GI0RRicR0h5kL9UA/exec", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            pageUrl,
+            name,
+            email,
+            phone,
+            batch
+          })
+        });
 
-      // 4️⃣ Open Razorpay Checkout (TEST KEY)
+        result = await response.json();
+
+        if (!result.success || !result.orderId) {
+          alert("Failed to create payment order. Please try again.");
+          return;
+        }
+
+      } catch (err) {
+        alert("Server error. Please try again later.");
+        console.error(err);
+        return;
+      }
+
+      // ==============================
+      // 4️⃣ OPEN RAZORPAY CHECKOUT
+      // ==============================
       const options = {
-        key: "rzp_test_v3gEhWzOtCcolK",   // ✅ TEST KEY ID ONLY
-        amount: 999900,               // ₹9,999 in paise
+        key: "rzp_test_v3gEhWzOtCcolK", // ✅ TEST KEY ID ONLY
+        order_id: result.orderId,      // 🔥 IMPORTANT
+        amount: 999900,                // ₹9,999 in paise
         currency: "INR",
         name: "AI Summer Bootcamp 2026",
         description: "Bootcamp Enrollment",
 
-        handler: function () {
-          alert("Payment successful! You will receive an email shortly.");
-          // ❌ DO NOT update sheet here
-          // ❌ DO NOT send email here
+        handler: function (response) {
+          // ⚠️ DO NOT update sheet here
+          // ⚠️ DO NOT send email here
+          // Webhook will handle everything
+          alert("Payment successful! You will receive a confirmation email shortly.");
         },
 
         prefill: {
@@ -107,7 +133,9 @@
           contact: phone
         },
 
-        theme: { color: "#6C63FF" }
+        theme: {
+          color: "#6C63FF"
+        }
       };
 
       const rzp = new Razorpay(options);
