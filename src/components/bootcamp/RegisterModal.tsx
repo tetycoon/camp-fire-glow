@@ -116,16 +116,17 @@ const RegisterModal: React.FC = () => {
         // Capture lead and generate Razorpay Order ID
         let result: any;
         try {
-            const queryParams = new URLSearchParams({
-                pageUrl,
-                name: form.name,
-                email: form.email,
-                phone: form.phone,
-                batch: form.batch
-            }).toString();
-
-            const response = await fetch(`${GOOGLE_SHEET_URL}?${queryParams}`, {
-                method: "GET",
+            const response = await fetch(GOOGLE_SHEET_URL, {
+                method: "POST",
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify({
+                    userType: "school students",
+                    pageUrl,   // 👈 category decided from this in GAS
+                    name: form.name,
+                    email: form.email,
+                    phone: form.phone,
+                    batch: form.batch
+                }),
             });
 
             result = await response.json();
