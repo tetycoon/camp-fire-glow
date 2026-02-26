@@ -3,7 +3,7 @@ import { CheckCircle2, Loader2, ShieldCheck, X } from "lucide-react";
 import { useRegisterModal } from "./RegisterModalContext";
 
 const RAZORPAY_KEY_ID = "rzp_test_v3gEhWzOtCcolK";
-const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycby2Z1t89c81kJNwa6Y74U0IhwossgtD8Zy0x0074ph1lyrhrkDfx9GI0RRicR0h5kL9UA/exec";
+const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbyiYW5Hyn7mn3U2eQ2y8WA1k_Yl5qkT--CkpEGlzU9pR2oGl8Ds9EATzFGDOQQJP9fy/exec";
 
 const batches = [
     { value: "batch1", label: "Batch 1 — April 1–30, 2026" },
