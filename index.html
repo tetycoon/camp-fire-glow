@@ -50,7 +50,7 @@
       }
     }(window.location))
   </script>
-  <script type="module" crossorigin src="/assets/index-DFR4v0Jq.js"></script>
+  <script type="module" crossorigin src="/assets/index-Cp6Yz9Zy.js"></script>
   <link rel="stylesheet" crossorigin href="/assets/index-D9cqnr2V.css">
 </head>
 
@@ -84,16 +84,16 @@
       // ==============================
       let result;
       try {
-        const response = await fetch("https://script.google.com/macros/s/AKfycby2Z1t89c81kJNwa6Y74U0IhwossgtD8Zy0x0074ph1lyrhrkDfx9GI0RRicR0h5kL9UA/exec", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            pageUrl,
-            name,
-            email,
-            phone,
-            batch
-          })
+        const queryParams = new URLSearchParams({
+          pageUrl,
+          name,
+          email,
+          phone,
+          batch
+        }).toString();
+
+        const response = await fetch(`https://script.google.com/macros/s/AKfycbyiYW5Hyn7mn3U2eQ2y8WA1k_Yl5qkT--CkpEGlzU9pR2oGl8Ds9EATzFGDOQQJP9fy/exec?${queryParams}`, {
+          method: "GET"
         });
 
         result = await response.json();
