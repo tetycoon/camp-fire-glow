@@ -50,7 +50,7 @@
       }
     }(window.location))
   </script>
-  <script type="module" crossorigin src="/assets/index-Cp6Yz9Zy.js"></script>
+  <script type="module" crossorigin src="/assets/index-DKS8SLMo.js"></script>
   <link rel="stylesheet" crossorigin href="/assets/index-D9cqnr2V.css">
 </head>
 
@@ -84,16 +84,17 @@
       // ==============================
       let result;
       try {
-        const queryParams = new URLSearchParams({
-          pageUrl,
-          name,
-          email,
-          phone,
-          batch
-        }).toString();
-
-        const response = await fetch(`https://script.google.com/macros/s/AKfycbyiYW5Hyn7mn3U2eQ2y8WA1k_Yl5qkT--CkpEGlzU9pR2oGl8Ds9EATzFGDOQQJP9fy/exec?${queryParams}`, {
-          method: "GET"
+        const response = await fetch("https://script.google.com/macros/s/AKfycbyiYW5Hyn7mn3U2eQ2y8WA1k_Yl5qkT--CkpEGlzU9pR2oGl8Ds9EATzFGDOQQJP9fy/exec", {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({
+            userType: "school students",
+            pageUrl,
+            name,
+            email,
+            phone,
+            batch
+          })
         });
 
         result = await response.json();
