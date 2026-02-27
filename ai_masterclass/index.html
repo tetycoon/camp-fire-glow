@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI-Powered Digital Marketing | Live Masterclass</title>
-    <!-- Fonts: Bricolage Grotesque & Outfit -->
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -18,12 +18,11 @@
             theme: {
                 extend: {
                     colors: {
-                        brand: {
-                            gold: '#C5A059', // Premium Gold
-                            goldLight: '#E5C185',
-                            midnight: '#020617', // Deep Dark Blue
-                            blue: '#3B82F6',
-                            muted: '#94A3B8',
+                        cyber: {
+                            indigo: '#0B0E14',   // Deep Base
+                            amethyst: '#A855F7', // Primary Accent
+                            cyan: '#06B6D4',     // Secondary Accent
+                            slate: '#94A3B8',
                         }
                     },
                     fontFamily: {
@@ -36,319 +35,372 @@
     </script>
     <style type="text/tailwindcss">
         @layer base {
-            body { @apply font-body bg-brand-midnight text-white overflow-x-hidden selection:bg-brand-gold/20 selection:text-brand-gold; }
+            body { @apply font-body bg-cyber-indigo text-white overflow-x-hidden selection:bg-cyber-amethyst/30 selection:text-white; }
             h1, h2, h3, h4 { @apply font-heading tracking-tight; }
         }
         @layer components {
-            .glass-dark { @apply bg-white/5 backdrop-blur-2xl border border-white/10 shadow-2xl; }
-            .btn-gold { @apply relative overflow-hidden bg-brand-gold text-brand-midnight font-black py-4 px-10 rounded-full transition-all duration-300 hover:bg-brand-goldLight hover:shadow-2xl hover:shadow-brand-gold/40 hover:-translate-y-1 active:scale-95; }
-            .badge-gold { @apply inline-flex items-center px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] border border-brand-gold/30 text-brand-gold bg-brand-gold/5; }
-            .card-premium { @apply bg-white/5 border border-white/5 p-8 rounded-[2.5rem] transition-all duration-500 hover:bg-white/10 hover:border-brand-gold/30 hover:-translate-y-2; }
+            .glass-cyber { @apply bg-white/[0.03] backdrop-blur-2xl border border-white/10 shadow-2xl; }
+            .btn-primary { @apply relative overflow-hidden bg-gradient-to-r from-cyber-amethyst to-cyber-cyan text-white font-black py-4 px-10 rounded-2xl transition-all duration-500 hover:shadow-[0_0_40px_rgba(168,85,247,0.4)] hover:-translate-y-1 active:scale-95; }
+            .btn-secondary { @apply relative overflow-hidden bg-white/5 border border-white/10 text-white font-bold py-4 px-10 rounded-2xl transition-all duration-300 hover:bg-white/10 hover:border-cyber-amethyst/50; }
+            .badge-cyber { @apply inline-flex items-center px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] border border-cyber-amethyst/30 text-cyber-amethyst bg-cyber-amethyst/5; }
+            .card-cyber { @apply bg-white/[0.02] border border-white/[0.05] p-10 rounded-[2rem] transition-all duration-500 hover:bg-white/[0.05] hover:border-cyber-cyan/30 hover:-translate-y-2; }
         }
         
-        .text-gold-gradient {
-            @apply bg-clip-text text-transparent bg-gradient-to-r from-brand-gold via-brand-goldLight to-brand-gold;
+        .text-gradient {
+            @apply bg-clip-text text-transparent bg-gradient-to-r from-cyber-amethyst via-white to-cyber-cyan;
         }
 
-        /* Animation Reveal */
         .reveal { opacity: 0; transform: translateY(30px); transition: all 1s cubic-bezier(0.2, 1, 0.3, 1); }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
         .hero-overlay {
-            background: linear-gradient(to bottom, rgba(2, 6, 23, 0.4), rgba(2, 6, 23, 0.95));
+            background: radial-gradient(circle at center, rgba(168, 85, 247, 0.05) 0%, rgba(11, 14, 20, 0.95) 100%);
         }
 
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #020617; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        .glow-dot {
+            @apply absolute w-1 h-1 bg-cyber-cyan rounded-full shadow-[0_0_10px_#06B6D4];
+        }
+
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: #0B0E14; }
+        ::-webkit-scrollbar-thumb { background: #1E293B; border-radius: 10px; }
     </style>
 </head>
 
 <body>
 
-    <!-- Navbar -->
-    <nav class="fixed top-0 left-0 right-0 z-[100] px-6 py-6 transition-all duration-500">
-        <div
-            class="max-w-6xl mx-auto flex items-center justify-between glass-dark rounded-3xl px-8 py-3.5 border-white/5">
+    <!-- Precise Progress Bar -->
+    <div class="fixed top-0 left-0 h-1 bg-gradient-to-r from-cyber-amethyst to-cyber-cyan z-[200] w-0 transition-all duration-100"
+        id="scrollProgress"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-[150] px-6 py-8 transition-all duration-500" id="navbar">
+        <div class="max-w-7xl mx-auto flex items-center justify-between glass-cyber rounded-[2rem] px-10 py-4">
             <div class="flex items-center gap-4">
                 <div
-                    class="w-10 h-10 bg-brand-gold rounded-xl flex items-center justify-center text-brand-midnight font-black italic text-xl shadow-lg shadow-brand-gold/20">
-                    AI</div>
-                <span class="font-heading font-black text-2xl tracking-tighter hidden sm:block italic">TECH
+                    class="w-10 h-10 bg-gradient-to-br from-cyber-amethyst to-cyber-cyan rounded-xl flex items-center justify-center text-white font-black italic shadow-lg shadow-cyber-amethyst/20">
+                    TT</div>
+                <span class="font-heading font-black text-2xl tracking-tighter italic lg:block hidden">TECH
                     TYCOON</span>
             </div>
-            <div class="hidden lg:flex items-center gap-10">
-                <a href="#topics"
-                    class="text-xs font-black uppercase tracking-widest text-slate-300 hover:text-brand-gold transition-colors">Course</a>
-                <a href="#trainer"
-                    class="text-xs font-black uppercase tracking-widest text-slate-300 hover:text-brand-gold transition-colors">Mentor</a>
-                <a href="#register"
-                    class="text-xs font-black uppercase tracking-widest text-slate-300 hover:text-brand-gold transition-colors">Pricing</a>
+            <div class="hidden lg:flex items-center gap-12">
+                <a href="#roadmap"
+                    class="text-xs font-black uppercase tracking-[0.2em] text-cyber-slate hover:text-white transition-colors">Roadmap</a>
+                <a href="#mentor"
+                    class="text-xs font-black uppercase tracking-[0.2em] text-cyber-slate hover:text-white transition-colors">Mentor</a>
+                <a href="#faq"
+                    class="text-xs font-black uppercase tracking-[0.2em] text-cyber-slate hover:text-white transition-colors">FAQ</a>
             </div>
-            <div>
-                <a href="#register"
-                    class="btn-gold !py-2.5 !px-8 text-xs !font-black uppercase tracking-widest whitespace-nowrap">Join
+            <div class="flex items-center gap-6">
+                <a href="#enroll"
+                    class="btn-primary !py-3 !px-8 text-xs !font-black uppercase tracking-widest whitespace-nowrap">Join
                     Workshop @99/-</a>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section class="relative min-h-screen flex items-center pt-20 overflow-hidden bg-brand-midnight">
-        <!-- Hero Background Image with Overlay -->
-        <div class="absolute inset-0 z-0">
-            <img src="hero-bg.png" alt="AI Marketing Background" class="w-full h-full object-cover">
+    <section class="relative min-h-screen flex items-center pt-32 overflow-hidden bg-cyber-indigo">
+        <!-- Abstract Background -->
+        <div class="absolute inset-0 z-0 opacity-40">
+            <img src="cyber-bg.png" alt="Cyber Background"
+                class="w-full h-full object-cover grayscale brightness-50 contrast-125">
             <div class="absolute inset-0 hero-overlay"></div>
         </div>
 
-        <div class="max-w-6xl mx-auto px-6 relative z-10 w-full pt-20 pb-20">
-            <div class="max-w-4xl">
-                <div class="badge-gold mb-8 reveal flex items-center gap-3">
-                    <span class="w-1.5 h-1.5 rounded-full bg-brand-gold animate-pulse"></span>
-                    Next Live Batch: 8th March 2025 • 10 AM IST
+        <div class="max-w-7xl mx-auto px-6 relative z-10 w-full lg:flex items-center gap-20">
+            <div class="lg:w-2/3">
+                <div class="badge-cyber mb-10 reveal flex items-center gap-3">
+                    <span class="flex h-2 w-2 relative">
+                        <span
+                            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyber-amethyst opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-cyber-amethyst"></span>
+                    </span>
+                    LIVE MASTERCLASS • 8th March • 10:00 AM IST
                 </div>
 
-                <h1 class="text-6xl md:text-[5.5rem] font-black mb-10 leading-[1.05] tracking-tight reveal">
-                    Master <span class="text-gold-gradient italic">AI-Powered</span><br>
+                <h1 class="text-6xl md:text-[6.5rem] font-black mb-10 leading-[0.95] tracking-tighter reveal">
+                    Master <span class="text-gradient italic font-extrabold">AI-Powered</span><br>
                     Digital Marketing
                 </h1>
 
-                <p class="text-xl md:text-2xl text-slate-300 mb-14 leading-relaxed font-medium reveal delay-200">
+                <p
+                    class="text-xl md:text-2xl text-cyber-slate mb-16 leading-relaxed reveal delay-200 max-w-2xl font-medium">
                     Build your digital branding and generate quality leads with AI for your business. An intensive
-                    3-hour masterclass for <span class="text-white font-bold">Trainers, Coaches, Entrepreneurs, and
-                        Business Owners</span>.
+                    3-hour mastery roadmap for <span
+                        class="text-white font-bold underline decoration-cyber-cyan/30 underline-offset-8">Trainers,
+                        Coaches, and Business Owners</span>.
                 </p>
 
-                <div class="flex flex-col sm:flex-row items-center gap-8 reveal delay-400">
-                    <a href="#register" class="btn-gold text-lg px-12 py-5 group">
-                        <span class="relative z-10">Claim My Exclusive Seat</span>
-                        <div
-                            class="absolute inset-0 bg-white/20 translate-x-full group-hover:translate-x-0 transition-transform duration-500">
-                        </div>
+                <div class="flex flex-col sm:flex-row items-center gap-10 reveal delay-400">
+                    <a href="#enroll" class="btn-primary text-lg px-14 py-6">
+                        Claim My Seat @99/-
                     </a>
 
-                    <div class="flex items-center gap-5">
-                        <div class="flex -space-x-3">
-                            <img class="w-10 h-10 rounded-full border-2 border-brand-midnight ring-1 ring-white/10"
-                                src="https://i.pravatar.cc/100?u=10" alt="">
-                            <img class="w-10 h-10 rounded-full border-2 border-brand-midnight ring-1 ring-white/10"
-                                src="https://i.pravatar.cc/100?u=11" alt="">
-                            <img class="w-10 h-10 rounded-full border-2 border-brand-midnight ring-1 ring-white/10"
-                                src="https://i.pravatar.cc/100?u=12" alt="">
+                    <div class="flex items-center gap-6">
+                        <div class="flex -space-x-4">
+                            <img class="w-12 h-12 rounded-full border-2 border-cyber-indigo"
+                                src="https://i.pravatar.cc/100?u=1" alt="">
+                            <img class="w-12 h-12 rounded-full border-2 border-cyber-indigo"
+                                src="https://i.pravatar.cc/100?u=2" alt="">
+                            <img class="w-12 h-12 rounded-full border-2 border-cyber-indigo"
+                                src="https://i.pravatar.cc/100?u=3" alt="">
                         </div>
-                        <div class="text-sm font-bold text-slate-400">
-                            <span class="text-brand-gold">4,800+</span> Already Trained
+                        <div class="text-sm font-bold text-cyber-slate">
+                            <span class="text-white">4,800+</span> Professionals Trained
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats/Visual Sidebar -->
+            <div class="lg:w-1/3 mt-20 lg:mt-0 reveal delay-600 hidden lg:block">
+                <div class="glass-cyber p-10 rounded-[2.5rem] rotate-2 border-white/5 relative">
+                    <div class="glow-dot top-10 right-10"></div>
+                    <div class="space-y-12">
+                        <div>
+                            <div class="text-5xl font-black text-white mb-2 italic">10X</div>
+                            <div class="text-[10px] font-black uppercase tracking-[0.3em] text-cyber-slate">Productivity
+                                Boost</div>
+                        </div>
+                        <div>
+                            <div class="text-5xl font-black text-white mb-2 italic">₹99</div>
+                            <div class="text-[10px] font-black uppercase tracking-[0.3em] text-cyber-slate">Limited Time
+                                Entry</div>
+                        </div>
+                        <div class="pt-6 border-t border-white/10 italic text-cyber-slate text-sm font-medium">
+                            "The single best investment I've made for my branding this year."
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- Floating Scroll Indicator -->
-        <div
-            class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 opacity-30 reveal delay-1000">
-            <div class="w-[1px] h-12 bg-gradient-to-b from-brand-gold to-transparent"></div>
-            <span class="text-[10px] font-black uppercase tracking-[0.3em]">Scroll</span>
-        </div>
     </section>
 
-    <!-- Features Section -->
-    <section id="topics" class="py-32 bg-[#010410]">
-        <div class="max-w-6xl mx-auto px-6">
-            <div class="flex flex-col md:flex-row justify-between items-end gap-10 mb-20 reveal">
-                <div class="max-w-xl">
-                    <span class="badge-gold mb-6 italic">The Toolkit</span>
-                    <h2 class="text-5xl font-black leading-tight italic">Weaponize Your <br><span
-                            class="text-gold-gradient">Marketing with AI</span></h2>
-                </div>
-                <p class="text-lg text-slate-400 max-w-sm mb-2 font-medium">No fluff. Just the exact AI strategies we
-                    used to scale businesses to 7-figures.</p>
+    <!-- Roadmap Section -->
+    <section id="roadmap" class="py-40 bg-[#080B10] border-y border-white/[0.05]">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center max-w-3xl mx-auto mb-32 reveal">
+                <span class="badge-cyber mb-8 italic">The Curriculum</span>
+                <h2 class="text-5xl md:text-7xl font-black leading-none mb-10 italic">The 3-Hour <span
+                        class="text-gradient">Mastery Roadmap</span></h2>
+                <p class="text-lg text-cyber-slate font-medium">Clear, actionable phases to transform your business
+                    identity and output.</p>
             </div>
 
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="card-premium reveal delay-100 border-white/5">
-                    <div
-                        class="w-16 h-16 glass-dark text-brand-gold rounded-[1.2rem] flex items-center justify-center text-3xl mb-8 border-brand-gold/10">
-                        🧠</div>
-                    <h3 class="text-2xl font-black mb-4 capitalize">Concept of AI</h3>
-                    <p class="text-slate-400 leading-relaxed font-medium">Master the foundational principles of
-                        artificial intelligence and how they apply to the modern business landscape.</p>
+            <div class="grid md:grid-cols-3 gap-10">
+                <div class="card-cyber reveal delay-100 group">
+                    <div class="h-24 flex items-center mb-6">
+                        <span
+                            class="text-7xl font-black text-white/[0.03] group-hover:text-cyber-amethyst/10 transition-colors">01</span>
+                    </div>
+                    <h3
+                        class="text-3xl font-black mb-6 italic underline decoration-cyber-amethyst decoration-4 underline-offset-8">
+                        Concept of AI</h3>
+                    <p class="text-cyber-slate leading-relaxed font-medium">Demystifying the neural revolution. Learn
+                        exactly how AI thinks and how to leverage its logic for strategic advantage.</p>
                 </div>
-                <div class="card-premium reveal delay-200 border-white/5">
-                    <div
-                        class="w-16 h-16 glass-dark text-brand-gold rounded-[1.2rem] flex items-center justify-center text-3xl mb-8 border-brand-gold/10">
-                        🚀</div>
-                    <h3 class="text-2xl font-black mb-4 capitalize">Power of AI in Marketing</h3>
-                    <p class="text-slate-400 leading-relaxed font-medium">Discover how AI-driven tools can skyrocket
-                        your reach, engagement, and conversion rates across all digital platforms.</p>
+                <div class="card-cyber reveal delay-200 group">
+                    <div class="h-24 flex items-center mb-6">
+                        <span
+                            class="text-7xl font-black text-white/[0.03] group-hover:text-cyber-cyan/10 transition-colors">02</span>
+                    </div>
+                    <h3
+                        class="text-3xl font-black mb-6 italic underline decoration-cyber-cyan decoration-4 underline-offset-8">
+                        AI in Marketing</h3>
+                    <p class="text-cyber-slate leading-relaxed font-medium">The Power Phase. Automated content clusters,
+                        predictive analytics, and AI branding that resonates at scale.</p>
                 </div>
-                <div class="card-premium reveal delay-300 border-white/5">
-                    <div
-                        class="w-16 h-16 glass-dark text-brand-gold rounded-[1.2rem] flex items-center justify-center text-3xl mb-8 border-brand-gold/10">
-                        🛠️</div>
-                    <h3 class="text-2xl font-black mb-4 capitalize">10+ AI Productivity Tools</h3>
-                    <p class="text-slate-400 leading-relaxed font-medium">Get a curated list of elite AI tools designed
-                        to automate your workflow and unlock massive productivity gains.</p>
+                <div class="card-cyber reveal delay-300 group">
+                    <div class="h-24 flex items-center mb-6">
+                        <span
+                            class="text-7xl font-black text-white/[0.03] group-hover:text-white/10 transition-colors">03</span>
+                    </div>
+                    <h3
+                        class="text-3xl font-black mb-6 italic underline decoration-white decoration-4 underline-offset-8 font-black">
+                        10+ AI Tools</h3>
+                    <p class="text-cyber-slate leading-relaxed font-medium">The Deployment Phase. Hands-on walktrough of
+                        the top 10 productivity tools used by elite consultants and digital marketers.</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Mentor Section -->
-    <section id="trainer" class="py-32 bg-brand-midnight relative overflow-hidden">
-        <div class="absolute top-1/2 left-0 w-full h-[1px] bg-white/5"></div>
-        <div class="max-w-6xl mx-auto px-6 relative z-10">
+    <section id="mentor" class="py-40 relative">
+        <div class="max-w-7xl mx-auto px-6">
             <div class="flex flex-col lg:flex-row items-center gap-24">
                 <div class="lg:w-1/2 reveal">
-                    <div class="relative">
+                    <div class="relative group">
                         <div
-                            class="aspect-square bg-slate-900 rounded-[3rem] overflow-hidden border border-white/10 group shadow-2xl shadow-brand-gold/10">
-                            <img src="antony-praveen.png" alt="Antony Praveen"
-                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000">
-                            <div
-                                class="absolute inset-0 bg-gradient-to-t from-brand-midnight/80 via-transparent to-transparent">
-                            </div>
+                            class="absolute -inset-4 bg-gradient-to-tr from-cyber-amethyst to-cyber-cyan opacity-20 blur-3xl group-hover:opacity-40 transition-opacity">
                         </div>
-                        <!-- Floating Card -->
-                        <div
-                            class="absolute -bottom-10 -right-6 glass-dark !bg-brand-gold p-8 rounded-[2rem] shadow-2xl shadow-brand-gold/30">
-                            <div class="text-brand-midnight font-black text-4xl italic tracking-tighter">TECH TYCOON
-                            </div>
-                            <div class="text-brand-midnight/50 font-black uppercase text-[10px] tracking-widest mt-1">
-                                Founder & Lead Mentor</div>
+                        <div class="relative aspect-square rounded-[3rem] overflow-hidden border border-white/10">
+                            <img src="antony-praveen.png" alt="Antony Praveen" class="w-full h-full object-cover">
                         </div>
                     </div>
                 </div>
                 <div class="lg:w-1/2 reveal delay-300">
-                    <h2 class="text-5xl font-black mb-6 leading-tight italic">Meet Your <br><span
-                            class="text-gold-gradient tracking-normal">Trainer</span></h2>
-                    <h3 class="text-2xl font-black text-white mb-6 uppercase tracking-wider italic">Antony Praveen</h3>
-                    <p
-                        class="text-lg text-slate-300 mb-8 leading-relaxed font-medium italic border-l-4 border-brand-gold pl-6 py-2 bg-white/5 rounded-r-2xl">
-                        "AI-Powered Digital Marketing Specialist | Certified International Trainer & Coach in AI-Powered
-                        Digital Solutions | Founder @Tech Tycoon Digital Solutions"
-                    </p>
-                    <div class="flex items-center gap-6 mb-12">
-                        <a href="https://www.techtycoon.in/" target="_blank"
-                            class="w-14 h-14 glass-dark rounded-2xl flex items-center justify-center text-brand-gold text-xl hover:bg-brand-gold hover:text-brand-midnight transition-all duration-300">🌐</a>
-                        <a href="https://www.instagram.com/amiable_antony?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
-                            target="_blank"
-                            class="w-14 h-14 glass-dark rounded-2xl flex items-center justify-center text-brand-gold text-xl hover:bg-brand-gold hover:text-brand-midnight transition-all duration-300 italic font-black text-lg">ig</a>
-                        <a href="https://www.linkedin.com/in/antony-praveen-techtycoon" target="_blank"
-                            class="w-14 h-14 glass-dark rounded-2xl flex items-center justify-center text-brand-gold text-xl hover:bg-brand-gold hover:text-brand-midnight transition-all duration-300 italic font-black text-lg">in</a>
+                    <span class="badge-cyber mb-10">Mentor Profile</span>
+                    <h2 class="text-5xl font-black mb-8 italic">Antony <span
+                            class="text-gradient uppercase">Praveen</span></h2>
+                    <h3 class="text-xl font-bold text-white/50 mb-10 tracking-[0.2em] font-black">Founder, TECH TYCOON
+                    </h3>
+
+                    <div class="bg-white/[0.03] p-8 rounded-3xl border-l-[6px] border-cyber-amethyst mb-12">
+                        <p class="text-xl text-white font-medium italic leading-relaxed">
+                            "AI-Powered Digital Marketing Specialist | Certified International Trainer & Coach |
+                            Architect of Digital Growth Solutions."
+                        </p>
                     </div>
-                    <a href="#register" class="btn-gold px-12 italic tracking-tighter">Reserve My VIP Seat</a>
+
+                    <div class="flex items-center gap-8 mb-16">
+                        <a href="https://www.techtycoon.in/" target="_blank"
+                            class="w-14 h-14 glass-cyber rounded-2xl flex items-center justify-center hover:bg-cyber-amethyst transition-all opacity-60 hover:opacity-100">🌐</a>
+                        <a href="https://www.instagram.com/amiable_antony" target="_blank"
+                            class="w-14 h-14 glass-cyber rounded-2xl flex items-center justify-center hover:bg-cyber-amethyst transition-all opacity-60 hover:opacity-100 font-black italic">ig</a>
+                        <a href="https://www.linkedin.com/in/antony-praveen-techtycoon" target="_blank"
+                            class="w-14 h-14 glass-cyber rounded-2xl flex items-center justify-center hover:bg-cyber-amethyst transition-all opacity-60 hover:opacity-100 font-black italic">in</a>
+                    </div>
+
+                    <a href="#enroll" class="btn-primary px-16 italic">Work with Antony</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Pricing / Registration -->
-    <section id="register" class="py-32 relative bg-[#010410]">
-        <div class="max-w-4xl mx-auto px-6 relative z-10">
-            <div class="text-center mb-24 reveal">
-                <span class="badge-gold mb-8">Exclusive Invite</span>
-                <h2 class="text-6xl md:text-8xl font-black mb-12 italic tracking-tighter">Join the <span
-                        class="text-gold-gradient">1%</span></h2>
-
-                <div
-                    class="inline-block p-1 bg-gradient-to-br from-brand-gold to-brand-midnight rounded-[3rem] shadow-2xl">
-                    <div class="bg-brand-midnight px-16 py-12 rounded-[2.9rem]">
-                        <div class="text-xs font-black text-slate-500 uppercase tracking-[0.3em] mb-4">Original
-                            Investment ₹2,999</div>
-                        <div
-                            class="text-[5.5rem] font-black leading-none tracking-tighter flex items-center justify-center gap-3">
-                            <span class="text-white/20 text-4xl italic mr-2">₹</span>99
-                        </div>
-                        <div
-                            class="mt-6 text-brand-gold font-black uppercase tracking-[0.2em] text-[10px] animate-pulse">
-                            48H EARLY BIRD DISCOUNT</div>
-                    </div>
-                </div>
+    <!-- FAQ Section -->
+    <section id="faq" class="py-40 bg-[#080B10]">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="text-center mb-20 reveal">
+                <h2 class="text-5xl font-black mb-6 italic">Common <span
+                        class="text-gradient tracking-tight">Questions</span></h2>
+                <p class="text-cyber-slate font-medium">Everything you need to know before joining.</p>
             </div>
 
-            <div class="glass-dark !bg-white/5 p-10 md:p-16 rounded-[3.5rem] reveal delay-200 border-brand-gold/10">
-                <form id="regForm" class="space-y-10">
-                    <div class="grid md:grid-cols-2 gap-10">
-                        <div class="space-y-3">
-                            <label
-                                class="block text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 ml-4">Legal
-                                Name</label>
-                            <input type="text" placeholder="Enter Full Name"
-                                class="w-full bg-white/5 border border-white/10 rounded-2xl px-8 py-5 font-bold focus:ring-1 focus:ring-brand-gold focus:bg-white/10 transition-all outline-none text-white placeholder:text-white/10"
-                                required>
-                        </div>
-                        <div class="space-y-3">
-                            <label
-                                class="block text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 ml-4">Primary
-                                Email</label>
-                            <input type="email" placeholder="example@email.com"
-                                class="w-full bg-white/5 border border-white/10 rounded-2xl px-8 py-5 font-bold focus:ring-1 focus:ring-brand-gold focus:bg-white/10 transition-all outline-none text-white placeholder:text-white/10"
-                                required>
-                        </div>
+            <div class="space-y-6 reveal delay-200">
+                <div class="glass-cyber border-white/5 p-8 rounded-3xl">
+                    <h4 class="text-lg font-black mb-4 italic text-cyan-400">Is this suitable for non-techies?</h4>
+                    <p class="text-cyber-slate font-medium">Absolutely. My framework is designed for business owners,
+                        not developers. If you can use a smartphone, you can use these AI tools.</p>
+                </div>
+                <div class="glass-cyber border-white/5 p-8 rounded-3xl">
+                    <h4 class="text-lg font-black mb-4 italic text-cyan-400">Do I need to pay for AI tools?</h4>
+                    <p class="text-cyber-slate font-medium">Most tools we cover have free tiers. I'll show you how to
+                        get 90% of the results using zero-cost alternatives.</p>
+                </div>
+                <div class="glass-cyber border-white/5 p-8 rounded-3xl">
+                    <h4 class="text-lg font-black mb-4 italic text-cyan-400">Will there be a recording?</h4>
+                    <p class="text-cyber-slate font-medium">This is a live, interactive session. Attendance is mandatory
+                        to get the full experience and the special tool repository.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Enrollment Form -->
+    <section id="enroll" class="py-40 relative overflow-hidden">
+        <div class="absolute inset-0 bg-cyber-amethyst/5 blur-[120px]"></div>
+        <div class="max-w-5xl mx-auto px-6 relative z-10">
+            <div class="glass-cyber p-12 md:p-24 rounded-[4rem] border-white/10 text-center">
+                <div class="badge-cyber mb-10">Price increases soon</div>
+                <h2 class="text-6xl md:text-8xl font-black mb-16 italic tracking-tighter">Secure Your <br><span
+                        class="text-gradient">Seat Now</span></h2>
+
+                <div class="flex items-center justify-center gap-4 mb-20">
+                    <span class="text-5xl font-black italic">₹99</span>
+                    <span class="text-2xl text-cyber-slate line-through opacity-50 font-bold">₹2,999</span>
+                </div>
+
+                <form id="enrollmentForm" class="grid md:grid-cols-2 gap-8 text-left max-w-3xl mx-auto">
+                    <div class="space-y-3">
+                        <label
+                            class="block text-[10px] font-black uppercase tracking-[0.3em] text-cyber-slate ml-4">Legal
+                            Name</label>
+                        <input type="text" placeholder="John Doe"
+                            class="w-full bg-white/5 border border-white/10 rounded-2xl px-8 py-5 font-bold focus:border-cyber-cyan transition-all outline-none"
+                            required>
                     </div>
-                    <div class="grid md:grid-cols-2 gap-10">
-                        <div class="space-y-3">
-                            <label
-                                class="block text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 ml-4">WhatsApp
-                                Contact</label>
-                            <input type="tel" placeholder="+91 00000 00000"
-                                class="w-full bg-white/5 border border-white/10 rounded-2xl px-8 py-5 font-bold focus:ring-1 focus:ring-brand-gold focus:bg-white/10 transition-all outline-none text-white placeholder:text-white/10"
-                                required>
-                        </div>
-                        <div class="space-y-3">
-                            <label
-                                class="block text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 ml-4">Profession</label>
-                            <select
-                                class="w-full bg-white/5 border border-white/10 rounded-2xl px-8 py-5 font-bold focus:ring-1 focus:ring-brand-gold focus:bg-white/10 transition-all outline-none text-white/50">
-                                <option>Trainer / Coach</option>
-                                <option>Entrepreneur</option>
-                                <option>Business Owner</option>
-                                <option>Freelancer</option>
-                                <option>Other</option>
-                            </select>
-                        </div>
+                    <div class="space-y-3">
+                        <label
+                            class="block text-[10px] font-black uppercase tracking-[0.3em] text-cyber-slate ml-4">Email
+                            Address</label>
+                        <input type="email" placeholder="john@company.com"
+                            class="w-full bg-white/5 border border-white/10 rounded-2xl px-8 py-5 font-bold focus:border-cyber-cyan transition-all outline-none"
+                            required>
+                    </div>
+                    <div class="space-y-3">
+                        <label
+                            class="block text-[10px] font-black uppercase tracking-[0.3em] text-cyber-slate ml-4">WhatsApp
+                            Contact</label>
+                        <input type="tel" placeholder="+91"
+                            class="w-full bg-white/5 border border-white/10 rounded-2xl px-8 py-5 font-bold focus:border-cyber-cyan transition-all outline-none"
+                            required>
+                    </div>
+                    <div class="space-y-3">
+                        <label
+                            class="block text-[10px] font-black uppercase tracking-[0.3em] text-cyber-slate ml-4">Profession</label>
+                        <select
+                            class="w-full bg-white/5 border border-white/10 rounded-2xl px-8 py-5 font-bold focus:border-cyber-cyan transition-all outline-none appearance-none font-black text-sm uppercase tracking-widest text-cyber-amethyst">
+                            <option>Trainer / Coach</option>
+                            <option>Entrepreneur</option>
+                            <option>Business Owner</option>
+                            <option>Freelancer</option>
+                        </select>
                     </div>
                     <button type="submit"
-                        class="w-full btn-gold !py-7 text-2xl !font-black group italic tracking-tighter">
-                        Claim My @99/- Seat Now
-                        <span class="inline-block ml-4 group-hover:translate-x-2 transition-transform">→</span>
+                        class="md:col-span-2 btn-primary !py-8 text-2xl !font-black uppercase italic tracking-tighter">
+                        Complete My Registration
                     </button>
-                    <p class="text-center text-[9px] font-black text-slate-600 uppercase tracking-[0.4em]">Encrypted
-                        Security • Instant Access • Lifetime Valid</p>
                 </form>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="bg-brand-midnight py-24 px-6 border-t border-white/5">
-        <div class="max-w-6xl mx-auto">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-12">
-                <div class="flex items-center gap-4">
+    <footer class="py-24 px-6 border-t border-white/5 bg-[#05070A]">
+        <div
+            class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12 text-center md:text-left">
+            <div>
+                <div class="flex items-center gap-4 mb-4 justify-center md:justify-start">
                     <div
-                        class="w-10 h-10 bg-brand-gold rounded-xl flex items-center justify-center text-brand-midnight font-black italic text-xl">
-                        AI</div>
-                    <span class="font-heading font-black text-2xl tracking-tighter italic whitespace-nowrap">TECH
-                        TYCOON</span>
+                        class="w-8 h-8 bg-gradient-to-br from-cyber-amethyst to-cyber-cyan rounded-lg flex items-center justify-center text-white font-black italic">
+                        TT</div>
+                    <span class="font-heading font-black text-2xl tracking-tighter italic">TECH TYCOON</span>
                 </div>
-                <div class="flex flex-wrap justify-center gap-12">
-                    <a href="#"
-                        class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 hover:text-brand-gold transition-colors">Privacy</a>
-                    <a href="#"
-                        class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 hover:text-brand-gold transition-colors">Terms</a>
-                    <a href="#"
-                        class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 hover:text-brand-gold transition-colors">Refunds</a>
-                </div>
-                <div class="text-[10px] font-black text-slate-600 uppercase tracking-[0.2em]">© 2025 ALL RIGHTS RESERVED
-                </div>
+                <div class="text-[10px] font-black text-cyber-slate uppercase tracking-widest">© 2025 ALL RIGHTS
+                    RESERVED</div>
+            </div>
+            <div class="flex gap-16 text-[10px] font-black uppercase tracking-[0.4em] text-cyber-slate">
+                <a href="#" class="hover:text-white transition-colors">Privacy</a>
+                <a href="#" class="hover:text-white transition-colors">Terms</a>
+                <a href="#" class="hover:text-white transition-colors">Refunds</a>
             </div>
         </div>
     </footer>
 
     <!-- Scripts -->
     <script>
-        // Reveal Animations
+        // Progress Bar & Navbar Scroll
+        window.addEventListener('scroll', () => {
+            const h = document.documentElement,
+                b = document.body,
+                st = 'scrollTop',
+                sh = 'scrollHeight';
+            const percent = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+            document.getElementById('scrollProgress').style.width = percent + '%';
+
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('bg-cyber-indigo/80', 'py-4');
+                navbar.classList.remove('py-8');
+            } else {
+                navbar.classList.remove('bg-cyber-indigo/80', 'py-4');
+                navbar.classList.add('py-8');
+            }
+        });
+
+        // Reveal Observer
         const observer = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
                 if (entry.isIntersecting) {
@@ -359,20 +411,10 @@
 
         document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
 
-        // Form Handling
-        document.getElementById('regForm').addEventListener('submit', function (e) {
+        // Form Submission Placeholder
+        document.getElementById('enrollmentForm').addEventListener('submit', (e) => {
             e.preventDefault();
-            alert(`Redirecting to payment for ₹99...\n\nThank you for choosing Tech Tycoon.`);
-        });
-
-        // Smooth Scroll
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
+            alert('Redirecting to the secure gateway for ₹99 processing...');
         });
     </script>
 </body>
