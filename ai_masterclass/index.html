@@ -992,10 +992,10 @@
                 const profession = document.getElementById('fprofession').value;
                 const pageUrl = window.location.href;
 
-                // 2. Call Apps Script to create order and save lead
-                let result;
+                // 2. Call Apps Script to save lead (but don't use its ₹9999 order_id)
                 try {
-                    const response = await fetch("https://script.google.com/macros/s/AKfycbyiYW5Hyn7mn3U2eQ2y8WA1k_Yl5qkT--CkpEGlzU9pR2oGl8Ds9EATzFGDOQQJP9fy/exec", {
+                    // Start saving lead in background (fire-and-forget for now)
+                    fetch("https://script.google.com/macros/s/AKfycbyiYW5Hyn7mn3U2eQ2y8WA1k_Yl5qkT--CkpEGlzU9pR2oGl8Ds9EATzFGDOQQJP9fy/exec", {
                         method: "POST",
                         headers: { "Content-Type": "text/plain;charset=utf-8" },
                         body: JSON.stringify({
@@ -1004,30 +1004,18 @@
                             name,
                             email,
                             phone,
-                            batch: "Masterclass"
+                            batch: "Masterclass",
+                            amount: 99 // Send amount context to backend
                         })
-                    });
-
-                    result = await response.json();
-
-                    if (!result.success || !result.orderId) {
-                        alert("Failed to create payment order. Please try again.");
-                        submitBtn.innerHTML = originalBtnText;
-                        submitBtn.disabled = false;
-                        return;
-                    }
+                    }).catch(e => console.error("Lead capture error:", e));
                 } catch (err) {
-                    alert("Server error. Please try again later.");
-                    console.error(err);
-                    submitBtn.innerHTML = originalBtnText;
-                    submitBtn.disabled = false;
-                    return;
+                    console.error("Warning: Lead capture block failed", err);
                 }
 
-                // 3. Open Razorpay Checkout
+                // 3. Open Razorpay Checkout DIRECTLY for ₹99
                 const options = {
                     key: "rzp_test_v3gEhWzOtCcolK", // TEST KEY
-                    order_id: result.orderId,
+                    // We REMOVED order_id here so the frontend can dictate the amount
                     amount: 9900, // ₹99 in paise
                     currency: "INR",
                     name: "Tech Tycoon",
