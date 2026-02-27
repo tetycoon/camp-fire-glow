@@ -46,7 +46,7 @@
             cursor: none;
         }
 
-        /* ─── CUSTOM CURSOR ────────────────────────────────────── */
+        /* ─── CURSOR ─── */
         #cursor {
             position: fixed;
             width: 14px;
@@ -77,7 +77,7 @@
             opacity: 1;
         }
 
-        /* ─── NAV ──────────────────────────────────────────────── */
+        /* ─── NAV ─── */
         nav {
             position: fixed;
             top: 0;
@@ -155,23 +155,10 @@
             padding: 10px 22px;
             border-radius: 100px;
             text-decoration: none;
-            transition: background 0.25s, transform 0.2s, box-shadow 0.2s;
+            transition: background 0.25s;
             cursor: none;
             position: relative;
             overflow: hidden;
-        }
-
-        .nav-btn::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, var(--blue), var(--indigo));
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .nav-btn:hover::after {
-            opacity: 1;
         }
 
         .nav-btn span {
@@ -184,7 +171,7 @@
             box-shadow: 0 8px 28px rgba(37, 99, 235, 0.4);
         }
 
-        /* ─── HERO ─────────────────────────────────────────────── */
+        /* ─── HERO ─── */
         .hero {
             min-height: 100vh;
             display: flex;
@@ -198,14 +185,12 @@
             background: var(--cream);
         }
 
-        /* Animated mesh background */
         .hero-canvas {
             position: absolute;
             inset: 0;
             z-index: 0;
         }
 
-        /* Floating blobs */
         .blob {
             position: absolute;
             border-radius: 50%;
@@ -230,7 +215,6 @@
             bottom: -80px;
             left: -80px;
             animation-duration: 15s;
-            animation-delay: -5s;
         }
 
         .blob3 {
@@ -240,78 +224,17 @@
             top: 40%;
             left: 10%;
             animation-duration: 18s;
-            animation-delay: -8s;
         }
 
         @keyframes blobFloat {
-            0% {
-                transform: translate(0, 0) scale(1);
-            }
 
-            25% {
-                transform: translate(30px, -20px) scale(1.05);
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
             }
 
             50% {
                 transform: translate(-20px, 30px) scale(0.95);
-            }
-
-            75% {
-                transform: translate(15px, 15px) scale(1.03);
-            }
-
-            100% {
-                transform: translate(0, 0) scale(1);
-            }
-        }
-
-        /* Floating particles */
-        .particle {
-            position: absolute;
-            border-radius: 50%;
-            animation: particleFloat linear infinite;
-            pointer-events: none;
-        }
-
-        @keyframes particleFloat {
-            0% {
-                transform: translateY(0) rotate(0deg);
-                opacity: 0;
-            }
-
-            10% {
-                opacity: 1;
-            }
-
-            90% {
-                opacity: 1;
-            }
-
-            100% {
-                transform: translateY(-100vh) rotate(720deg);
-                opacity: 0;
-            }
-        }
-
-        /* Floating icons */
-        .float-icon {
-            position: absolute;
-            font-size: 2rem;
-            opacity: 0.12;
-            animation: iconFloat ease-in-out infinite;
-            pointer-events: none;
-            user-select: none;
-        }
-
-        @keyframes iconFloat {
-
-            0%,
-            100% {
-                transform: translateY(0) rotate(-5deg);
-            }
-
-            50% {
-                transform: translateY(-18px) rotate(5deg);
             }
         }
 
@@ -321,7 +244,6 @@
             max-width: 880px;
         }
 
-        /* Live pill */
         .live-pill {
             display: inline-flex;
             align-items: center;
@@ -335,13 +257,6 @@
             border-radius: 100px;
             margin-bottom: 32px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-            animation: heroPop 0.7s 0.2s cubic-bezier(.34, 1.56, .64, 1) both;
-        }
-
-        .live-dot-wrap {
-            display: flex;
-            align-items: center;
-            gap: 6px;
         }
 
         .live-dot {
@@ -366,19 +281,6 @@
             }
         }
 
-        @keyframes heroPop {
-            from {
-                opacity: 0;
-                transform: scale(0.7) translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
-        }
-
-        /* Hero headline */
         .hero h1 {
             font-family: 'Clash Display', sans-serif;
             font-size: clamp(3.2rem, 8vw, 6.5rem);
@@ -387,53 +289,13 @@
             letter-spacing: -0.035em;
             color: var(--dark);
             margin-bottom: 24px;
-            animation: heroTitle 0.8s 0.35s cubic-bezier(.22, 1, .36, 1) both;
-        }
-
-        @keyframes heroTitle {
-            from {
-                opacity: 0;
-                transform: translateY(40px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
 
         .h1-line2 {
-            background: linear-gradient(135deg, var(--blue) 0%, var(--indigo) 50%, var(--coral) 100%);
+            background: linear-gradient(135deg, var(--blue), var(--indigo), var(--coral));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            position: relative;
-            display: inline-block;
-        }
-
-        /* Animated underline */
-        .h1-line2::after {
-            content: '';
-            position: absolute;
-            bottom: 4px;
-            left: 0;
-            right: 0;
-            height: 8px;
-            background: linear-gradient(90deg, var(--blue), var(--coral));
-            border-radius: 4px;
-            opacity: 0.25;
-            animation: underlineGrow 1s 1.2s ease both;
-            transform-origin: left;
-        }
-
-        @keyframes underlineGrow {
-            from {
-                transform: scaleX(0);
-            }
-
-            to {
-                transform: scaleX(1);
-            }
         }
 
         .hero-sub {
@@ -442,22 +304,14 @@
             max-width: 600px;
             margin: 0 auto 48px;
             line-height: 1.75;
-            animation: fadeUp 0.8s 0.55s ease both;
         }
 
-        .hero-sub strong {
-            color: var(--dark);
-            font-weight: 700;
-        }
-
-        /* Event chips */
         .chips {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
             justify-content: center;
             margin-bottom: 52px;
-            animation: fadeUp 0.8s 0.65s ease both;
         }
 
         .chip {
@@ -468,331 +322,29 @@
             border: 1.5px solid var(--border);
             border-radius: 100px;
             padding: 10px 20px;
-            font-size: 0.88rem;
             font-weight: 600;
-            color: var(--mid);
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
-            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
-            cursor: none;
-        }
-
-        .chip:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-            border-color: var(--blue);
-        }
-
-        /* Price display */
-        .price-wrap {
-            animation: fadeUp 0.8s 0.75s ease both;
-            margin-bottom: 44px;
-        }
-
-        .price-cross {
-            color: var(--muted);
-            text-decoration: line-through;
-            font-size: 0.95rem;
-            margin-bottom: 4px;
         }
 
         .price-main {
             font-family: 'Clash Display', sans-serif;
             font-size: clamp(3.5rem, 8vw, 5.5rem);
             font-weight: 700;
-            letter-spacing: -0.04em;
             color: var(--dark);
-            line-height: 1;
-        }
-
-        .price-main em {
-            font-style: normal;
-            background: linear-gradient(135deg, var(--blue), var(--coral));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .price-note {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: #FEF3C7;
-            color: #92400E;
-            font-size: 0.8rem;
-            font-weight: 700;
-            padding: 5px 14px;
-            border-radius: 100px;
-            margin-top: 8px;
-            border: 1px solid #FDE68A;
-        }
-
-        /* CTA buttons */
-        .hero-btns {
-            display: flex;
-            gap: 14px;
-            justify-content: center;
-            flex-wrap: wrap;
-            animation: fadeUp 0.8s 0.9s ease both;
         }
 
         .btn-hero {
-            position: relative;
-            overflow: hidden;
             background: linear-gradient(135deg, var(--blue), var(--indigo));
             color: white;
             font-weight: 800;
-            font-size: 1rem;
             padding: 18px 44px;
             border-radius: 100px;
-            border: none;
             text-decoration: none;
-            cursor: none;
-            transition: transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 8px 36px rgba(37, 99, 235, 0.35);
-            letter-spacing: 0.01em;
+            display: inline-block;
         }
 
-        .btn-hero::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, var(--indigo), var(--blue));
-            opacity: 0;
-            transition: opacity 0.35s;
-        }
-
-        .btn-hero span {
-            position: relative;
-            z-index: 1;
-        }
-
-        .btn-hero:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 16px 48px rgba(37, 99, 235, 0.45);
-        }
-
-        .btn-hero:hover::before {
-            opacity: 1;
-        }
-
-        /* Shimmer on btn */
-        .btn-hero::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -70%;
-            width: 50%;
-            height: 200%;
-            background: linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, 0.35) 50%, transparent 60%);
-            transform: skewX(-15deg);
-            animation: shimmer 3s 2s infinite;
-            z-index: 2;
-        }
-
-        @keyframes shimmer {
-            0% {
-                left: -70%;
-            }
-
-            100% {
-                left: 130%;
-            }
-        }
-
-        .btn-outline {
-            background: transparent;
-            color: var(--dark);
-            font-weight: 700;
-            font-size: 1rem;
-            padding: 18px 36px;
-            border-radius: 100px;
-            border: 2px solid var(--border);
-            text-decoration: none;
-            cursor: none;
-            transition: border-color 0.2s, transform 0.2s, background 0.2s;
-        }
-
-        .btn-outline:hover {
-            border-color: var(--dark);
-            background: var(--sky);
-            transform: translateY(-2px);
-        }
-
-        @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(24px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* ─── TICKER ───────────────────────────────────────────── */
-        .ticker {
-            background: var(--dark);
-            padding: 14px 0;
-            overflow: hidden;
-            white-space: nowrap;
-            position: relative;
-        }
-
-        .ticker::before,
-        .ticker::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            width: 60px;
-            z-index: 2;
-        }
-
-        .ticker::before {
-            left: 0;
-            background: linear-gradient(90deg, var(--dark), transparent);
-        }
-
-        .ticker::after {
-            right: 0;
-            background: linear-gradient(-90deg, var(--dark), transparent);
-        }
-
-        .ticker-inner {
-            display: inline-flex;
-            gap: 0;
-            animation: tickerScroll 30s linear infinite;
-        }
-
-        @keyframes tickerScroll {
-            from {
-                transform: translateX(0);
-            }
-
-            to {
-                transform: translateX(-50%);
-            }
-        }
-
-        .ticker-item {
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            padding: 0 32px;
-            color: rgba(255, 255, 255, 0.65);
-            font-size: 0.82rem;
-            font-weight: 600;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-        }
-
-        .ticker-dot {
-            width: 5px;
-            height: 5px;
-            background: var(--coral);
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-
-        /* ─── COUNTDOWN ────────────────────────────────────────── */
-        .countdown-section {
-            background: linear-gradient(135deg, var(--blue) 0%, #312E81 100%);
-            padding: 64px 24px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .countdown-section::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background-image: radial-gradient(circle, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-            background-size: 32px 32px;
-        }
-
-        .cd-title {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.78rem;
-            font-weight: 700;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            margin-bottom: 32px;
-            position: relative;
-        }
-
-        .cd-units {
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            gap: 16px;
-            flex-wrap: wrap;
-            position: relative;
-        }
-
-        .cd-block {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 20px;
-            padding: 24px 28px;
-            min-width: 110px;
-            backdrop-filter: blur(10px);
-            transition: transform 0.3s;
-        }
-
-        .cd-block:hover {
-            transform: translateY(-4px);
-        }
-
-        .cd-num {
-            font-family: 'Clash Display', sans-serif;
-            font-size: 3.2rem;
-            font-weight: 700;
-            color: white;
-            display: block;
-            line-height: 1;
-            letter-spacing: -0.04em;
-            transition: transform 0.3s;
-        }
-
-        .cd-num.flip {
-            animation: flipNum 0.4s ease;
-        }
-
-        @keyframes flipNum {
-            0% {
-                transform: rotateX(90deg);
-                opacity: 0;
-            }
-
-            100% {
-                transform: rotateX(0);
-                opacity: 1;
-            }
-        }
-
-        .cd-label {
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 0.72rem;
-            font-weight: 700;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            margin-top: 8px;
-            display: block;
-        }
-
-        .cd-sep {
-            font-family: 'Clash Display', sans-serif;
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: rgba(255, 255, 255, 0.2);
-            line-height: 1;
-            padding-top: 18px;
-        }
-
-        /* ─── SECTIONS ─────────────────────────────────────────── */
-        section.std {
+        /* ─── REGISTER SECTION ─── */
+        .reg-bg {
+            background: var(--cream);
             padding: 100px 24px;
         }
 
@@ -801,458 +353,142 @@
             margin: 0 auto;
         }
 
-        .stag {
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            font-size: 0.72rem;
-            font-weight: 800;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: var(--blue);
-            background: #EFF6FF;
-            padding: 6px 16px;
-            border-radius: 100px;
-            margin-bottom: 18px;
-            border: 1px solid #BFDBFE;
-        }
-
-        .stitle {
-            font-family: 'Clash Display', sans-serif;
-            font-size: clamp(2rem, 4.5vw, 3.2rem);
-            font-weight: 700;
-            line-height: 1.05;
-            letter-spacing: -0.03em;
-            color: var(--dark);
-            margin-bottom: 18px;
-        }
-
-        .ssub {
-            color: var(--muted);
-            font-size: 1rem;
-            line-height: 1.75;
-            max-width: 540px;
-            margin-bottom: 60px;
-        }
-
-        /* ─── LEARN CARDS ──────────────────────────────────────── */
-        .learn-bg {
-            background: var(--sky);
-        }
-
-        .learn-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 20px;
-        }
-
-        .lcard {
-            background: var(--white);
-            border: 1.5px solid var(--border);
+        .form-card {
+            background: white;
+            padding: 40px;
             border-radius: 24px;
-            padding: 36px;
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.4s cubic-bezier(.34, 1.56, .64, 1), box-shadow 0.4s, border-color 0.3s;
-            cursor: none;
+            border: 1px solid var(--border);
+            max-width: 500px;
+            margin: 0 auto;
         }
 
-        .lcard::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--blue), var(--coral));
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.4s ease;
-        }
-
-        .lcard:hover {
-            transform: translateY(-10px) rotate(-0.3deg);
-            box-shadow: 0 24px 64px rgba(37, 99, 235, 0.12);
-            border-color: rgba(37, 99, 235, 0.2);
-        }
-
-        .lcard:hover::before {
-            transform: scaleX(1);
-        }
-
-        .lcard-num {
-            position: absolute;
-            top: 24px;
-            right: 28px;
-            font-family: 'Clash Display', sans-serif;
-            font-size: 4rem;
-            font-weight: 700;
-            color: rgba(37, 99, 235, 0.05);
-            line-height: 1;
-            letter-spacing: -0.06em;
-            transition: color 0.3s;
-        }
-
-        .lcard:hover .lcard-num {
-            color: rgba(37, 99, 235, 0.1);
-        }
-
-        .lcard-icon {
-            width: 56px;
-            height: 56px;
-            background: linear-gradient(135deg, #EFF6FF, #DBEAFE);
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.6rem;
+        .fg {
             margin-bottom: 20px;
-            transition: transform 0.4s cubic-bezier(.34, 1.56, .64, 1);
         }
 
-        .lcard:hover .lcard-icon {
-            transform: scale(1.15) rotate(-5deg);
-        }
-
-        .lcard-title {
-            font-weight: 800;
-            font-size: 1.08rem;
-            color: var(--dark);
-            margin-bottom: 10px;
-        }
-
-        .lcard-desc {
-            color: var(--muted);
-            font-size: 0.9rem;
-            line-height: 1.7;
-        }
-
-        /* ─── AUDIENCE ─────────────────────────────────────────── */
-        .audience-bg {
-            background: var(--dark);
-        }
-
-        .audience-bg .stag {
-            background: rgba(255, 255, 255, 0.08);
-            color: #93C5FD;
-            border-color: rgba(255, 255, 255, 0.1);
-        }
-
-        .audience-bg .stitle {
-            color: white;
-        }
-
-        .audience-bg .ssub {
-            color: rgba(255, 255, 255, 0.45);
-        }
-
-        .aud-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-            gap: 20px;
-        }
-
-        .acard {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.07);
-            border-radius: 24px;
-            padding: 36px 28px;
-            text-align: center;
-            cursor: none;
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.4s cubic-bezier(.34, 1.56, .64, 1), border-color 0.3s, background 0.3s;
-        }
-
-        .acard::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(249, 115, 22, 0.1));
-            opacity: 0;
-            transition: opacity 0.4s;
-        }
-
-        .acard:hover {
-            transform: translateY(-8px) scale(1.02);
-            border-color: rgba(37, 99, 235, 0.3);
-        }
-
-        .acard:hover::after {
-            opacity: 1;
-        }
-
-        .acard-icon {
-            font-size: 3rem;
-            margin-bottom: 16px;
+        .fg label {
             display: block;
-            transition: transform 0.4s cubic-bezier(.34, 1.56, .64, 1);
-            position: relative;
-            z-index: 1;
-        }
-
-        .acard:hover .acard-icon {
-            transform: scale(1.2) translateY(-4px);
-        }
-
-        .acard-title {
-            font-weight: 800;
-            color: white;
-            font-size: 1.1rem;
             margin-bottom: 8px;
-            position: relative;
-            z-index: 1;
+            font-weight: 700;
         }
 
-        .acard-text {
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 0.87rem;
-            line-height: 1.65;
-            position: relative;
-            z-index: 1;
+        .fg input,
+        .fg select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
         }
 
-        < !-- TRAINER --><section class="std trainer-bg" id="trainer"><div class="container"><div class="trainer-grid"><div class="trainer-visual">< !-- Floating stat badges --><div class="stat-float s1 sr left"><div class="sf-num" data-count="500">0</div><div class="sf-lbl">Students Trained</div></div><div class="stat-float s2 sr right"><div class="sf-num" data-count="50">0</div><div class="sf-lbl">Workshops Done</div></div><div class="trainer-frame sr scale"><div class="trainer-avatar">👤</div><div class="trainer-name">Your Name Here</div><div class="trainer-role">Digital Marketing Expert & AI Strategist</div><div class="trainer-chips"><span class="tchip">AI Marketing</span><span class="tchip">Lead Gen</span><span class="tchip">Branding</span><span class="tchip">Social Media</span><span class="tchip">Growth Hacking</span></div></div></div><div class="trainer-info"><div class="sr"><div class="stag">👋 Meet Your Trainer</div></div><h2 class="stitle sr d1">Expert Who Has<br>Been There,
-        Done That</h2><p class="trainer-bio sr d2">With over <strong>X+years of experience</strong>in digital marketing,
-        I have helped hundreds of businesses,
-        coaches,
-        and entrepreneurs build powerful online brands and generate consistent,
-        high-quality leads. </p><p class="trainer-bio sr d3">As a certified digital marketing professional and AI enthusiast,
-        I blend <strong>cutting-edge AI tools</strong>with proven marketing strategies to deliver real,
-        measurable results. My mission: make advanced digital marketing accessible and affordable for every professional. </p><p class="trainer-bio sr d4">I have conducted workshops across India — this masterclass brings you the same transformation in just <strong>3 focused hours</strong>,
-        from the comfort of your home. </p><div class="stats-row"><div class="sbox sr d2"><div class="sbox-num" data-count="500">0</div><div class="sbox-lbl">Students</div></div><div class="sbox sr d3"><div class="sbox-num" data-count="10">0</div><div class="sbox-lbl">Years Exp.</div></div><div class="sbox sr d4"><div class="sbox-num" data-count="50">0</div><div class="sbox-lbl">Workshops</div></div></div></div></div></div></section>< !-- REGISTER --><section class="std reg-bg" id="register"><div class="container"><div class="reg-grid"><div class="form-left"><div class="sr"><div class="stag">📋 Secure Your Spot</div></div><h2 class="stitle sr d1">Register Before<br><span style="background:linear-gradient(135deg,var(--blue),var(--coral));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Seats Are Gone !</span></h2><p style="color:var(--muted);font-size:0.97rem;line-height:1.75;margin-bottom:32px;" class="sr d2">At just ₹99,
-        this is the best investment you'll make this year. Every minute you wait is a minute your competitors get ahead.</p>
+        .pay-btn {
+            width: 100%;
+            background: var(--dark);
+            color: white;
+            padding: 16px;
+            border-radius: 100px;
+            font-weight: 800;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
 
-        <div class="ben-list"><div class="ben-item sr d2"><div class="ben-check">✓</div>3-hour live,
-        interactive session with real-time Q&A</div><div class="ben-item sr d3"><div class="ben-check">✓</div>AI tools cheatsheet & ready-to-use marketing templates</div><div class="ben-item sr d4"><div class="ben-check">✓</div>Recording access for 7 days after the event</div><div class="ben-item sr d5"><div class="ben-check">✓</div>Exclusive community group access</div><div class="ben-item sr d6"><div class="ben-check">✓</div>Certificate of participation</div></div><div class="price-banner sr"><div class="pb-label">Registration Fee</div><div class="pb-amt">₹99</div><div class="pb-note">One-time · No hidden charges</div><div class="pb-badge">🎯<br>Limited<br>Seats</div></div></div>< !-- FORM --><div class="form-card"><div class="fcard-head"><h3>Registration Form</h3><p>Fill in details to reserve your seat</p></div><div class="urgency-bar">🔥 Only a few seats remaining !</div><div class="fg"><label>Full Name</label><input type="text" id="f-name" placeholder="Enter your full name"></div><div class="fg"><label>Email Address</label><input type="email" id="f-email" placeholder="Enter your email address"></div><div class="fg"><label>Phone Number</label><input type="tel" id="f-phone" placeholder="+91 98765 43210"></div><div class="fg"><label>Profession</label><select id="f-prof"><option value="" disabled selected>Select your profession</option><option>Trainer</option><option>Coach</option><option>Entrepreneur</option><option>Business Owner</option><option>Freelancer</option><option>Student</option><option>Other</option></select></div><button class="pay-btn" onclick="handlePayment()">🔒 Proceed to Payment — ₹99 </button><div class="sec-note"><span class="sec-green">🔐</span>Secure payment &nbsp;
-        ·&nbsp;
-        <span class="sec-green">✓</span>100% Safe </div></div></div></div></section>< !-- FOOTER --><footer><div class="footer-logo"><span>AI-Powered</span>Digital Marketing</div><div class="footer-details">📅 8th March 2025 &nbsp;
-        ·&nbsp;
-        ⏰ 10:00 AM – 1:00 PM IST &nbsp;
-        ·&nbsp;
-        🌐 Online via Zoom<br>For queries: <a href="mailto:info@yoursite.com">info@yoursite.com</a></div><div class="footer-copy">© 2025 All Rights Reserved · Made with ❤️ for Trainers, Coaches & Business Owners</div></footer><script>
-        /* ─── CUSTOM CURSOR ─── */
-        const cursor=document.getElementById('cursor');
-        const ring=document.getElementById('cursor-ring');
-        let mx=0,
-        my=0,
-        rx=0,
-        ry=0;
-
-        document.addEventListener('mousemove', e=> {
-                mx=e.clientX; my=e.clientY;
-                cursor.style.left=mx+'px';
-                cursor.style.top=my+'px';
-            });
-
+<body>
+    <div id="cursor"></div>
+    <div id="cursor-ring"></div>
+    <nav>
+        <div class="logo">AI TYCOON <span class="logo-badge">Masterclass</span></div>
+        <div class="nav-right">
+            <a href="#register" class="nav-btn"><span>Register Now</span></a>
+        </div>
+    </nav>
+    <section class="hero">
+        <canvas id="heroCanvas" class="hero-canvas"></canvas>
+        <div class="blob blob1"></div>
+        <div class="blob blob2"></div>
+        <div class="blob blob3"></div>
+        <div class="hero-content">
+            <div class="live-pill">
+                <div class="live-dot"></div> LIVE WORKSHOP
+            </div>
+            <h1>AI-Powered<br><span class="h1-line2">Digital Marketing</span></h1>
+            <p class="hero-sub">Transform your business with the power of <strong>Artificial Intelligence</strong>.
+                Learn lead generation, content creation, and scaling strategies used by the top 1%.</p>
+            <div class="chips">
+                <div class="chip">📅 8th March</div>
+                <div class="chip">⏰ 10 AM - 1 PM</div>
+                <div class="chip">🌐 Online</div>
+            </div>
+            <div class="price-main">₹99</div>
+            <div style="margin-top:30px;">
+                <a href="#register" class="btn-hero">Secure Your Spot Now</a>
+            </div>
+        </div>
+    </section>
+    <section class="reg-bg" id="register">
+        <div class="container">
+            <div class="form-card">
+                <h2 style="margin-bottom:20px;text-align:center;">Register Now</h2>
+                <div class="fg"><label>Full Name</label><input type="text" id="f-name" placeholder="John Doe"></div>
+                <div class="fg"><label>Email</label><input type="email" id="f-email" placeholder="john@example.com">
+                </div>
+                <div class="fg"><label>Phone</label><input type="tel" id="f-phone" placeholder="+91 9876543210"></div>
+                <div class="fg">
+                    <label>Profession</label>
+                    <select id="f-prof">
+                        <option>Trainer</option>
+                        <option>Coach</option>
+                        <option>Entrepreneur</option>
+                        <option>Business Owner</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+                <button class="pay-btn" onclick="handlePayment()">Proceed to Payment — ₹99</button>
+            </div>
+        </div>
+    </section>
+    <script>
+        const cursor = document.getElementById('cursor');
+        const ring = document.getElementById('cursor-ring');
+        let mx = 0, my = 0, rx = 0, ry = 0;
+        document.addEventListener('mousemove', e => {
+            mx = e.clientX; my = e.clientY;
+            cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+        });
         (function animRing() {
-                rx +=(mx - rx) * 0.12;
-                ry +=(my - ry) *.12;
-                ring.style.left=rx+'px';
-                ring.style.top=ry+'px';
-                requestAnimationFrame(animRing);
-            })();
+            rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+            ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+            requestAnimationFrame(animRing);
+        })();
 
-        document.querySelectorAll('a,button,.chip,.lcard,.acard,.sbox,.ben-item').forEach(el=> {
-                el.addEventListener('mouseenter', ()=> {
-                        cursor.style.width='28px'; cursor.style.height='28px';
-                        cursor.style.background='var(--coral)';
-                        ring.style.width='60px'; ring.style.height='60px';
-                    });
-
-                el.addEventListener('mouseleave', ()=> {
-                        cursor.style.width='14px'; cursor.style.height='14px';
-                        cursor.style.background='var(--blue)';
-                        ring.style.width='44px'; ring.style.height='44px';
-                    });
-            });
-
-        /* ─── HERO CANVAS PARTICLES ─── */
-        const canvas=document.getElementById('heroCanvas');
-        const ctx=canvas.getContext('2d');
-        let W,
-        H,
-        particles=[];
-
-        function resize() {
-            W=canvas.width=canvas.offsetWidth;
-            H=canvas.height=canvas.offsetHeight;
-        }
-
-        resize();
-        window.addEventListener('resize', resize);
-
+        /* --- Particles --- */
+        const canvas = document.getElementById('heroCanvas');
+        const ctx = canvas.getContext('2d');
+        let W, H, particles = [];
+        function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resize); resize();
         class Particle {
-            constructor() {
-                this.reset();
-            }
-
+            constructor() { this.reset(); }
             reset() {
-                this.x=Math.random() * W;
-                this.y=Math.random() * H;
-                this.r=Math.random() * 2.5+0.5;
-                this.vx=(Math.random() - 0.5) * 0.4;
-                this.vy=(Math.random() - 0.5) * 0.4;
-                this.a=Math.random() * 0.6+0.1;
-                this.col=Math.random()>0.5 ? '37,99,235': '249,115,22';
+                this.x = Math.random() * W; this.y = Math.random() * H;
+                this.r = Math.random() * 2 + 1; this.vx = (Math.random() - 0.5) * 0.5; this.vy = (Math.random() - 0.5) * 0.5;
+                this.col = Math.random() > 0.5 ? '37,99,235' : '249,115,22'; this.a = Math.random() * 0.5 + 0.1;
             }
-
-            update() {
-                this.x+=this.vx;
-                this.y+=this.vy;
-                if(this.x<0||this.x>W||this.y<0||this.y>H) this.reset();
-            }
-
-            draw() {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.r, 0, Math.PI*2);
-
-                ctx.fillStyle=`rgba($ {
-                        this.col
-                    }
-
-                    , $ {
-                        this.a
-                    })`;
-                ctx.fill();
-            }
+            update() { this.x += this.vx; this.y += this.vy; if (this.x < 0 || this.x > W || this.y < 0 || this.y > H) this.reset(); }
+            draw() { ctx.beginPath(); ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2); ctx.fillStyle = `rgba(${this.col},${this.a})`; ctx.fill(); }
         }
+        for (let i = 0; i < 80; i++) particles.push(new Particle());
+        (function anim() {
+            ctx.clearRect(0, 0, W, H); particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(anim);
+        })();
 
-        for(let i=0; i<120; i++) particles.push(new Particle());
-
-        function connectParticles() {
-            for(let i=0; i<particles.length; i++) {
-                for(let j=i+1; j<particles.length; j++) {
-                    const dx=particles[i].x-particles[j].x,
-                    dy=particles[i].y-particles[j].y;
-                    const d=Math.sqrt(dx*dx+dy*dy);
-
-                    if(d<100) {
-                        ctx.beginPath();
-
-                        ctx.strokeStyle=`rgba(37, 99, 235, $ {
-                                0.06*(1-d/100)
-                            })`;
-                        ctx.lineWidth=0.5;
-                        ctx.moveTo(particles[i].x, particles[i].y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.stroke();
-                    }
-                }
-            }
-        }
-
-        (function animParticles() {
-                ctx.clearRect(0, 0, W, H);
-
-                particles.forEach(p=> {
-                        p.update(); p.draw();
-                    });
-                connectParticles();
-                requestAnimationFrame(animParticles);
-            })();
-
-        /* ─── COUNTDOWN ─── */
-        const prev= {}
-
-        ;
-
-        function tick() {
-            const target=new Date('2025-03-08T10:00:00');
-            const diff=target - new Date();
-            const pad=n=>String(Math.max(0, n)).padStart(2, '0');
-
-            const vals= {
-                days: pad(Math.floor(diff/86400000)),
-                    hours: pad(Math.floor((diff%86400000)/3600000)),
-                    mins: pad(Math.floor((diff%3600000)/60000)),
-                    secs: pad(Math.floor((diff%60000)/1000))
-            }
-
-            ;
-
-            Object.entries(vals).forEach(([k, v])=> {
-                    const el=document.getElementById(k);
-
-                    if(prev[k] !==v) {
-                        el.textContent=v;
-                        el.classList.remove('flip');
-                        void el.offsetWidth;
-                        el.classList.add('flip');
-                        prev[k]=v;
-                    }
-                });
-        }
-
-        tick();
-        setInterval(tick, 1000);
-
-        /* ─── SCROLL REVEAL ─── */
-        const srObs=new IntersectionObserver(entries=> {
-                entries.forEach(e=> {
-                        if(e.isIntersecting) e.target.classList.add('vis');
-                    });
-            }
-
-            , {
-            threshold: 0.12
-        });
-        document.querySelectorAll('.sr').forEach(el=> srObs.observe(el));
-
-        /* ─── COUNTER ANIMATION ─── */
-        function animCount(el, target) {
-            let start=0;
-            const dur=1800;
-
-            const step=timestamp=> {
-                if( !start) start=timestamp;
-                const p=Math.min((timestamp-start)/dur, 1);
-                const ease=1 - Math.pow(1-p, 3);
-                el.textContent=Math.floor(ease * target)+(target >=100 ? '+' : '+');
-                if(p < 1) requestAnimationFrame(step);
-            }
-
-            ;
-            requestAnimationFrame(step);
-        }
-
-        const countObs=new IntersectionObserver(entries=> {
-                entries.forEach(e=> {
-                        if(e.isIntersecting) {
-                            const target=parseInt(e.target.dataset.count);
-                            animCount(e.target, target);
-                            countObs.unobserve(e.target);
-                        }
-                    });
-            }
-
-            , {
-            threshold: 0.5
-        });
-        document.querySelectorAll('[data-count]').forEach(el=> countObs.observe(el));
-
-        /* ─── PAYMENT ─── */
         function handlePayment() {
-            const name=document.getElementById('f-name').value.trim();
-            const email=document.getElementById('f-email').value.trim();
-            const phone=document.getElementById('f-phone').value.trim();
-            const prof=document.getElementById('f-prof').value;
-
-            if( !name|| !email|| !phone|| !prof) {
-                alert('Please fill in all fields to proceed.');
-                return;
-            }
-
-            // 👉 Integrate Razorpay / Instamojo / PayU here
-            alert(`Thank you, $ {
-                    name
-                }
-
-                ! 🎉\n\nRedirecting to payment...\nConfirmation will be sent to: $ {
-                    email
-                }
-
-                `);
+            const name = document.getElementById('f-name').value;
+            if (!name) { alert('Please fill details'); return; }
+            alert('Redirecting to payment...');
         }
+    </script>
+</body>
 
-        </script></body></html>
+</html>
