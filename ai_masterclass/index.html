@@ -46,7 +46,7 @@
     </script>
     <style type="text/tailwindcss">
         @layer base {
-            body { @apply font-body bg-cyber-indigo text-white overflow-x-hidden; }
+            body { @apply font-body bg-cyber-indigo text-white; }
             h1, h2, h3, h4 { @apply font-heading tracking-tight; }
             ::selection { background: rgba(168,85,247,0.25); color: #fff; }
         }
@@ -57,7 +57,7 @@
             .badge { @apply inline-flex items-center gap-2 px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em] border border-cyber-amethyst/30 text-cyber-amethyst bg-cyber-amethyst/5; }
             .section-card { @apply bg-cyber-card border border-white/[0.06] rounded-3xl transition-all duration-500 hover:border-cyber-amethyst/30 hover:-translate-y-1; }
         }
-        .text-grad { background: linear-gradient(135deg, #A855F7, #fff 50%, #06B6D4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .text-grad { background: linear-gradient(135deg, #A855F7, #fff 50%, #06B6D4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; padding-right: 0.1em; }
         .reveal { opacity: 0; transform: translateY(28px); transition: all 0.9s cubic-bezier(0.2, 1, 0.3, 1); }
         .reveal.active { opacity: 1; transform: translateY(0); }
         .delay-100 { transition-delay: 100ms; }
@@ -65,6 +65,9 @@
         .delay-300 { transition-delay: 300ms; }
         .delay-400 { transition-delay: 400ms; }
         #progressBar { background: linear-gradient(to right, #A855F7, #06B6D4); }
+        /* Prevent italic text clipping — italic glyphs slant right & need breathing room */
+        h1, h2 { overflow: visible; }
+        h1 .italic, h2 .italic, .text-grad { display: inline-block; padding-right: 0.1em; }
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: #0B0E14; }
         ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
@@ -72,805 +75,856 @@
 </head>
 
 <body>
+    <div class="overflow-x-hidden w-full">
 
-    <!-- Scroll Progress -->
-    <div id="progressBar" class="fixed top-0 left-0 h-[3px] z-[999] w-0 transition-all duration-75"></div>
+        <!-- Scroll Progress -->
+        <div id="progressBar" class="fixed top-0 left-0 h-[3px] z-[999] w-0 transition-all duration-75"></div>
 
-    <!-- ============ NAVBAR ============ -->
-    <nav id="navbar" class="fixed top-0 left-0 right-0 z-[100] px-4 lg:px-8 py-6 transition-all duration-500">
-        <div class="max-w-7xl mx-auto flex items-center justify-between glass rounded-2xl px-6 lg:px-10 py-3">
-            <div class="flex items-center gap-3">
+        <!-- ============ NAVBAR ============ -->
+        <nav id="navbar" class="fixed top-0 left-0 right-0 z-[100] px-4 lg:px-8 py-6 transition-all duration-500">
+            <div class="max-w-7xl mx-auto flex items-center justify-between glass rounded-2xl px-6 lg:px-10 py-3">
+                <div class="flex items-center gap-3">
+                    <div
+                        class="w-9 h-9 rounded-xl bg-gradient-to-br from-cyber-amethyst to-cyber-cyan flex items-center justify-center font-black italic text-sm">
+                        TT</div>
+                    <span class="font-heading font-black text-xl tracking-tighter italic hidden sm:block">TECH
+                        TYCOON</span>
+                </div>
                 <div
-                    class="w-9 h-9 rounded-xl bg-gradient-to-br from-cyber-amethyst to-cyber-cyan flex items-center justify-center font-black italic text-sm">
-                    TT</div>
-                <span class="font-heading font-black text-xl tracking-tighter italic hidden sm:block">TECH TYCOON</span>
+                    class="hidden lg:flex items-center gap-10 text-[10px] font-black uppercase tracking-[0.2em] text-cyber-slate">
+                    <a href="#why" class="hover:text-white transition-colors">Why Attend</a>
+                    <a href="#roadmap" class="hover:text-white transition-colors">Curriculum</a>
+                    <a href="#trainer" class="hover:text-white transition-colors">Trainer</a>
+                    <a href="#testimonials" class="hover:text-white transition-colors">Reviews</a>
+                    <a href="#faq" class="hover:text-white transition-colors">FAQ</a>
+                </div>
+                <a href="#enroll"
+                    class="btn-primary text-[11px] font-black uppercase tracking-wider px-6 py-3 whitespace-nowrap">Join
+                    Workshop @99/-</a>
             </div>
-            <div
-                class="hidden lg:flex items-center gap-10 text-[10px] font-black uppercase tracking-[0.2em] text-cyber-slate">
-                <a href="#why" class="hover:text-white transition-colors">Why Attend</a>
-                <a href="#roadmap" class="hover:text-white transition-colors">Curriculum</a>
-                <a href="#trainer" class="hover:text-white transition-colors">Trainer</a>
-                <a href="#testimonials" class="hover:text-white transition-colors">Reviews</a>
-                <a href="#faq" class="hover:text-white transition-colors">FAQ</a>
+        </nav>
+
+        <!-- ============ HERO ============ -->
+        <section class="relative min-h-screen flex items-center pt-32 pb-20 overflow-hidden">
+            <div class="absolute inset-0 z-0">
+                <img src="cyber-bg.png" alt="" class="w-full h-full object-cover opacity-20">
+                <div class="absolute inset-0"
+                    style="background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(168,85,247,0.12) 0%, rgba(11,14,20,0.98) 70%);">
+                </div>
             </div>
-            <a href="#enroll"
-                class="btn-primary text-[11px] font-black uppercase tracking-wider px-6 py-3 whitespace-nowrap">Join
-                Workshop @99/-</a>
-        </div>
-    </nav>
 
-    <!-- ============ HERO ============ -->
-    <section class="relative min-h-screen flex items-center pt-32 pb-20 overflow-hidden">
-        <div class="absolute inset-0 z-0">
-            <img src="cyber-bg.png" alt="" class="w-full h-full object-cover opacity-20">
-            <div class="absolute inset-0"
-                style="background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(168,85,247,0.12) 0%, rgba(11,14,20,0.98) 70%);">
-            </div>
-        </div>
+            <div class="max-w-7xl mx-auto px-4 lg:px-8 relative z-10 w-full">
+                <div class="lg:flex items-center gap-16">
+                    <!-- Left Content -->
+                    <div class="lg:w-3/5">
+                        <div class="badge mb-8 reveal">
+                            <span class="w-2 h-2 rounded-full bg-cyber-amethyst animate-pulse-slow"></span>
+                            LIVE Masterclass · 8th March 2025 · 10:00 AM IST
+                        </div>
 
-        <div class="max-w-7xl mx-auto px-4 lg:px-8 relative z-10 w-full">
-            <div class="lg:flex items-center gap-16">
-                <!-- Left Content -->
-                <div class="lg:w-3/5">
-                    <div class="badge mb-8 reveal">
-                        <span class="w-2 h-2 rounded-full bg-cyber-amethyst animate-pulse-slow"></span>
-                        LIVE Masterclass · 8th March 2025 · 10:00 AM IST
-                    </div>
+                        <h1
+                            class="text-5xl md:text-7xl lg:text-8xl font-black mb-8 leading-[0.9] tracking-tighter reveal">
+                            Master<br><span class="text-grad italic">AI-Powered</span><br>Digital Marketing
+                        </h1>
 
-                    <h1 class="text-5xl md:text-7xl lg:text-8xl font-black mb-8 leading-[0.9] tracking-tighter reveal">
-                        Master<br><span class="text-grad italic">AI-Powered</span><br>Digital Marketing
-                    </h1>
+                        <p class="text-lg md:text-xl text-cyber-slate leading-relaxed mb-10 reveal delay-200 max-w-xl">
+                            In just <strong class="text-white">3 hours</strong>, learn to build a powerful digital
+                            brand,
+                            attract quality leads, and automate your marketing — all using the latest AI tools. Designed
+                            for
+                            <span class="text-white font-bold">Trainers, Coaches, Entrepreneurs & Business
+                                Owners</span>.
+                        </p>
 
-                    <p class="text-lg md:text-xl text-cyber-slate leading-relaxed mb-10 reveal delay-200 max-w-xl">
-                        In just <strong class="text-white">3 hours</strong>, learn to build a powerful digital brand,
-                        attract quality leads, and automate your marketing — all using the latest AI tools. Designed for
-                        <span class="text-white font-bold">Trainers, Coaches, Entrepreneurs & Business Owners</span>.
-                    </p>
+                        <!-- Benefits Pills -->
+                        <div class="flex flex-wrap gap-3 mb-12 reveal delay-300">
+                            <span class="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm font-bold">✅ No
+                                Tech
+                                Background Needed</span>
+                            <span class="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm font-bold">✅ 10+
+                                AI
+                                Tools Covered</span>
+                            <span class="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm font-bold">✅
+                                Live
+                                Interactive Session</span>
+                            <span class="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm font-bold">✅
+                                Certificate of Completion</span>
+                        </div>
 
-                    <!-- Benefits Pills -->
-                    <div class="flex flex-wrap gap-3 mb-12 reveal delay-300">
-                        <span class="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm font-bold">✅ No Tech
-                            Background Needed</span>
-                        <span class="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm font-bold">✅ 10+ AI
-                            Tools Covered</span>
-                        <span class="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm font-bold">✅ Live
-                            Interactive Session</span>
-                        <span class="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm font-bold">✅
-                            Certificate of Completion</span>
-                    </div>
-
-                    <div class="flex flex-col sm:flex-row gap-6 items-start sm:items-center reveal delay-400">
-                        <a href="#enroll" class="btn-primary text-lg font-black px-12 py-5">Claim My Seat @₹99</a>
-                        <div class="text-sm text-cyber-slate">
-                            <div class="font-bold text-white text-base">Limited to 200 Seats</div>
-                            <div class="text-xs mt-0.5">⚡ 143 registered already</div>
+                        <div class="flex flex-col sm:flex-row gap-6 items-start sm:items-center reveal delay-400">
+                            <a href="#enroll" class="btn-primary text-lg font-black px-12 py-5">Claim My Seat @₹99</a>
+                            <div class="text-sm text-cyber-slate">
+                                <div class="font-bold text-white text-base">Limited to 200 Seats</div>
+                                <div class="text-xs mt-0.5">⚡ 143 registered already</div>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Right Card -->
-                <div class="lg:w-2/5 mt-16 lg:mt-0 reveal delay-300 hidden lg:block">
-                    <div class="glass rounded-3xl p-8 border-white/10 space-y-6">
-                        <div class="text-xs font-black uppercase tracking-[0.2em] text-cyber-amethyst mb-2">Workshop
-                            Details</div>
-                        <div class="space-y-5">
-                            <div class="flex items-center gap-5 py-4 border-b border-white/5">
-                                <span class="text-3xl">📅</span>
-                                <div>
-                                    <div class="font-black text-white text-lg">8th March 2025</div>
-                                    <div class="text-xs text-cyber-slate font-bold uppercase tracking-wider">Saturday
+                    <!-- Right Card -->
+                    <div class="lg:w-2/5 mt-16 lg:mt-0 reveal delay-300 hidden lg:block">
+                        <div class="glass rounded-3xl p-8 border-white/10 space-y-6">
+                            <div class="text-xs font-black uppercase tracking-[0.2em] text-cyber-amethyst mb-2">Workshop
+                                Details</div>
+                            <div class="space-y-5">
+                                <div class="flex items-center gap-5 py-4 border-b border-white/5">
+                                    <span class="text-3xl">📅</span>
+                                    <div>
+                                        <div class="font-black text-white text-lg">8th March 2025</div>
+                                        <div class="text-xs text-cyber-slate font-bold uppercase tracking-wider">
+                                            Saturday
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-5 py-4 border-b border-white/5">
+                                    <span class="text-3xl">⏰</span>
+                                    <div>
+                                        <div class="font-black text-white text-lg">10:00 AM – 1:00 PM</div>
+                                        <div class="text-xs text-cyber-slate font-bold uppercase tracking-wider">IST ·
+                                            Online Live</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-5 py-4 border-b border-white/5">
+                                    <span class="text-3xl">🌐</span>
+                                    <div>
+                                        <div class="font-black text-white text-lg">Zoom / Google Meet</div>
+                                        <div class="text-xs text-cyber-slate font-bold uppercase tracking-wider">Link
+                                            sent
+                                            after registration</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-5 py-4">
+                                    <span class="text-3xl">💰</span>
+                                    <div>
+                                        <div class="font-black text-white text-lg flex items-baseline gap-3">₹99 <span
+                                                class="text-cyber-slate line-through opacity-40 text-base font-bold">₹2,999</span>
+                                        </div>
+                                        <div
+                                            class="text-xs text-cyber-amethyst font-black uppercase tracking-wider animate-pulse">
+                                            Early Bird Offer Ends Soon</div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="flex items-center gap-5 py-4 border-b border-white/5">
-                                <span class="text-3xl">⏰</span>
-                                <div>
-                                    <div class="font-black text-white text-lg">10:00 AM – 1:00 PM</div>
-                                    <div class="text-xs text-cyber-slate font-bold uppercase tracking-wider">IST ·
-                                        Online Live</div>
+                            <a href="#enroll"
+                                class="block text-center btn-primary py-4 font-black italic tracking-tight">Reserve My
+                                Seat
+                                Now →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Social Proof Strip -->
+                <div
+                    class="mt-20 pt-10 border-t border-white/5 grid grid-cols-2 md:grid-cols-4 gap-10 text-center reveal delay-400">
+                    <div>
+                        <div class="text-4xl font-black text-white italic">4,800+</div>
+                        <div class="text-[11px] font-black text-cyber-slate uppercase tracking-[0.2em] mt-1">
+                            Professionals
+                            Trained</div>
+                    </div>
+                    <div>
+                        <div class="text-4xl font-black text-white italic">50+</div>
+                        <div class="text-[11px] font-black text-cyber-slate uppercase tracking-[0.2em] mt-1">Corporate
+                            Workshops</div>
+                    </div>
+                    <div>
+                        <div class="text-4xl font-black text-white italic">10+</div>
+                        <div class="text-[11px] font-black text-cyber-slate uppercase tracking-[0.2em] mt-1">AI Tools
+                            Covered</div>
+                    </div>
+                    <div>
+                        <div class="text-4xl font-black text-white italic">⭐ 4.9</div>
+                        <div class="text-[11px] font-black text-cyber-slate uppercase tracking-[0.2em] mt-1">Average
+                            Rating
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ WHY THIS MASTERCLASS ============ -->
+        <section id="why" class="py-32 bg-cyber-card border-y border-white/[0.05]">
+            <div class="max-w-7xl mx-auto px-4 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-24 reveal">
+                    <div class="badge mb-8">The Problem We Solve</div>
+                    <h2 class="text-5xl md:text-6xl font-black mb-8 italic leading-none">Why Your Marketing <span
+                            class="text-grad">Isn't Working</span></h2>
+                    <p class="text-lg text-cyber-slate font-medium">Most professionals spend hours creating content,
+                        chasing
+                        leads, and still see no results. Here's why — and how AI changes everything.</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="section-card p-10 reveal delay-100">
+                        <div
+                            class="w-14 h-14 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-3xl mb-8">
+                            😩</div>
+                        <h3 class="text-2xl font-black mb-4 italic">Time Drain</h3>
+                        <p class="text-cyber-slate leading-relaxed">You spend 30+ hours a week on content, email
+                            follow-ups,
+                            and social posting — yet your reach barely grows. There's a smarter way.</p>
+                    </div>
+                    <div class="section-card p-10 reveal delay-200">
+                        <div
+                            class="w-14 h-14 rounded-2xl bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center text-3xl mb-8">
+                            🎯</div>
+                        <h3 class="text-2xl font-black mb-4 italic">No Strategy</h3>
+                        <p class="text-cyber-slate leading-relaxed">Posting randomly without a clear AI-powered lead
+                            funnel
+                            means you attract the wrong audience and convert almost nobody into buyers.</p>
+                    </div>
+                    <div class="section-card p-10 reveal delay-300">
+                        <div
+                            class="w-14 h-14 rounded-2xl bg-cyber-amethyst/10 border border-cyber-amethyst/20 flex items-center justify-center text-3xl mb-8">
+                            🚀</div>
+                        <h3 class="text-2xl font-black mb-4 italic">The AI Solution</h3>
+                        <p class="text-cyber-slate leading-relaxed">In this masterclass you'll build automated systems
+                            that
+                            generate leads, produce content, and build your brand — even while you sleep.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ WHAT YOU WILL LEARN ============ -->
+        <section id="roadmap" class="py-32">
+            <div class="max-w-7xl mx-auto px-4 lg:px-8">
+                <div class="lg:flex items-end justify-between gap-12 mb-24 reveal">
+                    <div>
+                        <div class="badge mb-8">The 3-Hour Curriculum</div>
+                        <h2 class="text-5xl md:text-7xl font-black italic leading-none">What You'll<br><span
+                                class="text-grad">Master</span></h2>
+                    </div>
+                    <p class="text-lg text-cyber-slate max-w-sm lg:mb-2 mt-8 lg:mt-0 font-medium">Three focused modules
+                        —
+                        each building on the last to give you a complete, deployable AI marketing system.</p>
+                </div>
+
+                <!-- Module 1 -->
+                <div class="grid lg:grid-cols-2 gap-8 mb-8 reveal">
+                    <div class="section-card p-12 lg:col-span-2 border-cyber-amethyst/20">
+                        <div class="lg:flex gap-16 items-start">
+                            <div class="lg:w-1/3 mb-8 lg:mb-0">
+                                <div class="text-[100px] font-black leading-none opacity-10 italic">01</div>
+                                <h3 class="text-3xl font-black italic -mt-4 text-cyber-amethyst">Concept of AI</h3>
+                                <p class="text-cyber-slate mt-4 leading-relaxed">Build the mental model you need to use
+                                    AI
+                                    with confidence, not fear.</p>
+                            </div>
+                            <div class="lg:w-2/3 grid sm:grid-cols-2 gap-6">
+                                <div class="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6">
+                                    <div class="text-cyber-amethyst font-black mb-2">→ What is Generative AI?</div>
+                                    <p class="text-cyber-slate text-sm">Understanding LLMs, ChatGPT, and how they
+                                        "think" —
+                                        explained simply.</p>
+                                </div>
+                                <div class="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6">
+                                    <div class="text-cyber-amethyst font-black mb-2">→ AI vs Traditional Marketing</div>
+                                    <p class="text-cyber-slate text-sm">Why leading brands are cutting their marketing
+                                        budget by 60% using AI.</p>
+                                </div>
+                                <div class="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6">
+                                    <div class="text-cyber-amethyst font-black mb-2">→ The Mindset Shift</div>
+                                    <p class="text-cyber-slate text-sm">From "doing everything manually" to "building
+                                        systems that do it for you."</p>
+                                </div>
+                                <div class="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6">
+                                    <div class="text-cyber-amethyst font-black mb-2">→ Ethical AI Usage</div>
+                                    <p class="text-cyber-slate text-sm">How to use AI authentically while keeping your
+                                        brand
+                                        voice intact.</p>
                                 </div>
                             </div>
-                            <div class="flex items-center gap-5 py-4 border-b border-white/5">
-                                <span class="text-3xl">🌐</span>
-                                <div>
-                                    <div class="font-black text-white text-lg">Zoom / Google Meet</div>
-                                    <div class="text-xs text-cyber-slate font-bold uppercase tracking-wider">Link sent
-                                        after registration</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Module 2 -->
+                <div class="grid lg:grid-cols-2 gap-8 mb-8 reveal">
+                    <div class="section-card p-12 lg:col-span-2 border-cyber-cyan/20">
+                        <div class="lg:flex gap-16 items-start">
+                            <div class="lg:w-1/3 mb-8 lg:mb-0">
+                                <div class="text-[100px] font-black leading-none opacity-10 italic">02</div>
+                                <h3 class="text-3xl font-black italic -mt-4 text-cyber-cyan">AI in Digital Marketing
+                                </h3>
+                                <p class="text-cyber-slate mt-4 leading-relaxed">The power phase — integrate AI at every
+                                    step of your marketing funnel.</p>
+                            </div>
+                            <div class="lg:w-2/3 grid sm:grid-cols-2 gap-6">
+                                <div class="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6">
+                                    <div class="text-cyber-cyan font-black mb-2">→ AI Content Strategy</div>
+                                    <p class="text-cyber-slate text-sm">Create a month of social content in under 2
+                                        hours
+                                        using AI pipelines.</p>
+                                </div>
+                                <div class="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6">
+                                    <div class="text-cyber-cyan font-black mb-2">→ Digital Brand Building</div>
+                                    <p class="text-cyber-slate text-sm">Craft a consistent, premium brand identity
+                                        across
+                                        all platforms with AI.</p>
+                                </div>
+                                <div class="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6">
+                                    <div class="text-cyber-cyan font-black mb-2">→ AI Lead Generation</div>
+                                    <p class="text-cyber-slate text-sm">Build automated funnels that attract and qualify
+                                        high-value leads 24/7.</p>
+                                </div>
+                                <div class="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6">
+                                    <div class="text-cyber-cyan font-black mb-2">→ AI-Powered DMs & Emails</div>
+                                    <p class="text-cyber-slate text-sm">Write personalised outreach messages that
+                                        convert —
+                                        at scale.</p>
                                 </div>
                             </div>
-                            <div class="flex items-center gap-5 py-4">
-                                <span class="text-3xl">💰</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Module 3 -->
+                <div class="grid lg:grid-cols-2 gap-8 reveal">
+                    <div class="section-card p-12 lg:col-span-2 border-white/10">
+                        <div class="lg:flex gap-16 items-start">
+                            <div class="lg:w-1/3 mb-8 lg:mb-0">
+                                <div class="text-[100px] font-black leading-none opacity-10 italic">03</div>
+                                <h3 class="text-3xl font-black italic -mt-4 text-white">10+ AI Tools</h3>
+                                <p class="text-cyber-slate mt-4 leading-relaxed">Hands-on walkthroughs of the best AI
+                                    tools
+                                    for every type of business professional.</p>
+                            </div>
+                            <div class="lg:w-2/3 grid sm:grid-cols-2 gap-6">
+                                <div class="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6">
+                                    <div class="text-white font-black mb-2">→ Content Creation Tools</div>
+                                    <p class="text-cyber-slate text-sm">ChatGPT, Claude, Gemini — which to use and when
+                                        for
+                                        best results.</p>
+                                </div>
+                                <div class="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6">
+                                    <div class="text-white font-black mb-2">→ Visual & Graphic AI</div>
+                                    <p class="text-cyber-slate text-sm">Canva AI, Adobe Firefly, Midjourney for brand
+                                        visuals that wow.</p>
+                                </div>
+                                <div class="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6">
+                                    <div class="text-white font-black mb-2">→ AI Automation Tools</div>
+                                    <p class="text-cyber-slate text-sm">Zapier AI, Make.com — create workflows that run
+                                        your
+                                        marketing on autopilot.</p>
+                                </div>
+                                <div class="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6">
+                                    <div class="text-white font-black mb-2">→ AI Analytics & SEO</div>
+                                    <p class="text-cyber-slate text-sm">Use AI to decode your competitors and rank
+                                        higher
+                                        with minimal effort.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ WHO IS IT FOR ============ -->
+        <section class="py-32 bg-cyber-card border-y border-white/[0.05]">
+            <div class="max-w-7xl mx-auto px-4 lg:px-8">
+                <div class="text-center max-w-2xl mx-auto mb-24 reveal">
+                    <div class="badge mb-8">This Is For You If...</div>
+                    <h2 class="text-5xl md:text-6xl font-black italic leading-none">Who Should <span
+                            class="text-grad">Join</span></h2>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="section-card p-8 text-center reveal delay-100">
+                        <div class="text-5xl mb-6">🎓</div>
+                        <h3 class="text-xl font-black mb-4 italic">Trainers & Coaches</h3>
+                        <p class="text-cyber-slate text-sm leading-relaxed">Attract premium clients, fill your programs,
+                            and
+                            establish yourself as the go-to expert in your niche.</p>
+                    </div>
+                    <div class="section-card p-8 text-center reveal delay-200">
+                        <div class="text-5xl mb-6">💼</div>
+                        <h3 class="text-xl font-black mb-4 italic">Entrepreneurs</h3>
+                        <p class="text-cyber-slate text-sm leading-relaxed">Build a magnetic personal brand and
+                            AI-powered
+                            lead funnels without hiring a big marketing team.</p>
+                    </div>
+                    <div class="section-card p-8 text-center reveal delay-300">
+                        <div class="text-5xl mb-6">🏪</div>
+                        <h3 class="text-xl font-black mb-4 italic">Business Owners</h3>
+                        <p class="text-cyber-slate text-sm leading-relaxed">Cut your marketing costs, reach a wider
+                            audience, and make data-driven decisions using AI.</p>
+                    </div>
+                    <div class="section-card p-8 text-center reveal delay-400">
+                        <div class="text-5xl mb-6">📱</div>
+                        <h3 class="text-xl font-black mb-4 italic">Digital Marketers</h3>
+                        <p class="text-cyber-slate text-sm leading-relaxed">Level up your services, get more clients,
+                            and
+                            deliver 10x better results using AI tools.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ TRAINER ============ -->
+        <section id="trainer" class="py-32">
+            <div class="max-w-7xl mx-auto px-4 lg:px-8">
+                <div class="lg:flex items-center gap-24">
+                    <!-- Photo -->
+                    <div class="lg:w-5/12 mb-16 lg:mb-0 reveal">
+                        <div class="relative max-w-sm mx-auto">
+                            <div
+                                class="absolute -inset-6 bg-gradient-to-br from-cyber-amethyst/30 to-cyber-cyan/20 rounded-[4rem] blur-3xl opacity-60">
+                            </div>
+                            <div
+                                class="relative rounded-[3.5rem] overflow-hidden border border-white/10 shadow-2xl aspect-[4/5]">
+                                <img src="antony-praveen.jpg" alt="Antony Praveen - Founder of Tech Tycoon"
+                                    class="w-full h-full object-cover">
+                                <div class="absolute inset-0"
+                                    style="background: linear-gradient(to top, rgba(11,14,20,0.8) 0%, transparent 50%);">
+                                </div>
+                                <div class="absolute bottom-6 left-6 right-6">
+                                    <div class="font-black text-xl italic">Antony Praveen</div>
+                                    <div class="text-cyber-amethyst text-xs font-black uppercase tracking-widest mt-1">
+                                        Founder, Tech Tycoon</div>
+                                </div>
+                            </div>
+
+                            <!-- Floating Stats -->
+                            <div class="absolute -right-6 top-16 glass rounded-2xl px-6 py-4 border-white/10 shadow-xl">
+                                <div class="text-2xl font-black italic text-white">4,800+</div>
+                                <div class="text-[9px] font-black uppercase tracking-wider text-cyber-slate">Students
+                                    Trained</div>
+                            </div>
+                            <div
+                                class="absolute -left-6 bottom-24 glass rounded-2xl px-6 py-4 border-white/10 shadow-xl">
+                                <div class="text-2xl font-black italic text-white">50+</div>
+                                <div class="text-[9px] font-black uppercase tracking-wider text-cyber-slate">Corporate
+                                    Workshops</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Info -->
+                    <div class="lg:w-7/12 reveal delay-300">
+                        <div class="badge mb-8">Meet Your Trainer</div>
+                        <h2 class="text-5xl md:text-6xl font-black mb-6 italic leading-none">Antony <span
+                                class="text-grad">Praveen</span></h2>
+                        <h3 class="text-xl font-bold text-white/40 mb-10 uppercase tracking-[0.2em]">Founder · Tech
+                            Tycoon
+                            Digital Solutions</h3>
+
+                        <div
+                            class="bg-white/[0.03] border-l-[5px] border-cyber-amethyst rounded-r-2xl p-8 mb-12 italic text-lg text-white/80 leading-relaxed">
+                            "I help Trainers, Coaches, and Business Owners build a powerful digital presence and attract
+                            quality leads — using the exact AI strategies that scaled my own business to 7-figures."
+                        </div>
+
+                        <div class="grid sm:grid-cols-2 gap-6 mb-12">
+                            <div class="flex items-start gap-4">
+                                <div
+                                    class="w-10 h-10 rounded-xl bg-cyber-amethyst/10 border border-cyber-amethyst/30 flex items-center justify-center flex-shrink-0 text-cyber-amethyst font-black">
+                                    ✓</div>
                                 <div>
-                                    <div class="font-black text-white text-lg flex items-baseline gap-3">₹99 <span
-                                            class="text-cyber-slate line-through opacity-40 text-base font-bold">₹2,999</span>
+                                    <div class="font-black text-white mb-1">International Certified Trainer</div>
+                                    <div class="text-cyber-slate text-sm">Recognized globally for AI-Powered Digital
+                                        Training Excellence</div>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-4">
+                                <div
+                                    class="w-10 h-10 rounded-xl bg-cyber-amethyst/10 border border-cyber-amethyst/30 flex items-center justify-center flex-shrink-0 text-cyber-amethyst font-black">
+                                    ✓</div>
+                                <div>
+                                    <div class="font-black text-white mb-1">AI Marketing Specialist</div>
+                                    <div class="text-cyber-slate text-sm">Trained 4,800+ professionals across industries
                                     </div>
-                                    <div
-                                        class="text-xs text-cyber-amethyst font-black uppercase tracking-wider animate-pulse">
-                                        Early Bird Offer Ends Soon</div>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-4">
+                                <div
+                                    class="w-10 h-10 rounded-xl bg-cyber-amethyst/10 border border-cyber-amethyst/30 flex items-center justify-center flex-shrink-0 text-cyber-amethyst font-black">
+                                    ✓</div>
+                                <div>
+                                    <div class="font-black text-white mb-1">50+ Corporate Workshop</div>
+                                    <div class="text-cyber-slate text-sm">Partnered with leading companies for
+                                        team-level AI
+                                        adoption</div>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-4">
+                                <div
+                                    class="w-10 h-10 rounded-xl bg-cyber-amethyst/10 border border-cyber-amethyst/30 flex items-center justify-center flex-shrink-0 text-cyber-amethyst font-black">
+                                    ✓</div>
+                                <div>
+                                    <div class="font-black text-white mb-1">Founder @ Tech Tycoon</div>
+                                    <div class="text-cyber-slate text-sm">Built a 7-figure digital solutions brand using
+                                        AI
+                                        frameworks</div>
                                 </div>
                             </div>
                         </div>
-                        <a href="#enroll"
-                            class="block text-center btn-primary py-4 font-black italic tracking-tight">Reserve My Seat
-                            Now →</a>
+
+                        <!-- Social Links -->
+                        <div class="flex items-center gap-4 mb-12">
+                            <a href="https://www.techtycoon.in/" target="_blank" title="Website"
+                                class="glass w-12 h-12 rounded-xl flex items-center justify-center text-cyber-slate hover:text-white hover:border-cyber-amethyst transition-all">🌐</a>
+                            <a href="https://www.instagram.com/amiable_antony" target="_blank" title="Instagram"
+                                class="glass w-12 h-12 rounded-xl flex items-center justify-center font-black italic text-cyber-slate hover:text-white hover:border-cyber-amethyst transition-all text-sm">ig</a>
+                            <a href="https://www.linkedin.com/in/antony-praveen-techtycoon" target="_blank"
+                                title="LinkedIn"
+                                class="glass w-12 h-12 rounded-xl flex items-center justify-center font-black italic text-cyber-slate hover:text-white hover:border-cyber-amethyst transition-all text-sm">in</a>
+                        </div>
+
+                        <a href="#enroll" class="btn-primary px-14 py-5 text-lg font-black italic">Learn From Antony
+                            →</a>
                     </div>
                 </div>
             </div>
+        </section>
 
-            <!-- Social Proof Strip -->
-            <div
-                class="mt-20 pt-10 border-t border-white/5 grid grid-cols-2 md:grid-cols-4 gap-10 text-center reveal delay-400">
-                <div>
-                    <div class="text-4xl font-black text-white italic">4,800+</div>
-                    <div class="text-[11px] font-black text-cyber-slate uppercase tracking-[0.2em] mt-1">Professionals
-                        Trained</div>
+        <!-- ============ TESTIMONIALS ============ -->
+        <section id="testimonials" class="py-32 bg-cyber-card border-y border-white/[0.05]">
+            <div class="max-w-7xl mx-auto px-4 lg:px-8">
+                <div class="text-center mb-24 reveal">
+                    <div class="badge mb-8">Real Results</div>
+                    <h2 class="text-5xl md:text-6xl font-black italic leading-none">What Our <span
+                            class="text-grad">Students Say</span></h2>
                 </div>
-                <div>
-                    <div class="text-4xl font-black text-white italic">50+</div>
-                    <div class="text-[11px] font-black text-cyber-slate uppercase tracking-[0.2em] mt-1">Corporate
-                        Workshops</div>
-                </div>
-                <div>
-                    <div class="text-4xl font-black text-white italic">10+</div>
-                    <div class="text-[11px] font-black text-cyber-slate uppercase tracking-[0.2em] mt-1">AI Tools
-                        Covered</div>
-                </div>
-                <div>
-                    <div class="text-4xl font-black text-white italic">⭐ 4.9</div>
-                    <div class="text-[11px] font-black text-cyber-slate uppercase tracking-[0.2em] mt-1">Average Rating
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ============ WHY THIS MASTERCLASS ============ -->
-    <section id="why" class="py-32 bg-cyber-card border-y border-white/[0.05]">
-        <div class="max-w-7xl mx-auto px-4 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-24 reveal">
-                <div class="badge mb-8">The Problem We Solve</div>
-                <h2 class="text-5xl md:text-6xl font-black mb-8 italic leading-none">Why Your Marketing <span
-                        class="text-grad">Isn't Working</span></h2>
-                <p class="text-lg text-cyber-slate font-medium">Most professionals spend hours creating content, chasing
-                    leads, and still see no results. Here's why — and how AI changes everything.</p>
-            </div>
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="section-card p-10 reveal delay-100">
-                    <div
-                        class="w-14 h-14 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-3xl mb-8">
-                        😩</div>
-                    <h3 class="text-2xl font-black mb-4 italic">Time Drain</h3>
-                    <p class="text-cyber-slate leading-relaxed">You spend 30+ hours a week on content, email follow-ups,
-                        and social posting — yet your reach barely grows. There's a smarter way.</p>
-                </div>
-                <div class="section-card p-10 reveal delay-200">
-                    <div
-                        class="w-14 h-14 rounded-2xl bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center text-3xl mb-8">
-                        🎯</div>
-                    <h3 class="text-2xl font-black mb-4 italic">No Strategy</h3>
-                    <p class="text-cyber-slate leading-relaxed">Posting randomly without a clear AI-powered lead funnel
-                        means you attract the wrong audience and convert almost nobody into buyers.</p>
-                </div>
-                <div class="section-card p-10 reveal delay-300">
-                    <div
-                        class="w-14 h-14 rounded-2xl bg-cyber-amethyst/10 border border-cyber-amethyst/20 flex items-center justify-center text-3xl mb-8">
-                        🚀</div>
-                    <h3 class="text-2xl font-black mb-4 italic">The AI Solution</h3>
-                    <p class="text-cyber-slate leading-relaxed">In this masterclass you'll build automated systems that
-                        generate leads, produce content, and build your brand — even while you sleep.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ============ WHAT YOU WILL LEARN ============ -->
-    <section id="roadmap" class="py-32">
-        <div class="max-w-7xl mx-auto px-4 lg:px-8">
-            <div class="lg:flex items-end justify-between gap-12 mb-24 reveal">
-                <div>
-                    <div class="badge mb-8">The 3-Hour Curriculum</div>
-                    <h2 class="text-5xl md:text-7xl font-black italic leading-none">What You'll<br><span
-                            class="text-grad">Master</span></h2>
-                </div>
-                <p class="text-lg text-cyber-slate max-w-sm lg:mb-2 mt-8 lg:mt-0 font-medium">Three focused modules —
-                    each building on the last to give you a complete, deployable AI marketing system.</p>
-            </div>
-
-            <!-- Module 1 -->
-            <div class="grid lg:grid-cols-2 gap-8 mb-8 reveal">
-                <div class="section-card p-12 lg:col-span-2 border-cyber-amethyst/20">
-                    <div class="lg:flex gap-16 items-start">
-                        <div class="lg:w-1/3 mb-8 lg:mb-0">
-                            <div class="text-[100px] font-black leading-none opacity-10 italic">01</div>
-                            <h3 class="text-3xl font-black italic -mt-4 text-cyber-amethyst">Concept of AI</h3>
-                            <p class="text-cyber-slate mt-4 leading-relaxed">Build the mental model you need to use AI
-                                with confidence, not fear.</p>
-                        </div>
-                        <div class="lg:w-2/3 grid sm:grid-cols-2 gap-6">
-                            <div class="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6">
-                                <div class="text-cyber-amethyst font-black mb-2">→ What is Generative AI?</div>
-                                <p class="text-cyber-slate text-sm">Understanding LLMs, ChatGPT, and how they "think" —
-                                    explained simply.</p>
-                            </div>
-                            <div class="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6">
-                                <div class="text-cyber-amethyst font-black mb-2">→ AI vs Traditional Marketing</div>
-                                <p class="text-cyber-slate text-sm">Why leading brands are cutting their marketing
-                                    budget by 60% using AI.</p>
-                            </div>
-                            <div class="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6">
-                                <div class="text-cyber-amethyst font-black mb-2">→ The Mindset Shift</div>
-                                <p class="text-cyber-slate text-sm">From "doing everything manually" to "building
-                                    systems that do it for you."</p>
-                            </div>
-                            <div class="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6">
-                                <div class="text-cyber-amethyst font-black mb-2">→ Ethical AI Usage</div>
-                                <p class="text-cyber-slate text-sm">How to use AI authentically while keeping your brand
-                                    voice intact.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Module 2 -->
-            <div class="grid lg:grid-cols-2 gap-8 mb-8 reveal">
-                <div class="section-card p-12 lg:col-span-2 border-cyber-cyan/20">
-                    <div class="lg:flex gap-16 items-start">
-                        <div class="lg:w-1/3 mb-8 lg:mb-0">
-                            <div class="text-[100px] font-black leading-none opacity-10 italic">02</div>
-                            <h3 class="text-3xl font-black italic -mt-4 text-cyber-cyan">AI in Digital Marketing</h3>
-                            <p class="text-cyber-slate mt-4 leading-relaxed">The power phase — integrate AI at every
-                                step of your marketing funnel.</p>
-                        </div>
-                        <div class="lg:w-2/3 grid sm:grid-cols-2 gap-6">
-                            <div class="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6">
-                                <div class="text-cyber-cyan font-black mb-2">→ AI Content Strategy</div>
-                                <p class="text-cyber-slate text-sm">Create a month of social content in under 2 hours
-                                    using AI pipelines.</p>
-                            </div>
-                            <div class="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6">
-                                <div class="text-cyber-cyan font-black mb-2">→ Digital Brand Building</div>
-                                <p class="text-cyber-slate text-sm">Craft a consistent, premium brand identity across
-                                    all platforms with AI.</p>
-                            </div>
-                            <div class="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6">
-                                <div class="text-cyber-cyan font-black mb-2">→ AI Lead Generation</div>
-                                <p class="text-cyber-slate text-sm">Build automated funnels that attract and qualify
-                                    high-value leads 24/7.</p>
-                            </div>
-                            <div class="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6">
-                                <div class="text-cyber-cyan font-black mb-2">→ AI-Powered DMs & Emails</div>
-                                <p class="text-cyber-slate text-sm">Write personalised outreach messages that convert —
-                                    at scale.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Module 3 -->
-            <div class="grid lg:grid-cols-2 gap-8 reveal">
-                <div class="section-card p-12 lg:col-span-2 border-white/10">
-                    <div class="lg:flex gap-16 items-start">
-                        <div class="lg:w-1/3 mb-8 lg:mb-0">
-                            <div class="text-[100px] font-black leading-none opacity-10 italic">03</div>
-                            <h3 class="text-3xl font-black italic -mt-4 text-white">10+ AI Tools</h3>
-                            <p class="text-cyber-slate mt-4 leading-relaxed">Hands-on walkthroughs of the best AI tools
-                                for every type of business professional.</p>
-                        </div>
-                        <div class="lg:w-2/3 grid sm:grid-cols-2 gap-6">
-                            <div class="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6">
-                                <div class="text-white font-black mb-2">→ Content Creation Tools</div>
-                                <p class="text-cyber-slate text-sm">ChatGPT, Claude, Gemini — which to use and when for
-                                    best results.</p>
-                            </div>
-                            <div class="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6">
-                                <div class="text-white font-black mb-2">→ Visual & Graphic AI</div>
-                                <p class="text-cyber-slate text-sm">Canva AI, Adobe Firefly, Midjourney for brand
-                                    visuals that wow.</p>
-                            </div>
-                            <div class="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6">
-                                <div class="text-white font-black mb-2">→ AI Automation Tools</div>
-                                <p class="text-cyber-slate text-sm">Zapier AI, Make.com — create workflows that run your
-                                    marketing on autopilot.</p>
-                            </div>
-                            <div class="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6">
-                                <div class="text-white font-black mb-2">→ AI Analytics & SEO</div>
-                                <p class="text-cyber-slate text-sm">Use AI to decode your competitors and rank higher
-                                    with minimal effort.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ============ WHO IS IT FOR ============ -->
-    <section class="py-32 bg-cyber-card border-y border-white/[0.05]">
-        <div class="max-w-7xl mx-auto px-4 lg:px-8">
-            <div class="text-center max-w-2xl mx-auto mb-24 reveal">
-                <div class="badge mb-8">This Is For You If...</div>
-                <h2 class="text-5xl md:text-6xl font-black italic leading-none">Who Should <span
-                        class="text-grad">Join</span></h2>
-            </div>
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <div class="section-card p-8 text-center reveal delay-100">
-                    <div class="text-5xl mb-6">🎓</div>
-                    <h3 class="text-xl font-black mb-4 italic">Trainers & Coaches</h3>
-                    <p class="text-cyber-slate text-sm leading-relaxed">Attract premium clients, fill your programs, and
-                        establish yourself as the go-to expert in your niche.</p>
-                </div>
-                <div class="section-card p-8 text-center reveal delay-200">
-                    <div class="text-5xl mb-6">💼</div>
-                    <h3 class="text-xl font-black mb-4 italic">Entrepreneurs</h3>
-                    <p class="text-cyber-slate text-sm leading-relaxed">Build a magnetic personal brand and AI-powered
-                        lead funnels without hiring a big marketing team.</p>
-                </div>
-                <div class="section-card p-8 text-center reveal delay-300">
-                    <div class="text-5xl mb-6">🏪</div>
-                    <h3 class="text-xl font-black mb-4 italic">Business Owners</h3>
-                    <p class="text-cyber-slate text-sm leading-relaxed">Cut your marketing costs, reach a wider
-                        audience, and make data-driven decisions using AI.</p>
-                </div>
-                <div class="section-card p-8 text-center reveal delay-400">
-                    <div class="text-5xl mb-6">📱</div>
-                    <h3 class="text-xl font-black mb-4 italic">Digital Marketers</h3>
-                    <p class="text-cyber-slate text-sm leading-relaxed">Level up your services, get more clients, and
-                        deliver 10x better results using AI tools.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ============ TRAINER ============ -->
-    <section id="trainer" class="py-32">
-        <div class="max-w-7xl mx-auto px-4 lg:px-8">
-            <div class="lg:flex items-center gap-24">
-                <!-- Photo -->
-                <div class="lg:w-5/12 mb-16 lg:mb-0 reveal">
-                    <div class="relative max-w-sm mx-auto">
-                        <div
-                            class="absolute -inset-6 bg-gradient-to-br from-cyber-amethyst/30 to-cyber-cyan/20 rounded-[4rem] blur-3xl opacity-60">
-                        </div>
-                        <div
-                            class="relative rounded-[3.5rem] overflow-hidden border border-white/10 shadow-2xl aspect-[4/5]">
-                            <img src="antony-praveen.jpg" alt="Antony Praveen - Founder of Tech Tycoon"
-                                class="w-full h-full object-cover">
-                            <div class="absolute inset-0"
-                                style="background: linear-gradient(to top, rgba(11,14,20,0.8) 0%, transparent 50%);">
-                            </div>
-                            <div class="absolute bottom-6 left-6 right-6">
-                                <div class="font-black text-xl italic">Antony Praveen</div>
-                                <div class="text-cyber-amethyst text-xs font-black uppercase tracking-widest mt-1">
-                                    Founder, Tech Tycoon</div>
-                            </div>
-                        </div>
-
-                        <!-- Floating Stats -->
-                        <div class="absolute -right-6 top-16 glass rounded-2xl px-6 py-4 border-white/10 shadow-xl">
-                            <div class="text-2xl font-black italic text-white">4,800+</div>
-                            <div class="text-[9px] font-black uppercase tracking-wider text-cyber-slate">Students
-                                Trained</div>
-                        </div>
-                        <div class="absolute -left-6 bottom-24 glass rounded-2xl px-6 py-4 border-white/10 shadow-xl">
-                            <div class="text-2xl font-black italic text-white">50+</div>
-                            <div class="text-[9px] font-black uppercase tracking-wider text-cyber-slate">Corporate
-                                Workshops</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Info -->
-                <div class="lg:w-7/12 reveal delay-300">
-                    <div class="badge mb-8">Meet Your Trainer</div>
-                    <h2 class="text-5xl md:text-6xl font-black mb-6 italic leading-none">Antony <span
-                            class="text-grad">Praveen</span></h2>
-                    <h3 class="text-xl font-bold text-white/40 mb-10 uppercase tracking-[0.2em]">Founder · Tech Tycoon
-                        Digital Solutions</h3>
-
-                    <div
-                        class="bg-white/[0.03] border-l-[5px] border-cyber-amethyst rounded-r-2xl p-8 mb-12 italic text-lg text-white/80 leading-relaxed">
-                        "I help Trainers, Coaches, and Business Owners build a powerful digital presence and attract
-                        quality leads — using the exact AI strategies that scaled my own business to 7-figures."
-                    </div>
-
-                    <div class="grid sm:grid-cols-2 gap-6 mb-12">
-                        <div class="flex items-start gap-4">
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="section-card p-10 reveal delay-100">
+                        <div class="text-cyber-amethyst text-4xl mb-6 italic font-black">"</div>
+                        <p class="text-white leading-relaxed mb-8 font-medium">After Antony's workshop I generated 42
+                            qualified leads in the first week using nothing but AI tools he showed us. Absolutely
+                            mind-blowing ROI for ₹99.</p>
+                        <div class="flex items-center gap-4 border-t border-white/10 pt-6">
                             <div
-                                class="w-10 h-10 rounded-xl bg-cyber-amethyst/10 border border-cyber-amethyst/30 flex items-center justify-center flex-shrink-0 text-cyber-amethyst font-black">
-                                ✓</div>
+                                class="w-12 h-12 rounded-xl bg-gradient-to-br from-cyber-amethyst to-cyber-cyan flex items-center justify-center font-black">
+                                SK</div>
                             <div>
-                                <div class="font-black text-white mb-1">International Certified Trainer</div>
-                                <div class="text-cyber-slate text-sm">Recognized globally for AI-Powered Digital
-                                    Training Excellence</div>
+                                <div class="font-black text-white">Suresh Kumar</div>
+                                <div class="text-cyber-slate text-sm">Business Coach, Chennai</div>
                             </div>
                         </div>
-                        <div class="flex items-start gap-4">
+                    </div>
+                    <div class="section-card p-10 reveal delay-200">
+                        <div class="text-cyber-amethyst text-4xl mb-6 italic font-black">"</div>
+                        <p class="text-white leading-relaxed mb-8 font-medium">I used to spend 3 hours daily on social
+                            media
+                            content. Now I do it in 20 minutes with AI. The content quality went up too — my engagement
+                            tripled!</p>
+                        <div class="flex items-center gap-4 border-t border-white/10 pt-6">
                             <div
-                                class="w-10 h-10 rounded-xl bg-cyber-amethyst/10 border border-cyber-amethyst/30 flex items-center justify-center flex-shrink-0 text-cyber-amethyst font-black">
-                                ✓</div>
+                                class="w-12 h-12 rounded-xl bg-gradient-to-br from-cyber-cyan to-blue-600 flex items-center justify-center font-black">
+                                RP</div>
                             <div>
-                                <div class="font-black text-white mb-1">AI Marketing Specialist</div>
-                                <div class="text-cyber-slate text-sm">Trained 4,800+ professionals across industries
-                                </div>
+                                <div class="font-black text-white">Ranjitha Priya</div>
+                                <div class="text-cyber-slate text-sm">Wellness Coach, Bangalore</div>
                             </div>
                         </div>
-                        <div class="flex items-start gap-4">
+                    </div>
+                    <div class="section-card p-10 reveal delay-300">
+                        <div class="text-cyber-amethyst text-4xl mb-6 italic font-black">"</div>
+                        <p class="text-white leading-relaxed mb-8 font-medium">As a business owner with zero marketing
+                            background, Antony's session was an eye-opener. I now have a full AI lead-gen system running
+                            every single day.</p>
+                        <div class="flex items-center gap-4 border-t border-white/10 pt-6">
                             <div
-                                class="w-10 h-10 rounded-xl bg-cyber-amethyst/10 border border-cyber-amethyst/30 flex items-center justify-center flex-shrink-0 text-cyber-amethyst font-black">
-                                ✓</div>
+                                class="w-12 h-12 rounded-xl bg-gradient-to-br from-yellow-500 to-orange-500 flex items-center justify-center font-black">
+                                MR</div>
                             <div>
-                                <div class="font-black text-white mb-1">50+ Corporate Workshop</div>
-                                <div class="text-cyber-slate text-sm">Partnered with leading companies for team-level AI
-                                    adoption</div>
-                            </div>
-                        </div>
-                        <div class="flex items-start gap-4">
-                            <div
-                                class="w-10 h-10 rounded-xl bg-cyber-amethyst/10 border border-cyber-amethyst/30 flex items-center justify-center flex-shrink-0 text-cyber-amethyst font-black">
-                                ✓</div>
-                            <div>
-                                <div class="font-black text-white mb-1">Founder @ Tech Tycoon</div>
-                                <div class="text-cyber-slate text-sm">Built a 7-figure digital solutions brand using AI
-                                    frameworks</div>
+                                <div class="font-black text-white">Mohammed Rasheed</div>
+                                <div class="text-cyber-slate text-sm">Retail Business Owner, Coimbatore</div>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Social Links -->
-                    <div class="flex items-center gap-4 mb-12">
-                        <a href="https://www.techtycoon.in/" target="_blank" title="Website"
-                            class="glass w-12 h-12 rounded-xl flex items-center justify-center text-cyber-slate hover:text-white hover:border-cyber-amethyst transition-all">🌐</a>
-                        <a href="https://www.instagram.com/amiable_antony" target="_blank" title="Instagram"
-                            class="glass w-12 h-12 rounded-xl flex items-center justify-center font-black italic text-cyber-slate hover:text-white hover:border-cyber-amethyst transition-all text-sm">ig</a>
-                        <a href="https://www.linkedin.com/in/antony-praveen-techtycoon" target="_blank" title="LinkedIn"
-                            class="glass w-12 h-12 rounded-xl flex items-center justify-center font-black italic text-cyber-slate hover:text-white hover:border-cyber-amethyst transition-all text-sm">in</a>
-                    </div>
-
-                    <a href="#enroll" class="btn-primary px-14 py-5 text-lg font-black italic">Learn From Antony →</a>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- ============ TESTIMONIALS ============ -->
-    <section id="testimonials" class="py-32 bg-cyber-card border-y border-white/[0.05]">
-        <div class="max-w-7xl mx-auto px-4 lg:px-8">
-            <div class="text-center mb-24 reveal">
-                <div class="badge mb-8">Real Results</div>
-                <h2 class="text-5xl md:text-6xl font-black italic leading-none">What Our <span
-                        class="text-grad">Students Say</span></h2>
-            </div>
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="section-card p-10 reveal delay-100">
-                    <div class="text-cyber-amethyst text-4xl mb-6 italic font-black">"</div>
-                    <p class="text-white leading-relaxed mb-8 font-medium">After Antony's workshop I generated 42
-                        qualified leads in the first week using nothing but AI tools he showed us. Absolutely
-                        mind-blowing ROI for ₹99.</p>
-                    <div class="flex items-center gap-4 border-t border-white/10 pt-6">
-                        <div
-                            class="w-12 h-12 rounded-xl bg-gradient-to-br from-cyber-amethyst to-cyber-cyan flex items-center justify-center font-black">
-                            SK</div>
+        <!-- ============ WHAT YOU GET ============ -->
+        <section class="py-32">
+            <div class="max-w-7xl mx-auto px-4 lg:px-8">
+                <div class="text-center mb-24 reveal">
+                    <div class="badge mb-8">Your Complete Package</div>
+                    <h2 class="text-5xl md:text-6xl font-black italic leading-none">Everything You Get <span
+                            class="text-grad">@₹99</span></h2>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="section-card p-10 reveal delay-100 flex items-start gap-6">
+                        <div class="text-3xl flex-shrink-0">🎓</div>
                         <div>
-                            <div class="font-black text-white">Suresh Kumar</div>
-                            <div class="text-cyber-slate text-sm">Business Coach, Chennai</div>
+                            <h4 class="font-black text-white mb-2 italic">3-Hour Live Masterclass</h4>
+                            <p class="text-cyber-slate text-sm leading-relaxed">Intensive, interactive session with live
+                                Q&A, examples, and real-time implementation guidance.</p>
                         </div>
                     </div>
-                </div>
-                <div class="section-card p-10 reveal delay-200">
-                    <div class="text-cyber-amethyst text-4xl mb-6 italic font-black">"</div>
-                    <p class="text-white leading-relaxed mb-8 font-medium">I used to spend 3 hours daily on social media
-                        content. Now I do it in 20 minutes with AI. The content quality went up too — my engagement
-                        tripled!</p>
-                    <div class="flex items-center gap-4 border-t border-white/10 pt-6">
-                        <div
-                            class="w-12 h-12 rounded-xl bg-gradient-to-br from-cyber-cyan to-blue-600 flex items-center justify-center font-black">
-                            RP</div>
+                    <div class="section-card p-10 reveal delay-200 flex items-start gap-6">
+                        <div class="text-3xl flex-shrink-0">🛠️</div>
                         <div>
-                            <div class="font-black text-white">Ranjitha Priya</div>
-                            <div class="text-cyber-slate text-sm">Wellness Coach, Bangalore</div>
+                            <h4 class="font-black text-white mb-2 italic">AI Tools Resource Kit</h4>
+                            <p class="text-cyber-slate text-sm leading-relaxed">Curated list of 10+ AI tools with setup
+                                guides, prompt templates, and use-case breakdowns.</p>
                         </div>
                     </div>
-                </div>
-                <div class="section-card p-10 reveal delay-300">
-                    <div class="text-cyber-amethyst text-4xl mb-6 italic font-black">"</div>
-                    <p class="text-white leading-relaxed mb-8 font-medium">As a business owner with zero marketing
-                        background, Antony's session was an eye-opener. I now have a full AI lead-gen system running
-                        every single day.</p>
-                    <div class="flex items-center gap-4 border-t border-white/10 pt-6">
-                        <div
-                            class="w-12 h-12 rounded-xl bg-gradient-to-br from-yellow-500 to-orange-500 flex items-center justify-center font-black">
-                            MR</div>
+                    <div class="section-card p-10 reveal delay-300 flex items-start gap-6">
+                        <div class="text-3xl flex-shrink-0">📋</div>
                         <div>
-                            <div class="font-black text-white">Mohammed Rasheed</div>
-                            <div class="text-cyber-slate text-sm">Retail Business Owner, Coimbatore</div>
+                            <h4 class="font-black text-white mb-2 italic">AI Content Templates</h4>
+                            <p class="text-cyber-slate text-sm leading-relaxed">Ready-to-use prompts and content
+                                frameworks
+                                that work across Instagram, LinkedIn, and more.</p>
+                        </div>
+                    </div>
+                    <div class="section-card p-10 reveal delay-100 flex items-start gap-6">
+                        <div class="text-3xl flex-shrink-0">🏆</div>
+                        <div>
+                            <h4 class="font-black text-white mb-2 italic">Certificate of Completion</h4>
+                            <p class="text-cyber-slate text-sm leading-relaxed">A shareable digital certificate to
+                                showcase
+                                your AI Marketing credentials on LinkedIn and portfolios.</p>
+                        </div>
+                    </div>
+                    <div class="section-card p-10 reveal delay-200 flex items-start gap-6">
+                        <div class="text-3xl flex-shrink-0">💬</div>
+                        <div>
+                            <h4 class="font-black text-white mb-2 italic">WhatsApp Community Access</h4>
+                            <p class="text-cyber-slate text-sm leading-relaxed">Join a private group of AI-powered
+                                professionals for tips, support, and collaboration.</p>
+                        </div>
+                    </div>
+                    <div class="section-card p-10 reveal delay-300 flex items-start gap-6">
+                        <div class="text-3xl flex-shrink-0">❓</div>
+                        <div>
+                            <h4 class="font-black text-white mb-2 italic">Live Q&A with Antony</h4>
+                            <p class="text-cyber-slate text-sm leading-relaxed">Get your specific business questions
+                                answered directly by the trainer during the live session.</p>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- ============ WHAT YOU GET ============ -->
-    <section class="py-32">
-        <div class="max-w-7xl mx-auto px-4 lg:px-8">
-            <div class="text-center mb-24 reveal">
-                <div class="badge mb-8">Your Complete Package</div>
-                <h2 class="text-5xl md:text-6xl font-black italic leading-none">Everything You Get <span
-                        class="text-grad">@₹99</span></h2>
-            </div>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="section-card p-10 reveal delay-100 flex items-start gap-6">
-                    <div class="text-3xl flex-shrink-0">🎓</div>
-                    <div>
-                        <h4 class="font-black text-white mb-2 italic">3-Hour Live Masterclass</h4>
-                        <p class="text-cyber-slate text-sm leading-relaxed">Intensive, interactive session with live
-                            Q&A, examples, and real-time implementation guidance.</p>
-                    </div>
+        <!-- ============ FAQ ============ -->
+        <section id="faq" class="py-32 bg-cyber-card border-y border-white/[0.05]">
+            <div class="max-w-4xl mx-auto px-4 lg:px-8">
+                <div class="text-center mb-24 reveal">
+                    <div class="badge mb-8">Clear Your Doubts</div>
+                    <h2 class="text-5xl md:text-6xl font-black italic leading-none">Frequently Asked <span
+                            class="text-grad">Questions</span></h2>
                 </div>
-                <div class="section-card p-10 reveal delay-200 flex items-start gap-6">
-                    <div class="text-3xl flex-shrink-0">🛠️</div>
-                    <div>
-                        <h4 class="font-black text-white mb-2 italic">AI Tools Resource Kit</h4>
-                        <p class="text-cyber-slate text-sm leading-relaxed">Curated list of 10+ AI tools with setup
-                            guides, prompt templates, and use-case breakdowns.</p>
-                    </div>
-                </div>
-                <div class="section-card p-10 reveal delay-300 flex items-start gap-6">
-                    <div class="text-3xl flex-shrink-0">📋</div>
-                    <div>
-                        <h4 class="font-black text-white mb-2 italic">AI Content Templates</h4>
-                        <p class="text-cyber-slate text-sm leading-relaxed">Ready-to-use prompts and content frameworks
-                            that work across Instagram, LinkedIn, and more.</p>
-                    </div>
-                </div>
-                <div class="section-card p-10 reveal delay-100 flex items-start gap-6">
-                    <div class="text-3xl flex-shrink-0">🏆</div>
-                    <div>
-                        <h4 class="font-black text-white mb-2 italic">Certificate of Completion</h4>
-                        <p class="text-cyber-slate text-sm leading-relaxed">A shareable digital certificate to showcase
-                            your AI Marketing credentials on LinkedIn and portfolios.</p>
-                    </div>
-                </div>
-                <div class="section-card p-10 reveal delay-200 flex items-start gap-6">
-                    <div class="text-3xl flex-shrink-0">💬</div>
-                    <div>
-                        <h4 class="font-black text-white mb-2 italic">WhatsApp Community Access</h4>
-                        <p class="text-cyber-slate text-sm leading-relaxed">Join a private group of AI-powered
-                            professionals for tips, support, and collaboration.</p>
-                    </div>
-                </div>
-                <div class="section-card p-10 reveal delay-300 flex items-start gap-6">
-                    <div class="text-3xl flex-shrink-0">❓</div>
-                    <div>
-                        <h4 class="font-black text-white mb-2 italic">Live Q&A with Antony</h4>
-                        <p class="text-cyber-slate text-sm leading-relaxed">Get your specific business questions
-                            answered directly by the trainer during the live session.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ============ FAQ ============ -->
-    <section id="faq" class="py-32 bg-cyber-card border-y border-white/[0.05]">
-        <div class="max-w-4xl mx-auto px-4 lg:px-8">
-            <div class="text-center mb-24 reveal">
-                <div class="badge mb-8">Clear Your Doubts</div>
-                <h2 class="text-5xl md:text-6xl font-black italic leading-none">Frequently Asked <span
-                        class="text-grad">Questions</span></h2>
-            </div>
-            <div class="space-y-5 reveal delay-100" id="faqContainer">
-                <div class="section-card overflow-hidden">
-                    <button
-                        class="faq-btn w-full flex justify-between items-center p-8 text-left font-black text-lg italic">
-                        Is this suitable if I have zero tech background?
-                        <span class="faq-icon text-cyber-amethyst text-2xl flex-shrink-0 ml-4">+</span>
-                    </button>
-                    <div class="faq-body hidden px-8 pb-8 text-cyber-slate leading-relaxed">
-                        Absolutely! This masterclass is designed for business professionals who want practical AI skills
-                        — not developers. If you can use a smartphone and Instagram, you're more than ready.
-                    </div>
-                </div>
-                <div class="section-card overflow-hidden">
-                    <button
-                        class="faq-btn w-full flex justify-between items-center p-8 text-left font-black text-lg italic">
-                        Will the session be recorded?
-                        <span class="faq-icon text-cyber-amethyst text-2xl flex-shrink-0 ml-4">+</span>
-                    </button>
-                    <div class="faq-body hidden px-8 pb-8 text-cyber-slate leading-relaxed">
-                        This is a live, interactive session — attendance is mandatory for full value. The live format
-                        ensures you get personalised feedback and Q&A access. A summary resource kit is shared
-                        post-session.
-                    </div>
-                </div>
-                <div class="section-card overflow-hidden">
-                    <button
-                        class="faq-btn w-full flex justify-between items-center p-8 text-left font-black text-lg italic">
-                        Do I need to pay for AI tools separately?
-                        <span class="faq-icon text-cyber-amethyst text-2xl flex-shrink-0 ml-4">+</span>
-                    </button>
-                    <div class="faq-body hidden px-8 pb-8 text-cyber-slate leading-relaxed">
-                        No! I'll show you how to get massive results using free-tier tools. We also cover premium tools
-                        for those who want to scale. You can start with ₹0 additional spend.
-                    </div>
-                </div>
-                <div class="section-card overflow-hidden">
-                    <button
-                        class="faq-btn w-full flex justify-between items-center p-8 text-left font-black text-lg italic">
-                        What platform will the session be on?
-                        <span class="faq-icon text-cyber-amethyst text-2xl flex-shrink-0 ml-4">+</span>
-                    </button>
-                    <div class="faq-body hidden px-8 pb-8 text-cyber-slate leading-relaxed">
-                        The live session will be conducted on Zoom/Google Meet. The joining link and instructions will
-                        be sent to your registered email address 24 hours before the session.
-                    </div>
-                </div>
-                <div class="section-card overflow-hidden">
-                    <button
-                        class="faq-btn w-full flex justify-between items-center p-8 text-left font-black text-lg italic">
-                        Is there a refund policy?
-                        <span class="faq-icon text-cyber-amethyst text-2xl flex-shrink-0 ml-4">+</span>
-                    </button>
-                    <div class="faq-body hidden px-8 pb-8 text-cyber-slate leading-relaxed">
-                        Due to the live nature and extremely low investment of ₹99, refunds are not available. If for
-                        any reason the session is cancelled by us, a full refund or a free spot in the next session will
-                        be offered.
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ============ REGISTRATION ============ -->
-    <section id="enroll" class="py-32 relative overflow-hidden">
-        <div class="absolute inset-0"
-            style="background: radial-gradient(ellipse 70% 50% at 50% 100%, rgba(168,85,247,0.08) 0%, transparent 70%);">
-        </div>
-        <div class="max-w-5xl mx-auto px-4 lg:px-8 relative z-10">
-            <div class="glass rounded-[3rem] p-10 md:p-20 border-white/10">
-                <div class="text-center mb-16 reveal">
-                    <div class="badge mb-8 animate-pulse-slow">⚡ Only 57 Seats Left</div>
-                    <h2 class="text-5xl md:text-7xl font-black italic tracking-tighter mb-8">Secure Your <span
-                            class="text-grad">Seat</span></h2>
-                    <div class="flex items-center justify-center gap-6">
-                        <div class="text-6xl font-black italic">₹99</div>
-                        <div>
-                            <div class="text-2xl text-cyber-slate line-through opacity-40 font-bold">₹2,999</div>
-                            <div class="text-cyber-amethyst font-black uppercase text-[10px] tracking-[0.3em]">97% OFF
-                                Today Only</div>
-                        </div>
-                    </div>
-                </div>
-
-                <form id="enrollForm" class="max-w-xl mx-auto reveal delay-200">
-                    <div class="space-y-5">
-                        <div>
-                            <label
-                                class="block text-[10px] font-black uppercase tracking-[0.3em] text-cyber-slate mb-3 ml-2">Your
-                                Full Name</label>
-                            <input type="text" id="fname" placeholder="e.g. Antony Praveen" required
-                                class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 font-bold focus:border-cyber-amethyst focus:bg-white/8 transition-all outline-none placeholder:text-white/20">
-                        </div>
-                        <div>
-                            <label
-                                class="block text-[10px] font-black uppercase tracking-[0.3em] text-cyber-slate mb-3 ml-2">Email
-                                Address</label>
-                            <input type="email" id="femail" placeholder="yourname@email.com" required
-                                class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 font-bold focus:border-cyber-amethyst transition-all outline-none placeholder:text-white/20">
-                        </div>
-                        <div>
-                            <label
-                                class="block text-[10px] font-black uppercase tracking-[0.3em] text-cyber-slate mb-3 ml-2">WhatsApp
-                                Number</label>
-                            <input type="tel" id="fphone" placeholder="+91 9XXXXXXXXX" required
-                                class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 font-bold focus:border-cyber-amethyst transition-all outline-none placeholder:text-white/20">
-                        </div>
-                        <div>
-                            <label
-                                class="block text-[10px] font-black uppercase tracking-[0.3em] text-cyber-slate mb-3 ml-2">I
-                                Am A...</label>
-                            <select id="fprofession"
-                                class="w-full bg-cyber-indigo border border-white/10 rounded-2xl px-6 py-5 font-bold focus:border-cyber-amethyst transition-all outline-none text-white">
-                                <option value="">Select your profession</option>
-                                <option>Trainer / Coach</option>
-                                <option>Entrepreneur</option>
-                                <option>Business Owner</option>
-                                <option>Digital Marketer / Freelancer</option>
-                                <option>Other</option>
-                            </select>
-                        </div>
-                        <button type="submit"
-                            class="w-full btn-primary py-7 text-xl font-black italic mt-4 tracking-tight">
-                            Complete My Registration — ₹99 →
+                <div class="space-y-5 reveal delay-100" id="faqContainer">
+                    <div class="section-card overflow-hidden">
+                        <button
+                            class="faq-btn w-full flex justify-between items-center p-8 text-left font-black text-lg italic">
+                            Is this suitable if I have zero tech background?
+                            <span class="faq-icon text-cyber-amethyst text-2xl flex-shrink-0 ml-4">+</span>
                         </button>
+                        <div class="faq-body hidden px-8 pb-8 text-cyber-slate leading-relaxed">
+                            Absolutely! This masterclass is designed for business professionals who want practical AI
+                            skills
+                            — not developers. If you can use a smartphone and Instagram, you're more than ready.
+                        </div>
                     </div>
-                    <div class="text-center mt-8 text-[10px] text-cyber-slate font-black uppercase tracking-[0.3em]">
-                        🔒 256-bit Encrypted · Instant Confirmation · Zero Spam
+                    <div class="section-card overflow-hidden">
+                        <button
+                            class="faq-btn w-full flex justify-between items-center p-8 text-left font-black text-lg italic">
+                            Will the session be recorded?
+                            <span class="faq-icon text-cyber-amethyst text-2xl flex-shrink-0 ml-4">+</span>
+                        </button>
+                        <div class="faq-body hidden px-8 pb-8 text-cyber-slate leading-relaxed">
+                            This is a live, interactive session — attendance is mandatory for full value. The live
+                            format
+                            ensures you get personalised feedback and Q&A access. A summary resource kit is shared
+                            post-session.
+                        </div>
                     </div>
-                </form>
+                    <div class="section-card overflow-hidden">
+                        <button
+                            class="faq-btn w-full flex justify-between items-center p-8 text-left font-black text-lg italic">
+                            Do I need to pay for AI tools separately?
+                            <span class="faq-icon text-cyber-amethyst text-2xl flex-shrink-0 ml-4">+</span>
+                        </button>
+                        <div class="faq-body hidden px-8 pb-8 text-cyber-slate leading-relaxed">
+                            No! I'll show you how to get massive results using free-tier tools. We also cover premium
+                            tools
+                            for those who want to scale. You can start with ₹0 additional spend.
+                        </div>
+                    </div>
+                    <div class="section-card overflow-hidden">
+                        <button
+                            class="faq-btn w-full flex justify-between items-center p-8 text-left font-black text-lg italic">
+                            What platform will the session be on?
+                            <span class="faq-icon text-cyber-amethyst text-2xl flex-shrink-0 ml-4">+</span>
+                        </button>
+                        <div class="faq-body hidden px-8 pb-8 text-cyber-slate leading-relaxed">
+                            The live session will be conducted on Zoom/Google Meet. The joining link and instructions
+                            will
+                            be sent to your registered email address 24 hours before the session.
+                        </div>
+                    </div>
+                    <div class="section-card overflow-hidden">
+                        <button
+                            class="faq-btn w-full flex justify-between items-center p-8 text-left font-black text-lg italic">
+                            Is there a refund policy?
+                            <span class="faq-icon text-cyber-amethyst text-2xl flex-shrink-0 ml-4">+</span>
+                        </button>
+                        <div class="faq-body hidden px-8 pb-8 text-cyber-slate leading-relaxed">
+                            Due to the live nature and extremely low investment of ₹99, refunds are not available. If
+                            for
+                            any reason the session is cancelled by us, a full refund or a free spot in the next session
+                            will
+                            be offered.
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- ============ FOOTER ============ -->
-    <footer class="py-20 px-4 lg:px-8 border-t border-white/[0.06]" style="background: #05070A;">
-        <div class="max-w-7xl mx-auto">
-            <div class="lg:flex items-center justify-between gap-12">
-                <div class="mb-10 lg:mb-0">
-                    <div class="flex items-center gap-4 mb-4">
+        <!-- ============ REGISTRATION ============ -->
+        <section id="enroll" class="py-32 relative overflow-hidden">
+            <div class="absolute inset-0"
+                style="background: radial-gradient(ellipse 70% 50% at 50% 100%, rgba(168,85,247,0.08) 0%, transparent 70%);">
+            </div>
+            <div class="max-w-5xl mx-auto px-4 lg:px-8 relative z-10">
+                <div class="glass rounded-[3rem] p-10 md:p-20 border-white/10">
+                    <div class="text-center mb-16 reveal">
+                        <div class="badge mb-8 animate-pulse-slow">⚡ Only 57 Seats Left</div>
+                        <h2 class="text-5xl md:text-7xl font-black italic tracking-tighter mb-8">Secure Your <span
+                                class="text-grad">Seat</span></h2>
+                        <div class="flex items-center justify-center gap-6">
+                            <div class="text-6xl font-black italic">₹99</div>
+                            <div>
+                                <div class="text-2xl text-cyber-slate line-through opacity-40 font-bold">₹2,999</div>
+                                <div class="text-cyber-amethyst font-black uppercase text-[10px] tracking-[0.3em]">97%
+                                    OFF
+                                    Today Only</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form id="enrollForm" class="max-w-xl mx-auto reveal delay-200">
+                        <div class="space-y-5">
+                            <div>
+                                <label
+                                    class="block text-[10px] font-black uppercase tracking-[0.3em] text-cyber-slate mb-3 ml-2">Your
+                                    Full Name</label>
+                                <input type="text" id="fname" placeholder="e.g. Antony Praveen" required
+                                    class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 font-bold focus:border-cyber-amethyst focus:bg-white/8 transition-all outline-none placeholder:text-white/20">
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-[10px] font-black uppercase tracking-[0.3em] text-cyber-slate mb-3 ml-2">Email
+                                    Address</label>
+                                <input type="email" id="femail" placeholder="yourname@email.com" required
+                                    class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 font-bold focus:border-cyber-amethyst transition-all outline-none placeholder:text-white/20">
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-[10px] font-black uppercase tracking-[0.3em] text-cyber-slate mb-3 ml-2">WhatsApp
+                                    Number</label>
+                                <input type="tel" id="fphone" placeholder="+91 9XXXXXXXXX" required
+                                    class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 font-bold focus:border-cyber-amethyst transition-all outline-none placeholder:text-white/20">
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-[10px] font-black uppercase tracking-[0.3em] text-cyber-slate mb-3 ml-2">I
+                                    Am A...</label>
+                                <select id="fprofession"
+                                    class="w-full bg-cyber-indigo border border-white/10 rounded-2xl px-6 py-5 font-bold focus:border-cyber-amethyst transition-all outline-none text-white">
+                                    <option value="">Select your profession</option>
+                                    <option>Trainer / Coach</option>
+                                    <option>Entrepreneur</option>
+                                    <option>Business Owner</option>
+                                    <option>Digital Marketer / Freelancer</option>
+                                    <option>Other</option>
+                                </select>
+                            </div>
+                            <button type="submit"
+                                class="w-full btn-primary py-7 text-xl font-black italic mt-4 tracking-tight">
+                                Complete My Registration — ₹99 →
+                            </button>
+                        </div>
                         <div
-                            class="w-9 h-9 rounded-xl bg-gradient-to-br from-cyber-amethyst to-cyber-cyan flex items-center justify-center font-black italic text-sm">
-                            TT</div>
-                        <span class="font-heading font-black text-2xl tracking-tighter italic">TECH TYCOON</span>
-                    </div>
-                    <p class="text-cyber-slate text-sm max-w-xs leading-relaxed">Empowering professionals with
-                        AI-powered digital marketing skills since 2020.</p>
-                    <div class="flex items-center gap-4 mt-6">
-                        <a href="https://www.techtycoon.in/" target="_blank"
-                            class="glass w-10 h-10 rounded-xl flex items-center justify-center text-cyber-slate hover:text-white transition-all">🌐</a>
-                        <a href="https://www.instagram.com/amiable_antony" target="_blank"
-                            class="glass w-10 h-10 rounded-xl flex items-center justify-center text-cyber-slate hover:text-white font-black italic text-sm transition-all">ig</a>
-                        <a href="https://www.linkedin.com/in/antony-praveen-techtycoon" target="_blank"
-                            class="glass w-10 h-10 rounded-xl flex items-center justify-center text-cyber-slate hover:text-white font-black italic text-sm transition-all">in</a>
-                    </div>
-                </div>
-                <div
-                    class="flex flex-wrap gap-x-16 gap-y-4 text-[10px] font-black uppercase tracking-[0.3em] text-cyber-slate">
-                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
-                    <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
-                    <a href="#" class="hover:text-white transition-colors">Refund Policy</a>
-                    <a href="mailto:hello@techtycoon.in" class="hover:text-white transition-colors">Contact Us</a>
-                </div>
-                <div
-                    class="mt-10 lg:mt-0 text-[10px] font-black text-cyber-slate uppercase tracking-[0.3em] text-right">
-                    © 2025 Tech Tycoon Digital Solutions<br>All Rights Reserved
+                            class="text-center mt-8 text-[10px] text-cyber-slate font-black uppercase tracking-[0.3em]">
+                            🔒 256-bit Encrypted · Instant Confirmation · Zero Spam
+                        </div>
+                    </form>
                 </div>
             </div>
-        </div>
-    </footer>
+        </section>
 
-    <script>
-        // Progress Bar
-        window.addEventListener('scroll', () => {
-            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            document.getElementById('progressBar').style.width = (winScroll / height * 100) + '%';
-        });
+        <!-- ============ FOOTER ============ -->
+        <footer class="py-20 px-4 lg:px-8 border-t border-white/[0.06]" style="background: #05070A;">
+            <div class="max-w-7xl mx-auto">
+                <div class="lg:flex items-center justify-between gap-12">
+                    <div class="mb-10 lg:mb-0">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div
+                                class="w-9 h-9 rounded-xl bg-gradient-to-br from-cyber-amethyst to-cyber-cyan flex items-center justify-center font-black italic text-sm">
+                                TT</div>
+                            <span class="font-heading font-black text-2xl tracking-tighter italic">TECH TYCOON</span>
+                        </div>
+                        <p class="text-cyber-slate text-sm max-w-xs leading-relaxed">Empowering professionals with
+                            AI-powered digital marketing skills since 2020.</p>
+                        <div class="flex items-center gap-4 mt-6">
+                            <a href="https://www.techtycoon.in/" target="_blank"
+                                class="glass w-10 h-10 rounded-xl flex items-center justify-center text-cyber-slate hover:text-white transition-all">🌐</a>
+                            <a href="https://www.instagram.com/amiable_antony" target="_blank"
+                                class="glass w-10 h-10 rounded-xl flex items-center justify-center text-cyber-slate hover:text-white font-black italic text-sm transition-all">ig</a>
+                            <a href="https://www.linkedin.com/in/antony-praveen-techtycoon" target="_blank"
+                                class="glass w-10 h-10 rounded-xl flex items-center justify-center text-cyber-slate hover:text-white font-black italic text-sm transition-all">in</a>
+                        </div>
+                    </div>
+                    <div
+                        class="flex flex-wrap gap-x-16 gap-y-4 text-[10px] font-black uppercase tracking-[0.3em] text-cyber-slate">
+                        <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                        <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+                        <a href="#" class="hover:text-white transition-colors">Refund Policy</a>
+                        <a href="mailto:hello@techtycoon.in" class="hover:text-white transition-colors">Contact Us</a>
+                    </div>
+                    <div
+                        class="mt-10 lg:mt-0 text-[10px] font-black text-cyber-slate uppercase tracking-[0.3em] text-right">
+                        © 2025 Tech Tycoon Digital Solutions<br>All Rights Reserved
+                    </div>
+                </div>
+            </div>
+        </footer>
 
-        // Sticky Nav Shrink
-        window.addEventListener('scroll', () => {
-            const nav = document.getElementById('navbar');
-            if (window.scrollY > 60) { nav.classList.add('py-2'); nav.classList.remove('py-6'); }
-            else { nav.classList.remove('py-2'); nav.classList.add('py-6'); }
-        });
-
-        // Reveal on Scroll
-        const observer = new IntersectionObserver(entries => {
-            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('active'); });
-        }, { threshold: 0.1 });
-        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-        // FAQ Accordion
-        document.querySelectorAll('.faq-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const body = btn.nextElementSibling;
-                const icon = btn.querySelector('.faq-icon');
-                const isOpen = !body.classList.contains('hidden');
-                document.querySelectorAll('.faq-body').forEach(b => b.classList.add('hidden'));
-                document.querySelectorAll('.faq-icon').forEach(i => i.textContent = '+');
-                if (!isOpen) { body.classList.remove('hidden'); icon.textContent = '−'; }
+        <script>
+            // Progress Bar
+            window.addEventListener('scroll', () => {
+                const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                document.getElementById('progressBar').style.width = (winScroll / height * 100) + '%';
             });
-        });
 
-        // Form Submit
-        document.getElementById('enrollForm').addEventListener('submit', e => {
-            e.preventDefault();
-            const name = document.getElementById('fname').value;
-            alert(`🎉 Thank you, ${name}!\n\nYou're registered. You'll receive confirmation on WhatsApp and email within minutes.\n\nWelcome to the AI Mastery Family!`);
-        });
-    </script>
+            // Sticky Nav Shrink
+            window.addEventListener('scroll', () => {
+                const nav = document.getElementById('navbar');
+                if (window.scrollY > 60) { nav.classList.add('py-2'); nav.classList.remove('py-6'); }
+                else { nav.classList.remove('py-2'); nav.classList.add('py-6'); }
+            });
+
+            // Reveal on Scroll
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('active'); });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+            // FAQ Accordion
+            document.querySelectorAll('.faq-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const body = btn.nextElementSibling;
+                    const icon = btn.querySelector('.faq-icon');
+                    const isOpen = !body.classList.contains('hidden');
+                    document.querySelectorAll('.faq-body').forEach(b => b.classList.add('hidden'));
+                    document.querySelectorAll('.faq-icon').forEach(i => i.textContent = '+');
+                    if (!isOpen) { body.classList.remove('hidden'); icon.textContent = '−'; }
+                });
+            });
+
+            // Form Submit
+            document.getElementById('enrollForm').addEventListener('submit', e => {
+                e.preventDefault();
+                const name = document.getElementById('fname').value;
+                alert(`🎉 Thank you, ${name}!\n\nYou're registered. You'll receive confirmation on WhatsApp and email within minutes.\n\nWelcome to the AI Mastery Family!`);
+            });
+        </script>
+    </div>
 </body>
 
 </html>
