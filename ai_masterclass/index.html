@@ -1,523 +1,441 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI-Powered Digital Marketing | Live Masterclass</title>
+    <!-- Fonts: Bricolage Grotesque & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;500;700;800;900&family=Clash+Display:wght@400;500;600;700&family=Satoshi:wght@300;400;500;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Outfit:wght@100..900&display=swap"
         rel="stylesheet">
-    <style>
-        /* ─── RESET & ROOT ─────────────────────────────────────── */
-        *,
-        *::before,
-        *::after {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        :root {
-            --sky: #EEF4FF;
-            --white: #FFFFFF;
-            --cream: #FDF9F4;
-            --blue: #2563EB;
-            --blue2: #1D4ED8;
-            --indigo: #4F46E5;
-            --coral: #F97316;
-            --teal: #0EA5E9;
-            --dark: #0F172A;
-            --mid: #334155;
-            --muted: #64748B;
-            --border: #E2E8F0;
-            --gold: #F59E0B;
-        }
-
-        body {
-            font-family: 'Satoshi', sans-serif;
-            background: var(--white);
-            color: var(--dark);
-            overflow-x: hidden;
-            cursor: none;
-        }
-
-        /* ─── CURSOR ─── */
-        #cursor {
-            position: fixed;
-            width: 14px;
-            height: 14px;
-            background: var(--blue);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9999;
-            transform: translate(-50%, -50%);
-            transition: transform 0.1s;
-            mix-blend-mode: multiply;
-        }
-
-        #cursor-ring {
-            position: fixed;
-            width: 44px;
-            height: 44px;
-            border: 2px solid var(--blue);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9998;
-            transform: translate(-50%, -50%);
-            transition: transform 0.15s ease;
-            opacity: 0.4;
-        }
-
-        /* ─── NAV ─── */
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 500;
-            padding: 0 40px;
-            height: 68px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(24px);
-            border-bottom: 1px solid rgba(226, 232, 240, 0.6);
-        }
-
-        .logo {
-            font-family: 'Clash Display', sans-serif;
-            font-weight: 700;
-            font-size: 1.15rem;
-            color: var(--dark);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .logo-badge {
-            background: linear-gradient(135deg, var(--blue), var(--indigo));
-            color: white;
-            font-size: 0.65rem;
-            font-weight: 700;
-            padding: 3px 8px;
-            border-radius: 6px;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-        }
-
-        .nav-btn {
-            background: var(--dark);
-            color: white;
-            font-weight: 700;
-            font-size: 0.85rem;
-            padding: 10px 22px;
-            border-radius: 100px;
-            text-decoration: none;
-            transition: transform 0.2s;
-            cursor: none;
-        }
-
-        /* ─── HERO ─── */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            text-align: center;
-            padding: 100px 24px 80px;
-            position: relative;
-            overflow: hidden;
-            background: var(--cream);
-        }
-
-        .hero-canvas {
-            position: absolute;
-            inset: 0;
-            z-index: 0;
-        }
-
-        .blob {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.5;
-            animation: blobFloat 12s linear infinite;
-        }
-
-        .blob1 {
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(37, 99, 235, 0.2), transparent 70%);
-            top: -100px;
-            right: -100px;
-        }
-
-        @keyframes blobFloat {
-
-            0%,
-            100% {
-                transform: translate(0, 0);
-            }
-
-            50% {
-                transform: translate(-30px, 20px);
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            blue: '#2563EB',
+                            indigo: '#4F46E5',
+                            coral: '#F97316',
+                            dark: '#0F172A',
+                            mid: '#334155',
+                            muted: '#64748B',
+                        }
+                    },
+                    fontFamily: {
+                        heading: ['Bricolage Grotesque', 'sans-serif'],
+                        body: ['Outfit', 'sans-serif'],
+                    },
+                    animation: {
+                        'blob': 'blob 10s infinite',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%, 100%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
             }
         }
+    </script>
+    <style type="text/tailwindcss">
+        @layer base {
+            body { @apply font-body bg-white text-brand-dark overflow-x-hidden; }
+            h1, h2, h3, h4 { @apply font-heading tracking-tight; }
+        }
+        @layer components {
+            .glass { @apply bg-white/80 backdrop-blur-xl border border-white/20 shadow-xl; }
+            .btn-primary { @apply relative overflow-hidden bg-brand-dark text-white font-bold py-4 px-10 rounded-full transition-all duration-300 hover:shadow-2xl hover:shadow-brand-blue/40 hover:-translate-y-1 active:scale-95; }
+            .badge { @apply inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider; }
+            .card { @apply bg-white border border-slate-100 p-8 rounded-[2rem] transition-all duration-500 hover:shadow-2xl hover:shadow-brand-blue/10 hover:-translate-y-2; }
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            max-width: 880px;
+        .text-gradient {
+            @apply bg-clip-text text-transparent bg-gradient-to-r from-brand-blue via-brand-indigo to-brand-coral;
         }
 
-        .live-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: white;
-            border: 1.5px solid var(--border);
-            color: var(--mid);
-            font-size: 0.82rem;
-            padding: 9px 20px;
-            border-radius: 100px;
-            margin-bottom: 32px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-        }
+        /* Animation Reveal */
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 1s cubic-bezier(0.2, 1, 0.3, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
 
-        .live-dot {
-            width: 8px;
-            height: 8px;
-            background: #EF4444;
-            border-radius: 50%;
-            animation: pulse 1.3s ease infinite;
-        }
-
-        @keyframes pulse {
-
-            0%,
-            100% {
-                transform: scale(1);
-            }
-
-            50% {
-                transform: scale(1.2);
-            }
-        }
-
-        .hero h1 {
-            font-family: 'Clash Display', sans-serif;
-            font-size: clamp(3rem, 8vw, 6rem);
-            font-weight: 700;
-            line-height: 1;
-            letter-spacing: -0.035em;
-            color: var(--dark);
-            margin-bottom: 24px;
-        }
-
-        .hero-sub {
-            font-size: 1.15rem;
-            color: var(--muted);
-            max-width: 650px;
-            margin: 0 auto 48px;
-            line-height: 1.6;
-        }
-
-        .price-main {
-            font-family: 'Clash Display', sans-serif;
-            font-size: 4rem;
-            font-weight: 700;
-            color: var(--dark);
-            margin-bottom: 40px;
-        }
-
-        .btn-hero {
-            background: linear-gradient(135deg, var(--blue), var(--indigo));
-            color: white;
-            font-weight: 800;
-            font-size: 1.1rem;
-            padding: 18px 48px;
-            border-radius: 100px;
-            text-decoration: none;
-            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.3);
-        }
-
-        /* --- SECTIONS --- */
-        section.std {
-            padding: 100px 24px;
-        }
-
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-
-        .stitle {
-            font-family: 'Clash Display', sans-serif;
-            font-size: 3rem;
-            font-weight: 700;
-            margin-bottom: 40px;
-            line-height: 1.1;
-        }
-
-        /* Learn Grid */
-        .learn-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-        }
-
-        .lcard {
-            background: white;
-            border: 1px solid var(--border);
-            padding: 40px;
-            border-radius: 24px;
-            transition: transform 0.3s;
-        }
-
-        .lcard:hover {
-            transform: translateY(-10px);
-            border-color: var(--blue);
-        }
-
-        .lcard-icon {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            display: block;
-        }
-
-        .lcard-title {
-            font-weight: 800;
-            font-size: 1.2rem;
-            margin-bottom: 10px;
-        }
-
-        /* Trainer Section */
-        .trainer-bg {
-            background: #F8FAFC;
-        }
-
-        .trainer-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 60px;
-            align-items: center;
-        }
-
-        .trainer-visual {
-            background: white;
-            border-radius: 30px;
-            padding: 40px;
-            text-align: center;
-            border: 1px solid var(--border);
-        }
-
-        .trainer-avatar {
-            font-size: 8rem;
-            margin-bottom: 20px;
-            display: block;
-        }
-
-        .trainer-name {
-            font-family: 'Clash Display', sans-serif;
-            font-size: 2rem;
-            font-weight: 700;
-        }
-
-        /* Form Card */
-        .form-card {
-            background: white;
-            padding: 50px;
-            border-radius: 30px;
-            border: 1px solid var(--border);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.05);
-        }
-
-        .fg {
-            margin-bottom: 25px;
-        }
-
-        .fg label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: 700;
-            font-size: 0.9rem;
-            color: var(--mid);
-        }
-
-        .fg input,
-        .fg select {
-            width: 100%;
-            padding: 15px;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            font-size: 1rem;
-        }
-
-        .pay-btn {
-            width: 100%;
-            background: var(--dark);
-            color: white;
-            padding: 20px;
-            border-radius: 100px;
-            font-weight: 800;
-            font-size: 1.1rem;
-            border: none;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        .pay-btn:hover {
-            transform: scale(1.02);
-            background: #000;
-        }
-
-        footer {
-            padding: 60px 24px;
-            text-align: center;
-            border-top: 1px solid var(--border);
-            color: var(--muted);
-        }
-
-        /* ANIMATION UTILITY */
-        .sr {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s ease-out;
-        }
-
-        .sr.vis {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        /* Custom Cursor Rendering Fix */
+        #cursor-follower { pointer-events: none; }
     </style>
 </head>
 
-<body>
-    <div id="cursor"></div>
-    <div id="cursor-ring"></div>
+<body class="selection:bg-brand-blue/10 selection:text-brand-blue">
 
-    <nav>
-        <div class="logo">AI TYCOON <span class="logo-badge">Masterclass</span></div>
-        <div class="nav-right"><a href="#register" class="nav-btn">Register</a></div>
+    <!-- Navbar -->
+    <nav class="fixed top-0 left-0 right-0 z-[100] px-6 py-4">
+        <div class="max-w-7xl mx-auto flex items-center justify-between glass rounded-2xl px-6 py-3">
+            <div class="flex items-center gap-3">
+                <div
+                    class="w-10 h-10 bg-brand-dark rounded-xl flex items-center justify-center text-white font-black italic text-xl">
+                    AI</div>
+                <span class="font-heading font-extrabold text-xl tracking-tighter">Digital Marketing</span>
+            </div>
+            <div class="hidden md:flex items-center gap-8">
+                <a href="#topics"
+                    class="text-sm font-semibold text-brand-mid hover:text-brand-blue transition-colors">Topics</a>
+                <a href="#trainer"
+                    class="text-sm font-semibold text-brand-mid hover:text-brand-blue transition-colors">Trainer</a>
+                <a href="#reviews"
+                    class="text-sm font-semibold text-brand-mid hover:text-brand-blue transition-colors">Reviews</a>
+            </div>
+            <div>
+                <a href="#register" class="btn-primary !py-2.5 !px-6 text-sm">Register — ₹99</a>
+            </div>
+        </div>
     </nav>
 
-    <section class="hero">
-        <canvas id="heroCanvas" class="hero-canvas"></canvas>
-        <div class="blob blob1"></div>
-        <div class="hero-content">
-            <div class="live-pill">
-                <div class="live-dot"></div> LIVE MASTERCLASS
+    <!-- Hero Section -->
+    <section class="relative min-height-[100vh] pt-40 pb-20 overflow-hidden bg-[#FAFBFE]">
+        <!-- Animated Blobs -->
+        <div
+            class="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-brand-blue/5 rounded-full blur-[100px] animate-blob">
+        </div>
+        <div
+            class="absolute bottom-[-10%] left-[-10%] w-[400px] h-[400px] bg-brand-coral/5 rounded-full blur-[100px] animate-blob animation-delay-2000">
+        </div>
+
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="text-center">
+                <div
+                    class="inline-flex items-center gap-2 bg-white px-5 py-2 rounded-full border border-slate-200 shadow-sm mb-8 animate-bounce transition-all">
+                    <span class="relative flex h-2.5 w-2.5">
+                        <span
+                            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
+                    </span>
+                    <span class="text-xs font-bold uppercase tracking-widest text-slate-600">Live Online Masterclass •
+                        8th March 2025</span>
+                </div>
+
+                <h1 class="text-6xl md:text-8xl font-black mb-8 leading-[1.05] tracking-tight text-slate-900">
+                    Stop Struggling.<br>
+                    <span class="text-gradient">AI-Powered Digital Marketing</span>
+                </h1>
+
+                <p class="text-lg md:text-2xl text-brand-muted max-w-3xl mx-auto mb-12 leading-relaxed font-medium">
+                    India's most <strong>affordable, actionable</strong> AI Digital Marketing workshop for trainers,
+                    coaches, entrepreneurs & business owners. 3 hours. Real results. Zero fluff.
+                </p>
+
+                <div class="flex flex-col md:flex-row items-center justify-center gap-6 mb-16">
+                    <a href="#register" class="btn-primary text-xl group">
+                        Secure Your Spot Now
+                        <div
+                            class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500">
+                        </div>
+                    </a>
+                    <div class="flex items-center gap-4 text-left">
+                        <div class="flex -space-x-4">
+                            <img class="w-12 h-12 rounded-full border-4 border-white"
+                                src="https://i.pravatar.cc/100?u=1" alt="">
+                            <img class="w-12 h-12 rounded-full border-4 border-white"
+                                src="https://i.pravatar.cc/100?u=2" alt="">
+                            <img class="w-12 h-12 rounded-full border-4 border-white"
+                                src="https://i.pravatar.cc/100?u=3" alt="">
+                            <div
+                                class="w-12 h-12 rounded-full border-4 border-white bg-brand-blue text-white flex items-center justify-center font-bold text-xs ring-2 ring-white">
+                                +2k</div>
+                        </div>
+                        <div>
+                            <p class="font-bold text-brand-dark">Joining the community</p>
+                            <p class="text-sm text-brand-muted">Already 2,400+ participants</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feature Chips -->
+                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                    <div class="glass p-4 rounded-2xl flex flex-col items-center gap-2">
+                        <span class="text-2xl">⏳</span>
+                        <span class="text-xs font-bold text-brand-muted uppercase">3 Hours</span>
+                    </div>
+                    <div class="glass p-4 rounded-2xl flex flex-col items-center gap-2">
+                        <span class="text-2xl">🎓</span>
+                        <span class="text-xs font-bold text-brand-muted uppercase">Cert Included</span>
+                    </div>
+                    <div class="glass p-4 rounded-2xl flex flex-col items-center gap-2">
+                        <span class="text-2xl">💸</span>
+                        <span class="text-xs font-bold text-brand-muted uppercase">Only ₹99</span>
+                    </div>
+                    <div class="glass p-4 rounded-2xl flex flex-col items-center gap-2">
+                        <span class="text-2xl">🎬</span>
+                        <span class="text-xs font-bold text-brand-muted uppercase">Recording</span>
+                    </div>
+                    <div class="glass p-4 rounded-2xl flex flex-col items-center gap-2">
+                        <span class="text-2xl">💬</span>
+                        <span class="text-xs font-bold text-brand-muted uppercase">Live Q&A</span>
+                    </div>
+                    <div class="glass p-4 rounded-2xl flex flex-col items-center gap-2">
+                        <span class="text-2xl">🛠️</span>
+                        <span class="text-xs font-bold text-brand-muted uppercase">AI Tools</span>
+                    </div>
+                </div>
             </div>
-            <h1>AI-Powered<br><span
-                    style="background: linear-gradient(135deg, var(--blue), var(--coral)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Digital
-                    Marketing</span></h1>
-            <p class="hero-sub sr">Master the future of marketing. Learn how to use AI to generate high-quality leads,
-                automate content, and save 10+ hours every week.</p>
-            <div class="price-main sr">₹99</div>
-            <div class="sr"><a href="#register" class="btn-hero">Reserve My Seat</a></div>
         </div>
     </section>
 
-    <section class="std">
-        <div class="container">
-            <h2 class="stitle sr">What You Will Learn</h2>
-            <div class="learn-grid">
-                <div class="lcard sr">
-                    <span class="lcard-icon">🎯</span>
-                    <div class="lcard-title">AI Lead Gen</div>
-                    <div class="lcard-desc">How to find and convert your ideal customers using AI tools.</div>
+    <!-- Topics Section -->
+    <section id="topics" class="py-32 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-20 reveal">
+                <h2 class="text-4xl md:text-5xl font-black mb-6">Master 6 Engines of Growth</h2>
+                <p class="text-xl text-brand-muted max-w-2xl mx-auto">Skip the theory. Get practical step-by-step
+                    systems to automate your marketing.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="card reveal delay-100">
+                    <div
+                        class="w-14 h-14 bg-blue-50 text-brand-blue rounded-2xl flex items-center justify-center text-3xl mb-6">
+                        🤖</div>
+                    <h3 class="text-2xl font-bold mb-4">AI Lead Generation</h3>
+                    <p class="text-brand-muted leading-relaxed">Automate your prospecting and reach thousands of
+                        potential leads without spending a rupee on ads.</p>
                 </div>
-                <div class="lcard sr">
-                    <span class="lcard-icon">✍️</span>
-                    <div class="lcard-title">Content Automation</div>
-                    <div class="lcard-desc">Create 30 days of social media content in just 30 minutes.</div>
+                <div class="card reveal delay-200">
+                    <div
+                        class="w-14 h-14 bg-indigo-50 text-brand-indigo rounded-2xl flex items-center justify-center text-3xl mb-6">
+                        ⚡</div>
+                    <h3 class="text-2xl font-bold mb-4">Content Multiplier</h3>
+                    <p class="text-brand-muted leading-relaxed">Learn how AI can turn one video or article into 50+
+                        social media posts in less than 5 minutes.</p>
                 </div>
-                <div class="lcard sr">
-                    <span class="lcard-icon">🚀</span>
-                    <div class="lcard-title">Scaling Secrets</div>
-                    <div class="lcard-desc">Proven strategies to scale your personal brand with AI.</div>
+                <div class="card reveal delay-300">
+                    <div
+                        class="w-14 h-14 bg-orange-50 text-brand-coral rounded-2xl flex items-center justify-center text-3xl mb-6">
+                        📈</div>
+                    <h3 class="text-2xl font-bold mb-4">SEO & Ranking</h3>
+                    <p class="text-brand-muted leading-relaxed">Use AI to research keywords and create SEO-optimized
+                        content that ranks on page 1 of Google effortlessly.</p>
+                </div>
+                <div class="card reveal delay-400">
+                    <div
+                        class="w-14 h-14 bg-green-50 text-green-600 rounded-2xl flex items-center justify-center text-3xl mb-6">
+                        📱</div>
+                    <h3 class="text-2xl font-bold mb-4">Viral Reels Strategy</h3>
+                    <p class="text-brand-muted leading-relaxed">Identify trending hooks and use AI clones to generate
+                        high-engagement video content consistently.</p>
+                </div>
+                <div class="card reveal delay-500">
+                    <div
+                        class="w-14 h-14 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center text-3xl mb-6">
+                        📧</div>
+                    <h3 class="text-2xl font-bold mb-4">Email Magic</h3>
+                    <p class="text-brand-muted leading-relaxed">Write personalized, high-converting emails at scale that
+                        bypass spam filters and land in the primary tab.</p>
+                </div>
+                <div class="card reveal delay-600">
+                    <div
+                        class="w-14 h-14 bg-pink-50 text-pink-600 rounded-2xl flex items-center justify-center text-3xl mb-6">
+                        🛠️</div>
+                    <h3 class="text-2xl font-bold mb-4">AI Toolset</h3>
+                    <p class="text-brand-muted leading-relaxed">Get our curated list of 100+ AI tools categorized for
+                        designers, writers, marketers and video editors.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="std trainer-bg" id="trainer">
-        <div class="container">
-            <div class="trainer-grid">
-                <div class="trainer-visual sr"><span class="trainer-avatar">👤</span>
-                    <div class="trainer-name">AI Strategist</div>
-                    <p>Digital Marketing Expert</p>
+    <!-- Trainer Section -->
+    <section id="trainer" class="py-32 bg-slate-50 border-y border-slate-100">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col lg:flex-row items-center gap-20">
+                <div class="lg:w-1/2 relative reveal">
+                    <div class="aspect-square bg-white shadow-2xl rounded-[3rem] overflow-hidden border-8 border-white">
+                        <!-- Placeholder for Trainer Image -->
+                        <div class="w-full h-full bg-slate-200 flex items-center justify-center text-8xl">👤</div>
+                    </div>
+                    <!-- Floating stats -->
+                    <div class="absolute -top-10 -right-10 glass p-6 rounded-3xl animate-float">
+                        <div class="text-3xl font-black text-brand-blue">50+</div>
+                        <div class="text-xs font-bold text-brand-muted uppercase">Workshops Done</div>
+                    </div>
+                    <div class="absolute -bottom-10 -left-10 glass p-6 rounded-3xl animate-float delay-700">
+                        <div class="text-3xl font-black text-brand-coral">10+</div>
+                        <div class="text-xs font-bold text-brand-muted uppercase">Years Experience</div>
+                    </div>
                 </div>
-                <div class="trainer-info">
-                    <h2 class="stitle sr">Meet Your Trainer</h2>
-                    <p class="sr" style="font-size:1.1rem; line-height:1.7; color:var(--mid);">With years of experience
-                        in AI and Digital Marketing, I have helped 500+ professionals automate their workflows and grow
-                        their businesses. This masterclass is designed to give you practical, actionable insights.</p>
+                <div class="lg:w-1/2 reveal delay-200">
+                    <span class="badge bg-brand-blue/10 text-brand-blue mb-4">Meet Your Mentor</span>
+                    <h2 class="text-5xl font-black mb-8 leading-tight">Learn from an Industry Expert</h2>
+                    <p class="text-lg text-brand-muted mb-6 leading-relaxed">
+                        With over a decade of experience in the digital trenches, I've seen marketing evolve from basic
+                        status updates to complex AI-driven workflows.
+                    </p>
+                    <p class="text-lg text-brand-muted mb-10 leading-relaxed">
+                        My goal is simple: to stop the technical overwhelm and give you the exact systems I use to scale
+                        businesses using Artificial Intelligence.
+                    </p>
+                    <ul class="space-y-4 mb-12">
+                        <li class="flex items-center gap-3 font-bold text-brand-dark">
+                            <span
+                                class="w-6 h-6 bg-brand-blue/10 text-brand-blue rounded-full flex items-center justify-center text-xs">✓</span>
+                            Certified AI Marketing Strategist
+                        </li>
+                        <li class="flex items-center gap-3 font-bold text-brand-dark">
+                            <span
+                                class="w-6 h-6 bg-brand-blue/10 text-brand-blue rounded-full flex items-center justify-center text-xs">✓</span>
+                            Trained 5,000+ Entrepreneurs
+                        </li>
+                        <li class="flex items-center gap-3 font-bold text-brand-dark">
+                            <span
+                                class="w-6 h-6 bg-brand-blue/10 text-brand-blue rounded-full flex items-center justify-center text-xs">✓</span>
+                            Founder of AI Tycoon Community
+                        </li>
+                    </ul>
+                    <a href="#register" class="btn-primary">Reserve My Spot</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="std" id="register">
-        <div class="container">
-            <div class="form-card sr">
-                <h2 style="text-align:center; margin-bottom:30px;">Register Now</h2>
-                <div class="fg"><label>Full Name</label><input type="text" id="f-name" placeholder="Name"></div>
-                <div class="fg"><label>Email</label><input type="email" id="f-email" placeholder="Email"></div>
-                <div class="fg"><label>Phone</label><input type="tel" id="f-phone" placeholder="Phone"></div>
-                <div class="fg"><label>Profession</label><select id="f-prof">
-                        <option>Trainer</option>
-                        <option>Coach</option>
-                        <option>Entrepreneur</option>
-                        <option>Other</option>
-                    </select></div>
-                <button class="pay-btn" onclick="handlePayment()">Pay ₹99 & Register</button>
+    <!-- Pricing / Registration -->
+    <section id="register" class="py-32 relative bg-brand-dark text-white overflow-hidden">
+        <div
+            class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 pointer-events-none">
+        </div>
+
+        <div class="max-w-4xl mx-auto px-6 relative z-10">
+            <div class="text-center mb-20 reveal">
+                <h2 class="text-5xl md:text-7xl font-black mb-8">Ready to Level Up?</h2>
+                <div class="inline-block glass !bg-white/5 border-white/10 p-8 rounded-[2rem]">
+                    <div class="text-sm font-bold text-white/50 uppercase mb-2">Original Price ₹2,999</div>
+                    <div class="text-7xl font-black mb-4 tracking-tighter">₹99 <span
+                            class="text-2xl font-bold text-white/40 italic font-body tracking-normal underline decoration-red-500/50 decoration-4">Only</span>
+                    </div>
+                    <p class="text-brand-blue font-bold">Limited time offer for the next 48 hours</p>
+                </div>
+            </div>
+
+            <div class="bg-white text-brand-dark p-8 md:p-12 rounded-[3rem] shadow-2xl reveal delay-200">
+                <form id="regForm" class="space-y-8">
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <label class="block text-sm font-black uppercase mb-3 text-slate-400">Full Name</label>
+                            <input type="text" placeholder="Your Name"
+                                class="w-full bg-slate-50 border-none rounded-2xl px-6 py-4 font-bold focus:ring-2 focus:ring-brand-blue transition-all"
+                                required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-black uppercase mb-3 text-slate-400">Email Address</label>
+                            <input type="email" placeholder="email@example.com"
+                                class="w-full bg-slate-50 border-none rounded-2xl px-6 py-4 font-bold focus:ring-2 focus:ring-brand-blue transition-all"
+                                required>
+                        </div>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <label class="block text-sm font-black uppercase mb-3 text-slate-400">WhatsApp
+                                Number</label>
+                            <input type="tel" placeholder="+91 00000 00000"
+                                class="w-full bg-slate-50 border-none rounded-2xl px-6 py-4 font-bold focus:ring-2 focus:ring-brand-blue transition-all"
+                                required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-black uppercase mb-3 text-slate-400">Your
+                                Profession</label>
+                            <select
+                                class="w-full bg-slate-50 border-none rounded-2xl px-6 py-4 font-bold focus:ring-2 focus:ring-brand-blue transition-all">
+                                <option>Trainer / Coach</option>
+                                <option>Entrepreneur</option>
+                                <option>Business Owner</option>
+                                <option>Freelancer</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full btn-primary !py-6 text-xl">
+                        🔒 Pay ₹99 & Claim My Seat
+                    </button>
+                    <p class="text-center text-sm font-bold text-slate-400 uppercase tracking-widest">Secure Payment
+                        Powered by Razorpay</p>
+                </form>
             </div>
         </div>
     </section>
 
-    <footer>© 2025 AI Tycoon Masterclass. All Rights Reserved.</footer>
+    <!-- Footer -->
+    <footer class="bg-slate-50 py-20 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-10 mb-20">
+                <div class="flex items-center gap-3">
+                    <div
+                        class="w-10 h-10 bg-brand-dark rounded-xl flex items-center justify-center text-white font-black italic text-xl">
+                        AI</div>
+                    <span class="font-heading font-extrabold text-xl tracking-tighter text-brand-dark">Digital
+                        Marketing</span>
+                </div>
+                <div class="flex gap-8">
+                    <a href="#"
+                        class="text-brand-muted hover:text-brand-blue font-bold text-sm underline decoration-brand-blue/20">Terms</a>
+                    <a href="#"
+                        class="text-brand-muted hover:text-brand-blue font-bold text-sm underline decoration-brand-blue/20">Privacy</a>
+                    <a href="#"
+                        class="text-brand-muted hover:text-brand-blue font-bold text-sm underline decoration-brand-blue/20">Refund
+                        Policy</a>
+                </div>
+            </div>
+            <div class="text-center text-slate-400 text-sm font-bold">
+                © 2025 AI TYCOON ACADEMY. ALL RIGHTS RESERVED.
+            </div>
+        </div>
+    </footer>
 
+    <!-- Scripts -->
     <script>
-        const cursor = document.getElementById('cursor');
-        const ring = document.getElementById('cursor-ring');
-        let mx = 0, my = 0, rx = 0, ry = 0;
-        document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cursor.style.left = `${mx}px`; cursor.style.top = `${my}px`; });
-        (function animRing() { rx += (mx - rx) * 0.15; ry += (my - ry) * 0.15; ring.style.left = `${rx}px`; ring.style.top = `${ry}px`; requestAnimationFrame(animRing); })();
-
-        // Particles
-        const canvas = document.getElementById('heroCanvas');
-        const ctx = canvas.getContext('2d');
-        let W, H, particles = [];
-        function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
-        window.addEventListener('resize', resize); resize();
-        class Particle {
-            constructor() { this.reset(); }
-            reset() { this.x = Math.random() * W; this.y = Math.random() * H; this.r = Math.random() * 2 + 1; this.vx = (Math.random() - 0.5) * 0.5; this.vy = (Math.random() - 0.5) * 0.5; this.col = Math.random() > 0.5 ? '37,99,235' : '249,115,22'; this.a = Math.random() * 0.4 + 0.1; }
-            update() { this.x += this.vx; this.y += this.vy; if (this.x < 0 || this.x > W || this.y < 0 || this.y > H) this.reset(); }
-            draw() { ctx.beginPath(); ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2); ctx.fillStyle = `rgba(${this.col},${this.a})`; ctx.fill(); }
-        }
-        for (let i = 0; i < 60; i++) particles.push(new Particle());
-        (function animLoop() { ctx.clearRect(0, 0, W, H); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animLoop); })();
-
-        // Scroll Reveal
-        const srObs = new IntersectionObserver(entries => {
-            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); });
+        // Reveal Animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
         }, { threshold: 0.1 });
-        document.querySelectorAll('.sr').forEach(el => srObs.observe(el));
 
-        function handlePayment() {
-            const name = document.getElementById('f-name').value;
-            if (!name) { alert('Please fill details'); return; }
-            alert(`Redirecting ${name} to payment...`);
-        }
+        document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+
+        // Form Handling
+        document.getElementById('regForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const inputs = this.querySelectorAll('input');
+            const data = {};
+            inputs.forEach(input => data[input.placeholder] = input.value);
+
+            // Integrate your payment gateway here
+            alert(`Redirecting to payment for ₹99...\n\nThank you, ${data['Your Name']}!`);
+        });
+
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
     </script>
 </body>
 
