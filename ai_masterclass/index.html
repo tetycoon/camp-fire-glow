@@ -56,7 +56,7 @@
             pointer-events: none;
             z-index: 9999;
             transform: translate(-50%, -50%);
-            transition: transform 0.1s, width 0.3s, height 0.3s, background 0.3s;
+            transition: transform 0.1s;
             mix-blend-mode: multiply;
         }
 
@@ -69,12 +69,8 @@
             pointer-events: none;
             z-index: 9998;
             transform: translate(-50%, -50%);
-            transition: transform 0.15s ease, width 0.3s, height 0.3s, opacity 0.3s;
+            transition: transform 0.15s ease;
             opacity: 0.4;
-        }
-
-        body:hover #cursor {
-            opacity: 1;
         }
 
         /* ─── NAV ─── */
@@ -92,19 +88,6 @@
             background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(24px);
             border-bottom: 1px solid rgba(226, 232, 240, 0.6);
-            animation: navSlide 0.6s ease both;
-        }
-
-        @keyframes navSlide {
-            from {
-                transform: translateY(-100%);
-                opacity: 0;
-            }
-
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
         }
 
         .logo {
@@ -128,25 +111,6 @@
             text-transform: uppercase;
         }
 
-        .nav-right {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .nav-link {
-            font-size: 0.88rem;
-            color: var(--muted);
-            font-weight: 500;
-            text-decoration: none;
-            transition: color 0.2s;
-            cursor: none;
-        }
-
-        .nav-link:hover {
-            color: var(--dark);
-        }
-
         .nav-btn {
             background: var(--dark);
             color: white;
@@ -155,20 +119,8 @@
             padding: 10px 22px;
             border-radius: 100px;
             text-decoration: none;
-            transition: background 0.25s;
+            transition: transform 0.2s;
             cursor: none;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .nav-btn span {
-            position: relative;
-            z-index: 1;
-        }
-
-        .nav-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 28px rgba(37, 99, 235, 0.4);
         }
 
         /* ─── HERO ─── */
@@ -196,45 +148,26 @@
             border-radius: 50%;
             filter: blur(80px);
             opacity: 0.5;
-            animation: blobFloat linear infinite;
+            animation: blobFloat 12s linear infinite;
         }
 
         .blob1 {
             width: 500px;
             height: 500px;
-            background: radial-gradient(circle, rgba(37, 99, 235, 0.25), transparent 70%);
+            background: radial-gradient(circle, rgba(37, 99, 235, 0.2), transparent 70%);
             top: -100px;
             right: -100px;
-            animation-duration: 12s;
-        }
-
-        .blob2 {
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(249, 115, 22, 0.2), transparent 70%);
-            bottom: -80px;
-            left: -80px;
-            animation-duration: 15s;
-        }
-
-        .blob3 {
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, rgba(79, 70, 229, 0.2), transparent 70%);
-            top: 40%;
-            left: 10%;
-            animation-duration: 18s;
         }
 
         @keyframes blobFloat {
 
             0%,
             100% {
-                transform: translate(0, 0) scale(1);
+                transform: translate(0, 0);
             }
 
             50% {
-                transform: translate(-20px, 30px) scale(0.95);
+                transform: translate(-30px, 20px);
             }
         }
 
@@ -252,7 +185,6 @@
             border: 1.5px solid var(--border);
             color: var(--mid);
             font-size: 0.82rem;
-            font-weight: 600;
             padding: 9px 20px;
             border-radius: 100px;
             margin-bottom: 32px;
@@ -272,79 +204,52 @@
             0%,
             100% {
                 transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
             }
 
             50% {
-                transform: scale(1.1);
-                box-shadow: 0 0 0 6px rgba(239, 68, 68, 0);
+                transform: scale(1.2);
             }
         }
 
         .hero h1 {
             font-family: 'Clash Display', sans-serif;
-            font-size: clamp(3.2rem, 8vw, 6.5rem);
+            font-size: clamp(3rem, 8vw, 6rem);
             font-weight: 700;
-            line-height: 0.97;
+            line-height: 1;
             letter-spacing: -0.035em;
             color: var(--dark);
             margin-bottom: 24px;
         }
 
-        .h1-line2 {
-            background: linear-gradient(135deg, var(--blue), var(--indigo), var(--coral));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
         .hero-sub {
-            font-size: clamp(1rem, 2.2vw, 1.2rem);
+            font-size: 1.15rem;
             color: var(--muted);
-            max-width: 600px;
+            max-width: 650px;
             margin: 0 auto 48px;
-            line-height: 1.75;
-        }
-
-        .chips {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-            margin-bottom: 52px;
-        }
-
-        .chip {
-            display: flex;
-            align-items: center;
-            gap: 7px;
-            background: white;
-            border: 1.5px solid var(--border);
-            border-radius: 100px;
-            padding: 10px 20px;
-            font-weight: 600;
+            line-height: 1.6;
         }
 
         .price-main {
             font-family: 'Clash Display', sans-serif;
-            font-size: clamp(3.5rem, 8vw, 5.5rem);
+            font-size: 4rem;
             font-weight: 700;
             color: var(--dark);
+            margin-bottom: 40px;
         }
 
         .btn-hero {
             background: linear-gradient(135deg, var(--blue), var(--indigo));
             color: white;
             font-weight: 800;
-            padding: 18px 44px;
+            font-size: 1.1rem;
+            padding: 18px 48px;
             border-radius: 100px;
             text-decoration: none;
-            display: inline-block;
+            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.3);
         }
 
-        /* ─── REGISTER SECTION ─── */
-        .reg-bg {
-            background: var(--cream);
+        /* --- SECTIONS --- */
+        section.std {
             padding: 100px 24px;
         }
 
@@ -353,42 +258,143 @@
             margin: 0 auto;
         }
 
-        .form-card {
+        .stitle {
+            font-family: 'Clash Display', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 40px;
+            line-height: 1.1;
+        }
+
+        /* Learn Grid */
+        .learn-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .lcard {
             background: white;
+            border: 1px solid var(--border);
             padding: 40px;
             border-radius: 24px;
+            transition: transform 0.3s;
+        }
+
+        .lcard:hover {
+            transform: translateY(-10px);
+            border-color: var(--blue);
+        }
+
+        .lcard-icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .lcard-title {
+            font-weight: 800;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        /* Trainer Section */
+        .trainer-bg {
+            background: #F8FAFC;
+        }
+
+        .trainer-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .trainer-visual {
+            background: white;
+            border-radius: 30px;
+            padding: 40px;
+            text-align: center;
             border: 1px solid var(--border);
-            max-width: 500px;
-            margin: 0 auto;
+        }
+
+        .trainer-avatar {
+            font-size: 8rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .trainer-name {
+            font-family: 'Clash Display', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        /* Form Card */
+        .form-card {
+            background: white;
+            padding: 50px;
+            border-radius: 30px;
+            border: 1px solid var(--border);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.05);
         }
 
         .fg {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         .fg label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--mid);
         }
 
         .fg input,
         .fg select {
             width: 100%;
-            padding: 12px;
-            border-radius: 8px;
+            padding: 15px;
+            border-radius: 12px;
             border: 1px solid var(--border);
+            font-size: 1rem;
         }
 
         .pay-btn {
             width: 100%;
             background: var(--dark);
             color: white;
-            padding: 16px;
+            padding: 20px;
             border-radius: 100px;
             font-weight: 800;
+            font-size: 1.1rem;
             border: none;
             cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .pay-btn:hover {
+            transform: scale(1.02);
+            background: #000;
+        }
+
+        footer {
+            padding: 60px 24px;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+        }
+
+        /* ANIMATION UTILITY */
+        .sr {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        .sr.vis {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
@@ -396,72 +402,97 @@
 <body>
     <div id="cursor"></div>
     <div id="cursor-ring"></div>
+
     <nav>
         <div class="logo">AI TYCOON <span class="logo-badge">Masterclass</span></div>
-        <div class="nav-right">
-            <a href="#register" class="nav-btn"><span>Register Now</span></a>
-        </div>
+        <div class="nav-right"><a href="#register" class="nav-btn">Register</a></div>
     </nav>
+
     <section class="hero">
         <canvas id="heroCanvas" class="hero-canvas"></canvas>
         <div class="blob blob1"></div>
-        <div class="blob blob2"></div>
-        <div class="blob blob3"></div>
         <div class="hero-content">
             <div class="live-pill">
-                <div class="live-dot"></div> LIVE WORKSHOP
+                <div class="live-dot"></div> LIVE MASTERCLASS
             </div>
-            <h1>AI-Powered<br><span class="h1-line2">Digital Marketing</span></h1>
-            <p class="hero-sub">Transform your business with the power of <strong>Artificial Intelligence</strong>.
-                Learn lead generation, content creation, and scaling strategies used by the top 1%.</p>
-            <div class="chips">
-                <div class="chip">📅 8th March</div>
-                <div class="chip">⏰ 10 AM - 1 PM</div>
-                <div class="chip">🌐 Online</div>
-            </div>
-            <div class="price-main">₹99</div>
-            <div style="margin-top:30px;">
-                <a href="#register" class="btn-hero">Secure Your Spot Now</a>
+            <h1>AI-Powered<br><span
+                    style="background: linear-gradient(135deg, var(--blue), var(--coral)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Digital
+                    Marketing</span></h1>
+            <p class="hero-sub sr">Master the future of marketing. Learn how to use AI to generate high-quality leads,
+                automate content, and save 10+ hours every week.</p>
+            <div class="price-main sr">₹99</div>
+            <div class="sr"><a href="#register" class="btn-hero">Reserve My Seat</a></div>
+        </div>
+    </section>
+
+    <section class="std">
+        <div class="container">
+            <h2 class="stitle sr">What You Will Learn</h2>
+            <div class="learn-grid">
+                <div class="lcard sr">
+                    <span class="lcard-icon">🎯</span>
+                    <div class="lcard-title">AI Lead Gen</div>
+                    <div class="lcard-desc">How to find and convert your ideal customers using AI tools.</div>
+                </div>
+                <div class="lcard sr">
+                    <span class="lcard-icon">✍️</span>
+                    <div class="lcard-title">Content Automation</div>
+                    <div class="lcard-desc">Create 30 days of social media content in just 30 minutes.</div>
+                </div>
+                <div class="lcard sr">
+                    <span class="lcard-icon">🚀</span>
+                    <div class="lcard-title">Scaling Secrets</div>
+                    <div class="lcard-desc">Proven strategies to scale your personal brand with AI.</div>
+                </div>
             </div>
         </div>
     </section>
-    <section class="reg-bg" id="register">
+
+    <section class="std trainer-bg" id="trainer">
         <div class="container">
-            <div class="form-card">
-                <h2 style="margin-bottom:20px;text-align:center;">Register Now</h2>
-                <div class="fg"><label>Full Name</label><input type="text" id="f-name" placeholder="John Doe"></div>
-                <div class="fg"><label>Email</label><input type="email" id="f-email" placeholder="john@example.com">
+            <div class="trainer-grid">
+                <div class="trainer-visual sr"><span class="trainer-avatar">👤</span>
+                    <div class="trainer-name">AI Strategist</div>
+                    <p>Digital Marketing Expert</p>
                 </div>
-                <div class="fg"><label>Phone</label><input type="tel" id="f-phone" placeholder="+91 9876543210"></div>
-                <div class="fg">
-                    <label>Profession</label>
-                    <select id="f-prof">
+                <div class="trainer-info">
+                    <h2 class="stitle sr">Meet Your Trainer</h2>
+                    <p class="sr" style="font-size:1.1rem; line-height:1.7; color:var(--mid);">With years of experience
+                        in AI and Digital Marketing, I have helped 500+ professionals automate their workflows and grow
+                        their businesses. This masterclass is designed to give you practical, actionable insights.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="std" id="register">
+        <div class="container">
+            <div class="form-card sr">
+                <h2 style="text-align:center; margin-bottom:30px;">Register Now</h2>
+                <div class="fg"><label>Full Name</label><input type="text" id="f-name" placeholder="Name"></div>
+                <div class="fg"><label>Email</label><input type="email" id="f-email" placeholder="Email"></div>
+                <div class="fg"><label>Phone</label><input type="tel" id="f-phone" placeholder="Phone"></div>
+                <div class="fg"><label>Profession</label><select id="f-prof">
                         <option>Trainer</option>
                         <option>Coach</option>
                         <option>Entrepreneur</option>
-                        <option>Business Owner</option>
                         <option>Other</option>
-                    </select>
-                </div>
-                <button class="pay-btn" onclick="handlePayment()">Proceed to Payment — ₹99</button>
+                    </select></div>
+                <button class="pay-btn" onclick="handlePayment()">Pay ₹99 & Register</button>
             </div>
         </div>
     </section>
+
+    <footer>© 2025 AI Tycoon Masterclass. All Rights Reserved.</footer>
+
     <script>
         const cursor = document.getElementById('cursor');
         const ring = document.getElementById('cursor-ring');
         let mx = 0, my = 0, rx = 0, ry = 0;
-        document.addEventListener('mousemove', e => {
-            mx = e.clientX; my = e.clientY;
-            cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
-        });
-        (function animRing() {
-            rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
-            ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
-            requestAnimationFrame(animRing);
-        })();
+        document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cursor.style.left = `${mx}px`; cursor.style.top = `${my}px`; });
+        (function animRing() { rx += (mx - rx) * 0.15; ry += (my - ry) * 0.15; ring.style.left = `${rx}px`; ring.style.top = `${ry}px`; requestAnimationFrame(animRing); })();
 
-        /* --- Particles --- */
+        // Particles
         const canvas = document.getElementById('heroCanvas');
         const ctx = canvas.getContext('2d');
         let W, H, particles = [];
@@ -469,24 +500,23 @@
         window.addEventListener('resize', resize); resize();
         class Particle {
             constructor() { this.reset(); }
-            reset() {
-                this.x = Math.random() * W; this.y = Math.random() * H;
-                this.r = Math.random() * 2 + 1; this.vx = (Math.random() - 0.5) * 0.5; this.vy = (Math.random() - 0.5) * 0.5;
-                this.col = Math.random() > 0.5 ? '37,99,235' : '249,115,22'; this.a = Math.random() * 0.5 + 0.1;
-            }
+            reset() { this.x = Math.random() * W; this.y = Math.random() * H; this.r = Math.random() * 2 + 1; this.vx = (Math.random() - 0.5) * 0.5; this.vy = (Math.random() - 0.5) * 0.5; this.col = Math.random() > 0.5 ? '37,99,235' : '249,115,22'; this.a = Math.random() * 0.4 + 0.1; }
             update() { this.x += this.vx; this.y += this.vy; if (this.x < 0 || this.x > W || this.y < 0 || this.y > H) this.reset(); }
             draw() { ctx.beginPath(); ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2); ctx.fillStyle = `rgba(${this.col},${this.a})`; ctx.fill(); }
         }
-        for (let i = 0; i < 80; i++) particles.push(new Particle());
-        (function anim() {
-            ctx.clearRect(0, 0, W, H); particles.forEach(p => { p.update(); p.draw(); });
-            requestAnimationFrame(anim);
-        })();
+        for (let i = 0; i < 60; i++) particles.push(new Particle());
+        (function animLoop() { ctx.clearRect(0, 0, W, H); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animLoop); })();
+
+        // Scroll Reveal
+        const srObs = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.sr').forEach(el => srObs.observe(el));
 
         function handlePayment() {
             const name = document.getElementById('f-name').value;
             if (!name) { alert('Please fill details'); return; }
-            alert('Redirecting to payment...');
+            alert(`Redirecting ${name} to payment...`);
         }
     </script>
 </body>
