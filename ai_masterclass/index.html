@@ -92,15 +92,16 @@
                 </div>
                 <div
                     class="hidden lg:flex items-center gap-10 text-[10px] font-black uppercase tracking-[0.2em] text-cyber-slate">
-                    <a href="#why" class="hover:text-white transition-colors">Why Attend</a>
+                    <a href="https://www.techtycoon.in/" target="_blank" class="hover:text-white transition-colors">Why
+                        Attend</a>
                     <a href="#roadmap" class="hover:text-white transition-colors">Curriculum</a>
                     <a href="#trainer" class="hover:text-white transition-colors">Trainer</a>
                     <a href="#testimonials" class="hover:text-white transition-colors">Reviews</a>
                     <a href="#faq" class="hover:text-white transition-colors">FAQ</a>
                 </div>
-                <a href="#enroll"
+                <button onclick="openModal()"
                     class="btn-primary text-[11px] font-black uppercase tracking-wider px-6 py-3 whitespace-nowrap">Join
-                    Workshop @99/-</a>
+                    Workshop @99/-</button>
             </div>
         </nav>
 
@@ -774,78 +775,98 @@
             </div>
         </section>
 
-        <!-- ============ REGISTRATION ============ -->
-        <section id="enroll" class="py-32 relative overflow-hidden">
-            <div class="absolute inset-0"
-                style="background: radial-gradient(ellipse 70% 50% at 50% 100%, rgba(168,85,247,0.08) 0%, transparent 70%);">
+        <!-- ============ ANCHOR: just keeps page scrollable, replaced by modal ============ -->
+        <div id="enroll"></div>
+
+        <!-- ============ FLOATING BOTTOM CTA ============ -->
+        <div id="floatingCTA" class="fixed bottom-0 left-0 right-0 z-[99] px-4 pb-4 pt-2 pointer-events-none">
+            <div class="max-w-2xl mx-auto pointer-events-auto">
+                <button onclick="openModal()"
+                    class="w-full btn-primary py-5 text-lg font-black italic tracking-tight flex items-center justify-center gap-4 shadow-2xl shadow-cyber-amethyst/30">
+                    <span>⚡ Claim My Seat @₹99</span>
+                    <span class="text-xs font-black opacity-70 uppercase tracking-widest line-through">₹2,999</span>
+                </button>
             </div>
-            <div class="max-w-5xl mx-auto px-4 lg:px-8 relative z-10">
-                <div class="glass rounded-[3rem] p-10 md:p-20 border-white/10">
-                    <div class="text-center mb-16 reveal">
-                        <div class="badge mb-8 animate-pulse-slow">⚡ Only 57 Seats Left</div>
-                        <h2 class="text-5xl md:text-7xl font-black italic tracking-tighter mb-8">Secure Your <span
-                                class="text-grad">Seat</span></h2>
-                        <div class="flex items-center justify-center gap-6">
-                            <div class="text-6xl font-black italic">₹99</div>
-                            <div>
-                                <div class="text-2xl text-cyber-slate line-through opacity-40 font-bold">₹2,999</div>
-                                <div class="text-cyber-amethyst font-black uppercase text-[10px] tracking-[0.3em]">97%
-                                    OFF
-                                    Today Only</div>
-                            </div>
+        </div>
+
+        <!-- ============ REGISTRATION MODAL ============ -->
+        <div id="regModal"
+            class="fixed inset-0 z-[500] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+            <!-- Backdrop -->
+            <div id="modalBackdrop" onclick="closeModal()" class="absolute inset-0 bg-black/70 backdrop-blur-md"></div>
+
+            <!-- Modal Card -->
+            <div id="modalCard"
+                class="relative w-full max-w-lg bg-[#0F131C] border border-white/10 rounded-[2.5rem] p-8 md:p-12 shadow-2xl shadow-cyber-amethyst/20 translate-y-8 transition-transform duration-400 max-h-[90vh] overflow-y-auto">
+
+                <!-- Close Button -->
+                <button onclick="closeModal()"
+                    class="absolute top-6 right-6 w-10 h-10 glass rounded-full flex items-center justify-center text-cyber-slate hover:text-white hover:bg-white/10 transition-all text-xl leading-none">×</button>
+
+                <!-- Header -->
+                <div class="text-center mb-8">
+                    <div class="badge mb-5 mx-auto w-fit">⚡ Only 57 Seats Left</div>
+                    <h2 class="text-3xl md:text-4xl font-black italic mb-4">Secure Your <span
+                            class="text-grad">Seat</span></h2>
+                    <div class="flex items-center justify-center gap-4">
+                        <span class="text-4xl font-black italic">₹99</span>
+                        <div class="text-left">
+                            <div class="text-lg text-cyber-slate line-through opacity-40 font-bold">₹2,999</div>
+                            <div class="text-cyber-amethyst font-black uppercase text-[9px] tracking-[0.3em]">97% OFF —
+                                Early Bird</div>
                         </div>
                     </div>
-
-                    <form id="enrollForm" class="max-w-xl mx-auto reveal delay-200">
-                        <div class="space-y-5">
-                            <div>
-                                <label
-                                    class="block text-[10px] font-black uppercase tracking-[0.3em] text-cyber-slate mb-3 ml-2">Your
-                                    Full Name</label>
-                                <input type="text" id="fname" placeholder="e.g. Antony Praveen" required
-                                    class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 font-bold focus:border-cyber-amethyst focus:bg-white/8 transition-all outline-none placeholder:text-white/20">
-                            </div>
-                            <div>
-                                <label
-                                    class="block text-[10px] font-black uppercase tracking-[0.3em] text-cyber-slate mb-3 ml-2">Email
-                                    Address</label>
-                                <input type="email" id="femail" placeholder="yourname@email.com" required
-                                    class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 font-bold focus:border-cyber-amethyst transition-all outline-none placeholder:text-white/20">
-                            </div>
-                            <div>
-                                <label
-                                    class="block text-[10px] font-black uppercase tracking-[0.3em] text-cyber-slate mb-3 ml-2">WhatsApp
-                                    Number</label>
-                                <input type="tel" id="fphone" placeholder="+91 9XXXXXXXXX" required
-                                    class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 font-bold focus:border-cyber-amethyst transition-all outline-none placeholder:text-white/20">
-                            </div>
-                            <div>
-                                <label
-                                    class="block text-[10px] font-black uppercase tracking-[0.3em] text-cyber-slate mb-3 ml-2">I
-                                    Am A...</label>
-                                <select id="fprofession"
-                                    class="w-full bg-cyber-indigo border border-white/10 rounded-2xl px-6 py-5 font-bold focus:border-cyber-amethyst transition-all outline-none text-white">
-                                    <option value="">Select your profession</option>
-                                    <option>Trainer / Coach</option>
-                                    <option>Entrepreneur</option>
-                                    <option>Business Owner</option>
-                                    <option>Digital Marketer / Freelancer</option>
-                                    <option>Other</option>
-                                </select>
-                            </div>
-                            <button type="submit"
-                                class="w-full btn-primary py-7 text-xl font-black italic mt-4 tracking-tight">
-                                Complete My Registration — ₹99 →
-                            </button>
-                        </div>
-                        <div
-                            class="text-center mt-8 text-[10px] text-cyber-slate font-black uppercase tracking-[0.3em]">
-                            🔒 256-bit Encrypted · Instant Confirmation · Zero Spam
-                        </div>
-                    </form>
                 </div>
+
+                <!-- Form -->
+                <form id="enrollForm">
+                    <div class="space-y-4">
+                        <div>
+                            <label
+                                class="block text-[10px] font-black uppercase tracking-[0.25em] text-cyber-slate mb-2.5 ml-2">Full
+                                Name</label>
+                            <input type="text" id="fname" placeholder="e.g. Antony Praveen" required
+                                class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 font-bold focus:border-cyber-amethyst transition-all outline-none placeholder:text-white/20">
+                        </div>
+                        <div>
+                            <label
+                                class="block text-[10px] font-black uppercase tracking-[0.25em] text-cyber-slate mb-2.5 ml-2">Email
+                                Address</label>
+                            <input type="email" id="femail" placeholder="yourname@email.com" required
+                                class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 font-bold focus:border-cyber-amethyst transition-all outline-none placeholder:text-white/20">
+                        </div>
+                        <div>
+                            <label
+                                class="block text-[10px] font-black uppercase tracking-[0.25em] text-cyber-slate mb-2.5 ml-2">WhatsApp
+                                Number</label>
+                            <input type="tel" id="fphone" placeholder="+91 9XXXXXXXXX" required
+                                class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 font-bold focus:border-cyber-amethyst transition-all outline-none placeholder:text-white/20">
+                        </div>
+                        <div>
+                            <label
+                                class="block text-[10px] font-black uppercase tracking-[0.25em] text-cyber-slate mb-2.5 ml-2">I
+                                Am A...</label>
+                            <select id="fprofession"
+                                class="w-full bg-cyber-indigo border border-white/10 rounded-2xl px-5 py-4 font-bold focus:border-cyber-amethyst transition-all outline-none text-white">
+                                <option value="">Select your profession</option>
+                                <option>Trainer / Coach</option>
+                                <option>Entrepreneur</option>
+                                <option>Business Owner</option>
+                                <option>Digital Marketer / Freelancer</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <button type="submit"
+                            class="w-full btn-primary py-5 text-lg font-black italic tracking-tight mt-2">
+                            Complete My Registration — ₹99 →
+                        </button>
+                    </div>
+                    <p class="text-center mt-6 text-[9px] text-cyber-slate font-black uppercase tracking-[0.3em]">🔒
+                        256-bit Encrypted · Instant Confirmation · Zero Spam</p>
+                </form>
             </div>
-        </section>
+        </div>
+
 
         <!-- ============ FOOTER ============ -->
         <footer class="py-20 px-4 lg:px-8 border-t border-white/[0.06]" style="background: #05070A;">
@@ -917,12 +938,39 @@
                 });
             });
 
+            // ===== MODAL LOGIC =====
+            const modal = document.getElementById('regModal');
+            const modalCard = document.getElementById('modalCard');
+
+            function openModal() {
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                modal.classList.add('opacity-100');
+                modalCard.classList.remove('translate-y-8');
+                modalCard.classList.add('translate-y-0');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeModal() {
+                modal.classList.add('opacity-0', 'pointer-events-none');
+                modal.classList.remove('opacity-100');
+                modalCard.classList.add('translate-y-8');
+                modalCard.classList.remove('translate-y-0');
+                document.body.style.overflow = '';
+            }
+
+            // Close on Escape key
+            document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
             // Form Submit
             document.getElementById('enrollForm').addEventListener('submit', e => {
                 e.preventDefault();
                 const name = document.getElementById('fname').value;
-                alert(`🎉 Thank you, ${name}!\n\nYou're registered. You'll receive confirmation on WhatsApp and email within minutes.\n\nWelcome to the AI Mastery Family!`);
+                closeModal();
+                setTimeout(() => {
+                    alert(`🎉 Thank you, ${name}!\n\nYou're registered! Confirmation sent to your WhatsApp and email.\n\nWelcome to the AI Mastery Family!`);
+                }, 300);
             });
+
         </script>
     </div>
 </body>
