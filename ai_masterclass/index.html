@@ -992,10 +992,10 @@
                 const profession = document.getElementById('fprofession').value;
                 const pageUrl = window.location.href;
 
-                // 2. Call Apps Script to save lead (but don't use its ₹9999 order_id)
+                // 2. Call Apps Script to save lead and generate Razorpay Order ID for ₹99
+                let orderId = "";
                 try {
-                    // Start saving lead in background (fire-and-forget for now)
-                    fetch("https://script.google.com/macros/s/AKfycbyiYW5Hyn7mn3U2eQ2y8WA1k_Yl5qkT--CkpEGlzU9pR2oGl8Ds9EATzFGDOQQJP9fy/exec", {
+                    const response = await fetch("https://script.google.com/macros/s/AKfycbw_52zFfuDr9Rcul2MHumxzCAslGOu-17Y9IIWowVZlYifvD8mCZh5b4Ivepouxeks05A/exec", {
                         method: "POST",
                         headers: { "Content-Type": "text/plain;charset=utf-8" },
                         body: JSON.stringify({
@@ -1005,18 +1005,33 @@
                             email,
                             phone,
                             batch: "Masterclass",
-                            amount: 99 // Send amount context to backend
+                            amount: 99
                         })
-                    }).catch(e => console.error("Lead capture error:", e));
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success && result.orderId) {
+                        orderId = result.orderId;
+                    } else {
+                        alert("Failed to initiate payment. Please try again.");
+                        submitBtn.innerHTML = originalBtnText;
+                        submitBtn.disabled = false;
+                        return;
+                    }
                 } catch (err) {
-                    console.error("Warning: Lead capture block failed", err);
+                    console.error("Error creating order:", err);
+                    alert("A server error occurred. Please try again later.");
+                    submitBtn.innerHTML = originalBtnText;
+                    submitBtn.disabled = false;
+                    return;
                 }
 
-                // 3. Open Razorpay Checkout DIRECTLY for ₹99
+                // 3. Open Razorpay Checkout for ₹99
                 const options = {
                     key: "rzp_test_v3gEhWzOtCcolK", // TEST KEY
-                    // We REMOVED order_id here so the frontend can dictate the amount
-                    amount: 9900, // ₹99 in paise
+                    order_id: orderId, // Using the order_id from the Apps Script
+                    amount: 9900, // ₹99 in paise (ignored by Razorpay if order_id has an amount)
                     currency: "INR",
                     name: "Tech Tycoon",
                     description: "AI Marketing Masterclass Enrollment",
