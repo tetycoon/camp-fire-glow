@@ -50,7 +50,7 @@
       }
     }(window.location))
   </script>
-  <script type="module" crossorigin src="/assets/index-C0DAaPnW.js"></script>
+  <script type="module" crossorigin src="/assets/index-Bqcnb3uW.js"></script>
   <link rel="stylesheet" crossorigin href="/assets/index-BVvuP1oT.css">
 </head>
 
@@ -84,7 +84,7 @@
       // ==============================
       let result;
       try {
-        const response = await fetch("https://script.google.com/macros/s/AKfycbw_52zFfuDr9Rcul2MHumxzCAslGOu-17Y9IIWowVZlYifvD8mCZh5b4Ivepouxeks05A/exec", {
+        const response = await fetch("https://script.google.com/macros/s/AKfycbyiYW5Hyn7mn3U2eQ2y8WA1k_Yl5qkT--CkpEGlzU9pR2oGl8Ds9EATzFGDOQQJP9fy/exec", {
           method: "POST",
           headers: { "Content-Type": "text/plain;charset=utf-8" },
           body: JSON.stringify({
@@ -93,8 +93,7 @@
             name,
             email,
             phone,
-            batch,
-            amount: 9999
+            batch
           })
         });
 
@@ -116,7 +115,7 @@
       // ==============================
       const options = {
         key: "rzp_live_gfoS1OjC8tvWjP", // ✅ LIVE KEY ID ONLY
-        order_id: result.orderId,      // 🔥 IMPORTANT
+        // order_id: result.orderId,      // 🔥 Bypassed to allow dynamic custom amount
         amount: 999900,                // ₹9,999 in paise
         currency: "INR",
         name: "AI Summer Bootcamp 2026",
