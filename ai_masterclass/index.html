@@ -1035,8 +1035,23 @@
                     currency: "INR",
                     name: "Tech Tycoon",
                     description: "AI Marketing Masterclass Enrollment",
-                    handler: function (response) {
-                        // Payment successful
+                    handler: async function (response) {
+                        // Payment successful - immediately notify Apps Script to mark PAID
+                        try {
+                            await fetch("https://script.google.com/macros/s/AKfycbw_52zFfuDr9Rcul2MHumxzCAslGOu-17Y9IIWowVZlYifvD8mCZh5b4Ivepouxeks05A/exec", {
+                                method: "POST",
+                                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                                body: JSON.stringify({
+                                    paymentSuccess: true,
+                                    razorpay_payment_id: response.razorpay_payment_id,
+                                    razorpay_order_id: response.razorpay_order_id,
+                                    name: name,
+                                    email: email
+                                })
+                            });
+                        } catch (err) {
+                            console.error("Could not notify server of payment", err);
+                        }
                         closeModal();
                         setTimeout(() => {
                             alert(`🎉 Thank you, ${name}!\n\nYour payment is successful and you're registered!\nConfirmation sent to your WhatsApp and email.`);
