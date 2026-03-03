@@ -56,160 +56,130 @@
 
     <style type="text/tailwindcss">
         @layer base {
-            body { @apply font-body bg-white text-brand-dark overflow-x-hidden; }
+            body { @apply font-body bg-[#F8FAFC] text-brand-dark overflow-x-hidden; }
             h1, h2, h3, h4 { @apply font-heading tracking-tight; }
         }
         @layer components {
-            .glass { @apply bg-white/80 backdrop-blur-xl border border-white/20 shadow-xl; }
-            .btn-primary { @apply relative overflow-hidden bg-brand-dark text-white font-bold py-4 px-10 rounded-full transition-all duration-300 hover:shadow-2xl hover:shadow-brand-blue/40 hover:-translate-y-1 active:scale-95; }
-            .badge { @apply inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider; }
-            .card { @apply bg-white border border-slate-100 p-8 rounded-[2rem] transition-all duration-500 hover:shadow-2xl hover:shadow-brand-blue/10 hover:-translate-y-2; }
+            .glass { @apply bg-white/70 backdrop-blur-2xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.05)]; }
+            .btn-primary { @apply relative overflow-hidden bg-brand-dark text-white font-bold py-4 px-10 rounded-full transition-all duration-500 hover:shadow-[0_20px_40px_rgba(37,99,235,0.25)] hover:-translate-y-1.5 active:scale-95; }
+            .badge { @apply inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest; }
+            .card { @apply bg-white border border-slate-100 p-8 rounded-[2.5rem] transition-all duration-500 hover:shadow-[0_30px_60px_rgba(15,23,42,0.08)] hover:-translate-y-2; }
         }
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-
+        
         .text-gradient {
             @apply bg-clip-text text-transparent bg-gradient-to-r from-brand-blue via-brand-indigo to-brand-coral;
         }
 
-        /* Animation Reveal */
-        .reveal { opacity: 0; transform: translateY(30px); transition: all 1s cubic-bezier(0.2, 1, 0.3, 1); }
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 1.2s cubic-bezier(0.2, 1, 0.3, 1); }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
-        /* Modal Styles */
         .modal-overlay {
-            @apply fixed inset-0 z-[110] bg-brand-dark/20 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-500 flex items-center justify-center p-6;
+            @apply fixed inset-0 z-[110] bg-brand-dark/30 backdrop-blur-xl opacity-0 pointer-events-none transition-all duration-700 flex items-center justify-center p-6;
         }
-        .modal-overlay.active {
-            @apply opacity-100 pointer-events-auto;
-        }
+        .modal-overlay.active { @apply opacity-100 pointer-events-auto; }
         .modal-content {
-            @apply bg-white w-full max-w-xl rounded-[2.5rem] shadow-2xl shadow-brand-blue/20 transform scale-90 opacity-0 transition-all duration-500 overflow-hidden relative;
+            @apply bg-white w-full max-w-xl rounded-[3rem] shadow-[0_50px_100px_rgba(0,0,0,0.15)] transform scale-95 opacity-0 transition-all duration-700 overflow-hidden relative;
         }
-        .modal-overlay.active .modal-content {
-            @apply scale-100 opacity-100;
-        }
-        body.modal-open {
-            @apply overflow-hidden;
+        .modal-overlay.active .modal-content { @apply scale-100 opacity-100; }
+        body.modal-open { @apply overflow-hidden; }
+
+        .pricing-card {
+            @apply bg-white border-2 border-slate-100 p-10 rounded-[3rem] transition-all duration-500 hover:border-brand-blue/30 shadow-xl;
         }
 
-        /* Custom Cursor Rendering Fix */
-        #cursor-follower { pointer-events: none; }
+        /* Animated background for Hero */
+        .hero-mesh {
+            background-color: #ffffff;
+            background-image: radial-gradient(at 0% 0%, hsla(221,100%,95%,1) 0, transparent 50%), 
+                              radial-gradient(at 100% 100%, hsla(20,100%,95%,1) 0, transparent 50%);
+        }
     </style>
 </head>
 
 <body class="selection:bg-brand-blue/10 selection:text-brand-blue">
 
     <!-- Navbar -->
-    <nav class="fixed top-0 left-0 right-0 z-[100] px-6 py-4">
-        <div class="max-w-7xl mx-auto flex items-center justify-between glass rounded-2xl px-6 py-3">
-            <div class="flex items-center gap-3">
+    <nav class="fixed top-0 left-0 right-0 z-[100] px-6 py-6 transition-all duration-500">
+        <div class="max-w-7xl mx-auto flex items-center justify-between glass rounded-[2rem] px-8 py-4">
+            <div class="flex items-center gap-4 group cursor-pointer">
                 <div
-                    class="w-10 h-10 bg-brand-dark rounded-xl flex items-center justify-center text-white font-black italic text-xl">
+                    class="w-12 h-12 bg-brand-dark rounded-2xl flex items-center justify-center text-white font-black italic text-2xl group-hover:rotate-6 transition-transform">
                     AI</div>
-                <span class="font-heading font-extrabold text-xl tracking-tighter">Digital Marketing</span>
+                <div class="flex flex-col">
+                    <span class="font-heading font-black text-xl tracking-tighter leading-none">AI Tycoon</span>
+                    <span class="text-[10px] uppercase tracking-[0.2em] font-bold text-brand-muted">Digital
+                        Academy</span>
+                </div>
             </div>
-            <div class="hidden md:flex items-center gap-8">
+            <div class="hidden md:flex items-center gap-10">
                 <a href="#topics"
-                    class="text-sm font-semibold text-brand-mid hover:text-brand-blue transition-colors">Topics</a>
+                    class="text-sm font-bold text-brand-mid hover:text-brand-blue transition-colors">Program</a>
                 <a href="#trainer"
-                    class="text-sm font-semibold text-brand-mid hover:text-brand-blue transition-colors">Trainer</a>
-                <a href="#reviews"
-                    class="text-sm font-semibold text-brand-mid hover:text-brand-blue transition-colors">Reviews</a>
+                    class="text-sm font-bold text-brand-mid hover:text-brand-blue transition-colors">Instructor</a>
+                <a href="#faq" class="text-sm font-bold text-brand-mid hover:text-brand-blue transition-colors">FAQs</a>
             </div>
             <div>
-                <button onclick="openModal()" class="btn-primary !py-2.5 !px-6 text-sm">Register — ₹99</button>
+                <button onclick="openModal()" class="btn-primary !py-3 !px-8 text-sm">Join Masterclass — ₹99</button>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section class="relative min-height-[100vh] pt-40 pb-20 overflow-hidden bg-[#FAFBFE]">
-        <!-- Animated Blobs -->
-        <div
-            class="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-brand-blue/5 rounded-full blur-[100px] animate-blob">
-        </div>
-        <div
-            class="absolute bottom-[-10%] left-[-10%] w-[400px] h-[400px] bg-brand-coral/5 rounded-full blur-[100px] animate-blob animation-delay-2000">
-        </div>
-
+    <section class="relative min-h-screen pt-48 pb-32 overflow-hidden hero-mesh">
         <div class="max-w-7xl mx-auto px-6 relative z-10">
-            <div class="text-center">
-                <div
-                    class="inline-flex items-center gap-2 bg-white px-5 py-2 rounded-full border border-slate-200 shadow-sm mb-8 animate-bounce transition-all">
-                    <span class="relative flex h-2.5 w-2.5">
-                        <span
-                            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
-                    </span>
-                    <span class="text-xs font-bold uppercase tracking-widest text-slate-600">Live Online Masterclass •
-                        8th March 2025</span>
+            <div class="grid lg:grid-cols-2 gap-20 items-center">
+                <div class="reveal">
+                    <div
+                        class="inline-flex items-center gap-3 bg-white px-5 py-2.5 rounded-full border border-slate-200 shadow-sm mb-10 transition-all hover:border-brand-blue/20">
+                        <span class="relative flex h-3 w-3">
+                            <span
+                                class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-blue opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-3 w-3 bg-brand-blue"></span>
+                        </span>
+                        <span class="text-xs font-black uppercase tracking-widest text-slate-500">Live Hands-on Workshop
+                            • ₹99 Only</span>
+                    </div>
+
+                    <h1 class="text-7xl md:text-8xl font-black mb-10 leading-[0.95] tracking-tight text-slate-900">
+                        Master AI.<br>
+                        <span class="text-gradient">Scale Your Business.</span>
+                    </h1>
+
+                    <p class="text-xl md:text-2xl text-slate-500 max-w-xl mb-12 leading-relaxed font-medium">
+                        Stop the manual hustle. Learn the <strong class="text-brand-dark">6-Step AI Blueprint</strong>
+                        to automate your content, leads, and sales in just 3 hours.
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-5">
+                        <button onclick="openModal()"
+                            class="btn-primary !px-12 text-xl shadow-2xl shadow-brand-blue/20">
+                            Claim My Spot Now
+                        </button>
+                        <div class="flex items-center gap-4 px-2">
+                            <div class="flex -space-x-3">
+                                <img class="w-12 h-12 rounded-full border-4 border-white"
+                                    src="https://i.pravatar.cc/100?u=a1" alt="User">
+                                <img class="w-12 h-12 rounded-full border-4 border-white"
+                                    src="https://i.pravatar.cc/100?u=a2" alt="User">
+                                <img class="w-12 h-12 rounded-full border-4 border-white"
+                                    src="https://i.pravatar.cc/100?u=a3" alt="User">
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="font-black text-brand-dark leading-none">5,000+</span>
+                                <span
+                                    class="text-[10px] font-bold text-brand-muted uppercase tracking-tighter">Certified
+                                    Students</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <h1 class="text-6xl md:text-8xl font-black mb-8 leading-[1.05] tracking-tight text-slate-900">
-                    Stop Struggling.<br>
-                    <span class="text-gradient">AI-Powered Digital Marketing</span>
-                </h1>
-
-                <p class="text-lg md:text-2xl text-brand-muted max-w-3xl mx-auto mb-12 leading-relaxed font-medium">
-                    India's most <strong>affordable, actionable</strong> AI Digital Marketing workshop for trainers,
-                    coaches, entrepreneurs & business owners. 3 hours. Real results. Zero fluff.
-                </p>
-
-                <div class="flex flex-col md:flex-row items-center justify-center gap-6 mb-16">
-                    <button onclick="openModal()" class="btn-primary text-xl group">
-                        Secure Your Spot Now
-                        <div
-                            class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500">
-                        </div>
-                    </button>
-                    <div class="flex items-center gap-4 text-left">
-                        <div class="flex -space-x-4">
-                            <img class="w-12 h-12 rounded-full border-4 border-white"
-                                src="https://i.pravatar.cc/100?u=1" alt="">
-                            <img class="w-12 h-12 rounded-full border-4 border-white"
-                                src="https://i.pravatar.cc/100?u=2" alt="">
-                            <img class="w-12 h-12 rounded-full border-4 border-white"
-                                src="https://i.pravatar.cc/100?u=3" alt="">
-                            <div
-                                class="w-12 h-12 rounded-full border-4 border-white bg-brand-blue text-white flex items-center justify-center font-bold text-xs ring-2 ring-white">
-                                +2k</div>
-                        </div>
-                        <div>
-                            <p class="font-bold text-brand-dark">Joining the community</p>
-                            <p class="text-sm text-brand-muted">Already 2,400+ participants</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Feature Chips -->
-                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                    <div class="glass p-4 rounded-2xl flex flex-col items-center gap-2">
-                        <span class="text-2xl">⏳</span>
-                        <span class="text-xs font-bold text-brand-muted uppercase">3 Hours</span>
-                    </div>
-                    <div class="glass p-4 rounded-2xl flex flex-col items-center gap-2">
-                        <span class="text-2xl">🎓</span>
-                        <span class="text-xs font-bold text-brand-muted uppercase">Cert Included</span>
-                    </div>
-                    <div class="glass p-4 rounded-2xl flex flex-col items-center gap-2">
-                        <span class="text-2xl">💸</span>
-                        <span class="text-xs font-bold text-brand-muted uppercase">Only ₹99</span>
-                    </div>
-                    <div class="glass p-4 rounded-2xl flex flex-col items-center gap-2">
-                        <span class="text-2xl">🎬</span>
-                        <span class="text-xs font-bold text-brand-muted uppercase">Recording</span>
-                    </div>
-                    <div class="glass p-4 rounded-2xl flex flex-col items-center gap-2">
-                        <span class="text-2xl">👥</span>
-                        <span class="text-xs font-bold text-brand-muted uppercase">Q&A Session</span>
-                    </div>
-                    <div class="glass p-4 rounded-2xl flex flex-col items-center gap-2">
-                        <span class="text-2xl">🎁</span>
-                        <span class="text-xs font-bold text-brand-muted uppercase">AI Toolset</span>
+                <div class="relative reveal delay-300">
+                    <div
+                        class="relative z-10 rounded-[3rem] overflow-hidden shadow-[0_50px_100px_rgba(0,0,0,0.1)] border-8 border-white group">
+                        <img src="hero-ai.png" alt="Futuristic AI Workspace"
+                            class="w-full h-full object-cover transition-all duration-1000 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-brand-dark/40 to-transparent"></div>
                     </div>
                 </div>
             </div>
@@ -219,83 +189,267 @@
     <!-- Topics Section -->
     <section id="topics" class="py-32 bg-white">
         <div class="max-w-7xl mx-auto px-6">
-            <div class="text-center mb-20 reveal">
-                <h2 class="text-4xl md:text-5xl font-black mb-6">Master 6 Engines of Growth</h2>
-                <p class="text-xl text-brand-muted max-w-2xl mx-auto">
-                    Skip the theory. Get practical step-by-step systems to automate your marketing.
+            <div class="text-center mb-24 reveal">
+                <badge class="badge bg-brand-blue/10 text-brand-blue mb-4">The Curriculum</badge>
+                <h2 class="text-4xl md:text-6xl font-black mb-6">Master 6 Engines of Growth</h2>
+                <p class="text-xl text-brand-muted max-w-2xl mx-auto font-medium">
+                    Skip the theory. Get practical step-by-step systems to automate your marketing and scale results.
                 </p>
             </div>
 
-            <div class="grid md:grid-cols-3 gap-8">
+            <div class="grid md:grid-cols-3 gap-10">
                 <!-- Card 1 -->
-                <div class="card reveal delay-100">
+                <div class="card reveal delay-100 group">
                     <div
-                        class="w-14 h-14 bg-blue-50 text-brand-blue rounded-2xl flex items-center justify-center text-3xl mb-6">
+                        class="w-16 h-16 bg-blue-50 text-brand-blue rounded-3xl flex items-center justify-center text-3xl mb-8 group-hover:rotate-12 transition-transform">
                         🤖</div>
-                    <h3 class="text-2xl font-bold mb-4">AI Lead Generation</h3>
-                    <p class="text-brand-muted leading-relaxed">
-                        Automate your prospecting and reach thousands of potential leads without spending a rupee on
-                        ads.
+                    <h3 class="text-2xl font-black mb-4">AI Lead Generation</h3>
+                    <p class="text-brand-muted leading-relaxed font-medium">
+                        Automate your prospecting and reach thousands of potential leads without spending a single rupee
+                        on ads.
                     </p>
                 </div>
 
                 <!-- Card 2 -->
-                <div class="card reveal delay-200">
+                <div class="card reveal delay-200 group">
                     <div
-                        class="w-14 h-14 bg-indigo-50 text-brand-indigo rounded-2xl flex items-center justify-center text-3xl mb-6">
+                        class="w-16 h-16 bg-indigo-50 text-brand-indigo rounded-3xl flex items-center justify-center text-3xl mb-8 group-hover:rotate-12 transition-transform">
                         ⚡</div>
-                    <h3 class="text-2xl font-bold mb-4">Content Multiplier</h3>
-                    <p class="text-brand-muted leading-relaxed">
-                        Learn how AI can turn one video or article into 50+ social media posts in less than 5 minutes.
+                    <h3 class="text-2xl font-black mb-4">Content Multiplier</h3>
+                    <p class="text-brand-muted leading-relaxed font-medium">
+                        Learn how AI can turn one video or article into 50+ high-quality social media posts in less than
+                        5 minutes.
                     </p>
                 </div>
 
                 <!-- Card 3 -->
-                <div class="card reveal delay-300">
+                <div class="card reveal delay-300 group">
                     <div
-                        class="w-14 h-14 bg-orange-50 text-brand-coral rounded-2xl flex items-center justify-center text-3xl mb-6">
+                        class="w-16 h-16 bg-orange-50 text-brand-coral rounded-3xl flex items-center justify-center text-3xl mb-8 group-hover:rotate-12 transition-transform">
                         📈</div>
-                    <h3 class="text-2xl font-bold mb-4">SEO & Ranking</h3>
-                    <p class="text-brand-muted leading-relaxed">
-                        Use AI to research keywords and create SEO-optimized content that ranks on page 1 of Google
-                        effortlessly.
+                    <h3 class="text-2xl font-black mb-4">SEO & Ranking</h3>
+                    <p class="text-brand-muted leading-relaxed font-medium">
+                        Use AI to research keywords and create SEO-optimized content that ranks on page 1 of Google with
+                        zero effort.
                     </p>
                 </div>
 
                 <!-- Card 4 -->
-                <div class="card reveal delay-400">
+                <div class="card reveal delay-400 group">
                     <div
-                        class="w-14 h-14 bg-green-50 text-green-600 rounded-2xl flex items-center justify-center text-3xl mb-6">
+                        class="w-16 h-16 bg-green-50 text-green-600 rounded-3xl flex items-center justify-center text-3xl mb-8 group-hover:rotate-12 transition-transform">
                         📱</div>
-                    <h3 class="text-2xl font-bold mb-4">Viral Reels Strategy</h3>
-                    <p class="text-brand-muted leading-relaxed">
-                        Identify trending hooks and use AI clones to generate high-engagement video content
+                    <h3 class="text-2xl font-black mb-4">Viral Reels Strategy</h3>
+                    <p class="text-brand-muted leading-relaxed font-medium">
+                        Identify trending hooks and use AI voice clones to generate high-engagement video content
                         consistently.
                     </p>
                 </div>
 
                 <!-- Card 5 -->
-                <div class="card reveal delay-500">
+                <div class="card reveal delay-500 group">
                     <div
-                        class="w-14 h-14 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center text-3xl mb-6">
+                        class="w-16 h-16 bg-purple-50 text-purple-600 rounded-3xl flex items-center justify-center text-3xl mb-8 group-hover:rotate-12 transition-transform">
                         📧</div>
-                    <h3 class="text-2xl font-bold mb-4">Email Magic</h3>
-                    <p class="text-brand-muted leading-relaxed">
-                        Write personalized, high-converting emails at scale that bypass spam filters and land in the
-                        primary tab.
+                    <h3 class="text-2xl font-black mb-4">Email Hyper-Growth</h3>
+                    <p class="text-brand-muted leading-relaxed font-medium">
+                        Write personalized, high-converting emails at scale that bypass spam filters and land directly
+                        in the primary tab.
                     </p>
                 </div>
 
                 <!-- Card 6 -->
-                <div class="card reveal delay-600">
+                <div class="card reveal delay-600 group">
                     <div
-                        class="w-14 h-14 bg-pink-50 text-pink-600 rounded-2xl flex items-center justify-center text-3xl mb-6">
+                        class="w-16 h-16 bg-pink-50 text-pink-600 rounded-3xl flex items-center justify-center text-3xl mb-8 group-hover:rotate-12 transition-transform">
                         🛠️</div>
-                    <h3 class="text-2xl font-bold mb-4">AI Toolset</h3>
-                    <p class="text-brand-muted leading-relaxed">
-                        Get our curated list of 100+ AI tools categorized for designers, writers, marketers and video
+                    <h3 class="text-2xl font-black mb-4">AI Ultimate Toolset</h3>
+                    <p class="text-brand-muted leading-relaxed font-medium">
+                        Get our curated list of 150+ AI tools categorized for designers, writers, marketers, and video
                         editors.
                     </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Who is this for Section -->
+    <section class="py-20 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="mt-40 reveal">
+                <div class="text-center mb-16">
+                    <badge class="badge bg-brand-blue/10 text-brand-blue mb-4">Target Audience</badge>
+                    <h2 class="text-4xl md:text-5xl font-black mb-6">Is this Workshop for You?</h2>
+                </div>
+                <div class="grid md:grid-cols-4 gap-6">
+                    <div
+                        class="glass p-8 rounded-[2.5rem] flex flex-col items-center text-center group hover:bg-white transition-all duration-500">
+                        <div
+                            class="w-16 h-16 bg-slate-50 text-slate-800 rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:bg-brand-blue group-hover:text-white transition-all">
+                            🏗️</div>
+                        <h4 class="text-lg font-black mb-2">Business Owners</h4>
+                        <p class="text-sm text-brand-muted leading-relaxed">Automate your inbound lead flow and save 20+
+                            hours
+                            every month.</p>
+                    </div>
+                    <div
+                        class="glass p-8 rounded-[2.5rem] flex flex-col items-center text-center group hover:bg-white transition-all duration-500">
+                        <div
+                            class="w-16 h-16 bg-slate-50 text-slate-800 rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:bg-brand-indigo group-hover:text-white transition-all">
+                            📈</div>
+                        <h4 class="text-lg font-black mb-2">Digital Marketers</h4>
+                        <p class="text-sm text-brand-muted leading-relaxed">Stay ahead of the curve by mastering
+                            AI-driven
+                            growth strategies.</p>
+                    </div>
+                    <div
+                        class="glass p-8 rounded-[2.5rem] flex flex-col items-center text-center group hover:bg-white transition-all duration-500">
+                        <div
+                            class="w-16 h-16 bg-slate-50 text-slate-800 rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:bg-brand-coral group-hover:text-white transition-all">
+                            🎓</div>
+                        <h4 class="text-lg font-black mb-2">Trainers & Coaches</h4>
+                        <p class="text-sm text-brand-muted leading-relaxed">Scale your personal brand and fill your
+                            high-ticket
+                            programs.</p>
+                    </div>
+                    <div
+                        class="glass p-8 rounded-[2.5rem] flex flex-col items-center text-center group hover:bg-white transition-all duration-500">
+                        <div
+                            class="w-16 h-16 bg-slate-50 text-slate-800 rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:bg-green-600 group-hover:text-white transition-all">
+                            💸</div>
+                        <h4 class="text-lg font-black mb-2">Entrepreneurs</h4>
+                        <p class="text-sm text-brand-muted leading-relaxed">Build a lean, AI-optimized business with
+                            zero
+                            technical overhead.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </section>
+
+    <!-- Masterclass Bonuses -->
+    <section class="py-32 bg-brand-dark text-white relative overflow-hidden">
+        <!-- Background decorative elements -->
+        <div class="absolute top-0 right-0 w-[600px] h-[600px] bg-brand-blue/10 rounded-full blur-[120px]"></div>
+        <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-brand-coral/10 rounded-full blur-[100px]"></div>
+
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="grid lg:grid-cols-2 gap-20 items-center">
+                <div class="reveal">
+                    <badge class="badge bg-white/10 text-brand-blue mb-6">Exclusive Bonuses</badge>
+                    <h2 class="text-5xl md:text-6xl font-black mb-8 leading-tight">Wait, There's More!<br><span
+                            class="text-brand-blue">Values Worth ₹4,999+</span></h2>
+
+                    <div class="space-y-10">
+                        <div class="flex gap-6 group">
+                            <div
+                                class="w-14 h-14 shrink-0 bg-white/5 rounded-2xl flex items-center justify-center text-2xl border border-white/10 group-hover:bg-brand-blue transition-all">
+                                🎁</div>
+                            <div>
+                                <h4 class="text-xl font-black mb-2">AI Marketing Playbook</h4>
+                                <p class="text-white/60">A step-by-step guide to every tool we cover in the workshop.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex gap-6 group">
+                            <div
+                                class="w-14 h-14 shrink-0 bg-white/5 rounded-2xl flex items-center justify-center text-2xl border border-white/10 group-hover:bg-brand-indigo transition-all">
+                                📜</div>
+                            <div>
+                                <h4 class="text-xl font-black mb-2">Professional Certificate</h4>
+                                <p class="text-white/60">Verified proof of your AI marketing expertise.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-6 group">
+                            <div
+                                class="w-14 h-14 shrink-0 bg-white/5 rounded-2xl flex items-center justify-center text-2xl border border-white/10 group-hover:bg-brand-coral transition-all">
+                                🎥</div>
+                            <div>
+                                <h4 class="text-xl font-black mb-2">Session Recording</h4>
+                                <p class="text-white/60">Lifetime access to the workshop recording for review anytime.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button onclick="openModal()"
+                        class="btn-primary !bg-white !text-brand-dark mt-12 py-5 px-12 text-xl">
+                        Enroll Now for ₹99
+                    </button>
+                </div>
+
+                <div class="relative reveal delay-300">
+                    <img src="bonuses.png" alt="Digital Bonuses Illustration"
+                        class="w-full h-auto drop-shadow-[0_20px_50px_rgba(37,99,235,0.3)] animate-float">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="py-32 bg-white scroll-mt-24">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="text-center mb-20 reveal">
+                <badge class="badge bg-slate-100 text-slate-500 mb-4">Got Questions?</badge>
+                <h2 class="text-4xl md:text-5xl font-black mb-6 text-slate-900">Frequently Asked Questions</h2>
+            </div>
+
+            <div class="space-y-4">
+                <!-- Question 1 -->
+                <div class="glass !rounded-3xl overflow-hidden reveal">
+                    <button onclick="toggleFaq(this)"
+                        class="w-full px-8 py-6 flex items-center justify-between text-left group">
+                        <span class="font-black text-lg text-slate-800">Is this for beginners?</span>
+                        <span class="text-brand-blue group-hover:rotate-180 transition-transform">▼</span>
+                    </button>
+                    <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 px-8">
+                        <p class="pb-6 text-brand-muted font-medium">Yes! This workshop is designed for beginners to
+                            intermediate learners. We start from the absolute basics of AI and move to complex
+                            automation strategies that anyone can follow.</p>
+                    </div>
+                </div>
+
+                <!-- Question 2 -->
+                <div class="glass !rounded-3xl overflow-hidden reveal delay-100">
+                    <button onclick="toggleFaq(this)"
+                        class="w-full px-8 py-6 flex items-center justify-between text-left group">
+                        <span class="font-black text-lg text-slate-800">Will I get the recordings?</span>
+                        <span class="text-brand-blue group-hover:rotate-180 transition-transform">▼</span>
+                    </button>
+                    <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 px-8">
+                        <p class="pb-6 text-brand-muted font-medium">Absolutely! Every participant gets lifetime access
+                            to the session recording. If you miss the live session, you can watch it at your own pace
+                            alongside the playbook.</p>
+                    </div>
+                </div>
+
+                <!-- Question 3 -->
+                <div class="glass !rounded-3xl overflow-hidden reveal delay-200">
+                    <button onclick="toggleFaq(this)"
+                        class="w-full px-8 py-6 flex items-center justify-between text-left group">
+                        <span class="font-black text-lg text-slate-800">Are there any hidden costs?</span>
+                        <span class="text-brand-blue group-hover:rotate-180 transition-transform">▼</span>
+                    </button>
+                    <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 px-8">
+                        <p class="pb-6 text-brand-muted font-medium">No. We focus on tools with generous free tiers.
+                            We'll show you how to build a powerful AI marketing system without spending hundreds of
+                            dollars on subscriptions.</p>
+                    </div>
+                </div>
+
+                <!-- Question 4 -->
+                <div class="glass !rounded-3xl overflow-hidden reveal delay-300">
+                    <button onclick="toggleFaq(this)"
+                        class="w-full px-8 py-6 flex items-center justify-between text-left group">
+                        <span class="font-black text-lg text-slate-800">Do I get a certificate?</span>
+                        <span class="text-brand-blue group-hover:rotate-180 transition-transform">▼</span>
+                    </button>
+                    <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 px-8">
+                        <p class="pb-6 text-brand-muted font-medium">Yes! You will receive a professional 'AI Marketing
+                            Strategist' certificate from AI Tycoon Academy, which you can showcase on LinkedIn or your
+                            portfolio.</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -475,6 +629,21 @@
             if (!e || e.target.id === 'regModal' || e.target.closest('button')) {
                 document.getElementById('regModal').classList.remove('active');
                 document.body.classList.remove('modal-open');
+            }
+        }
+
+        // FAQ Toggle
+        function toggleFaq(btn) {
+            const content = btn.nextElementSibling;
+            const isOpen = content.style.maxHeight !== '0px' && content.style.maxHeight !== '';
+
+            // Close all others
+            document.querySelectorAll('.faq-content').forEach(el => el.style.maxHeight = '0px');
+            document.querySelectorAll('#faq button span:last-child').forEach(el => el.style.transform = 'rotate(0deg)');
+
+            if (!isOpen) {
+                content.style.maxHeight = content.scrollHeight + 'px';
+                btn.querySelector('span:last-child').style.transform = 'rotate(180deg)';
             }
         }
 
