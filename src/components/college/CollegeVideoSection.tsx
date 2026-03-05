@@ -5,7 +5,7 @@ const CollegeVideoSection: React.FC = () => {
     const [isPlaying, setIsPlaying] = useState(false);
 
     // Replace this URL with your actual video when ready
-    const VIDEO_URL = "https://www.youtube.com/embed/dQw4w9WgXcQ";
+    const VIDEO_URL = "https://www.youtube.com/embed/6MxGoXMVckI";
 
     return (
         <section className="section-border py-20 px-4 relative overflow-hidden bg-midnight">

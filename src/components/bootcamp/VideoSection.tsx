@@ -6,7 +6,7 @@ const VideoSection: React.FC = () => {
 
     // Replace this URL with your actual video when ready
     // Supported: YouTube embed URL, direct MP4 link, or Vimeo embed URL
-    const VIDEO_URL = "https://www.youtube.com/embed/dQw4w9WgXcQ";
+    const VIDEO_URL = "https://www.youtube.com/embed/6MxGoXMVckI";
 
     return (
         <section className="section-border py-20 px-4 relative overflow-hidden">
