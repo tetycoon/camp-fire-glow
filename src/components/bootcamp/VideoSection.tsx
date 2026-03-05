@@ -1,15 +1,38 @@
-import React, { useState } from "react";
-import { Play, Film } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { Play, Film, X, Maximize2 } from "lucide-react";
 
 const VideoSection: React.FC = () => {
     const [isPlaying, setIsPlaying] = useState(false);
+    const [isSticky, setIsSticky] = useState(false);
+    const [isClosed, setIsClosed] = useState(false);
+    const sectionRef = useRef<HTMLElement>(null);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                // If the section is not intersecting and video is playing, make it sticky
+                setIsSticky(!entry.isIntersecting);
+            },
+            { threshold: 0.1 }
+        );
+
+        if (sectionRef.current) {
+            observer.observe(sectionRef.current);
+        }
+
+        return () => {
+            if (sectionRef.current) {
+                observer.unobserve(sectionRef.current);
+            }
+        };
+    }, []);
 
     // Replace this URL with your actual video when ready
     // Supported: YouTube embed URL, direct MP4 link, or Vimeo embed URL
-    const VIDEO_URL = "https://www.youtube.com/embed/6MxGoXMVckI";
+    const VIDEO_URL = "https://www.youtube.com/embed/k8QE4RahamM";
 
     return (
-        <section className="section-border py-20 px-4 relative overflow-hidden">
+        <section ref={sectionRef} className="section-border py-20 px-4 relative overflow-hidden">
             <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, hsl(222 47% 5%), hsl(222 40% 6%))" }} />
             <div className="absolute inset-0 grid-bg opacity-15" />
             <div className="absolute top-10 right-10 w-80 h-80 rounded-full blur-3xl pointer-events-none" style={{ background: "radial-gradient(circle, hsl(265 85% 65% / 0.08), transparent 70%)" }} />
@@ -120,6 +143,44 @@ const VideoSection: React.FC = () => {
           - Vimeo:   "https://player.vimeo.com/video/YOUR_VIDEO_ID"
           ============================================
         */}
+                {/* Floating Mini Video */}
+                {isPlaying && isSticky && !isClosed && (
+                    <div className="fixed bottom-6 right-6 w-72 sm:w-80 aspect-video z-[100] animate-in fade-in slide-in-from-bottom-10 duration-500">
+                        <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-2xl border border-primary/20 bg-midnight group/mini">
+                            {/* Header/Controls */}
+                            <div className="absolute top-0 inset-x-0 h-10 bg-gradient-to-b from-black/80 to-transparent z-20 flex items-center justify-end px-3 opacity-0 group-hover/mini:opacity-100 transition-opacity">
+                                <button
+                                    onClick={() => {
+                                        sectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+                                    }}
+                                    className="p-1.5 hover:bg-white/10 rounded-full text-white transition-colors mr-1"
+                                    title="Scroll to video"
+                                >
+                                    <Maximize2 className="w-4 h-4" />
+                                </button>
+                                <button
+                                    onClick={() => setIsClosed(true)}
+                                    className="p-1.5 hover:bg-white/10 rounded-full text-white transition-colors"
+                                    title="Close mini player"
+                                >
+                                    <X className="w-4 h-4" />
+                                </button>
+                            </div>
+
+                            {/* Video Content */}
+                            <iframe
+                                src={`${VIDEO_URL}?autoplay=1&rel=0&mute=0`}
+                                title="AI Summer Bootcamp 2026 — Glimpse Video (Floating)"
+                                className="w-full h-full"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                            />
+
+                            {/* Overlay to handle drag/click if needed, or just visual focus */}
+                            <div className="absolute inset-0 pointer-events-none border border-primary/10 rounded-2xl z-10" />
+                        </div>
+                    </div>
+                )}
             </div>
         </section>
     );
