@@ -66,7 +66,10 @@ const VideoSection: React.FC = () => {
                         <div className="w-full h-full rounded-3xl" style={{ background: "hsl(222 40% 7%)" }} />
                     </div>
 
-                    <div className="relative aspect-video rounded-3xl overflow-hidden z-10">
+                    <div className={`${isPlaying && isSticky && !isClosed
+                            ? "fixed bottom-8 right-8 w-72 sm:w-80 z-[9999] shadow-[0_20px_50px_rgba(0,0,0,0.5),0_0_30px_hsl(199,100%,55%,0.2)] animate-in fade-in slide-in-from-bottom-10"
+                            : "relative w-full h-full"
+                        } aspect-video rounded-3xl overflow-hidden z-10 transition-all duration-500 hover:scale-[1.02]`}>
                         {!isPlaying ? (
                             /* Thumbnail / Play overlay */
                             <div className="absolute inset-0 flex flex-col items-center justify-center cursor-pointer"
@@ -119,14 +122,47 @@ const VideoSection: React.FC = () => {
                                 </div>
                             </div>
                         ) : (
-                            /* Embedded Video */
-                            <iframe
-                                src={`${VIDEO_URL}?autoplay=1&rel=0`}
-                                title="AI Summer Bootcamp 2026 — Glimpse Video"
-                                className="w-full h-full"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen
-                            />
+                            /* Embedded Video (Single Instance) */
+                            <div className="relative w-full h-full group/player">
+                                {/* Header/Controls (Only visible in sticky mode) */}
+                                {isSticky && !isClosed && (
+                                    <div className="absolute top-0 inset-x-0 h-10 bg-gradient-to-b from-black/80 to-transparent z-20 flex items-center justify-end px-3 opacity-0 group-hover/player:opacity-100 transition-opacity">
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                sectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+                                            }}
+                                            className="p-1.5 hover:bg-white/10 rounded-full text-white transition-colors mr-1"
+                                            title="Scroll to video"
+                                        >
+                                            <Maximize2 className="w-4 h-4" />
+                                        </button>
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setIsClosed(true);
+                                            }}
+                                            className="p-1.5 hover:bg-white/10 rounded-full text-white transition-colors"
+                                            title="Close mini player"
+                                        >
+                                            <X className="w-4 h-4" />
+                                        </button>
+                                    </div>
+                                )}
+
+                                <iframe
+                                    src={`${VIDEO_URL}?autoplay=1&rel=0`}
+                                    title="AI Summer Bootcamp 2026 — Glimpse Video"
+                                    className="w-full h-full"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                />
+
+                                {/* Mini player border glow */}
+                                {isSticky && !isClosed && (
+                                    <div className="absolute inset-0 pointer-events-none border-2 border-primary/30 rounded-3xl z-10" />
+                                )}
+                            </div>
                         )}
                     </div>
                 </div>
@@ -143,44 +179,6 @@ const VideoSection: React.FC = () => {
           - Vimeo:   "https://player.vimeo.com/video/YOUR_VIDEO_ID"
           ============================================
         */}
-                {/* Floating Mini Video */}
-                {isPlaying && isSticky && !isClosed && (
-                    <div className="fixed bottom-6 right-6 w-72 sm:w-80 aspect-video z-[100] animate-in fade-in slide-in-from-bottom-10 duration-500">
-                        <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-2xl border border-primary/20 bg-midnight group/mini">
-                            {/* Header/Controls */}
-                            <div className="absolute top-0 inset-x-0 h-10 bg-gradient-to-b from-black/80 to-transparent z-20 flex items-center justify-end px-3 opacity-0 group-hover/mini:opacity-100 transition-opacity">
-                                <button
-                                    onClick={() => {
-                                        sectionRef.current?.scrollIntoView({ behavior: 'smooth' });
-                                    }}
-                                    className="p-1.5 hover:bg-white/10 rounded-full text-white transition-colors mr-1"
-                                    title="Scroll to video"
-                                >
-                                    <Maximize2 className="w-4 h-4" />
-                                </button>
-                                <button
-                                    onClick={() => setIsClosed(true)}
-                                    className="p-1.5 hover:bg-white/10 rounded-full text-white transition-colors"
-                                    title="Close mini player"
-                                >
-                                    <X className="w-4 h-4" />
-                                </button>
-                            </div>
-
-                            {/* Video Content */}
-                            <iframe
-                                src={`${VIDEO_URL}?autoplay=1&rel=0&mute=0`}
-                                title="AI Summer Bootcamp 2026 — Glimpse Video (Floating)"
-                                className="w-full h-full"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen
-                            />
-
-                            {/* Overlay to handle drag/click if needed, or just visual focus */}
-                            <div className="absolute inset-0 pointer-events-none border border-primary/10 rounded-2xl z-10" />
-                        </div>
-                    </div>
-                )}
             </div>
         </section>
     );
