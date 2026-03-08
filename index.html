@@ -83,7 +83,7 @@
       // ==============================
       let result;
       try {
-        const response = await fetch("https://script.google.com/macros/s/AKfycbyiYW5Hyn7mn3U2eQ2y8WA1k_Yl5qkT--CkpEGlzU9pR2oGl8Ds9EATzFGDOQQJP9fy/exec", {
+        const response = await fetch("https://script.google.com/macros/s/AKfycbzMlMVIAGQbGNkdmdVjlrakzCuGFRQxmMSmRZs_QgKf0PabRGlhOUzMiz1gkQjdtRw/exec", {
           method: "POST",
           headers: { "Content-Type": "text/plain;charset=utf-8" },
           body: JSON.stringify({
@@ -113,8 +113,8 @@
       // 4️⃣ OPEN RAZORPAY CHECKOUT
       // ==============================
       const options = {
-        key: "rzp_test_v3gEhWzOtCcolK", // ✅ TEST KEY ID ONLY
-        order_id: result.orderId,      // 🔥 IMPORTANT
+        key: "rzp_live_gfoS1OjC8tvWjP", // ✅ LIVE KEY ID ONLY
+        order_id: result.orderId,      // 🔥 RESTORED to allow tracking
         amount: 999900,                // ₹9,999 in paise
         currency: "INR",
         name: "AI Summer Bootcamp 2026",

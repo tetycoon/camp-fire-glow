@@ -48,13 +48,13 @@ const benefits = [
 const CollegeWhySection: React.FC = () => {
     const { openRegisterModal } = useCollegeRegisterModal();
     return (
-        <section id="why" className="section-border py-24 px-4 relative bg-midnight/50">
+        <section id="why" className="section-border responsive-section relative bg-midnight/50">
             <div className="absolute inset-0 grid-bg opacity-10" />
             <div className="absolute top-20 left-10 w-80 h-80 rounded-full blur-3xl pointer-events-none" style={{ background: "radial-gradient(circle, hsl(45 100% 50% / 0.05), transparent 70%)" }} />
             <div className="absolute bottom-10 right-10 w-72 h-72 rounded-full blur-3xl pointer-events-none" style={{ background: "radial-gradient(circle, hsl(28 100% 50% / 0.05), transparent 70%)" }} />
 
             <div className="max-w-7xl mx-auto relative z-10">
-                <div className="text-center mb-16">
+                <div className="text-center mb-12 sm:mb-16">
                     <div className="section-label mb-4 mx-auto w-fit border-gold/30 text-gold bg-gold/10">✦ The Advantage</div>
                     <h2 className="font-display text-3xl sm:text-5xl font-bold text-foreground mb-4">
                         Why This <span className="text-gradient-gold">Bootcamp?</span>

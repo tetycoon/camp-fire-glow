@@ -21,13 +21,13 @@ const PricingSection: React.FC = () => {
   const { openRegisterModal } = useRegisterModal();
 
   return (
-    <section id="pricing" className="section-border py-24 px-4 relative overflow-hidden">
+    <section id="pricing" className="section-border responsive-section relative overflow-hidden">
       <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, hsl(222 40% 7%), hsl(222 47% 5%))" }} />
       <div className="absolute inset-0 grid-bg opacity-20" />
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] rounded-full blur-3xl pointer-events-none" style={{ background: "radial-gradient(ellipse, hsl(199 100% 55% / 0.07), transparent 70%)" }} />
 
       <div className="max-w-4xl mx-auto relative z-10">
-        <div className="text-center mb-16">
+        <div className="text-center mb-12 sm:mb-16">
           <div className="section-label mb-4 mx-auto w-fit">💳 Investment</div>
           <h2 className="font-display text-3xl sm:text-5xl font-bold text-foreground mb-4">
             Batches & <span className="text-gradient">Pricing</span>
@@ -83,41 +83,44 @@ const PricingSection: React.FC = () => {
 
               <div className="flex items-baseline gap-3 mb-1">
                 <span className="font-display text-2xl text-muted-foreground/50 line-through">₹14,999</span>
-                <span className="font-display text-5xl sm:text-6xl font-black text-gradient">₹9,999</span>
+                <span className="font-display text-4xl sm:text-6xl font-black text-gradient">₹9,999</span>
               </div>
 
               {/* Savings badge */}
-              <div className="flex items-center gap-3 mb-3">
+              <div className="flex items-center gap-3 mb-4">
                 <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full font-display text-xs font-bold"
                   style={{ background: "hsl(142 70% 50% / 0.12)", border: "1px solid hsl(142 70% 50% / 0.3)", color: "hsl(142 70% 55%)" }}>
-                  <Zap className="w-3 h-3" />
+                  <Zap className="w-3.5 h-3.5" />
                   SAVE ₹5,000
                 </span>
                 <span className="badge-green font-body text-xs px-3 py-1 rounded-full flex items-center gap-1">
-                  <Zap className="w-3 h-3" />
+                  <Zap className="w-3.5 h-3.5 fill-green-400" />
                   33% OFF
                 </span>
               </div>
 
-              <p className="font-body text-sm text-muted-foreground mt-1">Inclusive of GST • Complete 30-day program</p>
-              <div className="flex items-center gap-2 mt-3">
-                <Users className="w-4 h-4 text-primary" />
+              <p className="font-body text-sm text-muted-foreground mt-1 px-1">Inclusive of GST • Complete 30-day program</p>
+              <div className="flex items-center gap-2 mt-4 px-1">
+                <Users className="w-4.5 h-4.5 text-primary" />
                 <span className="font-body text-sm text-muted-foreground">Limited to <span className="text-primary font-semibold">20 seats</span> per batch</span>
               </div>
 
               {/* Deadline reminder */}
-              <div className="flex items-center gap-2 mt-3 px-4 py-2 rounded-xl"
-                style={{ background: "hsl(25 100% 60% / 0.08)", border: "1px solid hsl(25 100% 60% / 0.2)" }}>
-                <Calendar className="w-4 h-4 text-orange-400" />
-                <span className="font-body text-xs text-orange-400 font-semibold">
-                  ⏰ Price increases to ₹14,999 after March 15, 2026
-                </span>
+              <div className="flex flex-col gap-2 mt-5">
+                <div className="flex items-center gap-2 px-4 py-3 rounded-xl"
+                  style={{ background: "hsl(25 100% 60% / 0.08)", border: "1px solid hsl(25 100% 60% / 0.2)" }}>
+                  <Calendar className="w-4 h-4 text-orange-400" />
+                  <span className="font-body text-xs sm:text-sm text-orange-400 font-semibold leading-tight">
+                    ⏰ Price increases to ₹14,999 after March 15, 2026
+                  </span>
+                </div>
+
               </div>
             </div>
 
             <button
               onClick={openRegisterModal}
-              className="btn-glow text-primary-foreground font-display text-sm font-bold px-10 py-4 rounded-full tracking-widest whitespace-nowrap"
+              className="btn-glow text-primary-foreground font-display text-sm sm:text-sm font-bold px-8 py-3.5 sm:py-4 rounded-full tracking-widest whitespace-nowrap shadow-lg w-full sm:w-auto mt-4 sm:mt-0"
             >
               SECURE YOUR SEAT 🚀
             </button>

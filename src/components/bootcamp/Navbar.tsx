@@ -73,7 +73,7 @@ const Navbar: React.FC = () => {
   const [open, setOpen] = React.useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [showCTA, setShowCTA] = useState(false);
-  const { openRegisterModal } = useRegisterModal();
+  const { openRegisterModal, isVideoDocked } = useRegisterModal();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -178,42 +178,74 @@ const Navbar: React.FC = () => {
           </div>
         </div>
 
-        {/* Mobile dropdown */}
-        {open && (
-          <div
-            className="md:hidden px-4 pb-4"
-            style={{ background: "hsl(222 40% 8%)", borderTop: "1px solid hsl(199 100% 55% / 0.15)" }}
-          >
-            <div className="flex flex-col gap-3 pt-3 font-body text-sm">
-              {["why", "modules", "trainer", "pricing"].map((id) => (
+        {/* Mobile menu overlay */}
+        <div
+          className={`fixed inset-0 z-[100] md:hidden transition-all duration-500 ${open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+            }`}
+        >
+          <div className="absolute inset-0 bg-background/60 backdrop-blur-2xl" />
+
+          <div className="relative h-full flex flex-col px-8 pt-24 pb-12">
+            <button
+              onClick={() => setOpen(false)}
+              className="absolute top-6 right-8 p-2 rounded-full bg-white/5 border border-white/10 text-muted-foreground hover:text-primary transition-colors"
+            >
+              <X className="w-6 h-6" />
+            </button>
+
+            <div className="flex flex-col gap-8">
+              <div className="flex items-center gap-3">
+                <img src="/logo.png" alt="Tech Tycoon" className="w-10 h-10 rounded-full" />
+                <span className="font-display text-xl font-bold tracking-wider text-gradient">TECH TYCOON</span>
+              </div>
+
+              <div className="flex flex-col gap-6">
+                {["why", "modules", "trainer", "pricing"].map((id, i) => (
+                  <button
+                    key={id}
+                    onClick={() => scrollTo(id)}
+                    className="group flex items-center justify-between text-2xl font-display font-bold text-foreground hover:text-primary transition-all duration-300"
+                    style={{ transitionDelay: `${i * 100}ms` }}
+                  >
+                    <span>{id === "why" ? "About Bootcamp" : id.charAt(0).toUpperCase() + id.slice(1)}</span>
+                    <span className="w-8 h-px bg-primary/30 group-hover:w-12 transition-all" />
+                  </button>
+                ))}
+
                 <button
-                  key={id}
-                  onClick={() => scrollTo(id)}
-                  className="text-left text-muted-foreground hover:text-primary transition-colors py-2 capitalize"
+                  onClick={() => { openRegisterModal(); setOpen(false); }}
+                  className="group flex items-center justify-between text-2xl font-display font-bold text-foreground hover:text-primary transition-all duration-300"
+                  style={{ transitionDelay: "400ms" }}
                 >
-                  {id === "why" ? "About" : id.charAt(0).toUpperCase() + id.slice(1)}
+                  <span>Register Now</span>
+                  <span className="w-8 h-px bg-primary/30 group-hover:w-12 transition-all" />
                 </button>
-              ))}
+              </div>
+            </div>
+
+            <div className="mt-auto">
               <button
                 onClick={() => { openRegisterModal(); setOpen(false); }}
-                className="text-left text-muted-foreground hover:text-primary transition-colors py-2 capitalize"
-              >
-                Register
-              </button>
-              <button
-                onClick={() => { openRegisterModal(); setOpen(false); }}
-                className="btn-glow text-primary-foreground font-display text-xs font-bold px-5 py-3 rounded-full tracking-wider mt-2"
+                className="w-full btn-glow text-primary-foreground font-display text-sm font-bold py-4 rounded-2xl tracking-widest"
               >
                 🔒 SECURE YOUR SEAT
               </button>
+
+              <div className="mt-6 flex items-center justify-center gap-4 py-4 rounded-2xl bg-white/5 border border-white/10">
+                <Clock className="w-4 h-4 text-orange-400" />
+                <div className="flex items-center gap-2">
+                  <span className="font-body text-[0.7rem] text-muted-foreground uppercase tracking-wider">Registration closes in</span>
+                  <CountdownTimer compact />
+                </div>
+              </div>
             </div>
           </div>
-        )}
+        </div>
       </nav>
 
       {/* ── Floating bottom pill (mobile only) ── */}
       <div
-        className={`fixed bottom-5 left-1/2 -translate-x-1/2 z-50 md:hidden transition-all duration-500 ${showCTA ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10 pointer-events-none"
+        className={`fixed bottom-36 left-1/2 -translate-x-1/2 z-50 md:hidden transition-all duration-500 ${isVideoDocked ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10 pointer-events-none"
           }`}
       >
         <button

@@ -10,7 +10,7 @@ const CollegeHeroSection: React.FC = () => {
     };
 
     return (
-        <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-4 pt-24 overflow-hidden bg-[#020408]">
+        <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-4 pt-20 sm:pt-24 pb-12 sm:pb-16 overflow-hidden bg-[#020408]">
             {/* Background */}
             <div
                 className="absolute inset-0 bg-cover bg-center opacity-40"
@@ -20,46 +20,47 @@ const CollegeHeroSection: React.FC = () => {
             <div className="absolute inset-0 grid-bg opacity-20" />
 
             {/* Vivid glowing orbs - Gold & Amber theme */}
-            <div className="absolute top-1/4 left-1/5 w-72 h-72 rounded-full blur-3xl animate-float" style={{ background: "radial-gradient(circle, hsl(45 100% 50% / 0.2), transparent 70%)" }} />
-            <div className="absolute bottom-1/3 right-1/5 w-96 h-96 rounded-full blur-3xl animate-float" style={{ animationDelay: "2s", background: "radial-gradient(circle, hsl(28 100% 50% / 0.15), transparent 70%)" }} />
-            <div className="absolute top-2/3 left-1/3 w-64 h-64 rounded-full blur-3xl animate-float" style={{ animationDelay: "4s", background: "radial-gradient(circle, hsl(38 100% 50% / 0.1), transparent 70%)" }} />
+            <div className="absolute top-1/4 left-1/5 w-72 h-72 rounded-full blur-3xl animate-float opacity-50 sm:opacity-100" style={{ background: "radial-gradient(circle, hsl(45 100% 50% / 0.2), transparent 70%)" }} />
+            <div className="absolute bottom-1/3 right-1/5 w-96 h-96 rounded-full blur-3xl animate-float opacity-40 sm:opacity-100" style={{ animationDelay: "2s", background: "radial-gradient(circle, hsl(28 100% 50% / 0.15), transparent 70%)" }} />
+            <div className="absolute top-2/3 left-1/3 w-64 h-64 rounded-full blur-3xl animate-float opacity-30 sm:opacity-100" style={{ animationDelay: "4s", background: "radial-gradient(circle, hsl(38 100% 50% / 0.1), transparent 70%)" }} />
 
             <div className="relative z-10 max-w-5xl mx-auto">
                 {/* Attention badge */}
-                <div className="inline-flex items-center gap-2 mb-8 px-5 py-2 rounded-full border border-primary/30 bg-midnight/50 backdrop-blur-sm">
-                    <Sparkles className="w-4 h-4 text-gold" style={{ color: "hsl(45 100% 50%)" }} />
-                    <span className="font-body text-xs tracking-[0.25em] text-gold uppercase font-semibold">
+                <div className="inline-flex items-center gap-1.5 sm:gap-2 mb-4 sm:mb-8 px-3 sm:px-5 py-1.5 sm:py-2 rounded-full border border-primary/30 bg-midnight/50 backdrop-blur-sm">
+                    <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gold" style={{ color: "hsl(45 100% 50%)" }} />
+                    <span className="font-body text-[0.6rem] sm:text-xs tracking-[0.2em] sm:tracking-[0.25em] text-gold uppercase font-semibold">
                         Tech Tycoon Digital Solutions · Est. 2026
                     </span>
-                    <Sparkles className="w-4 h-4 text-gold" style={{ color: "hsl(45 100% 50%)" }} />
+                    <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gold" style={{ color: "hsl(45 100% 50%)" }} />
                 </div>
 
-                <h1 className="font-display text-5xl sm:text-7xl lg:text-8xl font-black leading-tight mb-6">
+                <h1 className="font-display text-[2.5rem] leading-[1.05] sm:text-7xl lg:text-8xl font-black sm:leading-[1.1] mb-4 sm:mb-6 px-2">
                     <span className="text-gradient-gold glow-text">AI Mastery</span>
                     <br />
                     <span className="text-foreground">Bootcamp</span>
                     <span className="text-gradient-gold"> 2026</span>
                 </h1>
 
-                <p className="font-body text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
+                <p className="font-body text-sm sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-6 sm:mb-10 leading-relaxed px-2 sm:px-4">
                     The future belongs to college students & entrepreneurs who master AI early. Build real-world skills that drive careers & startups — in just{" "}
                     <span className="text-gradient-gold font-semibold">30 days.</span>
                 </p>
 
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                    <button
-                        onClick={openRegisterModal}
-                        className="btn-gold font-display text-sm font-bold px-10 py-4 rounded-full tracking-widest w-full sm:w-auto"
-                    >
-                        🚀 REGISTER NOW
-                    </button>
-                    <button
-                        onClick={() => scrollTo("modules")}
-                        className="font-display text-sm font-bold px-8 py-4 rounded-full tracking-widest border text-foreground hover:text-gold transition-all w-full sm:w-auto backdrop-blur-sm"
-                        style={{ borderColor: "hsl(45 100% 50% / 0.3)", background: "hsl(45 100% 50% / 0.05)" }}
-                    >
-                        EXPLORE MODULES
-                    </button>
+                <div className="flex flex-col items-center justify-center gap-4 sm:gap-6">
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full px-4">
+                        <button
+                            onClick={openRegisterModal}
+                            className="btn-gold font-display text-sm sm:text-sm font-bold px-8 py-3.5 sm:py-4 rounded-full tracking-widest w-full sm:w-auto shadow-lg"
+                        >
+                            🚀 REGISTER NOW
+                        </button>
+                        <button
+                            onClick={() => scrollTo("modules")}
+                            className="font-display text-sm sm:text-sm font-bold px-8 py-3.5 sm:py-4 rounded-full tracking-widest border border-gold/30 text-foreground hover:bg-gold/10 transition-all w-full sm:w-auto backdrop-blur-sm"
+                        >
+                            EXPLORE MODULES
+                        </button>
+                    </div>
                 </div>
 
                 {/* Stats row */}

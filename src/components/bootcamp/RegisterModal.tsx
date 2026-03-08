@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { CheckCircle2, Loader2, ShieldCheck, X } from "lucide-react";
 import { useRegisterModal } from "./RegisterModalContext";
 
-const RAZORPAY_KEY_ID = "rzp_test_v3gEhWzOtCcolK";
-const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbyiYW5Hyn7mn3U2eQ2y8WA1k_Yl5qkT--CkpEGlzU9pR2oGl8Ds9EATzFGDOQQJP9fy/exec";
+const RAZORPAY_KEY_ID = "rzp_live_gfoS1OjC8tvWjP";
+const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbzMlMVIAGQbGNkdmdVjlrakzCuGFRQxmMSmRZs_QgKf0PabRGlhOUzMiz1gkQjdtRw/exec";
 
 const batches = [
     { value: "batch1", label: "Batch 1 — April 1–30, 2026" },
@@ -51,11 +51,14 @@ function loadRazorpayScript(): Promise<boolean> {
 
 const RegisterModal: React.FC = () => {
     const { isOpen, closeRegisterModal } = useRegisterModal();
-    const [form, setForm] = useState({ name: "", email: "", phone: "", batch: "" });
+    const [form, setForm] = useState({ name: "", email: "", phone: "", batch: "", coupon: "WELCOME33" });
     const [submitted, setSubmitted] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [couponChecking, setCouponChecking] = useState(false);
     const [paymentId, setPaymentId] = useState<string>("");
     const [visible, setVisible] = useState(false);
+    const [discountApplied, setDiscountApplied] = useState(true);  // WELCOME33 → ₹9,999
+    const [friendCouponApplied, setFriendCouponApplied] = useState(false); // 12-digit → ₹6,999
 
     // Animate in/out
     useEffect(() => {
@@ -79,7 +82,9 @@ const RegisterModal: React.FC = () => {
             closeRegisterModal();
             // Reset form when closing (but keep submitted state if payment done)
             if (!submitted) {
-                setForm({ name: "", email: "", phone: "", batch: "" });
+                setForm({ name: "", email: "", phone: "", batch: "", coupon: "WELCOME33" });
+                setDiscountApplied(true);
+                setFriendCouponApplied(false);
             }
         }, 300);
     };
@@ -115,6 +120,8 @@ const RegisterModal: React.FC = () => {
 
         // Capture lead and generate Razorpay Order ID
         let result: any;
+        const finalAmount = friendCouponApplied ? 699900 : discountApplied ? 999900 : 1499900;
+
         try {
             const response = await fetch(GOOGLE_SHEET_URL, {
                 method: "POST",
@@ -125,7 +132,8 @@ const RegisterModal: React.FC = () => {
                     name: form.name,
                     email: form.email,
                     phone: form.phone,
-                    batch: form.batch
+                    batch: form.batch,
+                    amount: finalAmount / 100
                 }),
             });
 
@@ -147,7 +155,7 @@ const RegisterModal: React.FC = () => {
         const options: RazorpayOptions = {
             key: RAZORPAY_KEY_ID,
             order_id: result.orderId,
-            amount: 999900,
+            amount: finalAmount,
             currency: "INR",
             name: "Tech Tycoon Digital Solutions",
             description: `AI Summer Bootcamp 2026 — ${batchLabel}`,
@@ -166,8 +174,7 @@ const RegisterModal: React.FC = () => {
                 setPaymentId(response.razorpay_payment_id || "TEST_PAYMENT_ID");
                 setSubmitted(true);
                 setLoading(false);
-                // ❌ DO NOT update sheet here
-                // ❌ DO NOT send email here
+                // Removed single-use private coupon tracking
             },
             modal: {
                 ondismiss: () => {
@@ -190,7 +197,7 @@ const RegisterModal: React.FC = () => {
             onClick={handleBackdropClick}
         >
             <div
-                className={`relative w-full max-w-md rounded-3xl p-8 sm:p-10 transition-all duration-300 ${visible ? "scale-100 translate-y-0" : "scale-95 translate-y-4"
+                className={`relative w-full max-w-md rounded-3xl p-4 sm:p-10 transition-all duration-300 ${visible ? "scale-100 translate-y-0" : "scale-95 translate-y-4"
                     }`}
                 style={{
                     background: "linear-gradient(145deg, hsl(222 40% 10%), hsl(222 40% 7%))",
@@ -233,79 +240,116 @@ const RegisterModal: React.FC = () => {
                 ) : (
                     <>
                         {/* Header */}
-                        <div className="text-center mb-6">
-                            <p className="font-body text-xs tracking-[0.3em] text-primary uppercase font-semibold mb-2">Enroll Now</p>
-                            <h2 className="font-display text-2xl sm:text-3xl font-bold text-foreground mb-1">
+                        <div className="text-center mb-4 sm:mb-6">
+                            <p className="font-body text-[10px] sm:text-xs tracking-[0.3em] text-primary uppercase font-semibold mb-1 sm:mb-2">Enroll Now</p>
+                            <h2 className="font-display text-xl sm:text-3xl font-bold text-foreground mb-0.5 sm:mb-1">
                                 Register <span className="text-gradient">Now</span>
                             </h2>
-                            <p className="font-body text-sm text-muted-foreground">Secure your spot in the AI revolution</p>
+                            <p className="font-body text-xs sm:text-sm text-muted-foreground">Secure your spot in the AI revolution</p>
                         </div>
 
-                        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-                            <div className="flex flex-col gap-1.5">
-                                <label className="font-body text-xs font-semibold text-muted-foreground uppercase tracking-wider">Full Name</label>
+                        <form onSubmit={handleSubmit} className="flex flex-col gap-3 sm:gap-4">
+                            <div className="flex flex-col gap-1">
+                                <label className="font-body text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">Full Name</label>
                                 <input
                                     id="name"
                                     type="text"
                                     required
                                     value={form.name}
                                     onChange={e => setForm({ ...form, name: e.target.value })}
-                                    placeholder="Enter your full name"
-                                    className="bg-muted/50 border border-border rounded-xl px-4 py-3 font-body text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 focus:bg-primary/5 transition-all"
+                                    placeholder="Enter your name"
+                                    className="bg-muted/50 border border-border rounded-xl px-3 sm:px-4 py-2 sm:py-3 font-body text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 focus:bg-primary/5 transition-all"
                                 />
                             </div>
-                            <div className="flex flex-col gap-1.5">
-                                <label className="font-body text-xs font-semibold text-muted-foreground uppercase tracking-wider">Email</label>
+                            <div className="flex flex-col gap-1">
+                                <label className="font-body text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">Email</label>
                                 <input
                                     id="email"
                                     type="email"
                                     required
                                     value={form.email}
                                     onChange={e => setForm({ ...form, email: e.target.value })}
-                                    placeholder="Enter your email address"
-                                    className="bg-muted/50 border border-border rounded-xl px-4 py-3 font-body text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 focus:bg-primary/5 transition-all"
+                                    placeholder="Enter email address"
+                                    className="bg-muted/50 border border-border rounded-xl px-3 sm:px-4 py-2 sm:py-3 font-body text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 focus:bg-primary/5 transition-all"
                                 />
                             </div>
-                            <div className="flex flex-col gap-1.5">
-                                <label className="font-body text-xs font-semibold text-muted-foreground uppercase tracking-wider">Phone</label>
+                            <div className="flex flex-col gap-1">
+                                <label className="font-body text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">Phone</label>
                                 <input
                                     id="phone"
                                     type="tel"
                                     required
                                     value={form.phone}
                                     onChange={e => setForm({ ...form, phone: e.target.value })}
-                                    placeholder="Enter your phone number"
-                                    className="bg-muted/50 border border-border rounded-xl px-4 py-3 font-body text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 focus:bg-primary/5 transition-all"
+                                    placeholder="Enter phone number"
+                                    className="bg-muted/50 border border-border rounded-xl px-3 sm:px-4 py-2 sm:py-3 font-body text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 focus:bg-primary/5 transition-all"
                                 />
                             </div>
-                            <div className="flex flex-col gap-1.5">
-                                <label className="font-body text-xs font-semibold text-muted-foreground uppercase tracking-wider">Select Batch</label>
+                            <div className="flex flex-col gap-1">
+                                <label className="font-body text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">Select Batch</label>
                                 <select
                                     id="batch"
                                     required
                                     value={form.batch}
                                     onChange={e => setForm({ ...form, batch: e.target.value })}
-                                    className="bg-muted/50 border border-border rounded-xl px-4 py-3 font-body text-sm text-foreground focus:outline-none focus:border-primary/50 focus:bg-primary/5 transition-all appearance-none cursor-pointer"
+                                    className="bg-muted/50 border border-border rounded-xl px-3 sm:px-4 py-2 sm:py-3 font-body text-sm text-foreground focus:outline-none focus:border-primary/50 focus:bg-primary/5 transition-all appearance-none cursor-pointer"
                                 >
-                                    <option value="" className="bg-card">Choose your batch</option>
+                                    <option value="" className="bg-card">Choose batch</option>
                                     {batches.map(b => (
                                         <option key={b.value} value={b.value} className="bg-card">{b.label}</option>
                                     ))}
                                 </select>
                             </div>
 
+                            <div className="flex flex-col gap-1">
+                                <label className="font-body text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">Coupon Code</label>
+                                <div className="flex gap-2">
+                                    <input
+                                        id="coupon"
+                                        type="text"
+                                        value={form.coupon}
+                                        onChange={e => setForm({ ...form, coupon: e.target.value.toUpperCase() })}
+                                        placeholder="Optional"
+                                        className="bg-muted/50 border border-border rounded-xl px-3 sm:px-4 py-2 sm:py-3 font-body text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 focus:bg-primary/5 transition-all flex-1"
+                                    />
+                                    <button
+                                        type="button"
+                                        disabled={couponChecking}
+                                        onClick={async () => {
+                                            const code = form.coupon.trim();
+                                            if (code === "WELCOME33") {
+                                                setDiscountApplied(true);
+                                                setFriendCouponApplied(false);
+                                                alert("Early Bird discount applied! Price: ₹9,999");
+                                            } else if (code === "AMIABLE30") {
+                                                setDiscountApplied(true);
+                                                setFriendCouponApplied(true);
+                                                alert("Special discount applied! Price reduced to ₹6,999");
+                                            } else {
+                                                alert("Invalid coupon code. Please try again.");
+                                                setDiscountApplied(false);
+                                                setFriendCouponApplied(false);
+                                            }
+                                        }}
+                                        className="font-display text-[10px] sm:text-xs font-bold px-3 sm:px-4 rounded-xl border border-primary/30 text-primary hover:bg-primary/10 transition-all uppercase tracking-wider disabled:opacity-50"
+                                    >
+                                        {couponChecking ? "..." : "Apply"}
+                                    </button>
+                                </div>
+                            </div>
+
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="btn-glow text-primary-foreground font-display text-sm font-bold px-8 py-4 rounded-full tracking-widest flex items-center justify-center gap-3 mt-2 disabled:opacity-70"
+                                className="btn-glow text-primary-foreground font-display text-xs sm:text-sm font-bold px-4 py-3 sm:py-4 rounded-full tracking-widest flex items-center justify-center gap-2 sm:gap-3 mt-1 disabled:opacity-70"
                             >
                                 {loading ? (
                                     <>
-                                        <Loader2 className="w-5 h-5 animate-spin" />
+                                        <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
                                         <span>OPENING PAYMENT...</span>
                                     </>
                                 ) : (
-                                    <span>PROCEED TO PAYMENT — ₹9,999</span>
+                                    <span>PAY {friendCouponApplied ? "₹6,999" : discountApplied ? "₹9,999" : "₹14,999"}</span>
                                 )}
                             </button>
 
@@ -318,7 +362,7 @@ const RegisterModal: React.FC = () => {
                     </>
                 )}
             </div>
-        </div>
+        </div >
     );
 };
 

@@ -38,17 +38,17 @@ const audiences = [
 const WhoCanJoin: React.FC = () => {
   const { openRegisterModal } = useRegisterModal();
   return (
-    <section id="who" className="section-border py-24 px-4 relative overflow-hidden">
+    <section id="who" className="section-border responsive-section relative overflow-hidden">
       <div className="absolute inset-0 grid-bg opacity-20" />
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] rounded-full blur-3xl pointer-events-none" style={{ background: "radial-gradient(ellipse, hsl(199 100% 55% / 0.06), transparent 70%)" }} />
 
       <div className="max-w-7xl mx-auto relative z-10">
-        <div className="text-center mb-16">
+        <div className="text-center mb-12 sm:mb-16">
           <div className="section-label mb-4 mx-auto w-fit">🎯 Eligibility</div>
           <h2 className="font-display text-3xl sm:text-5xl font-bold text-foreground mb-4">
             Who Can <span className="text-gradient">Join?</span>
           </h2>
-          <p className="font-body text-muted-foreground">Anyone ready to level up their future with AI</p>
+          <p className="font-body text-muted-foreground px-4">Anyone ready to level up their future with AI</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

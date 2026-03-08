@@ -154,28 +154,30 @@ const GallerySection: React.FC = () => {
                 </div>
 
                 {/* Thumbnail strip */}
-                <div className="flex items-center justify-center gap-3 mt-8">
-                    {galleryItems.map((item, i) => (
-                        <button
-                            key={i}
-                            onClick={() => goTo(i)}
-                            className="relative rounded-xl overflow-hidden transition-all duration-300"
-                            style={{
-                                width: "100px",
-                                height: "65px",
-                                border: i === current ? "2px solid hsl(199 100% 55%)" : "2px solid transparent",
-                                opacity: i === current ? 1 : 0.5,
-                                transform: i === current ? "scale(1.1)" : "scale(1)",
-                                boxShadow: i === current ? "0 0 20px hsl(199 100% 55% / 0.3)" : "none",
-                            }}
-                        >
-                            <img
-                                src={item.src}
-                                alt={item.caption}
-                                className="w-full h-full object-cover"
-                            />
-                        </button>
-                    ))}
+                <div className="flex items-center justify-start sm:justify-center gap-3 mt-8 px-4 overflow-x-auto pb-4 no-scrollbar">
+                    <div className="flex items-center gap-3 min-w-max mx-auto">
+                        {galleryItems.map((item, i) => (
+                            <button
+                                key={i}
+                                onClick={() => goTo(i)}
+                                className="relative rounded-xl overflow-hidden transition-all duration-300 flex-shrink-0"
+                                style={{
+                                    width: "80px",
+                                    height: "55px",
+                                    border: i === current ? "2px solid hsl(199 100% 55%)" : "2px solid transparent",
+                                    opacity: i === current ? 1 : 0.5,
+                                    transform: i === current ? "scale(1.1)" : "scale(1)",
+                                    boxShadow: i === current ? "0 0 20px hsl(199 100% 55% / 0.3)" : "none",
+                                }}
+                            >
+                                <img
+                                    src={item.src}
+                                    alt={item.caption}
+                                    className="w-full h-full object-cover"
+                                />
+                            </button>
+                        ))}
+                    </div>
                 </div>
             </div>
         </section>

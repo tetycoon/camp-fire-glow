@@ -21,13 +21,13 @@ const CollegePricingSection: React.FC = () => {
     const { openRegisterModal } = useCollegeRegisterModal();
 
     return (
-        <section id="pricing" className="section-border py-24 px-4 relative overflow-hidden bg-midnight">
+        <section id="pricing" className="section-border responsive-section relative overflow-hidden bg-midnight">
             <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, hsl(224 71% 4%), hsl(224 71% 2%))" }} />
             <div className="absolute inset-0 grid-bg opacity-10" />
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] rounded-full blur-3xl pointer-events-none" style={{ background: "radial-gradient(ellipse, hsl(45 100% 50% / 0.05), transparent 70%)" }} />
 
             <div className="max-w-4xl mx-auto relative z-10">
-                <div className="text-center mb-16">
+                <div className="text-center mb-12 sm:mb-16">
                     <div className="section-label mb-4 mx-auto w-fit border-gold/30 text-gold bg-gold/10">💳 Investment</div>
                     <h2 className="font-display text-3xl sm:text-5xl font-bold text-foreground mb-4">
                         Batches & <span className="text-gradient-gold">Pricing</span>
@@ -80,10 +80,10 @@ const CollegePricingSection: React.FC = () => {
 
                             <div className="flex items-baseline gap-3 mb-1">
                                 <span className="font-display text-2xl text-muted-foreground/50 line-through">₹14,999</span>
-                                <span className="font-display text-5xl sm:text-6xl font-black text-gradient-gold">₹9,999</span>
+                                <span className="font-display text-4xl sm:text-6xl font-black text-gradient-gold">₹9,999</span>
                             </div>
 
-                            <div className="flex items-center gap-3 mb-3">
+                            <div className="flex items-center gap-3 mb-4">
                                 <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full font-display text-xs font-bold"
                                     style={{ background: "hsl(45 100% 50% / 0.12)", border: "1px solid hsl(45 100% 50% / 0.3)", color: "hsl(45 100% 55%)" }}>
                                     <Zap className="w-3 h-3" />
@@ -95,24 +95,27 @@ const CollegePricingSection: React.FC = () => {
                                 </span>
                             </div>
 
-                            <p className="font-body text-sm text-muted-foreground mt-1">Inclusive of GST • Complete 30-day program</p>
+                            <p className="font-body text-sm text-muted-foreground mt-1 px-1">Inclusive of GST • Complete 30-day program</p>
                             <div className="flex items-center gap-2 mt-3">
                                 <Users className="w-4 h-4 text-gold" style={{ color: "hsl(45 100% 50%)" }} />
                                 <span className="font-body text-sm text-muted-foreground">Limited to <span className="text-gold font-semibold" style={{ color: "hsl(45 100% 50%)" }}>20 seats</span> per batch</span>
                             </div>
 
-                            <div className="flex items-center gap-2 mt-3 px-4 py-2 rounded-xl"
-                                style={{ background: "hsl(38 100% 50% / 0.08)", border: "1px solid hsl(38 100% 50% / 0.2)" }}>
-                                <Calendar className="w-4 h-4 text-amber" style={{ color: "hsl(38 100% 50%)" }} />
-                                <span className="font-body text-xs text-amber font-semibold" style={{ color: "hsl(38 100% 50%)" }}>
-                                    ⏰ Price increases to ₹14,999 after March 15, 2026
-                                </span>
+                            <div className="flex flex-col gap-2 mt-4">
+                                <div className="flex items-center gap-2 px-4 py-2 rounded-xl"
+                                    style={{ background: "hsl(38 100% 50% / 0.08)", border: "1px solid hsl(38 100% 50% / 0.2)" }}>
+                                    <Calendar className="w-4 h-4 text-amber" style={{ color: "hsl(38 100% 50%)" }} />
+                                    <span className="font-body text-xs text-amber font-semibold" style={{ color: "hsl(38 100% 50%)" }}>
+                                        ⏰ Price increases to ₹14,999 after March 15, 2026
+                                    </span>
+                                </div>
+
                             </div>
                         </div>
 
                         <button
                             onClick={openRegisterModal}
-                            className="btn-gold font-display text-sm font-bold px-10 py-4 rounded-full tracking-widest whitespace-nowrap"
+                            className="btn-gold font-display text-sm sm:text-sm font-bold px-8 py-3.5 sm:py-4 rounded-full tracking-widest whitespace-nowrap shadow-lg w-full sm:w-auto"
                         >
                             SECURE YOUR SEAT 🚀
                         </button>
