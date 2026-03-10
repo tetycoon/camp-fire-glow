@@ -999,10 +999,20 @@
             font-weight: 800;
         }
 
-        .proc-emoji {
-            font-size: 36px;
+        .proc-img {
+            width: 52px;
+            height: 52px;
+            object-fit: cover;
+            border-radius: 50%;
             position: relative;
             z-index: 1;
+            box-shadow: 0 4px 12px rgba(236, 72, 153, 0.2);
+            border: 2px solid #ffffff;
+            transition: transform 0.4s ease;
+        }
+
+        .proc-step:hover .proc-img {
+            transform: scale(1.1);
         }
 
         .proc-h {
@@ -2117,7 +2127,8 @@
                             <div class="proc-num"
                                 style="border-color:var(--cyan);color:var(--cyan);background:rgba(0,238,255,0.08)">01
                             </div>
-                            <span class="proc-emoji">🧠</span>
+                            <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=120&h=120&fit=crop"
+                                class="proc-img" alt="AI Foundations">
                         </div>
                         <div class="proc-h">AI Foundations &amp; Prompting</div>
                         <p class="proc-p">Master the art of prompting for marketing, copy, and strategy generation.</p>
@@ -2130,7 +2141,8 @@
                             <div class="proc-num"
                                 style="border-color:var(--violet);color:var(--violet);background:rgba(108,60,255,0.08)">
                                 02</div>
-                            <span class="proc-emoji">🎬</span>
+                            <img src="https://images.unsplash.com/photo-1536240478700-b869070f9279?w=120&h=120&fit=crop"
+                                class="proc-img" alt="AI Video">
                         </div>
                         <div class="proc-h">AI Video &amp; Content</div>
                         <p class="proc-p">Generate full-length AI videos without showing your face — ready to publish.
@@ -2144,7 +2156,8 @@
                             <div class="proc-num"
                                 style="border-color:var(--gold);color:var(--gold);background:rgba(246,201,14,0.08)">03
                             </div>
-                            <span class="proc-emoji">🏗️</span>
+                            <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=120&h=120&fit=crop"
+                                class="proc-img" alt="Web Building">
                         </div>
                         <div class="proc-h">Brand &amp; Web Building</div>
                         <p class="proc-p">Build a full brand identity and launch a website — entirely with AI tools.</p>
@@ -2157,7 +2170,8 @@
                             <div class="proc-num"
                                 style="border-color:var(--teal);color:var(--teal);background:rgba(0,200,180,0.08)">04
                             </div>
-                            <span class="proc-emoji">⚡</span>
+                            <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=120&h=120&fit=crop"
+                                class="proc-img" alt="Agents Automation">
                         </div>
                         <div class="proc-h">Agents &amp; Automation</div>
                         <p class="proc-p">Deploy 100+ AI agents and build automated workflows that run your business.
