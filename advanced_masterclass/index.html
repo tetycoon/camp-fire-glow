@@ -1729,10 +1729,358 @@
                 margin-bottom: 40px;
             }
         }
+
+        /* Countdown Timer */
+        .urgency-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(4, 14, 46, 0.95);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--b1);
+            z-index: 1000;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            font-family: var(--font-hd);
+            transform: translateY(-100%);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .urgency-bar.visible {
+            transform: translateY(0);
+        }
+
+        .urgency-text {
+            color: var(--txt);
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .urgency-text .highlight {
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        .urgency-timer {
+            display: flex;
+            gap: 8px;
+        }
+
+        .timer-box {
+            background: rgba(0, 238, 255, 0.1);
+            border: 1px solid var(--b1);
+            color: var(--cyan);
+            padding: 4px 8px;
+            border-radius: 4px;
+            min-width: 44px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 16px;
+            text-shadow: 0 0 8px rgba(0, 238, 255, 0.4);
+        }
+
+        /* Instructor Section */
+        .instructor-sec {
+            padding: 80px 20px;
+            background: linear-gradient(180deg, transparent, rgba(108, 60, 255, 0.05) 50%, transparent);
+            position: relative;
+        }
+
+        .inst-wrap {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            background: var(--card);
+            border: 1px solid var(--b1);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(0, 238, 255, 0.05);
+            backdrop-filter: blur(12px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .inst-wrap::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at center, rgba(108, 60, 255, 0.1), transparent 60%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .inst-img-wrap {
+            flex-shrink: 0;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            padding: 6px;
+            background: linear-gradient(135deg, var(--cyan), var(--violet));
+            position: relative;
+            z-index: 1;
+        }
+
+        .inst-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--void);
+            background: var(--deep);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+        }
+
+        .inst-content {
+            flex-grow: 1;
+            z-index: 1;
+        }
+
+        .inst-name {
+            font-family: var(--font-hd);
+            font-size: 32px;
+            color: #fff;
+            margin-bottom: 8px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+        }
+
+        .inst-title {
+            color: var(--cyan);
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .inst-bio {
+            color: var(--txt);
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .inst-stats {
+            display: flex;
+            gap: 24px;
+        }
+
+        .istat {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .istat-n {
+            font-family: var(--font-hd);
+            font-size: 24px;
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        .istat-l {
+            font-size: 12px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Testimonials Section */
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 50px;
+        }
+
+        .test-card {
+            background: var(--card);
+            border: 1px solid var(--b1);
+            border-radius: 20px;
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 1;
+        }
+
+        .test-card::before {
+            content: '"';
+            position: absolute;
+            top: 20px;
+            right: 24px;
+            font-family: var(--font-hd);
+            font-size: 80px;
+            color: rgba(255, 255, 255, 0.04);
+            line-height: 1;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .test-quote {
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--txt);
+            font-style: italic;
+            flex-grow: 1;
+            position: relative;
+            z-index: 1;
+        }
+
+        .test-author {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .ta-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-hd);
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .ta-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ta-name {
+            color: #fff;
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .ta-role {
+            color: var(--cyan);
+            font-size: 13px;
+        }
+
+        /* FAQ Section */
+        .faq-item {
+            background: rgba(4, 12, 40, 0.4);
+            border: 1px solid var(--b1);
+            border-radius: 12px;
+            margin-bottom: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item.active {
+            border-color: var(--cyan);
+            background: rgba(0, 238, 255, 0.05);
+            box-shadow: 0 0 20px rgba(0, 238, 255, 0.1);
+        }
+
+        .faq-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 600;
+            padding: 24px;
+            text-align: left;
+            cursor: pointer;
+            font-family: var(--font-bd);
+        }
+
+        .faq-icon {
+            color: var(--cyan);
+            font-size: 24px;
+            font-weight: 400;
+            font-family: var(--font-hd);
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(45deg);
+            color: var(--gold);
+        }
+
+        .faq-content {
+            max-height: 0;
+            padding: 0 24px;
+            color: var(--txt);
+            font-size: 16px;
+            line-height: 1.6;
+            transition: all 0.3s ease;
+            opacity: 0;
+        }
+
+        .faq-item.active .faq-content {
+            max-height: 200px;
+            padding-bottom: 24px;
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .urgency-bar {
+                flex-direction: column;
+                gap: 8px;
+                padding: 12px;
+            }
+
+            .urgency-text {
+                font-size: 12px;
+                text-align: center;
+            }
+
+            .nav {
+                top: 60px;
+                /* Push nav down to make room for timer */
+            }
+
+            .inst-wrap {
+                flex-direction: column;
+                text-align: center;
+                padding: 30px 20px;
+            }
+
+            .inst-stats {
+                justify-content: center;
+            }
+        }
     </style>
 </head>
 
 <body>
+    <div class="urgency-bar" id="urgencyBar">
+        <div class="urgency-text">
+            ⚡ Special Offer <span class="highlight">Expires In:</span>
+        </div>
+        <div class="urgency-timer">
+            <div class="timer-box" id="t-hours">02</div><span style="color:var(--b1);align-self:center">:</span>
+            <div class="timer-box" id="t-minutes">15</div><span style="color:var(--b1);align-self:center">:</span>
+            <div class="timer-box" id="t-seconds">00</div>
+        </div>
+    </div>
     <div id="cursor-dot"></div>
     <div id="cursor-ring"></div>
     <canvas id="canvas-bg"></canvas>
@@ -2030,6 +2378,133 @@
             </div>
         </section>
 
+        <section class="sec test-sec" id="testimonials">
+            <div class="sec-inner">
+                <div class="sr" style="display:flex;flex-direction:column;align-items:center">
+                    <div class="sec-tag"><span class="sec-tag-line"></span>Success Stories<span
+                            class="sec-tag-line"></span></div>
+                    <h2 class="sec-h2">What Our <em>Alumni</em> Say</h2>
+                    <p class="sec-p" style="text-align:center;margin:14px auto 0;max-width:600px">
+                        Join hundreds of professionals who have transformed their careers and businesses using our AI
+                        frameworks.
+                    </p>
+                </div>
+
+                <div class="test-grid">
+                    <div class="test-card sr" style="transition-delay:0.05s">
+                        <div class="test-quote">"I was a complete beginner. By Day 3, I launched my first AI-generated
+                            website. The prompt engineering frameworks alone are worth 10x the price."</div>
+                        <div class="test-author">
+                            <div class="ta-avatar" style="background:#00eeff;color:#000">S</div>
+                            <div class="ta-info">
+                                <div class="ta-name">Sarah Jenkins</div>
+                                <div class="ta-role">Marketing Freelancer</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="test-card sr" style="transition-delay:0.15s">
+                        <div class="test-quote">"The automation module changed how I run my agency. I've automated 15
+                            hours of repetitive tasks every week. Truly mind-blowing actionable content."</div>
+                        <div class="test-author">
+                            <div class="ta-avatar" style="background:#6c3cff;color:#fff">M</div>
+                            <div class="ta-info">
+                                <div class="ta-name">Michael R.</div>
+                                <div class="ta-role">Agency Owner</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="test-card sr" style="transition-delay:0.25s">
+                        <div class="test-quote">"Antony breaks down complex AI concepts into dead-simple steps. The
+                            community support and live interaction made all the difference."</div>
+                        <div class="test-author">
+                            <div class="ta-avatar" style="background:#f6c90e;color:#000">P</div>
+                            <div class="ta-info">
+                                <div class="ta-name">Priya Patel</div>
+                                <div class="ta-role">E-commerce Founder</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="sec faq-sec" id="faq">
+            <div class="sec-inner">
+                <div class="sr" style="display:flex;flex-direction:column;align-items:center">
+                    <div class="sec-tag"><span class="sec-tag-line" style="border-color:var(--pink)"></span>Got
+                        Questions?<span class="sec-tag-line" style="border-color:var(--pink)"></span></div>
+                    <h2 class="sec-h2">Frequently Asked <em>Questions</em></h2>
+                </div>
+                <div class="faq-wrap sr" style="margin-top:40px;max-width:800px;margin-left:auto;margin-right:auto">
+                    <div class="faq-item">
+                        <button class="faq-btn">Do I need coding experience to join? <span
+                                class="faq-icon">+</span></button>
+                        <div class="faq-content">
+                            <p>Not at all! This masterclass is designed for non-technical professionals. If you can type
+                                an email, you can learn prompt engineering and build AI workflows with our step-by-step
+                                systems.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-btn">Will I get recordings of the live sessions? <span
+                                class="faq-icon">+</span></button>
+                        <div class="faq-content">
+                            <p>If you choose the <strong>Full Enrollment</strong>, yes! You'll receive lifetime access
+                                to all session recordings, templates, and the Canva mastery bonus course.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-btn">Is the certificate valid globally? <span
+                                class="faq-icon">+</span></button>
+                        <div class="faq-content">
+                            <p>Yes. Upon completion, you will receive an industry-recognized digital certificate from
+                                Tech Tycoon, which you can easily add to your LinkedIn profile and resume.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-btn">How does the "Partial Enrollment" work? <span
+                                class="faq-icon">+</span></button>
+                        <div class="faq-content">
+                            <p>You can reserve your seat immediately by paying just ₹500 today. The remaining balance of
+                                ₹6,499 must be cleared before the masterclass begins to gain full access.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="sec instructor-sec" id="instructor">
+            <div class="sec-inner">
+                <div class="inst-wrap sr">
+                    <div class="inst-img-wrap">
+                        <div class="inst-img">👨‍💻</div>
+                    </div>
+                    <div class="inst-content">
+                        <div class="sec-tag" style="justify-content:flex-start;margin-bottom:12px;margin-top:0"><span
+                                class="sec-tag-line" style="width:20px;border-color:var(--violet)"></span>Meet Your
+                            Instructor</div>
+                        <h3 class="inst-name">Antony Praveen</h3>
+                        <div class="inst-title">AI Strategist & Business Developer</div>
+                        <p class="inst-bio">
+                            With over a decade of experience in digital transformation, Antony has helped thousands of
+                            professionals and businesses integrate AI into their daily workflows. He specializes in
+                            practical, no-fluff strategies that turn complex AI concepts into immediate business value.
+                        </p>
+                        <div class="inst-stats">
+                            <div class="istat">
+                                <span class="istat-n">10k+</span>
+                                <span class="istat-l">Students Trained</span>
+                            </div>
+                            <div class="istat">
+                                <span class="istat-n">200+</span>
+                                <span class="istat-l">Brands Scaled</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section class="sec price-sec" id="pricing">
             <div class="sec-inner" style="text-align:center">
                 <div class="sr" style="display:flex;flex-direction:column;align-items:center">
@@ -2128,6 +2603,7 @@
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
     <script>
         const dot = document.getElementById('cursor-dot');
         const ring = document.getElementById('cursor-ring');
@@ -2406,6 +2882,72 @@
                 btn.disabled = false;
             }
         }
+
+        // Countdown Timer Logic
+        function initCountdown() {
+            const bar = document.getElementById('urgencyBar');
+            const hEl = document.getElementById('t-hours');
+            const mEl = document.getElementById('t-minutes');
+            const sEl = document.getElementById('t-seconds');
+
+            // Show bar after a short delay
+            setTimeout(() => bar.classList.add('visible'), 1000);
+
+            // Set target time: 2 hours, 15 minutes from now
+            let totalSeconds = (2 * 3600) + (15 * 60);
+
+            const timer = setInterval(() => {
+                totalSeconds--;
+                if (totalSeconds < 0) {
+                    clearInterval(timer);
+                    return;
+                }
+
+                const h = Math.floor(totalSeconds / 3600);
+                const m = Math.floor((totalSeconds % 3600) / 60);
+                const s = totalSeconds % 60;
+
+                hEl.textContent = h.toString().padStart(2, '0');
+                mEl.textContent = m.toString().padStart(2, '0');
+                sEl.textContent = s.toString().padStart(2, '0');
+            }, 1000);
+        }
+        // FAQ Accordion Logic
+        function initFAQ() {
+            const btns = document.querySelectorAll('.faq-btn');
+            btns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const item = btn.parentElement;
+                    const isActive = item.classList.contains('active');
+
+                    // Close all
+                    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+
+                    // Toggle current
+                    if (!isActive) {
+                        item.classList.add('active');
+                    }
+                });
+            });
+        }
+
+        // Initialize Countdown, FAQ, and Tilt on load
+        window.addEventListener('DOMContentLoaded', () => {
+            initCountdown();
+            initFAQ();
+
+            // 3D Tilt Effect
+            if (typeof VanillaTilt !== 'undefined') {
+                VanillaTilt.init(document.querySelectorAll(".mod-card, .bon-card, .test-card, .pri-card, .inst-wrap"), {
+                    max: 8,
+                    speed: 400,
+                    glare: true,
+                    "max-glare": 0.15,
+                    scale: 1.02
+                });
+            }
+        });
+
     </script>
 </body>
 
