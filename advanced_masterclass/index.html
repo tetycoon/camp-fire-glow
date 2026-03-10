@@ -1566,16 +1566,16 @@
         }
 
         .modal-card {
-            background: #ffffff;
-            border: 1px solid var(--b1);
-            border-radius: 12px;
+            background: linear-gradient(135deg, #ffffff 0%, var(--deep) 100%);
+            border: 2px solid var(--navy);
+            border-radius: 16px;
             width: 90%;
             max-width: 440px;
             padding: 40px;
             position: relative;
             transform: translateY(20px);
             transition: transform 0.4s ease;
-            box-shadow: 0 0 60px rgba(0, 0, 0, 0.1), 0 0 30px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 20px 60px rgba(236, 72, 153, 0.15);
         }
 
         .modal-overlay.active .modal-card {
@@ -1628,41 +1628,43 @@
         .form-input {
             width: 100%;
             padding: 14px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid var(--b0);
-            border-radius: 4px;
-            color: var(--white);
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid var(--navy);
+            border-radius: 8px;
+            color: var(--txt);
             font-family: var(--font-bd);
             font-size: 14px;
-            transition: border-color 0.3s, background 0.3s;
+            transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
         }
 
         .form-input:focus {
             outline: none;
-            border-color: var(--white);
-            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--pink);
+            background: #ffffff;
+            box-shadow: 0 0 0 3px var(--b0);
         }
 
         .modal-btn {
             width: 100%;
             padding: 16px;
             border: none;
-            border-radius: 4px;
-            background: var(--white);
-            color: var(--void);
+            border-radius: 8px;
+            background: var(--pink);
+            color: #ffffff;
             font-family: var(--font-hd);
-            font-size: 12px;
+            font-size: 14px;
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 2px;
             cursor: pointer;
             margin-top: 10px;
-            transition: transform 0.2s, box-shadow 0.3s;
+            transition: transform 0.2s, box-shadow 0.3s, background 0.3s;
         }
 
         .modal-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+            background: var(--gold-d);
+            box-shadow: 0 10px 20px rgba(236, 72, 153, 0.3);
         }
 
         /* Floating CTA Mobile */
