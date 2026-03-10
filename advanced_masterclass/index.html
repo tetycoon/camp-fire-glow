@@ -1730,60 +1730,6 @@
             }
         }
 
-        /* Countdown Timer */
-        .urgency-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: rgba(4, 14, 46, 0.95);
-            backdrop-filter: blur(8px);
-            border-bottom: 1px solid var(--b1);
-            z-index: 1000;
-            padding: 8px 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 16px;
-            font-family: var(--font-hd);
-            transform: translateY(-100%);
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .urgency-bar.visible {
-            transform: translateY(0);
-        }
-
-        .urgency-text {
-            color: var(--txt);
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .urgency-text .highlight {
-            color: var(--gold);
-            font-weight: 700;
-        }
-
-        .urgency-timer {
-            display: flex;
-            gap: 8px;
-        }
-
-        .timer-box {
-            background: rgba(0, 238, 255, 0.1);
-            border: 1px solid var(--b1);
-            color: var(--cyan);
-            padding: 4px 8px;
-            border-radius: 4px;
-            min-width: 44px;
-            text-align: center;
-            font-weight: 700;
-            font-size: 16px;
-            text-shadow: 0 0 8px rgba(0, 238, 255, 0.4);
-        }
-
         /* Instructor Section */
         .instructor-sec {
             padding: 80px 20px;
@@ -2041,22 +1987,6 @@
         }
 
         @media (max-width: 768px) {
-            .urgency-bar {
-                flex-direction: column;
-                gap: 8px;
-                padding: 12px;
-            }
-
-            .urgency-text {
-                font-size: 12px;
-                text-align: center;
-            }
-
-            .nav {
-                top: 60px;
-                /* Push nav down to make room for timer */
-            }
-
             .inst-wrap {
                 flex-direction: column;
                 text-align: center;
@@ -2071,16 +2001,6 @@
 </head>
 
 <body>
-    <div class="urgency-bar" id="urgencyBar">
-        <div class="urgency-text">
-            ⚡ Special Offer <span class="highlight">Expires In:</span>
-        </div>
-        <div class="urgency-timer">
-            <div class="timer-box" id="t-hours">02</div><span style="color:var(--b1);align-self:center">:</span>
-            <div class="timer-box" id="t-minutes">15</div><span style="color:var(--b1);align-self:center">:</span>
-            <div class="timer-box" id="t-seconds">00</div>
-        </div>
-    </div>
     <div id="cursor-dot"></div>
     <div id="cursor-ring"></div>
     <canvas id="canvas-bg"></canvas>
@@ -2883,35 +2803,6 @@
             }
         }
 
-        // Countdown Timer Logic
-        function initCountdown() {
-            const bar = document.getElementById('urgencyBar');
-            const hEl = document.getElementById('t-hours');
-            const mEl = document.getElementById('t-minutes');
-            const sEl = document.getElementById('t-seconds');
-
-            // Show bar after a short delay
-            setTimeout(() => bar.classList.add('visible'), 1000);
-
-            // Set target time: 2 hours, 15 minutes from now
-            let totalSeconds = (2 * 3600) + (15 * 60);
-
-            const timer = setInterval(() => {
-                totalSeconds--;
-                if (totalSeconds < 0) {
-                    clearInterval(timer);
-                    return;
-                }
-
-                const h = Math.floor(totalSeconds / 3600);
-                const m = Math.floor((totalSeconds % 3600) / 60);
-                const s = totalSeconds % 60;
-
-                hEl.textContent = h.toString().padStart(2, '0');
-                mEl.textContent = m.toString().padStart(2, '0');
-                sEl.textContent = s.toString().padStart(2, '0');
-            }, 1000);
-        }
         // FAQ Accordion Logic
         function initFAQ() {
             const btns = document.querySelectorAll('.faq-btn');
@@ -2933,7 +2824,6 @@
 
         // Initialize Countdown, FAQ, and Tilt on load
         window.addEventListener('DOMContentLoaded', () => {
-            initCountdown();
             initFAQ();
 
             // 3D Tilt Effect
