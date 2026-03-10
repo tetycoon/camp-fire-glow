@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>4 Days AI Live MasterClass — AI Secrets</title>
+    <title>4 Days AI Live MasterClass — Tech Tycoon</title>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <link
         href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;600;700;800;900&display=swap"
@@ -1742,7 +1742,11 @@
     <div class="noise-layer"></div>
     <div class="site">
         <nav class="nav">
-            <a class="nav-brand" href="#">AI·SECRETS</a>
+            <a class="nav-brand" href="#">
+                <img src="./tech_tycoon_logo.png" alt="Tech Tycoon"
+                    style="height:32px;margin-right:8px;vertical-align:middle">
+                TECH·TYCOON
+            </a>
             <div class="nav-links">
                 <a class="nav-link" href="#curriculum">Curriculum</a>
                 <a class="nav-link" href="#bonus">Bonuses</a>
@@ -1772,7 +1776,7 @@
             <div class="hero-content">
                 <div class="hero-chip">
                     <span class="live-dot"></span>
-                    Live Webinar  ·  Limited Seats
+                    Live Webinar  ·  Professional Certificate Included
                 </div>
                 <h1 class="hero-h1">
                     <span class="row1">4 Days AI Live</span>
@@ -2052,6 +2056,7 @@
                             <li><span class="chk-icon">✓</span>Step-by-Step AI Workflows</li>
                             <li><span class="chk-icon">✓</span>1-on-1 Strategy Session (10 min)</li>
                             <li><span class="chk-icon">✓</span>WhatsApp Community Access</li>
+                            <li><span class="chk-icon">✓</span>Professional Digital Certificate</li>
                         </ul>
                         <button class="btn-pri-o" onclick="openRegisterModal(500)">Lock Seat — Rs. 500</button>
                         <div class="guarantee">
@@ -2076,6 +2081,7 @@
                             <li><span class="chk-icon">✓</span>1-on-1 Consultation (10 min)</li>
                             <li><span class="chk-icon">✓</span>Canva Masterclass Recording</li>
                             <li><span class="chk-icon">✓</span>WhatsApp Community Access</li>
+                            <li><span class="chk-icon">✓</span>Industry-Recognized Certificate</li>
                         </ul>
                         <button class="btn-pri-g" onclick="openRegisterModal(3999)">⚡ Enroll Now — Rs. 3,999/-</button>
                         <div class="guarantee">
@@ -2088,8 +2094,8 @@
             </div>
         </section>
         <footer>
-            <div class="foot-brand">AI·SECRETS</div>
-            <div class="foot-copy">© 2025 AI Secrets MasterClass · All rights reserved.</div>
+            <div class="foot-brand">TECH·TYCOON</div>
+            <div class="foot-copy">© 2025 Tech Tycoon MasterClass · All rights reserved.</div>
         </footer>
 
         <!-- Registration Modal -->
@@ -2097,7 +2103,7 @@
             <div class="modal-card">
                 <button class="modal-close" onclick="closeRegisterModal()">&times;</button>
                 <h3 class="modal-h" id="modalTitle">Complete Registration</h3>
-                <p class="modal-p" id="modalDesc">Enter details to proceed with ₹500 enrollment.</p>
+                <p class="modal-p" id="modalDesc">Enter details to proceed with your Tech Tycoon enrollment.</p>
                 <div class="form-group">
                     <label class="form-label">Full Name</label>
                     <input type="text" id="regName" class="form-input" placeholder="e.g. Antony Praveen">
@@ -2361,7 +2367,7 @@
                     key: "rzp_live_gfoS1OjC8tvWjP",
                     amount: currentAmount * 100,
                     currency: "INR",
-                    name: "AI Secrets MasterClass",
+                    name: "Tech Tycoon MasterClass",
                     description: currentAmount === 500 ? "Seat Reservation" : "Full Enrollment",
                     order_id: result.orderId,
                     handler: async function (paymentRes) {
