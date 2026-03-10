@@ -2364,9 +2364,25 @@
                     name: "AI Secrets MasterClass",
                     description: currentAmount === 500 ? "Seat Reservation" : "Full Enrollment",
                     order_id: result.orderId,
-                    handler: function (response) {
+                    handler: async function (paymentRes) {
                         alert("Payment successful! Check your email for details.");
                         closeRegisterModal();
+
+                        // Notify Apps Script of success to send email
+                        try {
+                            await fetch("https://script.google.com/macros/s/AKfycbyvNC2qBr6Wk8JbkG4aj1wW_P6WFiq7xK7hZKlSQBgE6fViuiAX3VLMpSccZso35BVJ/exec", {
+                                method: "POST",
+                                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                                body: JSON.stringify({
+                                    action: "payment_success",
+                                    orderId: result.orderId,
+                                    transactionId: paymentRes.razorpay_payment_id,
+                                    method: paymentRes.razorpay_payment_method || "Razorpay"
+                                })
+                            });
+                        } catch (e) {
+                            console.error("Success sync error:", e);
+                        }
                     },
                     prefill: { name, email, contact: phone },
                     theme: { color: "#ffffff" }
