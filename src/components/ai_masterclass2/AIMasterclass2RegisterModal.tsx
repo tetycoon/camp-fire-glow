@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { CheckCircle2, Loader2, ShieldCheck, X } from "lucide-react";
-import { useAIMasterclassRegisterModal } from "./AIMasterclassRegisterModalContext";
+import { useAIMasterclass2RegisterModal } from "./AIMasterclass2RegisterModalContext";
 
 const RAZORPAY_KEY_ID = "rzp_live_gfoS1OjC8tvWjP";
 const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbxsNlBVyY2LVjPuIBXRs2g1WXZ1r_WzM1b4zOChLVAD-iv2J8f3DXOhF4od7JOliOEa3A/exec";
@@ -38,8 +38,8 @@ function loadRazorpayScript(): Promise<boolean> {
     });
 }
 
-const AIMasterclassRegisterModal: React.FC = () => {
-    const { isOpen, closeRegisterModal } = useAIMasterclassRegisterModal();
+const AIMasterclass2RegisterModal: React.FC = () => {
+    const { isOpen, closeRegisterModal } = useAIMasterclass2RegisterModal();
     const [form, setForm] = useState({ name: "", email: "", phone: "", profession: "", coupon: "WELCOME33" });
     const [submitted, setSubmitted] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -202,7 +202,7 @@ const AIMasterclassRegisterModal: React.FC = () => {
                 ) : (
                     <>
                         <div className="text-center mb-6">
-                            <h2 className="font-display text-2xl font-bold mb-1 italic !text-white" style={{ color: "white" }}>Register <span className="text-gradient-green">Now</span></h2>
+                            <h2 className="font-display text-2xl font-bold mb-1 italic">Register <span className="text-gradient-green">Now</span></h2>
                             <p className="text-sm text-muted-foreground">Join the AI revolution for just ₹99</p>
                         </div>
 
@@ -213,7 +213,7 @@ const AIMasterclassRegisterModal: React.FC = () => {
                                 onChange={e => setForm({ ...form, name: e.target.value })}
                                 placeholder="Full Name"
                                 autoComplete="name"
-                                className="bg-muted/50 border border-border rounded-xl px-4 py-3 text-sm text-white focus:border-emerald-500/50 outline-none transition-colors"
+                                className="bg-muted/50 border border-border rounded-xl px-4 py-3 text-sm focus:border-emerald-500/50 outline-none transition-colors"
                             />
                             <input
                                 required
@@ -222,7 +222,7 @@ const AIMasterclassRegisterModal: React.FC = () => {
                                 onChange={e => setForm({ ...form, email: e.target.value })}
                                 placeholder="Email Address"
                                 autoComplete="email"
-                                className="bg-muted/50 border border-border rounded-xl px-4 py-3 text-sm text-white focus:border-emerald-500/50 outline-none transition-colors"
+                                className="bg-muted/50 border border-border rounded-xl px-4 py-3 text-sm focus:border-emerald-500/50 outline-none transition-colors"
                             />
                             <input
                                 required
@@ -233,22 +233,19 @@ const AIMasterclassRegisterModal: React.FC = () => {
                                 autoComplete="tel"
                                 pattern="[0-9]{10}"
                                 title="Please enter a valid 10-digit phone number"
-                                className="bg-muted/50 border border-border rounded-xl px-4 py-3 text-sm text-white focus:border-emerald-500/50 outline-none transition-colors"
+                                className="bg-muted/50 border border-border rounded-xl px-4 py-3 text-sm focus:border-emerald-500/50 outline-none transition-colors"
                             />
                             <select
                                 required
                                 value={form.profession}
                                 onChange={e => setForm({ ...form, profession: e.target.value })}
-                                className="bg-muted/50 border border-border rounded-xl px-4 py-3 text-sm text-white focus:border-emerald-500/50 outline-none appearance-none cursor-pointer"
+                                className="bg-muted/50 border border-border rounded-xl px-4 py-3 text-sm focus:border-emerald-500/50 outline-none appearance-none cursor-pointer"
                             >
                                 <option value="">I am a...</option>
                                 <option>Trainer / Coach</option>
                                 <option>Entrepreneur</option>
                                 <option>Business Owner</option>
                                 <option>Freelancer</option>
-                                <option>Educator</option>
-                                <option>Professionals</option>
-                                <option>Student</option>
                                 <option>Other</option>
                             </select>
 
@@ -271,4 +268,4 @@ const AIMasterclassRegisterModal: React.FC = () => {
     );
 };
 
-export default AIMasterclassRegisterModal;
+export default AIMasterclass2RegisterModal;

@@ -1,5 +1,4 @@
 import React from "react";
-import NeuralNetworkBackground from "../bootcamp/NeuralNetworkBackground";
 import AIMasterclassNavbar from "./AIMasterclassNavbar";
 import AIMasterclassHeroSection from "./AIMasterclassHeroSection";
 import AIMasterclassWhySection from "./AIMasterclassWhySection";
@@ -9,17 +8,18 @@ import AIMasterclassPricingSection from "./AIMasterclassPricingSection";
 import AIMasterclassFooter from "./AIMasterclassFooter";
 import AIMasterclassRegisterModal from "./AIMasterclassRegisterModal";
 import { AIMasterclassRegisterModalProvider } from "./AIMasterclassRegisterModalContext";
+import TestimonialCarousel from "./TestimonialCarousel";
 
 const AIMasterclassPage: React.FC = () => {
     return (
         <AIMasterclassRegisterModalProvider>
-            <div className="min-h-screen bg-background text-foreground overflow-x-hidden relative">
-                <NeuralNetworkBackground />
+            <div className="min-h-screen bg-white text-slate-900 font-sans overflow-x-hidden relative">
                 <AIMasterclassNavbar />
                 <AIMasterclassHeroSection />
                 <AIMasterclassWhySection />
                 <AIMasterclassModulesSection />
                 <AIMasterclassTrainerSection />
+                <TestimonialCarousel />
                 <AIMasterclassPricingSection />
                 <AIMasterclassFooter />
                 <AIMasterclassRegisterModal />

@@ -18,6 +18,7 @@ export default {
         body: ["Space Grotesk", "sans-serif"],
       },
       colors: {
+          brandGreen: "#b5d88f",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

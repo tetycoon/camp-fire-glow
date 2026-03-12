@@ -1,60 +1,104 @@
 import React from "react";
-import { BookOpen, Box, Cpu, Globe, Rocket, Sparkles, Smartphone, BarChart3 } from "lucide-react";
+import { BookOpen, Box, Cpu, Globe, CheckCircle2 } from "lucide-react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "../ui/accordion";
+import { useAIMasterclassRegisterModal } from "./AIMasterclassRegisterModalContext";
 
 const modules = [
     {
-        id: "01",
+        id: "module-1",
+        label: "Module 1",
         title: "Concept of AI",
         desc: "Understanding Generative AI, LLMs, and the shift from manual to automated systems.",
-        icon: <Cpu className="w-5 h-5" />,
-        color: "emerald"
+        points: [
+            "What is Generative AI and how it actually works",
+            "The evolution from manual tasks to AI pipelines",
+            "Setting up your first AI workspace"
+        ]
     },
     {
-        id: "02",
+        id: "module-2",
+        label: "Module 2",
         title: "Power of AI in Digital Marketing",
         desc: "Build AI pipelines for social content and high-value lead generation funnels.",
-        icon: <Globe className="w-5 h-5" />,
-        color: "blue"
+        points: [
+            "Creating a content calendar in 5 minutes",
+            "Automating lead generation and capture",
+            "Writing high-converting landing page copy"
+        ]
     },
     {
-        id: "03",
-        title: "10+ AI Tools for Productivity Audience",
+        id: "module-3",
+        label: "Module 3",
+        title: "10+ AI Tools for Productivity",
         desc: "Master ChatGPT, Claude, Midjourney, Canva AI, and professional automation tools.",
-        icon: <Box className="w-5 h-5" />,
-        color: "amber"
+        points: [
+            "Advanced Prompting techniques for ChatGPT & Claude",
+            "Creating stunning visuals with Midjourney & Canva",
+            "Automating workflows with Zapier + AI integrations"
+        ]
     }
 ];
 
 const AIMasterclassModulesSection: React.FC = () => {
+    const { openRegisterModal } = useAIMasterclassRegisterModal();
+
     return (
-        <section id="modules" className="section-border py-32 px-4 relative bg-gradient-to-b from-background via-blue-950/20 to-background">
-            <div className="max-w-5xl mx-auto px-4 lg:px-8">
-                <div className="text-left mb-16">
-                    <div className="section-label mb-4 w-fit">📚 Curriculum</div>
-                    <h2 className="font-display text-4xl sm:text-6xl font-black text-foreground mb-6">
-                        What You Will <span className="text-gradient-green italic">Learn</span>
+        <section id="modules" className="py-24 px-4 bg-white relative">
+            <div className="max-w-4xl mx-auto">
+                <div className="text-center mb-16">
+                    <div className="inline-block px-4 py-2 bg-gray-50 rounded-full text-sm font-bold text-slate-600 shadow-sm border border-gray-200 mb-6">
+                        📚 Curriculum
+                    </div>
+                    <h2 className="text-4xl sm:text-5xl font-black text-slate-900 mb-6 tracking-tight">
+                        What You Will <span className="text-blue-600">Learn</span>
                     </h2>
-                    <p className="font-body text-muted-foreground max-w-2xl text-lg">
+                    <p className="text-lg text-slate-600 max-w-2xl mx-auto">
                         Three comprehensive modules designed to take you from AI novice to power user.
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {modules.map((m) => (
-                        <div
-                            key={m.id}
-                            className="p-8 rounded-3xl bg-muted/30 border border-white/5 hover:border-emerald-500/30 transition-all hover:-translate-y-1 group"
-                        >
-                            <div className="flex items-center justify-between mb-6">
-                                <div className={`p-3 rounded-2xl bg-${m.color}-500/10 text-${m.color}-400 group-hover:scale-110 transition-transform`}>
-                                    {m.icon}
-                                </div>
-                                <span className="font-display text-3xl font-black opacity-10 italic">{m.id}</span>
-                            </div>
-                            <h3 className="font-display text-xl font-bold mb-3 italic">{m.title}</h3>
-                            <p className="font-body text-sm text-muted-foreground leading-relaxed">{m.desc}</p>
-                        </div>
-                    ))}
+                <div className="bg-white border border-gray-200 rounded-3xl p-6 md:p-10 shadow-xl shadow-blue-900/5 mb-12">
+                    <Accordion type="single" collapsible className="w-full space-y-4" defaultValue="module-1">
+                        {modules.map((m) => (
+                            <AccordionItem key={m.id} value={m.id} className="border border-gray-100 bg-gray-50/50 rounded-2xl px-6 data-[state=open]:bg-white data-[state=open]:border-blue-100 data-[state=open]:shadow-md transition-all">
+                                <AccordionTrigger className="hover:no-underline py-6">
+                                    <div className="flex flex-col md:flex-row md:items-center text-left gap-2 md:gap-6">
+                                        <div className="flex-shrink-0 text-sm font-bold text-blue-600 uppercase tracking-widest bg-blue-50 px-3 py-1 rounded-md w-fit">
+                                            {m.label}
+                                        </div>
+                                        <h3 className="text-xl md:text-2xl font-black text-slate-900">{m.title}</h3>
+                                    </div>
+                                </AccordionTrigger>
+                                <AccordionContent className="pb-6 pt-2">
+                                    <p className="text-slate-600 text-base mb-6 leading-relaxed">
+                                        {m.desc}
+                                    </p>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        {m.points.map((point, idx) => (
+                                            <div key={idx} className="flex items-start gap-3">
+                                                <CheckCircle2 className="w-5 h-5 text-brandGreen flex-shrink-0 mt-0.5" />
+                                                <span className="text-slate-700 font-medium">{point}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </AccordionContent>
+                            </AccordionItem>
+                        ))}
+                    </Accordion>
+                </div>
+                
+                <div className="flex justify-center">
+                    <button
+                        onClick={openRegisterModal}
+                        className="bg-brandGreen hover:bg-[#a3c77e] text-slate-900 text-lg font-black px-12 py-5 rounded-lg transition-transform hover:scale-[1.02] shadow-xl shadow-green-900/10 border border-[#a3c77e]"
+                    >
+                        GET MY DISCOUNTED SEAT
+                    </button>
                 </div>
             </div>
         </section>
