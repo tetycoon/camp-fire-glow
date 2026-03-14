@@ -1703,7 +1703,7 @@
             }
 
             .floating-cta {
-                display: block;
+                display: none;
             }
 
             .sec-h2 {
@@ -1711,7 +1711,52 @@
             }
 
             .hero-h1 {
-                font-size: 48px;
+                font-size: 40px;
+                line-height: 1.1;
+            }
+
+            .hero-chip {
+                font-size: 8px;
+                letter-spacing: 2px;
+                padding: 6px 12px;
+                margin-bottom: 24px;
+            }
+
+            .hero-sub {
+                font-size: 15px;
+                max-width: 100%;
+                padding: 0 10px;
+            }
+
+            .hero-stats {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+                width: 100%;
+                max-width: 400px;
+                margin: 0 auto 32px;
+            }
+
+            .hstat {
+                padding: 12px;
+            }
+
+            .hstat-n {
+                font-size: 24px;
+            }
+
+            .hero-ctas {
+                flex-direction: column;
+                gap: 12px;
+                width: 100%;
+                max-width: 320px;
+                margin: 0 auto;
+            }
+
+            .cta-main, .cta-secondary {
+                width: 100%;
+                padding: 16px 20px;
+                font-size: 10px;
             }
 
             .price-grid {
@@ -2079,7 +2124,7 @@
                         <div class="hstat-l">Duration</div>
                     </div>
                     <div class="hstat">
-                        <span class="hstat-n" style="color:var(--cyan);font-size:22px">LIVE</span>
+                        <div class="hstat-n" style="color:var(--cyan);font-size:22px">LIVE</div>
                         <div class="hstat-l">Interactive</div>
                     </div>
                 </div>
