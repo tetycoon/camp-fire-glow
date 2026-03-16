@@ -107,7 +107,7 @@ const AIMasterclass2HeroSection: React.FC = () => {
                                         <Languages className="w-6 h-6 text-orange-500" />
                                     </div>
                                     <div>
-                                        <div className="font-display text-xl font-black text-slate-900 leading-none">Basic English with mix of Tamil</div>
+                                        <div className="font-display text-xl font-black text-slate-900 leading-none">Basic English And Tamil</div>
                                         <div className="font-body text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">SESSION LANGUAGE</div>
                                     </div>
                                 </div>
