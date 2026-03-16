@@ -35,11 +35,11 @@ const modules = [
         id: "module-3",
         label: "Module 3",
         title: "10+ AI Tools for Productivity",
-        desc: "Master ChatGPT, Claude, Midjourney, Canva AI, and professional automation tools.",
+        desc: "Master ChatGPT, Claude, Napkin AI, Finalround AI, and Kling/flow AI for high-quality video generation.",
         points: [
             "Advanced Prompting techniques for ChatGPT & Claude",
-            "Creating stunning visuals with Midjourney & Canva",
-            "Automating workflows with Zapier + AI integrations"
+            "Creating stunning visuals & decks with Napkin AI & Finalround AI",
+            "Professional Video Generation with Kling/flow AI"
         ]
     }
 ];
