@@ -40,7 +40,7 @@ function loadRazorpayScript(): Promise<boolean> {
 
 const AIMasterclassRegisterModal: React.FC = () => {
     const { isOpen, closeRegisterModal } = useAIMasterclassRegisterModal();
-    const [form, setForm] = useState({ name: "", email: "", phone: "", profession: "", language: "English", coupon: "WELCOME33" });
+    const [form, setForm] = useState({ name: "", email: "", phone: "", profession: "", language: "", coupon: "WELCOME33" });
     const [submitted, setSubmitted] = useState(false);
     const [loading, setLoading] = useState(false);
     const [couponChecking, setCouponChecking] = useState(false);
@@ -64,7 +64,7 @@ const AIMasterclassRegisterModal: React.FC = () => {
         setTimeout(() => {
             closeRegisterModal();
             if (!submitted) {
-                setForm({ name: "", email: "", phone: "", profession: "", language: "English", coupon: "WELCOME33" });
+                setForm({ name: "", email: "", phone: "", profession: "", language: "", coupon: "WELCOME33" });
                 setDiscountApplied(false);
             }
         }, 300);
