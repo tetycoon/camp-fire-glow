@@ -3,9 +3,9 @@ import { CheckCircle2, Zap, Clock, ShieldCheck } from "lucide-react";
 import { useAIMasterclass2RegisterModal } from "./AIMasterclass2RegisterModalContext";
 
 const features = [
-    "Complete 4-Week Program",
-    "Daily Live + Recorded Sessions",
-    "Industry-Recognized Certificate",
+    "Complete 3-hour AI Basic to intermediate Training",
+    "Every sunday Live Session",
+    "Session in Basic English and mixed with Tamil",
     "10+ AI Tools Mastery",
     "WhatsApp Private Community",
     "Inclusive of GST"

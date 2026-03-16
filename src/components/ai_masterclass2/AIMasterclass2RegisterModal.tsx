@@ -204,6 +204,7 @@ const AIMasterclass2RegisterModal: React.FC = () => {
                         <div className="text-center mb-6">
                             <h2 className="font-display text-2xl font-bold mb-1 italic">Register <span className="text-gradient-green">Now</span></h2>
                             <p className="text-sm text-muted-foreground">Join the AI revolution for just ₹99</p>
+                            <p className="text-[10px] text-emerald-400/80 mt-1 font-medium italic">Session in Basic English and mixed with Tamil</p>
                         </div>
 
                         <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">

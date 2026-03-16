@@ -40,7 +40,7 @@ function loadRazorpayScript(): Promise<boolean> {
 
 const AIMasterclassRegisterModal: React.FC = () => {
     const { isOpen, closeRegisterModal } = useAIMasterclassRegisterModal();
-    const [form, setForm] = useState({ name: "", email: "", phone: "", profession: "", coupon: "WELCOME33" });
+    const [form, setForm] = useState({ name: "", email: "", phone: "", profession: "", language: "English", coupon: "WELCOME33" });
     const [submitted, setSubmitted] = useState(false);
     const [loading, setLoading] = useState(false);
     const [couponChecking, setCouponChecking] = useState(false);
@@ -64,7 +64,7 @@ const AIMasterclassRegisterModal: React.FC = () => {
         setTimeout(() => {
             closeRegisterModal();
             if (!submitted) {
-                setForm({ name: "", email: "", phone: "", profession: "", coupon: "WELCOME33" });
+                setForm({ name: "", email: "", phone: "", profession: "", language: "English", coupon: "WELCOME33" });
                 setDiscountApplied(false);
             }
         }, 300);
@@ -98,6 +98,7 @@ const AIMasterclassRegisterModal: React.FC = () => {
                     name: form.name,
                     email: form.email,
                     phone: form.phone,
+                    language: form.language,
                     batch: "Masterclass 2026",
                     amount: 99
                 }),
@@ -124,7 +125,7 @@ const AIMasterclassRegisterModal: React.FC = () => {
                     contact: form.phone,
                 },
                 notes: {
-                    batch: `Masterclass: ${form.profession}`,
+                    batch: `Masterclass: ${form.profession} (${form.language})`,
                 },
                 theme: {
                     color: "#10b981",
@@ -144,7 +145,8 @@ const AIMasterclassRegisterModal: React.FC = () => {
                                 razorpay_order_id: result.orderId,
                                 razorpay_payment_id: response.razorpay_payment_id,
                                 email: form.email,
-                                name: form.name
+                                name: form.name,
+                                language: form.language
                             })
                         });
                     } catch (e) {
@@ -204,6 +206,7 @@ const AIMasterclassRegisterModal: React.FC = () => {
                         <div className="text-center mb-6">
                             <h2 className="font-display text-2xl font-bold mb-1 italic !text-white" style={{ color: "white" }}>Register <span className="text-gradient-green">Now</span></h2>
                             <p className="text-sm text-muted-foreground">Join the AI revolution for just ₹99</p>
+                            <p className="text-[10px] text-emerald-400/80 mt-1 font-medium italic">Session in Basic English and mixed with Tamil</p>
                         </div>
 
                         <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -237,9 +240,20 @@ const AIMasterclassRegisterModal: React.FC = () => {
                             />
                             <select
                                 required
+                                value={form.language}
+                                onChange={e => setForm({ ...form, language: e.target.value })}
+                                className="bg-muted/50 border border-border rounded-xl px-4 py-3 text-sm text-white focus:border-emerald-500/50 outline-none appearance-none cursor-pointer"
+                            >
+                                <option value="">Preferred Language</option>
+                                <option value="English">English</option>
+                                <option value="Tamil">Tamil</option>
+                            </select>
+
+                            <select
+                                required
                                 value={form.profession}
                                 onChange={e => setForm({ ...form, profession: e.target.value })}
-                                className="bg-muted/50 border border-border rounded-xl px-4 py-3 text-sm text-white focus:border-emerald-500/50 outline-none appearance-none cursor-pointer"
+                                className="sm:col-span-2 bg-muted/50 border border-border rounded-xl px-4 py-3 text-sm text-white focus:border-emerald-500/50 outline-none appearance-none cursor-pointer"
                             >
                                 <option value="">I am a...</option>
                                 <option>Trainer / Coach</option>

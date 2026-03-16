@@ -1,5 +1,5 @@
 import React from "react";
-import { ChevronDown, Calendar, Clock, MapPin, IndianRupee, Zap } from "lucide-react";
+import { ChevronDown, Calendar, Clock, MapPin, IndianRupee, Zap, Languages } from "lucide-react";
 import { useAIMasterclass2RegisterModal } from "./AIMasterclass2RegisterModalContext";
 
 const AIMasterclass2HeroSection: React.FC = () => {
@@ -98,6 +98,17 @@ const AIMasterclass2HeroSection: React.FC = () => {
                                     <div>
                                         <div className="font-display text-xl font-black text-slate-900 leading-none">6:00 PM – 9:00 PM</div>
                                         <div className="font-body text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">IST • ONLINE LIVE</div>
+                                    </div>
+                                </div>
+
+                                {/* Language */}
+                                <div className="flex items-center gap-5">
+                                    <div className="w-12 h-12 rounded-2xl bg-orange-50 flex items-center justify-center">
+                                        <Languages className="w-6 h-6 text-orange-500" />
+                                    </div>
+                                    <div>
+                                        <div className="font-display text-xl font-black text-slate-900 leading-none">Basic English with mix of Tamil</div>
+                                        <div className="font-body text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">SESSION LANGUAGE</div>
                                     </div>
                                 </div>
 
