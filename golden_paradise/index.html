@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Golden Paradise Resort – Your Dream Escape Awaits</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C97A;
+    --gold-pale: #F5E9C8;
+    --deep: #0D1A12;
+    --forest: #1A2E20;
+    --cream: #FAF6EE;
+    --text: #2C3A2F;
+    --muted: #6B7E6E;
+    --white: #FFFFFF;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Jost', sans-serif;
+    background: var(--deep);
+    color: var(--white);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 30% 50%, rgba(201,168,76,0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 60% 80% at 80% 80%, rgba(26,46,32,0.9) 0%, transparent 60%),
+      url('https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=1600&q=80') center/cover no-repeat;
+    z-index: 0;
+  }
+
+  .hero-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(13,26,18,0.75) 0%, rgba(13,26,18,0.45) 50%, rgba(13,26,18,0.85) 100%);
+  }
+
+  /* decorative lines */
+  .deco-lines {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 1;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .deco-lines::before {
+    content: '';
+    position: absolute;
+    top: -40px; left: -40px;
+    width: 520px; height: 520px;
+    border: 1px solid rgba(201,168,76,0.18);
+    border-radius: 50%;
+    animation: spinSlow 40s linear infinite;
+  }
+  .deco-lines::after {
+    content: '';
+    position: absolute;
+    top: -80px; left: -80px;
+    width: 640px; height: 640px;
+    border: 1px solid rgba(201,168,76,0.09);
+    border-radius: 50%;
+    animation: spinSlow 60s linear infinite reverse;
+  }
+  @keyframes spinSlow { to { transform: rotate(360deg); } }
+
+  /* ── LEFT PANEL ── */
+  .hero-left {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px 64px 60px 72px;
+    animation: fadeSlideLeft 1s ease both;
+  }
+  @keyframes fadeSlideLeft {
+    from { opacity: 0; transform: translateX(-40px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid rgba(201,168,76,0.5);
+    border-radius: 100px;
+    padding: 6px 18px;
+    font-size: 11px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    margin-bottom: 36px;
+    width: fit-content;
+  }
+  .badge span { width: 6px; height: 6px; background: var(--gold); border-radius: 50%; display: inline-block; }
+
+  .tagline-small {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 20px;
+    color: var(--gold-light);
+    margin-bottom: 12px;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+  }
+
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(52px, 5.5vw, 80px);
+    font-weight: 300;
+    line-height: 1.05;
+    color: var(--white);
+    margin-bottom: 28px;
+  }
+  h1 em {
+    font-style: italic;
+    color: var(--gold-light);
+  }
+
+  .hero-desc {
+    font-size: 15px;
+    line-height: 1.75;
+    color: rgba(255,255,255,0.65);
+    max-width: 420px;
+    margin-bottom: 48px;
+    font-weight: 300;
+  }
+
+  .amenities {
+    display: flex;
+    gap: 28px;
+    flex-wrap: wrap;
+  }
+  .amenity {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.55);
+    letter-spacing: 0.3px;
+  }
+  .amenity-icon {
+    width: 32px; height: 32px;
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    background: rgba(201,168,76,0.08);
+  }
+
+  .divider-gold {
+    width: 60px; height: 1px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+    margin: 40px 0;
+  }
+
+  .trust-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .stars { color: var(--gold); font-size: 15px; letter-spacing: 2px; }
+  .trust-text { font-size: 13px; color: rgba(255,255,255,0.5); }
+  .trust-text strong { color: rgba(255,255,255,0.85); font-weight: 500; }
+
+  /* ── RIGHT PANEL / FORM ── */
+  .hero-right {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 60px 60px 40px;
+    animation: fadeSlideRight 1s 0.2s ease both;
+  }
+  @keyframes fadeSlideRight {
+    from { opacity: 0; transform: translateX(40px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  .form-card {
+    background: rgba(250,246,238,0.04);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 20px;
+    padding: 44px 44px 48px;
+    width: 100%;
+    max-width: 480px;
+    position: relative;
+    overflow: hidden;
+  }
+  .form-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent);
+  }
+
+  .form-header {
+    margin-bottom: 32px;
+    text-align: center;
+  }
+  .form-eyebrow {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+  .form-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 30px;
+    font-weight: 400;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+  .form-subtitle {
+    font-size: 13px;
+    color: rgba(255,255,255,0.45);
+    font-weight: 300;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  .form-grid .full { grid-column: 1 / -1; }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .field label {
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    font-weight: 500;
+  }
+  .field input,
+  .field select,
+  .field textarea {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 14px;
+    font-family: 'Jost', sans-serif;
+    color: var(--white);
+    outline: none;
+    transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+    width: 100%;
+    -webkit-appearance: none;
+  }
+  .field select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23C9A84C' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+    cursor: pointer;
+  }
+  .field select option { background: #1A2E20; color: #fff; }
+  .field textarea { resize: none; height: 80px; line-height: 1.5; }
+  .field input::placeholder,
+  .field textarea::placeholder { color: rgba(255,255,255,0.25); }
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    border-color: var(--gold);
+    background: rgba(201,168,76,0.07);
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.1);
+  }
+
+  /* phone field */
+  .phone-wrap {
+    display: flex;
+    gap: 8px;
+  }
+  .phone-code {
+    width: 80px;
+    flex-shrink: 0;
+  }
+  .phone-code input { text-align: center; }
+  .phone-num { flex: 1; }
+
+  /* guests row */
+  .guests-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  /* date picker row */
+  .date-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .section-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(201,168,76,0.6);
+    margin: 18px 0 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(201,168,76,0.15);
+  }
+
+  .interests {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .interest-chip {
+    padding: 7px 14px;
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 100px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.55);
+    cursor: pointer;
+    transition: all 0.18s;
+    user-select: none;
+    background: rgba(255,255,255,0.03);
+  }
+  .interest-chip:hover { border-color: var(--gold); color: var(--gold-light); }
+  .interest-chip.active {
+    background: rgba(201,168,76,0.15);
+    border-color: var(--gold);
+    color: var(--gold-light);
+  }
+
+  .submit-btn {
+    width: 100%;
+    margin-top: 24px;
+    padding: 16px;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 50%, var(--gold) 100%);
+    background-size: 200% auto;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--deep);
+    cursor: pointer;
+    transition: background-position 0.4s, transform 0.15s, box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .submit-btn:hover {
+    background-position: right center;
+    box-shadow: 0 8px 32px rgba(201,168,76,0.35);
+    transform: translateY(-1px);
+  }
+  .submit-btn:active { transform: translateY(0); }
+
+  .form-footer {
+    text-align: center;
+    margin-top: 16px;
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .form-footer svg { width: 12px; height: 12px; opacity: 0.5; }
+
+  /* ── SUCCESS ── */
+  .success-overlay {
+    display: none;
+    position: absolute;
+    inset: 0;
+    background: rgba(13,26,18,0.97);
+    border-radius: 20px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px;
+    z-index: 10;
+  }
+  .success-overlay.show { display: flex; animation: fadeIn 0.4s ease; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .success-icon {
+    width: 70px; height: 70px;
+    border: 2px solid var(--gold);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px;
+    margin-bottom: 24px;
+    animation: popIn 0.5s 0.2s ease both;
+  }
+  @keyframes popIn {
+    from { transform: scale(0); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+  }
+  .success-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    color: var(--gold-light);
+    margin-bottom: 12px;
+  }
+  .success-msg {
+    font-size: 14px;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.7;
+    max-width: 280px;
+  }
+
+  /* ── FLOATING STRIP ── */
+  .offer-strip {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: linear-gradient(90deg, var(--forest), rgba(26,46,32,0.95));
+    border-top: 1px solid rgba(201,168,76,0.2);
+    padding: 12px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+    animation: slideUp 1s 0.8s ease both;
+  }
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to   { transform: translateY(0); }
+  }
+  .offer-strip p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+  }
+  .offer-strip strong { color: var(--gold-light); }
+  .offer-dot {
+    width: 6px; height: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+    animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.4; transform: scale(0.7); }
+  }
+  .strip-close {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.3);
+    cursor: pointer;
+    font-size: 18px;
+    padding: 0 4px;
+    line-height: 1;
+    transition: color 0.2s;
+    margin-left: 8px;
+  }
+  .strip-close:hover { color: rgba(255,255,255,0.6); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; min-height: auto; }
+    .hero-left { padding: 60px 28px 40px; order: 1; }
+    .hero-right { padding: 20px 20px 100px; order: 2; }
+    .form-card { padding: 32px 24px 36px; }
+    .form-grid { grid-template-columns: 1fr; }
+    .form-grid .full { grid-column: 1; }
+    .date-row, .guests-row { grid-template-columns: 1fr 1fr; }
+    h1 { font-size: 44px; }
+    .amenities { gap: 16px; }
+    .offer-strip { padding: 12px 20px; flex-wrap: wrap; gap: 10px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="deco-lines"></div>
+
+  <!-- LEFT -->
+  <div class="hero-left">
+    <div class="badge"><span></span> Exclusive Resort Experience</div>
+
+    <p class="tagline-small">Welcome to</p>
+    <h1>Golden<br><em>Paradise</em><br>Resort</h1>
+
+    <p class="hero-desc">
+      Nestled in nature's finest embrace — where golden sunsets meet lush greenery. 
+      Every moment here is crafted for the extraordinary.
+    </p>
+
+    <div class="amenities">
+      <div class="amenity">
+        <div class="amenity-icon">🌊</div>
+        Infinity Pool
+      </div>
+      <div class="amenity">
+        <div class="amenity-icon">🍃</div>
+        Spa & Wellness
+      </div>
+      <div class="amenity">
+        <div class="amenity-icon">🌿</div>
+        Nature Trails
+      </div>
+      <div class="amenity">
+        <div class="amenity-icon">🍽️</div>
+        Fine Dining
+      </div>
+    </div>
+
+    <div class="divider-gold"></div>
+
+    <div class="trust-row">
+      <div class="stars">★★★★★</div>
+      <div class="trust-text"><strong>4.9/5</strong> from 1,200+ happy guests</div>
+    </div>
+  </div>
+
+  <!-- RIGHT / FORM -->
+  <div class="hero-right">
+    <div class="form-card" id="formCard">
+
+      <div class="success-overlay" id="successOverlay">
+        <div class="success-icon">✦</div>
+        <div class="success-title">Enquiry Received!</div>
+        <p class="success-msg">Thank you! Our resort specialist will reach out within 2 hours to craft your perfect Golden Paradise experience.</p>
+      </div>
+
+      <div class="form-header">
+        <p class="form-eyebrow">✦ Plan Your Visit ✦</p>
+        <h2 class="form-title">Book Your Escape</h2>
+        <p class="form-subtitle">Fill in your details — we'll plan everything for you</p>
+      </div>
+
+      <form id="enquiryForm" novalidate>
+
+        <!-- Your Details -->
+        <p class="section-label">Your Details</p>
+        <div class="form-grid">
+          <div class="field">
+            <label>First Name *</label>
+            <input type="text" placeholder="Arjun" required id="firstName">
+          </div>
+          <div class="field">
+            <label>Last Name *</label>
+            <input type="text" placeholder="Kumar" required id="lastName">
+          </div>
+          <div class="field full">
+            <label>Email Address *</label>
+            <input type="email" placeholder="you@email.com" required id="email">
+          </div>
+          <div class="field full">
+            <label>Phone Number *</label>
+            <div class="phone-wrap">
+              <div class="phone-code">
+                <input type="text" value="+91" id="phoneCode" placeholder="+91">
+              </div>
+              <div class="phone-num">
+                <input type="tel" placeholder="98765 43210" required id="phone">
+              </div>
+            </div>
+          </div>
+          <div class="field full">
+            <label>City / State</label>
+            <input type="text" placeholder="Chennai, Tamil Nadu" id="city">
+          </div>
+        </div>
+
+        <!-- Travel Plan -->
+        <p class="section-label">Travel Plan</p>
+        <div class="form-grid">
+          <div class="field full">
+            <label>Check-In Date *</label>
+            <div class="date-row">
+              <input type="date" required id="checkin">
+              <input type="date" id="checkout" placeholder="Check-Out">
+            </div>
+          </div>
+          <div class="field full">
+            <label>Guests</label>
+            <div class="guests-row">
+              <select id="adults">
+                <option value="">Adults</option>
+                <option>1 Adult</option>
+                <option selected>2 Adults</option>
+                <option>3 Adults</option>
+                <option>4 Adults</option>
+                <option>5+ Adults</option>
+              </select>
+              <select id="children">
+                <option value="" selected>Children</option>
+                <option>No Children</option>
+                <option>1 Child</option>
+                <option>2 Children</option>
+                <option>3+ Children</option>
+              </select>
+            </div>
+          </div>
+          <div class="field full">
+            <label>Room Preference</label>
+            <select id="room">
+              <option value="">Select room type</option>
+              <option>Deluxe Garden View</option>
+              <option>Premium Pool-Facing</option>
+              <option>Luxury Suite</option>
+              <option>Presidential Villa</option>
+              <option>Honeymoon Cottage</option>
+            </select>
+          </div>
+          <div class="field full">
+            <label>Occasion</label>
+            <select id="occasion">
+              <option value="">Select occasion</option>
+              <option>Leisure Holiday</option>
+              <option>Honeymoon / Anniversary</option>
+              <option>Family Vacation</option>
+              <option>Corporate Retreat</option>
+              <option>Birthday / Celebration</option>
+              <option>Weekend Getaway</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Interests -->
+        <p class="section-label">Interests</p>
+        <div class="interests" id="interests">
+          <div class="interest-chip" onclick="toggleChip(this)">🌊 Pool & Beach</div>
+          <div class="interest-chip" onclick="toggleChip(this)">🧘 Spa & Yoga</div>
+          <div class="interest-chip" onclick="toggleChip(this)">🥾 Trekking</div>
+          <div class="interest-chip" onclick="toggleChip(this)">🍽️ Food & Wine</div>
+          <div class="interest-chip" onclick="toggleChip(this)">📸 Photography</div>
+          <div class="interest-chip" onclick="toggleChip(this)">🎉 Events</div>
+          <div class="interest-chip" onclick="toggleChip(this)">🐦 Bird Watching</div>
+          <div class="interest-chip" onclick="toggleChip(this)">🏊 Water Sports</div>
+        </div>
+
+        <div class="form-grid" style="margin-top:14px;">
+          <div class="field full">
+            <label>Any Special Requests</label>
+            <textarea placeholder="Tell us about any special arrangements, dietary needs, or celebrations…" id="message"></textarea>
+          </div>
+        </div>
+
+        <button type="submit" class="submit-btn">✦ &nbsp; Send My Enquiry &nbsp; ✦</button>
+
+        <p class="form-footer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          100% Secure &nbsp;·&nbsp; No spam, ever &nbsp;·&nbsp; We call within 2 hrs
+        </p>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- OFFER STRIP -->
+<div class="offer-strip" id="offerStrip">
+  <div class="offer-dot"></div>
+  <p>🎁 <strong>Limited Offer:</strong> Book now & get complimentary Spa session + Late checkout — valid this month only</p>
+  <button class="strip-close" onclick="document.getElementById('offerStrip').remove()">×</button>
+</div>
+
+<script>
+  function toggleChip(el) {
+    el.classList.toggle('active');
+  }
+
+  // Set min dates
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('checkin').min = today;
+  document.getElementById('checkout').min = today;
+
+  document.getElementById('checkin').addEventListener('change', function() {
+    document.getElementById('checkout').min = this.value;
+  });
+
+  document.getElementById('enquiryForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const required = ['firstName','lastName','email','phone','checkin'];
+    let valid = true;
+    required.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el.value.trim()) {
+        el.style.borderColor = '#e05b5b';
+        el.addEventListener('input', () => el.style.borderColor = '', { once: true });
+        valid = false;
+      }
+    });
+
+    if (!valid) {
+      const firstErr = document.querySelector('input[style*="e05b5b"]');
+      if (firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    document.getElementById('successOverlay').classList.add('show');
+    setTimeout(() => {
+      document.getElementById('offerStrip').style.display = 'none';
+    }, 200);
+  });
+</script>
+</body>
+</html>
