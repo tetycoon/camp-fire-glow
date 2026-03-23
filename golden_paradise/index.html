@@ -201,9 +201,7 @@
   }
 
   .form-card {
-    background: rgba(250,246,238,0.04);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
+    background: var(--white);
     border: 1px solid rgba(201,168,76,0.2);
     border-radius: 20px;
     padding: 44px 44px 48px;
@@ -211,6 +209,8 @@
     max-width: 480px;
     position: relative;
     overflow: hidden;
+    color: var(--forest);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.15);
   }
   .form-card::before {
     content: '';
@@ -235,12 +235,12 @@
     font-family: 'Cormorant Garamond', serif;
     font-size: 30px;
     font-weight: 400;
-    color: var(--white);
+    color: var(--forest);
     margin-bottom: 8px;
   }
   .form-subtitle {
     font-size: 13px;
-    color: rgba(255,255,255,0.45);
+    color: var(--muted);
     font-weight: 300;
   }
 
@@ -261,22 +261,23 @@
     font-size: 11px;
     letter-spacing: 1.5px;
     text-transform: uppercase;
-    color: rgba(255,255,255,0.45);
+    color: var(--muted);
     font-weight: 500;
   }
   .field input,
   .field select,
   .field textarea {
-    background: rgba(255,255,255,0.05);
+    background: rgba(26,46,32,0.03);
     border: 1px solid rgba(201,168,76,0.2);
     border-radius: 10px;
     padding: 12px 14px;
     font-size: 14px;
     font-family: 'Jost', sans-serif;
-    color: var(--white);
+    color: var(--forest);
     outline: none;
     transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
     width: 100%;
+    appearance: none;
     -webkit-appearance: none;
   }
   .field select {
@@ -286,10 +287,10 @@
     padding-right: 36px;
     cursor: pointer;
   }
-  .field select option { background: #1A2E20; color: #fff; }
+  .field select option { background: var(--white); color: var(--forest); }
   .field textarea { resize: none; height: 80px; line-height: 1.5; }
   .field input::placeholder,
-  .field textarea::placeholder { color: rgba(255,255,255,0.25); }
+  .field textarea::placeholder { color: rgba(26,46,32,0.3); }
   .field input:focus,
   .field select:focus,
   .field textarea:focus {
@@ -328,7 +329,7 @@
     font-size: 11px;
     letter-spacing: 2px;
     text-transform: uppercase;
-    color: rgba(201,168,76,0.6);
+    color: var(--forest);
     margin: 18px 0 12px;
     display: flex;
     align-items: center;
@@ -385,7 +386,7 @@
     display: none;
     position: absolute;
     inset: 0;
-    background: rgba(13,26,18,0.97);
+    background: var(--white);
     border-radius: 20px;
     flex-direction: column;
     align-items: center;
@@ -393,6 +394,7 @@
     text-align: center;
     padding: 40px;
     z-index: 10;
+    color: var(--forest);
   }
   .success-overlay.show { display: flex; animation: fadeIn 0.4s ease; }
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -412,12 +414,12 @@
   .success-title {
     font-family: 'Cormorant Garamond', serif;
     font-size: 28px;
-    color: var(--gold-light);
+    color: var(--forest);
     margin-bottom: 12px;
   }
   .success-msg {
     font-size: 14px;
-    color: rgba(255,255,255,0.55);
+    color: var(--muted);
     line-height: 1.7;
     max-width: 280px;
   }
