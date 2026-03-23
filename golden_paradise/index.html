@@ -261,8 +261,10 @@
     font-size: 11px;
     letter-spacing: 1.5px;
     text-transform: uppercase;
-    color: var(--forest);
+    color: var(--forest) !important;
     font-weight: 500;
+    display: block;
+    margin-bottom: 4px;
   }
   .field input,
   .field select,
@@ -302,14 +304,29 @@
   /* phone field */
   .phone-wrap {
     display: flex;
-    gap: 8px;
+    gap: 0;
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 10px;
+    background: rgba(26,46,32,0.03);
+    overflow: hidden;
   }
   .phone-code {
-    width: 80px;
+    width: 70px;
     flex-shrink: 0;
+    border-right: 1px solid rgba(201,168,76,0.2);
   }
-  .phone-code input { text-align: center; }
+  .phone-code input { 
+    text-align: center; 
+    border: none !important; 
+    background: transparent !important;
+    box-shadow: none !important;
+  }
   .phone-num { flex: 1; }
+  .phone-num input { 
+    border: none !important; 
+    background: transparent !important;
+    box-shadow: none !important;
+  }
 
   /* guests row */
   .guests-row {
@@ -541,26 +558,26 @@
         <p class="success-msg">Thank you! Our resort specialist will reach out within 2 hours to craft your perfect Golden Paradise experience.</p>
       </div>
 
-      <form id="enquiryForm" novalidate>
-        <div class="form-header">
-          <p class="form-eyebrow">✦ Plan Your Visit ✦</p>
-          <h2 class="form-title">Book Your Escape</h2>
-          <p class="form-subtitle">Fill in your details — we'll plan everything for you</p>
-        </div>
+      <div class="form-header">
+        <p class="form-eyebrow">✦ Plan Your Visit ✦</p>
+        <h2 class="form-title">Book Your Escape</h2>
+        <p class="form-subtitle">Fill in your details — we'll plan everything for you</p>
+      </div>
 
+      <form id="enquiryForm" novalidate>
         <!-- Your Details -->
         <p class="section-label">Your Details</p>
         <div class="form-grid">
           <div class="field full">
-            <label style="color: var(--forest);">Your Name *</label>
+            <label>Your Name *</label>
             <input type="text" placeholder="Arjun Kumar" required id="fullName">
           </div>
           <div class="field full">
-            <label style="color: var(--forest);">Email Address *</label>
+            <label>Email Address *</label>
             <input type="email" placeholder="you@email.com" required id="email">
           </div>
           <div class="field full">
-            <label style="color: var(--forest);">Phone Number *</label>
+            <label>Phone Number *</label>
             <div class="phone-wrap">
               <div class="phone-code">
                 <input type="text" value="+91" id="phoneCode" placeholder="+91">
@@ -571,7 +588,7 @@
             </div>
           </div>
           <div class="field full">
-            <label style="color: var(--forest);">City / State</label>
+            <label>City / State</label>
             <input type="text" placeholder="Chennai, Tamil Nadu" id="city">
           </div>
         </div>
@@ -580,14 +597,14 @@
         <p class="section-label">Travel Plan</p>
         <div class="form-grid">
           <div class="field full">
-            <label style="color: var(--forest);">Check-In Date *</label>
+            <label>Check-In Date *</label>
             <div class="date-row">
               <input type="date" required id="checkin">
               <input type="date" id="checkout" placeholder="Check-Out">
             </div>
           </div>
           <div class="field full">
-            <label style="color: var(--forest);">Guests</label>
+            <label>Guests</label>
             <div class="guests-row">
               <select id="adults">
                 <option value="">Adults</option>
@@ -607,7 +624,7 @@
             </div>
           </div>
           <div class="field full">
-            <label style="color: var(--forest);">Room Preference</label>
+            <label>Room Preference</label>
             <select id="room">
               <option value="">Select room type</option>
               <option>Deluxe Garden View</option>
@@ -618,7 +635,7 @@
             </select>
           </div>
           <div class="field full">
-            <label style="color: var(--forest);">Occasion</label>
+            <label>Occasion</label>
             <select id="occasion">
               <option value="">Select occasion</option>
               <option>Leisure Holiday</option>
@@ -634,7 +651,7 @@
 
         <div class="form-grid" style="margin-top:14px;">
           <div class="field full">
-            <label style="color: var(--forest);">Any Special Requests</label>
+            <label>Any Special Requests</label>
             <textarea placeholder="Tell us about any special arrangements, dietary needs, or celebrations…" id="message"></textarea>
           </div>
         </div>
@@ -653,7 +670,6 @@
 
 <!-- OFFER STRIP -->
 <div class="offer-strip" id="offerStrip">
-  <div class="offer-dot"></div>
   <p>🎁 <strong>Limited Offer:</strong> Book now & get complimentary Spa session + Late checkout — valid this month only</p>
   <button class="strip-close" onclick="document.getElementById('offerStrip').remove()">×</button>
 </div>
