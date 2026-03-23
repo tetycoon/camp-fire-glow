@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
   <!-- v2.0.1 - Structural Fix -->
+  <!-- v2.0.2 - 2-Column Layout -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Golden Paradise Resort, Yercaud – Your Dream Escape Awaits</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -193,7 +194,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 60px 60px 60px 40px;
+    padding: 60px 40px;
     animation: fadeSlideRight 1s 0.2s ease both;
   }
   @keyframes fadeSlideRight {
@@ -207,7 +208,7 @@
     border-radius: 20px;
     padding: 44px 44px 48px;
     width: 100%;
-    max-width: 480px;
+    max-width: 640px;
     position: relative;
     overflow: hidden;
     color: var(--forest);
@@ -573,11 +574,11 @@
             <label>Your Name *</label>
             <input type="text" placeholder="Arjun Kumar" required id="fullName">
           </div>
-          <div class="field full">
+          <div class="field">
             <label>Email Address *</label>
             <input type="email" placeholder="you@email.com" required id="email">
           </div>
-          <div class="field full">
+          <div class="field">
             <label>Phone Number *</label>
             <div class="phone-wrap">
               <div class="phone-code">
@@ -588,9 +589,21 @@
               </div>
             </div>
           </div>
-          <div class="field full">
+          <div class="field">
             <label>City / State</label>
             <input type="text" placeholder="Chennai, Tamil Nadu" id="city">
+          </div>
+          <div class="field">
+            <label>Occasion</label>
+            <select id="occasion">
+              <option value="">Select occasion</option>
+              <option>Leisure Holiday</option>
+              <option>Honeymoon / Anniversary</option>
+              <option>Family Vacation</option>
+              <option>Corporate Retreat</option>
+              <option>Birthday / Celebration</option>
+              <option>Weekend Getaway</option>
+            </select>
           </div>
         </div>
 
@@ -604,7 +617,7 @@
               <input type="date" id="checkout" placeholder="Check-Out">
             </div>
           </div>
-          <div class="field full">
+          <div class="field">
             <label>Guests</label>
             <div class="guests-row">
               <select id="adults">
@@ -624,7 +637,7 @@
               </select>
             </div>
           </div>
-          <div class="field full">
+          <div class="field">
             <label>Room Preference</label>
             <select id="room">
               <option value="">Select room type</option>
@@ -633,18 +646,6 @@
               <option>Luxury Suite</option>
               <option>Presidential Villa</option>
               <option>Honeymoon Cottage</option>
-            </select>
-          </div>
-          <div class="field full">
-            <label>Occasion</label>
-            <select id="occasion">
-              <option value="">Select occasion</option>
-              <option>Leisure Holiday</option>
-              <option>Honeymoon / Anniversary</option>
-              <option>Family Vacation</option>
-              <option>Corporate Retreat</option>
-              <option>Birthday / Celebration</option>
-              <option>Weekend Getaway</option>
             </select>
           </div>
         </div>
