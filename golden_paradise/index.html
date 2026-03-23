@@ -551,14 +551,9 @@
 
         <!-- Your Details -->
         <p class="section-label">Your Details</p>
-        <div class="form-grid">
-          <div class="field">
-            <label>First Name *</label>
-            <input type="text" placeholder="Arjun" required id="firstName">
-          </div>
-          <div class="field">
-            <label>Last Name *</label>
-            <input type="text" placeholder="Kumar" required id="lastName">
+          <div class="field full">
+            <label>Your Name *</label>
+            <input type="text" placeholder="Arjun Kumar" required id="fullName">
           </div>
           <div class="field full">
             <label>Email Address *</label>
@@ -677,7 +672,7 @@
   document.getElementById('enquiryForm').addEventListener('submit', function(e) {
     e.preventDefault();
 
-    const required = ['firstName','lastName','email','phone','checkin'];
+    const required = ['fullName','email','phone','checkin'];
     let valid = true;
     required.forEach(id => {
       const el = document.getElementById(id);
