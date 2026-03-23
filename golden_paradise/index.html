@@ -341,29 +341,6 @@
     background: rgba(201,168,76,0.15);
   }
 
-  .interests {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 6px;
-  }
-  .interest-chip {
-    padding: 7px 14px;
-    border: 1px solid rgba(201,168,76,0.2);
-    border-radius: 100px;
-    font-size: 12px;
-    color: rgba(255,255,255,0.55);
-    cursor: pointer;
-    transition: all 0.18s;
-    user-select: none;
-    background: rgba(255,255,255,0.03);
-  }
-  .interest-chip:hover { border-color: var(--gold); color: var(--gold-light); }
-  .interest-chip.active {
-    background: rgba(201,168,76,0.15);
-    border-color: var(--gold);
-    color: var(--gold-light);
-  }
 
   .submit-btn {
     width: 100%;
@@ -657,18 +634,6 @@
           </div>
         </div>
 
-        <!-- Interests -->
-        <p class="section-label">Interests</p>
-        <div class="interests" id="interests">
-          <div class="interest-chip" onclick="toggleChip(this)">🌊 Pool & Beach</div>
-          <div class="interest-chip" onclick="toggleChip(this)">🧘 Spa & Yoga</div>
-          <div class="interest-chip" onclick="toggleChip(this)">🥾 Trekking</div>
-          <div class="interest-chip" onclick="toggleChip(this)">🍽️ Food & Wine</div>
-          <div class="interest-chip" onclick="toggleChip(this)">📸 Photography</div>
-          <div class="interest-chip" onclick="toggleChip(this)">🎉 Events</div>
-          <div class="interest-chip" onclick="toggleChip(this)">🐦 Bird Watching</div>
-          <div class="interest-chip" onclick="toggleChip(this)">🏊 Water Sports</div>
-        </div>
 
         <div class="form-grid" style="margin-top:14px;">
           <div class="field full">
@@ -697,9 +662,6 @@
 </div>
 
 <script>
-  function toggleChip(el) {
-    el.classList.toggle('active');
-  }
 
   // Set min dates
   const today = new Date().toISOString().split('T')[0];
