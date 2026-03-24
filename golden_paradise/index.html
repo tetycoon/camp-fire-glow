@@ -711,10 +711,49 @@
       return;
     }
 
-    document.getElementById('successOverlay').classList.add('show');
-    setTimeout(() => {
-      document.getElementById('offerStrip').style.display = 'none';
-    }, 200);
+    // Gather form data
+    const formData = {
+      name: document.getElementById('fullName').value,
+      email: document.getElementById('email').value,
+      phone: document.getElementById('phoneCode').value + ' ' + document.getElementById('phone').value,
+      city: document.getElementById('city').value,
+      occasion: document.getElementById('occasion').value,
+      checkIn: document.getElementById('checkin').value,
+      checkOut: document.getElementById('checkout').value,
+      adults: document.getElementById('adults').value,
+      children: document.getElementById('children').value,
+      roomPreference: document.getElementById('room').value,
+      queries: document.getElementById('message').value
+    };
+
+    // Show loading state
+    const submitBtn = document.querySelector('.submit-btn');
+    const originalBtnText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '✦ &nbsp; Sending... &nbsp; ✦';
+    submitBtn.disabled = true;
+
+    // Send data to Google Apps Script
+    fetch("https://script.google.com/macros/s/AKfycbydkiVwG1wHE-ZwbPcXCtGnViXjpfxS0G9NbG6HsvngLzBmuExMqiNXj4zYGy-QSFp1/exec", {
+      method: "POST",
+      body: JSON.stringify(formData)
+    })
+    .then(response => response.json())
+    .then(data => {
+      // Show success overlay
+      document.getElementById('successOverlay').classList.add('show');
+      setTimeout(() => {
+        document.getElementById('offerStrip').style.display = 'none';
+      }, 200);
+      document.getElementById('enquiryForm').reset();
+    })
+    .catch(error => {
+      console.error("Error:", error);
+      alert("There was an error submitting your request. Please try again or contact us directly.");
+    })
+    .finally(() => {
+      submitBtn.innerHTML = originalBtnText;
+      submitBtn.disabled = false;
+    });
   });
 </script>
 </body>
