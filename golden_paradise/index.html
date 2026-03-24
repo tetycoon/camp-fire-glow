@@ -781,6 +781,21 @@
         document.getElementById('offerStrip').style.display = 'none';
       }, 200);
       document.getElementById('enquiryForm').reset();
+
+      // Send to WhatsApp
+      const waText = `Hello Golden Paradise! I'd like to make an enquiry:
+
+*Name:* ${formData.name}
+*Email:* ${formData.email}
+*Phone:* ${formData.phone.replace("'", "")}
+*Dates:* ${formData.checkIn} to ${formData.checkOut || 'N/A'}
+*Guests:* ${formData.adults}, ${formData.children}
+*Room:* ${formData.roomPreference || 'Any'}
+*Occasion:* ${formData.occasion || 'None'}
+*Special Request:* ${formData.queries || 'None'}`;
+      
+      const waUrl = `https://wa.me/917530022445?text=${encodeURIComponent(waText)}`;
+      window.open(waUrl, '_blank');
     })
     .catch(error => {
       console.error("Error:", error);
