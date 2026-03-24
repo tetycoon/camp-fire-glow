@@ -629,21 +629,9 @@
               </div>
             </div>
           </div>
-          <div class="field">
+          <div class="field full">
             <label>City / State</label>
             <input type="text" placeholder="Chennai, Tamil Nadu" id="city">
-          </div>
-          <div class="field">
-            <label>Occasion</label>
-            <select id="occasion">
-              <option value="">Select occasion</option>
-              <option>Leisure Holiday</option>
-              <option>Honeymoon / Anniversary</option>
-              <option>Family Vacation</option>
-              <option>Corporate Retreat</option>
-              <option>Birthday / Celebration</option>
-              <option>Weekend Getaway</option>
-            </select>
           </div>
         </div>
 
@@ -681,11 +669,8 @@
             <label>Room Preference</label>
             <select id="room">
               <option value="">Select room type</option>
-              <option>Deluxe Garden View</option>
-              <option>Premium Pool-Facing</option>
-              <option>Luxury Suite</option>
-              <option>Presidential Villa</option>
-              <option>Honeymoon Cottage</option>
+              <option>Normal</option>
+              <option>Premium</option>
             </select>
           </div>
         </div>
@@ -757,7 +742,6 @@
       email: document.getElementById('email').value,
       phone: "'" + document.getElementById('phoneCode').value + ' ' + document.getElementById('phone').value,
       city: document.getElementById('city').value,
-      occasion: document.getElementById('occasion').value,
       checkIn: document.getElementById('checkin').value,
       checkOut: document.getElementById('checkout').value,
       adults: document.getElementById('adults').value,
@@ -795,7 +779,6 @@
 *Dates:* ${formData.checkIn} to ${formData.checkOut || 'N/A'}
 *Guests:* ${formData.adults}, ${formData.children}
 *Room:* ${formData.roomPreference || 'Any'}
-*Occasion:* ${formData.occasion || 'None'}
 *Special Request:* ${formData.queries || 'None'}`;
       
       const waUrl = `https://wa.me/917530022445?text=${encodeURIComponent(waText)}`;
