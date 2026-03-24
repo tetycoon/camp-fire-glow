@@ -155,11 +155,11 @@
     display: flex;
     gap: 20px;
     flex-wrap: wrap;
-    background: rgba(26,46,32,0.4);
-    border: 1px solid rgba(201,168,76,0.2);
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+    border: 1px solid var(--gold-pale);
     border-radius: 16px;
     padding: 24px;
-    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(201,168,76,0.3);
     max-width: fit-content;
   }
   .amenity {
@@ -167,26 +167,27 @@
     align-items: center;
     gap: 8px;
     font-size: 13px;
-    color: rgba(255,255,255,0.7);
+    color: var(--deep);
+    font-weight: 500;
     letter-spacing: 0.3px;
     transition: transform 0.3s ease;
   }
   .amenity:hover {
     transform: translateY(-2px);
-    color: var(--white);
+    color: var(--forest);
   }
   .amenity-icon {
     width: 32px; height: 32px;
-    border: 1px solid rgba(201,168,76,0.3);
+    border: 1px solid rgba(13,26,18,0.2);
     border-radius: 8px;
     display: flex; align-items: center; justify-content: center;
     font-size: 14px;
-    background: rgba(201,168,76,0.08);
+    background: rgba(13,26,18,0.05);
     transition: background 0.3s ease, border-color 0.3s ease;
   }
   .amenity:hover .amenity-icon {
-    background: rgba(201,168,76,0.2);
-    border-color: var(--gold);
+    background: rgba(13,26,18,0.1);
+    border-color: rgba(13,26,18,0.4);
   }
 
   .divider-gold {
