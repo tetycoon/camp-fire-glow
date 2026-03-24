@@ -715,7 +715,7 @@
     const formData = {
       name: document.getElementById('fullName').value,
       email: document.getElementById('email').value,
-      phone: document.getElementById('phoneCode').value + ' ' + document.getElementById('phone').value,
+      phone: "'" + document.getElementById('phoneCode').value + ' ' + document.getElementById('phone').value,
       city: document.getElementById('city').value,
       occasion: document.getElementById('occasion').value,
       checkIn: document.getElementById('checkin').value,
