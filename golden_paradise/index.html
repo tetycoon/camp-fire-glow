@@ -167,8 +167,13 @@
     align-items: center;
     gap: 8px;
     font-size: 13px;
-    color: rgba(255,255,255,0.55);
+    color: rgba(255,255,255,0.7);
     letter-spacing: 0.3px;
+    transition: transform 0.3s ease;
+  }
+  .amenity:hover {
+    transform: translateY(-2px);
+    color: var(--white);
   }
   .amenity-icon {
     width: 32px; height: 32px;
@@ -177,6 +182,11 @@
     display: flex; align-items: center; justify-content: center;
     font-size: 14px;
     background: rgba(201,168,76,0.08);
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+  .amenity:hover .amenity-icon {
+    background: rgba(201,168,76,0.2);
+    border-color: var(--gold);
   }
 
   .divider-gold {
@@ -210,15 +220,17 @@
   }
 
   .form-card {
-    background: var(--white);
-    border: 1px solid rgba(201,168,76,0.2);
+    background: rgba(13, 26, 18, 0.65);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(201,168,76,0.25);
     border-radius: 20px;
     padding: 44px 44px 64px;
     width: 100%;
     max-width: 640px;
     position: relative;
-    color: var(--forest);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+    color: var(--white);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.4);
   }
   .form-card::before {
     content: '';
@@ -243,12 +255,12 @@
     font-family: 'Cormorant Garamond', serif;
     font-size: 30px;
     font-weight: 400;
-    color: var(--forest);
+    color: var(--white);
     margin-bottom: 8px;
   }
   .form-subtitle {
     font-size: 13px;
-    color: var(--muted);
+    color: rgba(255,255,255,0.6);
     font-weight: 300;
   }
 
@@ -269,7 +281,7 @@
     font-size: 11px;
     letter-spacing: 1.5px;
     text-transform: uppercase;
-    color: var(--forest) !important;
+    color: rgba(255,255,255,0.9) !important;
     font-weight: 500;
     display: block;
     margin-bottom: 4px;
@@ -277,15 +289,15 @@
   .field input,
   .field select,
   .field textarea {
-    background: rgba(26,46,32,0.03);
+    background: rgba(0,0,0,0.25);
     border: 1px solid rgba(201,168,76,0.2);
     border-radius: 10px;
     padding: 12px 14px;
     font-size: 14px;
     font-family: 'Jost', sans-serif;
-    color: var(--forest);
+    color: var(--white);
     outline: none;
-    transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+    transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
     width: 100%;
     appearance: none;
     -webkit-appearance: none;
@@ -297,15 +309,15 @@
     padding-right: 36px;
     cursor: pointer;
   }
-  .field select option { background: var(--white); color: var(--forest); }
+  .field select option { background: var(--forest); color: var(--white); }
   .field textarea { resize: none; height: 80px; line-height: 1.5; }
   .field input::placeholder,
-  .field textarea::placeholder { color: rgba(26,46,32,0.3); }
+  .field textarea::placeholder { color: rgba(255,255,255,0.3); }
   .field input:focus,
   .field select:focus,
   .field textarea:focus {
     border-color: var(--gold);
-    background: rgba(201,168,76,0.07);
+    background: rgba(0,0,0,0.4);
     box-shadow: 0 0 0 3px rgba(201,168,76,0.1);
   }
 
@@ -315,8 +327,14 @@
     gap: 0;
     border: 1px solid rgba(201,168,76,0.2);
     border-radius: 10px;
-    background: rgba(26,46,32,0.03);
+    background: rgba(0,0,0,0.25);
     overflow: hidden;
+    transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
+  }
+  .phone-wrap:focus-within {
+    border-color: var(--gold);
+    background: rgba(0,0,0,0.4);
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.1);
   }
   .phone-code {
     width: 70px;
@@ -354,7 +372,7 @@
     font-size: 11px;
     letter-spacing: 2px;
     text-transform: uppercase;
-    color: var(--forest);
+    color: var(--gold-light);
     margin: 18px 0 12px;
     display: flex;
     align-items: center;
@@ -398,7 +416,7 @@
     text-align: center;
     margin-top: 16px;
     font-size: 11px;
-    color: var(--muted);
+    color: rgba(255,255,255,0.5);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -411,7 +429,8 @@
     display: none;
     position: absolute;
     inset: 0;
-    background: var(--white);
+    background: rgba(13, 26, 18, 0.95);
+    backdrop-filter: blur(10px);
     border-radius: 20px;
     flex-direction: column;
     align-items: center;
@@ -419,7 +438,7 @@
     text-align: center;
     padding: 40px;
     z-index: 10;
-    color: var(--forest);
+    color: var(--white);
   }
   .success-overlay.show { display: flex; animation: fadeIn 0.4s ease; }
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -439,12 +458,12 @@
   .success-title {
     font-family: 'Cormorant Garamond', serif;
     font-size: 28px;
-    color: var(--forest);
+    color: var(--white);
     margin-bottom: 12px;
   }
   .success-msg {
     font-size: 14px;
-    color: var(--muted);
+    color: rgba(255,255,255,0.7);
     line-height: 1.7;
     max-width: 280px;
   }
