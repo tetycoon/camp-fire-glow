@@ -50,7 +50,7 @@ const AIMasterclassPricingSection: React.FC = () => {
                             <div className="space-y-4 mb-10">
                                 <div className="flex items-center gap-3 text-slate-600">
                                     <Clock className="w-5 h-5 text-blue-600" />
-                                    <span className="text-sm font-bold">Offer ends March 22, 2026</span>
+                                    <span className="text-sm font-bold">Offer ends April 5, 2026</span>
                                 </div>
                                 <div className="flex items-center gap-3 text-slate-600">
                                     <ShieldCheck className="w-5 h-5 text-blue-600" />

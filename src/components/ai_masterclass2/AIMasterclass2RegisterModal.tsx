@@ -118,7 +118,7 @@ const AIMasterclass2RegisterModal: React.FC = () => {
                 amount: finalAmount,
                 currency: "INR",
                 name: "Tech Tycoon",
-                description: "AI Marketing Masterclass — June 2026",
+                description: "AI Marketing Masterclass — April 2026",
                 prefill: {
                     name: form.name,
                     email: form.email,

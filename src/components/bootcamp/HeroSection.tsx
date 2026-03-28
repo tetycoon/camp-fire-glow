@@ -83,7 +83,7 @@ const HeroSection: React.FC = () => {
             </div>
             <div className="font-body text-xs text-emerald-400 mt-1 tracking-wider uppercase font-semibold">🔥 Early Bird Offer</div>
             <div className="font-body mt-1 px-2 py-0.5 rounded-full text-[10px] font-semibold" style={{ background: "hsl(0 80% 55% / 0.15)", color: "hsl(0 80% 65%)", border: "1px solid hsl(0 80% 55% / 0.25)" }}>
-              Valid till March 15
+              Valid till April 5
             </div>
           </div>
         </div>

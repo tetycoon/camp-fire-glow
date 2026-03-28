@@ -36,7 +36,7 @@ const AIMasterclass2HeroSection: React.FC = () => {
                         <div className="inline-flex items-center gap-2 mb-8 px-4 py-2 rounded-full bg-[#fce7f3] border border-pink-200">
                             <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
                             <span className="font-display text-[10px] font-bold text-blue-600 uppercase tracking-[0.2em]">
-                                LIVE MASTERCLASS • 15TH MARCH 2026 • 6:00 PM IST
+                                LIVE MASTERCLASS • 5TH APRIL 2026 • 6:00 PM IST
                             </span>
                         </div>
 
@@ -85,7 +85,7 @@ const AIMasterclass2HeroSection: React.FC = () => {
                                         <Calendar className="w-6 h-6 text-blue-500" />
                                     </div>
                                     <div>
-                                        <div className="font-display text-xl font-black text-slate-900 leading-none">15th March 2026</div>
+                                        <div className="font-display text-xl font-black text-slate-900 leading-none">5th April 2026</div>
                                         <div className="font-body text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">SUNDAY</div>
                                     </div>
                                 </div>

@@ -77,7 +77,7 @@ const PricingSection: React.FC = () => {
                 style={{ background: "hsl(0 80% 55% / 0.12)", border: "1px solid hsl(0 80% 55% / 0.3)" }}>
                 <span className="text-sm">🔥</span>
                 <span className="font-display text-xs font-bold tracking-wider" style={{ color: "hsl(0 80% 65%)" }}>
-                  EARLY BIRD OFFER — ENDS MARCH 15!
+                  EARLY BIRD OFFER — ENDS APRIL 5!
                 </span>
               </div>
 
@@ -111,7 +111,7 @@ const PricingSection: React.FC = () => {
                   style={{ background: "hsl(25 100% 60% / 0.08)", border: "1px solid hsl(25 100% 60% / 0.2)" }}>
                   <Calendar className="w-4 h-4 text-orange-400" />
                   <span className="font-body text-xs sm:text-sm text-orange-400 font-semibold leading-tight">
-                    ⏰ Price increases to ₹14,999 after March 15, 2026
+                    ⏰ Price increases to ₹14,999 after April 5, 2026
                   </span>
                 </div>
 
