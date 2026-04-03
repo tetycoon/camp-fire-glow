@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import { Calendar, Users, CheckCircle2, Zap } from "lucide-react";
-import { useRegisterModal } from "./RegisterModalContext";
 
 const batches = [
-  { id: "batch1", name: "Batch 1", dates: "April 1–30, 2026", color: "cyan" },
-  { id: "batch2", name: "Batch 2", dates: "May 1–30, 2026", color: "purple" },
+  { id: "batch2", name: "May Batch", dates: "May 1–30, 2026", color: "purple" },
 ];
 
 const features = [
@@ -17,8 +15,7 @@ const features = [
 ];
 
 const PricingSection: React.FC = () => {
-  const [selected, setSelected] = useState<string | null>(null);
-  const { openRegisterModal } = useRegisterModal();
+  const [selected, setSelected] = useState<string | null>("batch2");
 
   return (
     <section id="pricing" className="section-border responsive-section relative overflow-hidden">
@@ -70,14 +67,14 @@ const PricingSection: React.FC = () => {
           </div>
 
           {/* Price */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-8 mb-10 relative z-10">
-            <div>
+          <div className="flex flex-col items-center text-center gap-8 mb-10 relative z-10">
+            <div className="w-full">
               {/* Urgency banner */}
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-5 animate-pulse"
                 style={{ background: "hsl(0 80% 55% / 0.12)", border: "1px solid hsl(0 80% 55% / 0.3)" }}>
                 <span className="text-sm">🔥</span>
                 <span className="font-display text-xs font-bold tracking-wider" style={{ color: "hsl(0 80% 65%)" }}>
-                  EARLY BIRD OFFER — ENDS APRIL 5!
+                  EARLY BIRD OFFER — ENDS APRIL 25!
                 </span>
               </div>
 
@@ -111,19 +108,13 @@ const PricingSection: React.FC = () => {
                   style={{ background: "hsl(25 100% 60% / 0.08)", border: "1px solid hsl(25 100% 60% / 0.2)" }}>
                   <Calendar className="w-4 h-4 text-orange-400" />
                   <span className="font-body text-xs sm:text-sm text-orange-400 font-semibold leading-tight">
-                    ⏰ Price increases to ₹14,999 after April 5, 2026
+                    ⏰ Price increases to ₹14,999 after April 25, 2026
                   </span>
                 </div>
 
               </div>
             </div>
 
-            <button
-              onClick={openRegisterModal}
-              className="btn-glow text-primary-foreground font-display text-sm sm:text-sm font-bold px-8 py-3.5 sm:py-4 rounded-full tracking-widest whitespace-nowrap shadow-lg w-full sm:w-auto mt-4 sm:mt-0"
-            >
-              SECURE YOUR SEAT 🚀
-            </button>
           </div>
 
           {/* Features */}

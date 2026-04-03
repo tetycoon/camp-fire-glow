@@ -1,38 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { CheckCircle2, Loader2, ShieldCheck, X } from "lucide-react";
 import { useCollegeRegisterModal } from "./CollegeRegisterModalContext";
+import { RazorpayOptions } from "@/types/razorpay";
 
 const RAZORPAY_KEY_ID = "rzp_live_gfoS1OjC8tvWjP";
-const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbzMlMVIAGQbGNkdmdVjlrakzCuGFRQxmMSmRZs_QgKf0PabRGlhOUzMiz1gkQjdtRw/exec";
+const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbxsNlBVyY2LVjPuIBXRs2g1WXZ1r_WzM1b4zOChLVAD-iv2J8f3DXOhF4od7JOliOEa3A/exec";
 
 const batches = [
     { value: "batch1", label: "Batch 1 — April 1–30, 2026" },
     { value: "batch2", label: "Batch 2 — May 1–30, 2026" },
 ];
 
-declare global {
-    interface Window {
-        Razorpay: new (options: RazorpayOptions) => RazorpayInstance;
-    }
-}
-
-interface RazorpayOptions {
-    key: string;
-    order_id?: string;
-    amount: number;
-    currency: string;
-    name: string;
-    description: string;
-    prefill: { name: string; email: string; contact: string };
-    notes: { batch: string };
-    theme: { color: string };
-    handler: (response: { razorpay_payment_id: string }) => void;
-    modal: { ondismiss: () => void };
-}
-
-interface RazorpayInstance {
-    open: () => void;
-}
 
 function loadRazorpayScript(): Promise<boolean> {
     return new Promise((resolve) => {

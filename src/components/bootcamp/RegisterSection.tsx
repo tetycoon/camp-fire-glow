@@ -1,36 +1,14 @@
 import React, { useState } from "react";
 import { CheckCircle2, Loader2, ShieldCheck } from "lucide-react";
+import { RazorpayOptions } from "@/types/razorpay";
 
 // Razorpay key_id is a publishable key — safe to use in frontend
 const RAZORPAY_KEY_ID = "rzp_live_gfoS1OjC8tvWjP";
 
 const batches = [
-  { value: "batch1", label: "Batch 1 — April 1–30, 2026" },
-  { value: "batch2", label: "Batch 2 — May 1–30, 2026" },
+  { value: "batch2", label: "May Batch — May 1–30, 2026" },
 ];
 
-declare global {
-  interface Window {
-    Razorpay: new (options: RazorpayOptions) => RazorpayInstance;
-  }
-}
-
-interface RazorpayOptions {
-  key: string;
-  amount: number;
-  currency: string;
-  name: string;
-  description: string;
-  prefill: { name: string; email: string; contact: string };
-  notes: { batch: string };
-  theme: { color: string };
-  handler: (response: { razorpay_payment_id: string }) => void;
-  modal: { ondismiss: () => void };
-}
-
-interface RazorpayInstance {
-  open: () => void;
-}
 
 function loadRazorpayScript(): Promise<boolean> {
   return new Promise((resolve) => {
@@ -48,7 +26,7 @@ function loadRazorpayScript(): Promise<boolean> {
 }
 
 const RegisterSection: React.FC = () => {
-  const [form, setForm] = useState({ name: "", email: "", phone: "", batch: "" });
+  const [form, setForm] = useState({ name: "", email: "", phone: "", batch: "batch2" });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [paymentId, setPaymentId] = useState<string>("");

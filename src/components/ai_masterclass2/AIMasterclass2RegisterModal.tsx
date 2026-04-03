@@ -1,27 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { CheckCircle2, Loader2, ShieldCheck, X } from "lucide-react";
 import { useAIMasterclass2RegisterModal } from "./AIMasterclass2RegisterModalContext";
+import { RazorpayOptions } from "@/types/razorpay";
 
 const RAZORPAY_KEY_ID = "rzp_live_gfoS1OjC8tvWjP";
 const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbxsNlBVyY2LVjPuIBXRs2g1WXZ1r_WzM1b4zOChLVAD-iv2J8f3DXOhF4od7JOliOEa3A/exec";
 
-interface RazorpayOptions {
-    key: string;
-    order_id?: string;
-    amount: number;
-    currency: string;
-    name: string;
-    description: string;
-    prefill: { name: string; email: string; contact: string };
-    notes: { batch: string; profession?: string };
-    theme: { color: string };
-    handler: (response: { razorpay_payment_id: string }) => void;
-    modal: { ondismiss: () => void };
-}
-
-interface RazorpayInstance {
-    open: () => void;
-}
 
 function loadRazorpayScript(): Promise<boolean> {
     return new Promise((resolve) => {
@@ -149,6 +133,13 @@ const AIMasterclass2RegisterModal: React.FC = () => {
                                 language: form.language
                             })
                         });
+
+                        // Direct redirect to WhatsApp tracking
+                        // This triggers the doGet function in Apps Script which logs the click and redirects to WA
+                        setTimeout(() => {
+                            window.location.href = `${GOOGLE_SHEET_URL}?action=whatsapp&orderId=${result.orderId}`;
+                        }, 1500); // 1.5s delay to let the user see the success state briefly
+
                     } catch (e) {
                         console.error("Failed to notify payment success", e);
                     }

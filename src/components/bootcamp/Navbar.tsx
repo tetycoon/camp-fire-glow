@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Menu, X, Clock } from "lucide-react";
+import { Menu, X, Clock, Download } from "lucide-react";
 import { useRegisterModal } from "./RegisterModalContext";
 
-// ── Countdown to Batch 1 start: April 1, 2026 ──
-const TARGET_DATE = new Date("2026-04-01T00:00:00");
+// ── Countdown to Batch 2 start: May 1, 2026 ──
+const TARGET_DATE = new Date("2026-05-01T00:00:00");
 
 function getTimeLeft() {
   const diff = TARGET_DATE.getTime() - Date.now();
@@ -104,7 +104,7 @@ const Navbar: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 h-10 flex items-center justify-between gap-4">
           <div className="hidden sm:flex items-center gap-2">
             <span className="text-[0.65rem] font-body font-semibold uppercase tracking-widest" style={{ color: "hsl(199 100% 70%)" }}>
-              ⚡ Batch 1 starts April 1 — Limited seats!
+              ⚡ Batch 2 starts May 1 — Limited seats!
             </span>
           </div>
 
@@ -150,6 +150,17 @@ const Navbar: React.FC = () => {
                   <span className="absolute -bottom-1 left-0 w-0 h-px bg-primary transition-all duration-300 group-hover:w-full" />
                 </button>
               ))}
+              <a
+                href="/brochure.pdf"
+                download="AI_Summer_Bootcamp_Brochure.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-primary transition-colors font-medium relative group flex items-center gap-1.5"
+              >
+                Brochure
+                <Download className="w-3.5 h-3.5" />
+                <span className="absolute -bottom-1 left-0 w-0 h-px bg-primary transition-all duration-300 group-hover:w-full" />
+              </a>
               <button
                 onClick={openRegisterModal}
                 className="hover:text-primary transition-colors capitalize font-medium relative group"
@@ -159,14 +170,17 @@ const Navbar: React.FC = () => {
               </button>
             </div>
 
-            {/* Desktop CTA */}
-            <button
-              onClick={openRegisterModal}
+            {/* Desktop CTA (Static in Top Right) */}
+            <a
+              href="/brochure.pdf"
+              download="AI_Summer_Bootcamp_Brochure.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
               className="hidden md:flex items-center gap-2 btn-glow text-primary-foreground font-display text-xs font-bold px-5 py-2.5 rounded-full tracking-wider transition-all duration-500"
-              style={{ boxShadow: showCTA ? "0 0 24px hsl(199 100% 55% / 0.5)" : undefined }}
+              style={{ boxShadow: "0 0 24px hsl(199 100% 55% / 0.5)" }}
             >
-              {showCTA ? "🔒 SECURE YOUR SEAT" : "REGISTER NOW"}
-            </button>
+              📥 DOWNLOAD BROCHURE
+            </a>
 
             {/* Mobile hamburger */}
             <button
@@ -212,6 +226,21 @@ const Navbar: React.FC = () => {
                   </button>
                 ))}
 
+                <a
+                  href="/brochure.pdf"
+                  download="AI_Summer_Bootcamp_Brochure.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex items-center justify-between text-2xl font-display font-bold text-foreground hover:text-primary transition-all duration-300"
+                  style={{ transitionDelay: "400ms" }}
+                >
+                  <span className="flex items-center gap-3">
+                    Brochure
+                    <Download className="w-5 h-5" />
+                  </span>
+                  <span className="w-8 h-px bg-primary/30 group-hover:w-12 transition-all" />
+                </a>
+
                 <button
                   onClick={() => { openRegisterModal(); setOpen(false); }}
                   className="group flex items-center justify-between text-2xl font-display font-bold text-foreground hover:text-primary transition-all duration-300"
@@ -243,14 +272,13 @@ const Navbar: React.FC = () => {
         </div>
       </nav>
 
-      {/* ── Floating bottom pill (mobile only) ── */}
+      {/* ── Fixed bottom pill (Appears after scroll) ── */}
       <div
-        className={`fixed bottom-36 left-1/2 -translate-x-1/2 z-50 md:hidden transition-all duration-500 ${isVideoDocked ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10 pointer-events-none"
-          }`}
+        className={`fixed bottom-10 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 ${showCTA ? "translate-y-0 opacity-100" : "translate-y-20 opacity-0 pointer-events-none"}`}
       >
         <button
           onClick={openRegisterModal}
-          className="btn-glow text-primary-foreground font-display text-[0.65rem] font-bold pl-5 pr-6 py-3 rounded-full tracking-wider flex items-center gap-3 whitespace-nowrap"
+          className="btn-glow text-primary-foreground font-display text-[0.65rem] sm:text-xs font-bold pl-5 pr-6 py-3 sm:py-4 rounded-full tracking-wider flex items-center gap-3 whitespace-nowrap"
           style={{ boxShadow: "0 8px 32px hsl(199 100% 55% / 0.5)" }}
         >
           <span>🔒 SECURE YOUR SEAT</span>
@@ -258,7 +286,7 @@ const Navbar: React.FC = () => {
             className="flex items-center gap-1 px-2 py-0.5 rounded-full"
             style={{ background: "hsl(222 47% 5% / 0.5)", border: "1px solid hsl(199 100% 55% / 0.3)" }}
           >
-            <Clock className="w-2.5 h-2.5" style={{ color: "hsl(25 100% 65%)" }} />
+            <Clock className="w-2.5 h-2.5 sm:w-3 sm:h-3" style={{ color: "hsl(25 100% 65%)" }} />
             <CountdownTimer compact />
           </span>
         </button>

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Brain, MessageSquare, Bot, BookOpen, Target, GraduationCap, Globe, Shield, Wrench, Code, Compass, Rocket, ChevronDown } from "lucide-react";
-import { useRegisterModal } from "./RegisterModalContext";
 
 const iconColors = [
   { iconColor: "text-cyan-400", iconClass: "icon-box-cyan" },
@@ -355,7 +354,6 @@ const ModuleCard: React.FC<ModuleCardProps> = ({ module, colors, isOpen, onToggl
 
 const ModulesSection: React.FC = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
-  const { openRegisterModal } = useRegisterModal();
 
   return (
     <section id="modules" className="section-border py-24 px-4 relative overflow-hidden">
@@ -389,14 +387,6 @@ const ModulesSection: React.FC = () => {
           })}
         </div>
 
-        <div className="text-center mt-12">
-          <button
-            onClick={openRegisterModal}
-            className="btn-glow text-primary-foreground font-display text-sm font-bold px-10 py-4 rounded-full tracking-widest"
-          >
-            🚀 SECURE YOUR SEAT
-          </button>
-        </div>
       </div>
     </section>
   );

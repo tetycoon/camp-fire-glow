@@ -1,38 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { CheckCircle2, Loader2, ShieldCheck, X } from "lucide-react";
 import { useRegisterModal } from "./RegisterModalContext";
+import { RazorpayOptions } from "@/types/razorpay";
 
 const RAZORPAY_KEY_ID = "rzp_live_gfoS1OjC8tvWjP";
-const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbzMlMVIAGQbGNkdmdVjlrakzCuGFRQxmMSmRZs_QgKf0PabRGlhOUzMiz1gkQjdtRw/exec";
+const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbxsNlBVyY2LVjPuIBXRs2g1WXZ1r_WzM1b4zOChLVAD-iv2J8f3DXOhF4od7JOliOEa3A/exec";
 
 const batches = [
-    { value: "batch1", label: "Batch 1 — April 1–30, 2026" },
-    { value: "batch2", label: "Batch 2 — May 1–30, 2026" },
+    { value: "batch2", label: "May Batch — May 1–30, 2026" },
 ];
 
-declare global {
-    interface Window {
-        Razorpay: new (options: RazorpayOptions) => RazorpayInstance;
-    }
-}
-
-interface RazorpayOptions {
-    key: string;
-    order_id?: string;
-    amount: number;
-    currency: string;
-    name: string;
-    description: string;
-    prefill: { name: string; email: string; contact: string };
-    notes: { batch: string };
-    theme: { color: string };
-    handler: (response: { razorpay_payment_id: string }) => void;
-    modal: { ondismiss: () => void };
-}
-
-interface RazorpayInstance {
-    open: () => void;
-}
 
 function loadRazorpayScript(): Promise<boolean> {
     return new Promise((resolve) => {
@@ -51,14 +28,14 @@ function loadRazorpayScript(): Promise<boolean> {
 
 const RegisterModal: React.FC = () => {
     const { isOpen, closeRegisterModal } = useRegisterModal();
-    const [form, setForm] = useState({ name: "", email: "", phone: "", batch: "", coupon: "WELCOME33" });
+    const [form, setForm] = useState({ name: "", email: "", phone: "", batch: "batch2", coupon: "WELCOME33" });
     const [submitted, setSubmitted] = useState(false);
     const [loading, setLoading] = useState(false);
     const [couponChecking, setCouponChecking] = useState(false);
     const [paymentId, setPaymentId] = useState<string>("");
     const [visible, setVisible] = useState(false);
     const [discountApplied, setDiscountApplied] = useState(true);  // WELCOME33 → ₹9,999
-    const [friendCouponApplied, setFriendCouponApplied] = useState(false); // 12-digit → ₹6,999
+    const [friendCouponApplied, setFriendCouponApplied] = useState(false); // 12-digit → ₹7,999
 
     // Animate in/out
     useEffect(() => {
@@ -82,7 +59,7 @@ const RegisterModal: React.FC = () => {
             closeRegisterModal();
             // Reset form when closing (but keep submitted state if payment done)
             if (!submitted) {
-                setForm({ name: "", email: "", phone: "", batch: "", coupon: "WELCOME33" });
+                setForm({ name: "", email: "", phone: "", batch: "batch2", coupon: "WELCOME33" });
                 setDiscountApplied(true);
                 setFriendCouponApplied(false);
             }
@@ -120,7 +97,7 @@ const RegisterModal: React.FC = () => {
 
         // Capture lead and generate Razorpay Order ID
         let result: any;
-        const finalAmount = friendCouponApplied ? 699900 : discountApplied ? 999900 : 1499900;
+        const finalAmount = friendCouponApplied ? 799900 : discountApplied ? 999900 : 1499900;
 
         try {
             const response = await fetch(GOOGLE_SHEET_URL, {
@@ -324,7 +301,7 @@ const RegisterModal: React.FC = () => {
                                             } else if (code === "AMIABLE30") {
                                                 setDiscountApplied(true);
                                                 setFriendCouponApplied(true);
-                                                alert("Special discount applied! Price reduced to ₹6,999");
+                                                alert("Special discount applied! Price reduced to ₹7,999");
                                             } else {
                                                 alert("Invalid coupon code. Please try again.");
                                                 setDiscountApplied(false);
@@ -349,7 +326,7 @@ const RegisterModal: React.FC = () => {
                                         <span>OPENING PAYMENT...</span>
                                     </>
                                 ) : (
-                                    <span>PAY {friendCouponApplied ? "₹6,999" : discountApplied ? "₹9,999" : "₹14,999"}</span>
+                                    <span>PAY {friendCouponApplied ? "₹7,999" : discountApplied ? "₹9,999" : "₹14,999"}</span>
                                 )}
                             </button>
 

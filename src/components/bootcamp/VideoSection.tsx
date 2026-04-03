@@ -7,7 +7,7 @@ const VideoSection: React.FC = () => {
     const [isSticky, setIsSticky] = useState(false);
     const [isClosed, setIsClosed] = useState(false);
     const sectionRef = useRef<HTMLElement>(null);
-    const { openRegisterModal, setIsVideoDocked } = useRegisterModal();
+    const { setIsVideoDocked } = useRegisterModal();
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -173,17 +173,6 @@ const VideoSection: React.FC = () => {
                                         ? "relative h-full flex items-center p-3 sm:p-4 gap-3 sm:gap-4 z-10"
                                         : "w-full h-full"
                                 }>
-                                    {/* Left CTA (Only in dock mode and only on desktop/tablet) */}
-                                    {isSticky && !isClosed && (
-                                        <div className="hidden sm:flex items-center pl-1 sm:pl-2">
-                                            <button
-                                                onClick={openRegisterModal}
-                                                className="btn-glow text-primary-foreground font-display text-xs sm:text-base font-bold px-6 sm:px-10 py-3 sm:py-4 rounded-xl tracking-wide whitespace-nowrap shadow-lg shrink-0"
-                                            >
-                                                SECURE SPOT
-                                            </button>
-                                        </div>
-                                    )}
 
                                     {/* Right Video + Controls */}
                                     <div className={
