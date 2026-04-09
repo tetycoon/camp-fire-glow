@@ -23,7 +23,8 @@ body{font-family:var(--bd);background:var(--bg);color:var(--slate);overflow-x:hi
 
 /* NAV */
 .nav{position:fixed;top:24px;left:50%;transform:translateX(-50%);width:96%;max-width:1200px;z-index:200;height:72px;background:rgba(255,255,255,0.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.5);border-radius:100px;display:flex;align-items:center;justify-content:space-between;padding:0 12px 0 32px;box-shadow:0 12px 40px rgba(15,23,42,0.06), inset 0 1px 0 rgba(255,255,255,1)}
-.nav-brand{font-family:var(--hd);font-size:18px;font-weight:900;letter-spacing:1.5px;color:var(--navy);text-decoration:none;display:flex;align-items:center;gap:6px}
+.nav-brand{font-family:var(--hd);font-size:18px;font-weight:900;letter-spacing:1.5px;color:var(--navy);text-decoration:none;display:flex;align-items:center;gap:10px}
+.nav-logo{height:34px;width:auto;object-fit:contain}
 .nav-brand span{color:var(--blue)}
 .nav-links{display:flex;gap:36px;align-items:center}
 .nav-link{font-size:12.5px;font-weight:600;color:var(--slate);text-decoration:none;transition:color 0.2s;text-transform:uppercase;letter-spacing:1.5px}
@@ -236,7 +237,10 @@ footer{background:var(--navy);padding:44px 5%;display:flex;align-items:center;ju
 <body>
 
 <nav class="nav">
-  <a href="#" class="nav-brand">TECH<span>TYCOON</span></a>
+  <a href="#" class="nav-brand">
+    <img src="logo.png" alt="Tech Tycoon Logo" class="nav-logo">
+    TECH<span>TYCOON</span>
+  </a>
   <div class="nav-links">
     <a href="#curriculum" class="nav-link">Curriculum</a>
     <a href="#bonus" class="nav-link">Bonuses</a>
