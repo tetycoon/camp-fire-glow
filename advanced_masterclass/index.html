@@ -18,23 +18,23 @@
             box-sizing: border-box;
         }
 
-        :root {
-            --void: #020617;     /* Deep Midnight Navy */
-            --deep: #0f172a;     /* Slate Navy */
-            --navy: #1e293b;     /* Slate */
-            --card: rgba(15, 23, 42, 0.8);
-            --gold: #c2a05d;     /* Sophisticated Gold */
-            --gold-d: #9c7e46;
+                :root {
+            --void: #ffffff;     /* White Background */
+            --deep: #f8fafc;     /* Slate-50 Sub Background */
+            --navy: #0f172a;     /* Deep Slate Headings */
+            --card: rgba(255, 255, 255, 0.95);
+            --gold: #1d4ed8;     /* Corporate Blue */
+            --gold-d: #1e3a8a;   /* Dark Blue hover */
             --emerald: #10b981;  /* Success Emerald */
-            --cyan: #10b981;     /* Reusing Emerald for accents */
-            --teal: #059669;
-            --violet: #6366f1;   /* Professional Indigo */
+            --cyan: #3b82f6;     /* Accent Blue */
+            --teal: #0284c7;     /* Sky Blue */
+            --violet: #4f46e5;   /* Indigo */
             --pink: #ef4444; 
-            --b0: rgba(16, 185, 129, 0.1);
-            --b1: rgba(16, 185, 129, 0.2);
-            --bg2: rgba(194, 160, 93, 0.1);
-            --txt: #f1f5f9;      /* Light Slate Text */
-            --muted: #94a3b8;    /* Muted Slate Text */
+            --b0: rgba(15, 23, 42, 0.08); /* Dark border */
+            --b1: rgba(15, 23, 42, 0.15); /* Darker border */
+            --bg2: rgba(37, 99, 235, 0.05); /* Blue bg tint */
+            --txt: #334155;      /* Slate-700 Text */
+            --muted: #64748b;    /* Muted Slate Text */
             --white: #ffffff;
             --font-hd: 'Outfit', sans-serif;
             --font-ui: 'Inter', sans-serif;
@@ -75,9 +75,9 @@
             right: 0;
             z-index: 200;
             height: 72px;
-            background: rgba(2, 6, 23, 0.85); /* Deep Navy */
+            background: rgba(255, 255, 255, 0.95); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); /* Deep Navy */
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -89,7 +89,8 @@
             font-size: 18px;
             font-weight: 800;
             letter-spacing: 2px;
-            color: var(--white);
+            color: var(--navy);
+
             text-decoration: none;
             display: flex;
             align-items: center;
@@ -121,7 +122,8 @@
             font-weight: 700;
             letter-spacing: 1px;
             text-transform: uppercase;
-            color: #020617;
+            color: #ffffff;
+
             background: var(--gold);
             border: none;
             padding: 12px 28px;
@@ -356,7 +358,7 @@
         }
 
         .hero-h1 .row1 {
-            color: var(--white);
+            color: var(--navy);
             display: block;
         }
 
@@ -472,7 +474,8 @@
             font-weight: 800;
             letter-spacing: 1.5px;
             text-transform: uppercase;
-            color: #020617;
+            color: #ffffff;
+
             transition: transform 0.2s, background 0.3s, box-shadow 0.3s;
         }
 
@@ -485,7 +488,7 @@
         .cta-secondary {
             padding: 20px 48px;
             background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid var(--gold);
             border-radius: 4px;
             cursor: pointer;
             font-family: var(--font-hd);
@@ -493,13 +496,15 @@
             font-weight: 600;
             letter-spacing: 1.5px;
             text-transform: uppercase;
-            color: var(--white);
+            color: var(--gold);
+            transition: background 0.3s, border-color 0.3s, transform 0.2s;
+
             transition: background 0.3s, border-color 0.3s, transform 0.2s;
         }
 
         .cta-secondary:hover {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: var(--white);
+            background: rgba(29, 78, 216, 0.05);
+            border-color: var(--gold-d);
             transform: translateY(-3px);
         }
 
@@ -593,6 +598,7 @@
 
         .sec-h2 {
             font-family: var(--font-hd);
+            color: var(--navy);
             font-size: 44px;
             font-weight: 800;
             line-height: 1.15;
@@ -741,7 +747,8 @@
             font-family: var(--font-hd);
             font-size: 13px;
             font-weight: 700;
-            color: var(--white);
+            color: var(--navy);
+
             margin-bottom: 8px;
             line-height: 1.4;
         }
@@ -981,7 +988,7 @@
         .pri-feats li {
             font-size: 14px;
             padding: 12px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
         }
 
         .chk-icon {
