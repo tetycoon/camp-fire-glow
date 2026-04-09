@@ -59,24 +59,27 @@ body{font-family:var(--bd);background:var(--bg);color:var(--slate);overflow-x:hi
 /* Hero Card */
 .hero-card{background:rgba(255,255,255,0.8);backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);border-radius:24px;padding:40px;box-shadow:0 24px 64px rgba(15,23,42,0.08), inset 0 1px 0 rgba(255,255,255,1);border:1px solid rgba(255,255,255,0.6)}
 .hero-card-label{font-size:9px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:var(--blue);margin-bottom:24px}
-.hero-detail{display:flex;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid var(--bg2)}
-.hero-detail:last-of-type{border-bottom:none;padding-bottom:0}
-.hero-detail-row{display:grid;grid-template-columns:1.05fr 0.95fr;gap:20px;border-bottom:1px solid var(--bg2)}
-.hero-detail-row .hero-detail{border-bottom:none}
+.hero-detail{display:flex;align-items:flex-start;gap:14px;padding:14px 12px;border-bottom:1px solid rgba(15,23,42,0.04);transition:all 0.3s ease;border-radius:12px;margin:0 -12px}
+.hero-detail:hover{background:rgba(255,255,255,0.7);box-shadow:0 4px 16px rgba(15,23,42,0.03);transform:translateX(4px)}
+.hero-detail:last-of-type{border-bottom:none}
+.hero-detail-row{display:grid;grid-template-columns:1.05fr 0.95fr;gap:20px;border-bottom:1px solid rgba(15,23,42,0.04)}
+.hero-detail-row .hero-detail{border-bottom:none;margin:0}
+.hero-detail-row .hero-detail:hover{transform:translateY(-2px)}
 @media(max-width:480px){.hero-detail-row{grid-template-columns:1fr;gap:0}}
-.hero-detail-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.hero-detail-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;box-shadow:inset 0 1px 0 rgba(255,255,255,1), 0 4px 12px rgba(15,23,42,0.05);transition:transform 0.3s ease}
+.hero-detail:hover .hero-detail-icon{transform:scale(1.08)}
 .hero-detail-icon.cal{background:#eff6ff}
 .hero-detail-icon.clk{background:#fdf4ff}
 .hero-detail-icon.lng{background:#fff7ed}
 .hero-detail-icon.prc{background:#f0fdf4}
 .hero-detail-title{font-family:var(--hd);font-size:16px;font-weight:700;color:var(--navy);line-height:1.2}
 .hero-detail-sub{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
-.hero-price-row{display:flex;align-items:baseline;gap:10px;margin-top:16px;padding:12px 18px;background:var(--blue);border-radius:10px}
-.hero-price-main{font-family:var(--hd);font-size:32px;font-weight:900;color:#fff}
-.hero-price-old{font-size:15px;color:rgba(255,255,255,0.55);text-decoration:line-through}
-.hero-price-tag{font-size:10px;color:#86efac;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-left:auto;align-self:center}
-.hero-card-cta{width:100%;margin-top:16px;padding:16px;background:var(--navy);color:#fff;border:none;border-radius:8px;font-family:var(--hd);font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:background 0.2s}
-.hero-card-cta:hover{background:var(--blue-d)}
+.hero-price-row{display:flex;align-items:baseline;gap:10px;margin-top:20px;padding:16px 20px;background:linear-gradient(135deg,var(--blue-m) 0%,var(--blue-d) 100%);border-radius:14px;box-shadow:0 8px 24px rgba(29,78,216,0.2)}
+.hero-price-main{font-family:var(--hd);font-size:32px;font-weight:900;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,0.1)}
+.hero-price-old{font-size:14px;color:rgba(255,255,255,0.6);text-decoration:line-through}
+.hero-price-tag{font-size:10px;color:#86efac;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-left:auto;align-self:center;background:rgba(0,0,0,0.15);padding:4px 8px;border-radius:4px}
+.hero-card-cta{width:100%;margin-top:16px;padding:18px;background:var(--navy);color:#fff;border:none;border-radius:100px;font-family:var(--hd);font-size:13px;font-weight:800;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all 0.3s ease;box-shadow:0 8px 20px rgba(15,23,42,0.15)}
+.hero-card-cta:hover{background:#000;transform:translateY(-3px);box-shadow:0 12px 28px rgba(15,23,42,0.25)}
 
 /* TICKER */
 .ticker{background:var(--navy);padding:13px 0;overflow:hidden}
