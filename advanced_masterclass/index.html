@@ -1159,7 +1159,7 @@
             position: fixed;
             inset: 0;
             z-index: 1000;
-            background: rgba(2, 6, 23, 0.8);
+            background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(12px);
             display: none;
             align-items: center;
@@ -1168,21 +1168,26 @@
             transition: opacity 0.3s;
         }
 
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
         .modal-card {
-            background: #0f172a;
-            border: 1px solid rgba(255,255,255,0.05);
+            background: #ffffff;
+            border: 1px solid rgba(0,0,0,0.1);
             border-radius: 12px;
             width: 90%;
             max-width: 440px;
             padding: 48px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.15);
         }
 
         .modal-h {
             font-family: var(--font-hd);
             font-size: 28px;
             font-weight: 700;
-            color: var(--white);
+            color: var(--navy);
             margin-bottom: 8px;
         }
 
@@ -1195,23 +1200,24 @@
         .form-input {
             width: 100%;
             padding: 16px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255,255,255,0.1);
+            background: #f8fafc;
+            border: 1px solid var(--b1);
             border-radius: 6px;
-            color: var(--white);
+            color: var(--navy);
             font-size: 15px;
         }
 
         .form-input:focus {
             outline: none;
-            border-color: var(--emerald);
-            background: rgba(255,255,255,0.05);
+            border-color: var(--gold);
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
         }
 
         .modal-btn {
             width: 100%;
             padding: 18px;
-            background: var(--emerald);
+            background: var(--gold);
             color: white;
             font-family: var(--font-hd);
             font-weight: 700;
@@ -1224,7 +1230,7 @@
 
         .modal-btn:hover {
             transform: translateY(-2px);
-            background: var(--teal);
+            background: var(--gold-d);
         }
 
         /* Floating CTA Mobile */
