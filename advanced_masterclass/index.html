@@ -115,7 +115,8 @@ body{font-family:var(--bd);background:var(--bg);color:var(--slate);overflow-x:hi
 /* BONUSES */
 .bonus-sec{background:var(--white)}
 .bonus-wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:56px}
-.bon-card{background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:34px 26px;text-align:center;transition:transform 0.3s,box-shadow 0.3s,border-color 0.3s}
+.bon-card{background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:34px 26px;text-align:center;transition:transform 0.3s,box-shadow 0.3s,border-color 0.3s;position:relative}
+.bon-val{position:absolute;top:12px;right:16px;font-size:8px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--blue);background:var(--blue-l);padding:2px 8px;border-radius:4px}
 .bon-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg);border-color:var(--blue-m)}
 .bon-icon{font-size:36px;margin-bottom:16px;display:block}
 .bon-h{font-family:var(--hd);font-size:15px;font-weight:700;color:var(--navy);margin-bottom:8px}
@@ -412,16 +413,19 @@ footer{background:var(--navy);padding:44px 5%;display:flex;align-items:center;ju
     <p class="sec-p">You're not just enrolling in a class — you're joining an AI business ecosystem.</p>
     <div class="bonus-wrap">
       <div class="bon-card sr">
+        <div class="bon-val">Value: &#8377;4,999</div>
         <span class="bon-icon">&#128222;</span>
         <div class="bon-h">1-on-1 Strategy Session</div>
         <p class="bon-p">A private 10-minute call to build your personalized AI strategy and answer your specific questions.</p>
       </div>
       <div class="bon-card sr">
+        <div class="bon-val">Value: &#8377;2,999</div>
         <span class="bon-icon">&#127775;</span>
         <div class="bon-h">Canva Masterclass Recording</div>
         <p class="bon-p">Full access to our recorded Canva course — design like a professional with zero prior experience.</p>
       </div>
       <div class="bon-card sr">
+        <div class="bon-val">Priceless</div>
         <span class="bon-icon">&#128101;</span>
         <div class="bon-h">Private Community Access</div>
         <p class="bon-p">Lifetime access to our private community for resources, peer networking, and ongoing AI support.</p>
@@ -462,7 +466,7 @@ footer{background:var(--navy);padding:44px 5%;display:flex;align-items:center;ju
   <div class="sec-inner" style="text-align:center;display:flex;flex-direction:column;align-items:center">
     <div class="sec-tag">Investment</div>
     <h2 class="sec-h2">Choose Your <em>Seat</em></h2>
-    <p class="sec-p" style="text-align:center">Limited enrollment. Lock in the special price today.</p>
+    <p class="sec-p" style="text-align:center">Only <strong>25 seats</strong> available for this exclusive May cohort. Lock in the early-bird premium rate today.</p>
     <div class="price-grid">
       <div class="pri-card sr">
         <div class="pri-label">Partial Enrollment</div>
