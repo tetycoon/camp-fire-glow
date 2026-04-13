@@ -16,6 +16,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
+    /* ===========================
+       CSS VARIABLES & RESET
+    =========================== */
     :root {
       --bg: #050510;
       --bg-card: rgba(255,255,255,0.04);
@@ -46,6 +49,9 @@
     img { max-width:100%; display:block; }
     a { text-decoration: none; }
 
+    /* ===========================
+       CANVAS BACKGROUNDS
+    =========================== */
     #particle-canvas {
       position: fixed; top:0; left:0; width:100%; height:100%;
       z-index: 0; pointer-events: none;
@@ -55,6 +61,9 @@
       z-index: 150; pointer-events: none;
     }
 
+    /* ===========================
+       NAVIGATION
+    =========================== */
     .nav {
       position: fixed; top:0; left:0; right:0; z-index:100;
       padding: 14px 40px;
@@ -64,15 +73,21 @@
       border-bottom: 1px solid rgba(124,58,237,0.2);
       transition: all 0.3s;
     }
-    .nav-logo { display: flex; align-items:center; gap:10px; }
+    .nav-logo {
+      display: flex; align-items:center; gap:10px;
+    }
     .nav-logo-icon {
       width:40px; height:40px;
       background: linear-gradient(135deg, var(--purple), var(--cyan));
       border-radius:8px; display:flex; align-items:center; justify-content:center;
       font-size:20px;
     }
-    .nav-logo-name { font-family: var(--font-game); font-size:13px; font-weight:700; letter-spacing:1px; }
-    .nav-logo-tag { font-size:9px; color:var(--cyan); letter-spacing:2.5px; margin-top:1px; }
+    .nav-logo-name {
+      font-family: var(--font-game); font-size:13px; font-weight:700; letter-spacing:1px;
+    }
+    .nav-logo-tag {
+      font-size:9px; color:var(--cyan); letter-spacing:2.5px; margin-top:1px;
+    }
     .nav-btn {
       font-family: var(--font-game); font-size:11px; font-weight:700;
       letter-spacing:1px; color:#fff;
@@ -82,12 +97,18 @@
     }
     .nav-btn:hover { box-shadow:var(--glow-purple); transform:translateY(-2px); }
 
+    /* ===========================
+       SCROLL REVEAL
+    =========================== */
     .reveal {
       opacity:0; transform:translateY(28px);
       transition: opacity 0.65s ease, transform 0.65s ease;
     }
     .reveal.visible { opacity:1; transform:translateY(0); }
 
+    /* ===========================
+       HERO
+    =========================== */
     .hero {
       position: relative; min-height:100vh;
       display:flex; align-items:center; justify-content:center;
@@ -103,6 +124,7 @@
     }
     .hero-inner { position:relative; z-index:1; max-width:900px; width:100%; }
 
+    /* Live badge */
     .live-badge {
       display:inline-flex; align-items:center; gap:8px;
       background: rgba(0,212,255,0.08);
@@ -121,8 +143,11 @@
       0%,100%{box-shadow:0 0 0 0 rgba(0,212,255,0.35);}
       50%{box-shadow:0 0 0 10px rgba(0,212,255,0);}
     }
-    @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.2;} }
+    @keyframes blink {
+      0%,100%{opacity:1;} 50%{opacity:0.2;}
+    }
 
+    /* Main title */
     .hero-eyebrow {
       font-family: var(--font-game); font-size:13px;
       color:var(--gold); letter-spacing:5px; margin-bottom:16px;
@@ -154,6 +179,7 @@
       to{opacity:1;transform:translateY(0);}
     }
 
+    /* Countdown */
     .countdown {
       display:flex; gap:14px; justify-content:center; flex-wrap:wrap;
       margin-bottom:44px;
@@ -182,6 +208,7 @@
       letter-spacing:2px; text-transform:uppercase; margin-top:5px;
     }
 
+    /* Hero CTAs */
     .hero-ctas {
       display:flex; gap:16px; justify-content:center; flex-wrap:wrap;
       animation: fadeUp 0.8s ease 1.3s both;
@@ -212,6 +239,7 @@
       background:rgba(0,212,255,0.1); box-shadow:var(--glow-cyan); transform:translateY(-3px);
     }
 
+    /* Scroll arrow */
     .scroll-hint {
       position:absolute; bottom:32px; left:50%; transform:translateX(-50%);
       animation: bob 2s ease-in-out infinite; cursor:pointer; color:var(--txt-muted);
@@ -221,11 +249,17 @@
       50%{transform:translateX(-50%) translateY(10px);}
     }
 
+    /* ===========================
+       DIVIDER
+    =========================== */
     .divider {
       height:1px; margin:0 8%;
       background:linear-gradient(90deg,transparent,rgba(124,58,237,0.3),transparent);
     }
 
+    /* ===========================
+       SECTIONS (shared)
+    =========================== */
     section { position:relative; z-index:1; }
     .wrap { max-width:1160px; margin:0 auto; padding:90px 24px; }
     .sec-label {
@@ -236,12 +270,19 @@
       font-family:var(--font-game); font-size:clamp(26px,5vw,46px);
       font-weight:900; line-height:1.1; margin-bottom:16px;
     }
-    .sec-body { font-size:17px; color:var(--txt-muted); max-width:620px; line-height:1.75; }
+    .sec-body {
+      font-size:17px; color:var(--txt-muted); max-width:620px; line-height:1.75;
+    }
 
+    /* ===========================
+       ABOUT SECTION
+    =========================== */
     .about-bg {
       background:linear-gradient(180deg,transparent 0%,rgba(124,58,237,0.06) 50%,transparent 100%);
     }
-    .about-grid { display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center; }
+    .about-grid {
+      display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center;
+    }
     .boss-card {
       background:rgba(255,255,255,0.04);
       border:1px solid rgba(124,58,237,0.35);
@@ -254,7 +295,10 @@
     }
     .boss-emoji { font-size:88px; display:block; margin-bottom:20px; animation:float 3s ease-in-out infinite; }
     @keyframes float { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-12px);} }
-    .boss-card-title { font-family:var(--font-game); font-size:18px; font-weight:700; color:var(--gold); margin-bottom:8px; }
+    .boss-card-title {
+      font-family:var(--font-game); font-size:18px; font-weight:700;
+      color:var(--gold); margin-bottom:8px;
+    }
     .boss-card-sub { font-size:13px; color:var(--txt-muted); margin-bottom:24px; }
     .info-row {
       display:flex; justify-content:space-between; align-items:center;
@@ -269,6 +313,7 @@
     .val-green { color:var(--green); }
     .val-purple { color:var(--purple-light); }
 
+    /* Steps */
     .steps { display:flex; flex-direction:column; gap:24px; margin-top:32px; }
     .step { display:flex; gap:18px; align-items:flex-start; }
     .step-num {
@@ -280,6 +325,9 @@
     .step-h { font-size:16px; font-weight:700; margin-bottom:4px; }
     .step-p { font-size:14px; color:var(--txt-muted); line-height:1.6; }
 
+    /* ===========================
+       FEATURES
+    =========================== */
     .features-grid {
       display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:22px; margin-top:52px;
     }
@@ -299,13 +347,25 @@
       box-shadow:0 22px 44px rgba(0,0,0,0.35);
     }
     .feat-icon { font-size:42px; margin-bottom:16px; display:block; }
-    .feat-title { font-family:var(--font-game); font-size:13px; font-weight:700; letter-spacing:0.5px; margin-bottom:8px; }
+    .feat-title {
+      font-family:var(--font-game); font-size:13px; font-weight:700;
+      letter-spacing:0.5px; margin-bottom:8px;
+    }
     .feat-desc { font-size:14px; color:var(--txt-muted); line-height:1.65; }
 
-    .reg-bg { background:radial-gradient(ellipse at center,rgba(124,58,237,0.07) 0%,transparent 70%); }
-    .reg-grid { display:grid; grid-template-columns:1fr 1.15fr; gap:60px; align-items:start; }
+    /* ===========================
+       REGISTRATION
+    =========================== */
+    .reg-bg {
+      background:radial-gradient(ellipse at center,rgba(124,58,237,0.07) 0%,transparent 70%);
+    }
+    .reg-grid {
+      display:grid; grid-template-columns:1fr 1.15fr; gap:60px; align-items:start;
+    }
     .highlights { display:flex; flex-direction:column; gap:14px; margin-top:28px; }
-    .hl-item { display:flex; align-items:center; gap:13px; font-size:15px; color:var(--txt); }
+    .hl-item {
+      display:flex; align-items:center; gap:13px; font-size:15px; color:var(--txt);
+    }
     .hl-icon {
       width:38px; height:38px; min-width:38px;
       background:rgba(124,58,237,0.15); border:1px solid rgba(124,58,237,0.3);
@@ -323,6 +383,7 @@
     .price-once { font-size:14px; color:var(--txt-muted); margin-top:2px; }
     .price-secure { font-size:12px; color:var(--green); margin-top:4px; }
 
+    /* Form Card */
     .form-card {
       background:rgba(255,255,255,0.03);
       border:1px solid rgba(124,58,237,0.35); border-radius:22px; padding:40px;
@@ -353,7 +414,10 @@
       box-shadow:0 0 0 3px rgba(124,58,237,0.18);
     }
     .form-input::placeholder { color:rgba(255,255,255,0.2); }
-    .form-secure { display:flex; align-items:center; gap:7px; font-size:12px; color:var(--txt-muted); margin-bottom:18px; }
+    .form-secure {
+      display:flex; align-items:center; gap:7px;
+      font-size:12px; color:var(--txt-muted); margin-bottom:18px;
+    }
     .btn-pay {
       width:100%; font-family:var(--font-game); font-size:14px; font-weight:700;
       letter-spacing:1px; color:#fff;
@@ -371,7 +435,12 @@
     .btn-pay:hover { transform:translateY(-3px); box-shadow:0 14px 44px rgba(124,58,237,0.5); }
     .btn-pay:disabled { opacity:0.65; cursor:not-allowed; transform:none; box-shadow:none; }
 
-    .faq-bg { background:linear-gradient(180deg,transparent 0%,rgba(0,212,255,0.02) 50%,transparent 100%); }
+    /* ===========================
+       FAQ
+    =========================== */
+    .faq-bg {
+      background:linear-gradient(180deg,transparent 0%,rgba(0,212,255,0.02) 50%,transparent 100%);
+    }
     .faq-list { margin-top:50px; display:flex; flex-direction:column; gap:12px; }
     .faq-item {
       background:rgba(255,255,255,0.03);
@@ -391,6 +460,9 @@
     .faq-item.open .faq-body { max-height:280px; }
     .faq-inner { padding:0 24px 20px; font-size:15px; color:var(--txt-muted); line-height:1.7; }
 
+    /* ===========================
+       FOOTER
+    =========================== */
     .footer {
       border-top:1px solid rgba(255,255,255,0.06);
       padding:44px 24px; text-align:center; position:relative; z-index:1;
@@ -402,6 +474,9 @@
     .footer-link:hover { color:var(--purple-light); }
     .footer-copy { font-size:12px; color:rgba(255,255,255,0.2); }
 
+    /* ===========================
+       FLOATING CTA
+    =========================== */
     .float-cta {
       position:fixed; bottom:24px; left:50%;
       transform:translateX(-50%) translateY(110px);
@@ -416,6 +491,9 @@
     .float-cta.show { transform:translateX(-50%) translateY(0); }
     .float-cta:hover { box-shadow:0 14px 44px rgba(124,58,237,0.65); transform:translateX(-50%) translateY(-4px); }
 
+    /* ===========================
+       SUCCESS OVERLAY
+    =========================== */
     .success-overlay {
       position:fixed; inset:0; background:rgba(5,5,16,0.96);
       z-index:200; display:flex; align-items:center; justify-content:center;
@@ -446,6 +524,9 @@
     .btn-wa:hover { transform:translateY(-3px); box-shadow:0 12px 30px rgba(37,211,102,0.4); }
     .success-counter { margin-top:18px; font-size:13px; color:var(--txt-muted); }
 
+    /* ===========================
+       RESPONSIVE
+    =========================== */
     @media (max-width:768px) {
       .nav { padding:12px 18px; }
       .about-grid, .reg-grid { grid-template-columns:1fr; gap:36px; }
@@ -464,9 +545,11 @@
 </head>
 <body>
 
+<!-- Background Canvases -->
 <canvas id="particle-canvas"></canvas>
 <canvas id="confetti-canvas"></canvas>
 
+<!-- ==================== NAVIGATION ==================== -->
 <nav class="nav" id="main-nav">
   <div class="nav-logo">
     <div class="nav-logo-icon">👑</div>
@@ -480,6 +563,7 @@
   </button>
 </nav>
 
+<!-- ==================== HERO ==================== -->
 <section class="hero" id="hero">
   <div class="hero-glow"></div>
   <div class="hero-inner">
@@ -493,12 +577,15 @@
     <p class="hero-desc">
       An electrifying live business simulation where you <strong style="color:#fff">negotiate deals</strong>, outmaneuver rivals, and prove to the world that you have what it takes to be <strong style="color:var(--gold)">THE BOSS</strong>.
     </p>
+
+    <!-- Countdown -->
     <div class="countdown">
       <div class="cd-box"><span class="cd-num" id="cd-days">00</span><span class="cd-lbl">Days</span></div>
       <div class="cd-box"><span class="cd-num" id="cd-hours">00</span><span class="cd-lbl">Hours</span></div>
       <div class="cd-box"><span class="cd-num" id="cd-mins">00</span><span class="cd-lbl">Minutes</span></div>
       <div class="cd-box"><span class="cd-num" id="cd-secs">00</span><span class="cd-lbl">Seconds</span></div>
     </div>
+
     <div class="hero-ctas">
       <button class="btn-primary" id="hero-reg-btn" onclick="document.getElementById('register').scrollIntoView({behavior:'smooth'})">
         🎮 SECURE YOUR SPOT — ₹999
@@ -508,6 +595,7 @@
       </button>
     </div>
   </div>
+
   <div class="scroll-hint" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">
     <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
       <path d="M12 5v14M5 12l7 7 7-7"/>
@@ -517,15 +605,19 @@
 
 <div class="divider"></div>
 
+<!-- ==================== ABOUT ==================== -->
 <section class="about-bg" id="about">
   <div class="wrap">
     <div class="about-grid">
+
+      <!-- Left: Info -->
       <div>
         <div class="sec-label reveal">WHAT IS THIS GAME</div>
         <h2 class="sec-title reveal">Ready to Claim<br>Your Crown? 👑</h2>
         <p class="sec-body reveal">
           "I Am the Boss" is a high-energy live business game where players compete in rapid-fire negotiation rounds, strategic deal-making, and leadership challenges. Only the sharpest minds survive.
         </p>
+
         <div class="steps">
           <div class="step reveal">
             <div class="step-num">1</div>
@@ -545,11 +637,13 @@
             <div class="step-num">3</div>
             <div>
               <div class="step-h">Claim the Throne</div>
-              <p class="step-p">The last boss standing wins cash prizes, a trophy, and the ultimate bragging rights. Are you up for it?</p>
+              <p class="step-p">The last boss standing wins the official title and the ultimate bragging rights. Are you up for it?</p>
             </div>
           </div>
         </div>
       </div>
+
+      <!-- Right: Card -->
       <div class="reveal">
         <div class="boss-card">
           <span class="boss-emoji">👔</span>
@@ -557,17 +651,19 @@
           <div class="boss-card-sub">Only one can wear the crown on April 17th</div>
           <div class="info-row"><span class="info-key">📅 Event Date</span><span class="info-val val-cyan">Saturday, 17 April 2026</span></div>
           <div class="info-row"><span class="info-key">🎟️ Entry</span><span class="info-val val-gold">₹999 Only</span></div>
-          <div class="info-row"><span class="info-key">🏆 Prizes</span><span class="info-val val-green">Cash + Trophy</span></div>
+          <div class="info-row"><span class="info-key">🏆 Reward</span><span class="info-val val-green">The Boss Title</span></div>
           <div class="info-row"><span class="info-key">📜 Certificate</span><span class="info-val val-purple">All Players</span></div>
           <div class="info-row"><span class="info-key">🧑‍🤝‍🧑 Community</span><span class="info-val val-cyan">WhatsApp Group</span></div>
         </div>
       </div>
+
     </div>
   </div>
 </section>
 
 <div class="divider"></div>
 
+<!-- ==================== FEATURES ==================== -->
 <section id="features">
   <div class="wrap">
     <div style="text-align:center">
@@ -576,21 +672,48 @@
       <p class="sec-body reveal" style="margin:0 auto">Every moment is crafted to push your limits, sharpen your instincts, and connect you with fellow go-getters.</p>
     </div>
     <div class="features-grid">
-      <div class="feat-card reveal"><span class="feat-icon">⚡</span><div class="feat-title">LIVE COMPETITION</div><p class="feat-desc">Real-time game rounds with instant scoring. Every decision matters. The pressure is on from minute one.</p></div>
-      <div class="feat-card reveal"><span class="feat-icon">🤝</span><div class="feat-title">NEGOTIATION BATTLES</div><p class="feat-desc">Deal-making, alliance-breaking, and power plays. Your persuasion and psychology skills are your weapons.</p></div>
-      <div class="feat-card reveal"><span class="feat-icon">🏆</span><div class="feat-title">CASH PRIZES</div><p class="feat-desc">The final Boss takes home real prizes. Risk is real. Reward is real. Compete with everything you've got.</p></div>
-      <div class="feat-card reveal"><span class="feat-icon">🧠</span><div class="feat-title">STRATEGY &amp; TACTICS</div><p class="feat-desc">Logic, psychology, and sharp thinking — the only tools that will get you to the top of the board.</p></div>
-      <div class="feat-card reveal"><span class="feat-icon">🌐</span><div class="feat-title">ELITE NETWORKING</div><p class="feat-desc">Connect with ambitious entrepreneurs, professionals, and leaders from across the city in one room.</p></div>
-      <div class="feat-card reveal"><span class="feat-icon">📜</span><div class="feat-title">BOSS CERTIFICATE</div><p class="feat-desc">Every participant receives an official "I Am the Boss" participation certificate from AI Tycoon.</p></div>
+      <div class="feat-card reveal">
+        <span class="feat-icon">⚡</span>
+        <div class="feat-title">LIVE COMPETITION</div>
+        <p class="feat-desc">Real-time game rounds with instant scoring. Every decision matters. The pressure is on from minute one.</p>
+      </div>
+      <div class="feat-card reveal">
+        <span class="feat-icon">🤝</span>
+        <div class="feat-title">NEGOTIATION BATTLES</div>
+        <p class="feat-desc">Deal-making, alliance-breaking, and power plays. Your persuasion and psychology skills are your weapons.</p>
+      </div>
+      <div class="feat-card reveal">
+        <span class="feat-icon">🏆</span>
+        <div class="feat-title">ELITE STATUS</div>
+        <p class="feat-desc">The final Boss takes home the official title and legacy. The challenge is real. The status is real. Compete with everything you've got.</p>
+      </div>
+      <div class="feat-card reveal">
+        <span class="feat-icon">🧠</span>
+        <div class="feat-title">STRATEGY & TACTICS</div>
+        <p class="feat-desc">Logic, psychology, and sharp thinking — the only tools that will get you to the top of the board.</p>
+      </div>
+      <div class="feat-card reveal">
+        <span class="feat-icon">🌐</span>
+        <div class="feat-title">ELITE NETWORKING</div>
+        <p class="feat-desc">Connect with ambitious entrepreneurs, professionals, and leaders from across the city in one room.</p>
+      </div>
+      <div class="feat-card reveal">
+        <span class="feat-icon">📜</span>
+        <div class="feat-title">BOSS CERTIFICATE</div>
+        <p class="feat-desc">Every participant receives an official "I Am the Boss" participation certificate from AI Tycoon.</p>
+      </div>
     </div>
   </div>
 </section>
 
 <div class="divider"></div>
 
+<!-- ==================== REGISTRATION ==================== -->
 <section class="reg-bg" id="register">
   <div class="wrap">
     <div class="reg-grid">
+
+      <!-- Left: Info -->
       <div>
         <div class="sec-label reveal">LIMITED SPOTS AVAILABLE</div>
         <h2 class="sec-title reveal" style="font-family:var(--font-game)">
@@ -599,6 +722,7 @@
         <p class="sec-body reveal">
           Don't miss your chance to play, compete, network, and prove yourself at Tamil Nadu's most exciting live business game event.
         </p>
+
         <div class="highlights">
           <div class="hl-item reveal"><div class="hl-icon">🎟️</div>Full-day access on Saturday, 17th April 2026</div>
           <div class="hl-item reveal"><div class="hl-icon">🎲</div>Multiple competitive game rounds</div>
@@ -607,6 +731,7 @@
           <div class="hl-item reveal"><div class="hl-icon">🏅</div>Participation certificate for every player</div>
           <div class="hl-item reveal"><div class="hl-icon">🤝</div>Network with 50+ ambitious professionals</div>
         </div>
+
         <div class="price-block reveal">
           <div>
             <div class="price-only">Registration Fee</div>
@@ -618,10 +743,13 @@
           </div>
         </div>
       </div>
+
+      <!-- Right: Form -->
       <div>
         <div class="form-card reveal" id="reg-form-card">
           <div class="form-title">🎮 Register to Play</div>
           <div class="form-sub">Fill in your details &amp; secure your spot instantly</div>
+
           <form id="boss-form" onsubmit="return false;">
             <div class="form-row">
               <div class="form-group">
@@ -633,14 +761,17 @@
                 <input type="text" id="f-city" class="form-input" placeholder="Your city" required>
               </div>
             </div>
+
             <div class="form-group">
               <label class="form-label" for="f-email">Email Address *</label>
               <input type="email" id="f-email" class="form-input" placeholder="your@email.com" required autocomplete="email">
             </div>
+
             <div class="form-group">
               <label class="form-label" for="f-phone">WhatsApp Number *</label>
               <input type="tel" id="f-phone" class="form-input" placeholder="10-digit WhatsApp number" required maxlength="10" inputmode="numeric">
             </div>
+
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label" for="f-age">Age</label>
@@ -651,51 +782,86 @@
                 <input type="text" id="f-occ" class="form-input" placeholder="Entrepreneur / Student…">
               </div>
             </div>
+
             <div class="form-secure">
               🔒 Your data is 100% secure. Payments powered by Razorpay.
             </div>
+
             <button type="button" class="btn-pay" id="pay-btn" onclick="submitAndPay()">
               🎮 REGISTER &amp; PAY ₹999 →
             </button>
           </form>
         </div>
       </div>
+
     </div>
   </div>
 </section>
 
 <div class="divider"></div>
 
+<!-- ==================== FAQ ==================== -->
 <section class="faq-bg" id="faq">
   <div class="wrap">
     <div style="text-align:center">
       <div class="sec-label reveal">FREQUENTLY ASKED</div>
       <h2 class="sec-title reveal">Got Questions? 🤔<br>We've Got Answers.</h2>
     </div>
+
     <div class="faq-list">
       <div class="faq-item reveal">
-        <button class="faq-q" onclick="toggleFAQ(this)">What exactly is the "I Am the Boss" game?<span class="faq-arrow">▼</span></button>
-        <div class="faq-body"><div class="faq-inner">"I Am the Boss" is a live, real-time business simulation game where players compete across multiple rounds of negotiation, deal-making, resource management, and strategic decision-making. It's fast-paced, fun, and intensely competitive!</div></div>
+        <button class="faq-q" onclick="toggleFAQ(this)">
+          What exactly is the "I Am the Boss" game?
+          <span class="faq-arrow">▼</span>
+        </button>
+        <div class="faq-body"><div class="faq-inner">
+          "I Am the Boss" is a live, real-time business simulation game where players compete across multiple rounds of negotiation, deal-making, resource management, and strategic decision-making. It's fast-paced, fun, and intensely competitive!
+        </div></div>
       </div>
       <div class="faq-item reveal">
-        <button class="faq-q" onclick="toggleFAQ(this)">Who should attend this event?<span class="faq-arrow">▼</span></button>
-        <div class="faq-body"><div class="faq-inner">Perfect for entrepreneurs, business professionals, students, managers, and anyone who loves strategic thinking and competitive games. No prior experience needed — just bring your A-game and a competitive mindset!</div></div>
+        <button class="faq-q" onclick="toggleFAQ(this)">
+          Who should attend this event?
+          <span class="faq-arrow">▼</span>
+        </button>
+        <div class="faq-body"><div class="faq-inner">
+          Perfect for entrepreneurs, business professionals, students, managers, and anyone who loves strategic thinking and competitive games. No prior experience needed — just bring your A-game and a competitive mindset!
+        </div></div>
       </div>
       <div class="faq-item reveal">
-        <button class="faq-q" onclick="toggleFAQ(this)">What does the ₹999 registration fee include?<span class="faq-arrow">▼</span></button>
-        <div class="faq-body"><div class="faq-inner">The ₹999 fee covers full-day event access, your Boss Kit (game materials), refreshments, an official participation certificate, and the chance to win cash prizes and trophies. Great value for an unforgettable day!</div></div>
+        <button class="faq-q" onclick="toggleFAQ(this)">
+          What does the ₹999 registration fee include?
+          <span class="faq-arrow">▼</span>
+        </button>
+        <div class="faq-body"><div class="faq-inner">
+          The ₹999 fee covers full-day event access, your Boss Kit (game materials), refreshments, and an official participation certificate. Great value for an unforgettable day!
+        </div></div>
       </div>
       <div class="faq-item reveal">
-        <button class="faq-q" onclick="toggleFAQ(this)">How do I know my registration is confirmed?<span class="faq-arrow">▼</span></button>
-        <div class="faq-body"><div class="faq-inner">Immediately after payment, you'll receive a confirmation email at your registered email address with your payment ID and event details. You'll also be redirected to our WhatsApp for event coordination and updates.</div></div>
+        <button class="faq-q" onclick="toggleFAQ(this)">
+          How do I know my registration is confirmed?
+          <span class="faq-arrow">▼</span>
+        </button>
+        <div class="faq-body"><div class="faq-inner">
+          Immediately after payment, you'll receive a confirmation email at your registered email address with your payment ID and event details. You'll also be redirected to our WhatsApp for event coordination and updates.
+        </div></div>
       </div>
       <div class="faq-item reveal">
-        <button class="faq-q" onclick="toggleFAQ(this)">What are the prizes for winners?<span class="faq-arrow">▼</span></button>
-        <div class="faq-body"><div class="faq-inner">Prizes include cash rewards for top performers, the coveted "Boss Trophy," and special recognition certificates. All participants receive a participation certificate regardless of outcome.</div></div>
+        <button class="faq-q" onclick="toggleFAQ(this)">
+          What do the winners receive?
+          <span class="faq-arrow">▼</span>
+        </button>
+        <div class="faq-body"><div class="faq-inner">
+          The top performer receives the official "Boss" recognition. All participants receive a participation certificate regardless of outcome.
+        </div></div>
       </div>
       <div class="faq-item reveal">
-        <button class="faq-q" onclick="toggleFAQ(this)">Is there a refund policy?<span class="faq-arrow">▼</span></button>
-        <div class="faq-body"><div class="faq-inner">Due to limited seats and event logistics, registrations are non-refundable. However, your spot can be transferred to another person with prior notice. Contact us on WhatsApp for any concerns.</div></div>
+        <button class="faq-q" onclick="toggleFAQ(this)">
+          Is there a refund policy?
+          <span class="faq-arrow">▼</span>
+        </button>
+        <div class="faq-body"><div class="faq-inner">
+          Due to limited seats and event logistics, registrations are non-refundable. However, your spot can be transferred to another person with prior notice. Contact us on WhatsApp for any concerns.
+        </div></div>
       </div>
     </div>
   </div>
@@ -703,6 +869,7 @@
 
 <div class="divider"></div>
 
+<!-- ==================== FOOTER ==================== -->
 <footer class="footer">
   <div class="footer-name">AI TYCOON</div>
   <div class="footer-sub">Tech Tycoon Digital Solutions — Crafting Game-Changing Experiences</div>
@@ -714,10 +881,12 @@
   <div class="footer-copy">© 2026 AI Tycoon – I Am the Boss Game Event. All rights reserved.</div>
 </footer>
 
+<!-- ==================== FLOATING CTA ==================== -->
 <button class="float-cta" id="float-cta" onclick="document.getElementById('register').scrollIntoView({behavior:'smooth'})">
   🎮 REGISTER NOW — ₹999
 </button>
 
+<!-- ==================== SUCCESS OVERLAY ==================== -->
 <div class="success-overlay" id="success-overlay">
   <div class="success-card">
     <span class="success-icon">🎉</span>
@@ -735,49 +904,68 @@
   </div>
 </div>
 
+<!-- ==================== SCRIPTS ==================== -->
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
+  /* =====================================================
+     ⚙️  CONFIGURATION — Update APPS_SCRIPT_URL after deploying!
+  ===================================================== */
   const APPS_SCRIPT_URL  = 'https://script.google.com/macros/s/AKfycbxSKDOhBvK2lUOOPj0HqIBfSvQj2UFJNliYL2M2nCmIEavKY6QMrh4nHJsLOviFV6_z3Q/exec';
   const RAZORPAY_KEY_ID  = 'rzp_live_gfoS1OjC8tvWjP';
   const WA_NUMBER        = '917558133039';
   const WA_MSG           = encodeURIComponent('Hai I am successfully register your game event');
   const WA_BASE_LINK     = `https://wa.me/${WA_NUMBER}?text=${WA_MSG}`;
 
-  // Particle background
+  /* =====================================================
+     🌟  PARTICLE BACKGROUND
+  ===================================================== */
   const pCanvas = document.getElementById('particle-canvas');
   const pCtx    = pCanvas.getContext('2d');
   let   pts     = [];
+
   function resizeP() { pCanvas.width = innerWidth; pCanvas.height = innerHeight; }
   function mkPts() {
     pts = [];
     const n = Math.floor(innerWidth * innerHeight / 11000);
     for (let i = 0; i < n; i++) pts.push({
-      x: Math.random() * pCanvas.width, y: Math.random() * pCanvas.height,
-      r: Math.random() * 1.8 + 0.3, vx:(Math.random()-.5)*.28, vy:(Math.random()-.5)*.28,
-      o: Math.random() * .55 + .08, h: Math.random() > .5 ? 265 : 192
+      x: Math.random() * pCanvas.width,
+      y: Math.random() * pCanvas.height,
+      r: Math.random() * 1.8 + 0.3,
+      vx:(Math.random()-.5)*.28,
+      vy:(Math.random()-.5)*.28,
+      o: Math.random() * .55 + .08,
+      h: Math.random() > .5 ? 265 : 192
     });
   }
   function drawP() {
     pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height);
     pts.forEach(p => {
       p.x += p.vx; p.y += p.vy;
-      if (p.x < 0) p.x = pCanvas.width; if (p.x > pCanvas.width) p.x = 0;
-      if (p.y < 0) p.y = pCanvas.height; if (p.y > pCanvas.height) p.y = 0;
-      pCtx.beginPath(); pCtx.arc(p.x, p.y, p.r, 0, Math.PI*2);
-      pCtx.fillStyle = `hsla(${p.h},80%,70%,${p.o})`; pCtx.fill();
+      if (p.x < 0) p.x = pCanvas.width;
+      if (p.x > pCanvas.width) p.x = 0;
+      if (p.y < 0) p.y = pCanvas.height;
+      if (p.y > pCanvas.height) p.y = 0;
+      pCtx.beginPath();
+      pCtx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+      pCtx.fillStyle = `hsla(${p.h},80%,70%,${p.o})`;
+      pCtx.fill();
     });
     requestAnimationFrame(drawP);
   }
   resizeP(); mkPts(); drawP();
   window.addEventListener('resize', () => { resizeP(); mkPts(); });
 
-  // Countdown timer
+  /* =====================================================
+     ⏱️  COUNTDOWN TIMER
+  ===================================================== */
   const eventDate = new Date('2026-04-17T09:00:00+05:30');
   function updateCd() {
     const diff = eventDate - Date.now();
     if (diff <= 0) { ['days','hours','mins','secs'].forEach(k => document.getElementById('cd-'+k).textContent='00'); return; }
-    const d = Math.floor(diff/86400000), h = Math.floor((diff%86400000)/3600000),
-          m = Math.floor((diff%3600000)/60000), s = Math.floor((diff%60000)/1000);
+    const d = Math.floor(diff/86400000);
+    const h = Math.floor((diff%86400000)/3600000);
+    const m = Math.floor((diff%3600000)/60000);
+    const s = Math.floor((diff%60000)/1000);
     document.getElementById('cd-days').textContent  = String(d).padStart(2,'0');
     document.getElementById('cd-hours').textContent = String(h).padStart(2,'0');
     document.getElementById('cd-mins').textContent  = String(m).padStart(2,'0');
@@ -785,37 +973,52 @@
   }
   updateCd(); setInterval(updateCd, 1000);
 
-  // Floating CTA
+  /* =====================================================
+     📍  FLOATING CTA ON SCROLL
+  ===================================================== */
   window.addEventListener('scroll', () => {
     const heroH = document.getElementById('hero').offsetHeight;
     document.getElementById('float-cta').classList.toggle('show', scrollY > heroH - 200);
   });
 
-  // Scroll reveal
+  /* =====================================================
+     👁️  SCROLL REVEAL
+  ===================================================== */
   const ro = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); ro.unobserve(e.target); } });
   }, { threshold: .1 });
   document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
 
-  // FAQ
+  /* =====================================================
+     ❓  FAQ ACCORDION
+  ===================================================== */
   function toggleFAQ(btn) {
-    const item = btn.parentElement, wasOpen = item.classList.contains('open');
+    const item = btn.parentElement;
+    const wasOpen = item.classList.contains('open');
     document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
     if (!wasOpen) item.classList.add('open');
   }
 
-  // Confetti
-  const cCanvas = document.getElementById('confetti-canvas'), cCtx = cCanvas.getContext('2d');
-  let cPieces = [], cRunning = false;
+  /* =====================================================
+     🎊  CONFETTI
+  ===================================================== */
+  const cCanvas = document.getElementById('confetti-canvas');
+  const cCtx    = cCanvas.getContext('2d');
+  let   cPieces = [], cRunning = false;
   const C_COLORS = ['#7c3aed','#00d4ff','#ffd700','#ff6b6b','#00ff88','#a855f7','#ff9f1c'];
+
   function launchConfetti() {
-    cCanvas.width = innerWidth; cCanvas.height = innerHeight; cPieces = []; cRunning = true;
+    cCanvas.width = innerWidth; cCanvas.height = innerHeight;
+    cPieces = []; cRunning = true;
     for (let i = 0; i < 160; i++) cPieces.push({
-      x: Math.random()*cCanvas.width, y:-10, w:Math.random()*9+3, h:Math.random()*6+3,
-      vx:(Math.random()-.5)*5, vy:Math.random()*5+2, rot:Math.random()*360,
-      rv:(Math.random()-.5)*12, color:C_COLORS[Math.floor(Math.random()*C_COLORS.length)], o:1
+      x: Math.random() * cCanvas.width, y: -10,
+      w: Math.random()*9+3, h: Math.random()*6+3,
+      vx:(Math.random()-.5)*5, vy:Math.random()*5+2,
+      rot: Math.random()*360, rv:(Math.random()-.5)*12,
+      color: C_COLORS[Math.floor(Math.random()*C_COLORS.length)], o:1
     });
-    animateC(); setTimeout(() => cRunning = false, 5500);
+    animateC();
+    setTimeout(() => cRunning = false, 5500);
   }
   function animateC() {
     if (!cRunning) { cCtx.clearRect(0,0,cCanvas.width,cCanvas.height); return; }
@@ -824,14 +1027,20 @@
     cPieces.forEach(p => {
       p.x+=p.vx; p.y+=p.vy; p.rot+=p.rv;
       if (p.y > cCanvas.height-180) p.o -= .018;
-      cCtx.save(); cCtx.translate(p.x,p.y); cCtx.rotate(p.rot*Math.PI/180);
-      cCtx.globalAlpha = Math.max(0,p.o); cCtx.fillStyle = p.color;
-      cCtx.fillRect(-p.w/2,-p.h/2,p.w,p.h); cCtx.restore();
+      cCtx.save();
+      cCtx.translate(p.x, p.y);
+      cCtx.rotate(p.rot*Math.PI/180);
+      cCtx.globalAlpha = Math.max(0,p.o);
+      cCtx.fillStyle = p.color;
+      cCtx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
+      cCtx.restore();
     });
     requestAnimationFrame(animateC);
   }
 
-  // Payment flow
+  /* =====================================================
+     💳  PAYMENT FLOW
+  ===================================================== */
   async function submitAndPay() {
     const name  = document.getElementById('f-name').value.trim();
     const email = document.getElementById('f-email').value.trim();
@@ -839,65 +1048,110 @@
     const city  = document.getElementById('f-city').value.trim();
     const age   = document.getElementById('f-age').value.trim();
     const occ   = document.getElementById('f-occ').value.trim();
-    if (!name)  { flashError('f-name','Please enter your full name'); return; }
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { flashError('f-email','Please enter a valid email address'); return; }
-    if (!phone || !/^[6-9]\d{9}$/.test(phone)) { flashError('f-phone','Please enter a valid 10-digit Indian mobile number'); return; }
-    if (!city)  { flashError('f-city','Please enter your city'); return; }
+
+    // --- Validation ---
+    if (!name)  { flashError('f-name', 'Please enter your full name'); return; }
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { flashError('f-email', 'Please enter a valid email address'); return; }
+    if (!phone || !/^[6-9]\d{9}$/.test(phone)) { flashError('f-phone', 'Please enter a valid 10-digit Indian mobile number'); return; }
+    if (!city)  { flashError('f-city', 'Please enter your city'); return; }
+
     const payBtn = document.getElementById('pay-btn');
-    payBtn.disabled = true; payBtn.textContent = '⏳ Creating your order…';
+    payBtn.disabled = true;
+    payBtn.textContent = '⏳ Creating your order…';
+
+    // --- Step 1: Create Razorpay order via Apps Script ---
     let orderId;
     try {
       const res = await fetch(APPS_SCRIPT_URL, {
-        method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
-        body: JSON.stringify({action:'createOrder',name,email,phone,city,age,occupation:occ})
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action:'createOrder', name, email, phone, city, age, occupation:occ })
       });
       const data = await res.json();
-      if (!data.success || !data.orderId) { alert('Could not create payment order. Please try again.\n'+(data.error||'')); resetBtn(payBtn); return; }
+      if (!data.success || !data.orderId) {
+        alert('Could not create payment order. Please try again.\n' + (data.error || ''));
+        resetBtn(payBtn); return;
+      }
       orderId = data.orderId;
-    } catch(err) { alert('Connection error. Please check your internet and try again.'); console.error(err); resetBtn(payBtn); return; }
+    } catch (err) {
+      alert('Connection error. Please check your internet and try again.');
+      console.error(err); resetBtn(payBtn); return;
+    }
+
     payBtn.textContent = '⚡ Opening payment…';
+
+    // --- Step 2: Open Razorpay Checkout ---
     const rzpOptions = {
-      key: RAZORPAY_KEY_ID, order_id: orderId, amount: 99900, currency:'INR',
-      name:'I Am the Boss – Game Event', description:'Game Event Registration · Saturday, 17 April 2026',
-      prefill:{name, email, contact:'91'+phone}, theme:{color:'#7c3aed'},
+      key:         RAZORPAY_KEY_ID,
+      order_id:    orderId,
+      amount:      99900,
+      currency:    'INR',
+      name:        'I Am the Boss – Game Event',
+      description: 'Game Event Registration · Saturday, 17 April 2026',
+      prefill:     { name, email, contact: '91' + phone },
+      theme:       { color: '#7c3aed' },
+
       handler: async function(response) {
         payBtn.textContent = '✅ Verifying payment…';
         let waLink = WA_BASE_LINK;
         try {
           const vRes = await fetch(APPS_SCRIPT_URL, {
-            method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
             body: JSON.stringify({
-              action:'verifyPayment',
-              razorpay_order_id: response.razorpay_order_id,
+              action: 'verifyPayment',
+              razorpay_order_id:   response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_signature: response.razorpay_signature,
-              name,email,phone,city
+              razorpay_signature:  response.razorpay_signature,
+              name, email, phone, city
             })
           });
           const vData = await vRes.json();
           if (vData.waLink) waLink = vData.waLink;
-        } catch(e) { console.error('Verify error:',e); }
-        showSuccess(waLink); resetBtn(payBtn);
+        } catch (e) { console.error('Verify error:', e); }
+        showSuccess(waLink);
+        resetBtn(payBtn);
       },
-      modal:{ondismiss:()=>resetBtn(payBtn)}
+
+      modal: { ondismiss: () => resetBtn(payBtn) }
     };
+
     const rzp = new Razorpay(rzpOptions);
-    rzp.on('payment.failed',function(r){ alert('Payment failed: '+r.error.description); resetBtn(payBtn); });
+    rzp.on('payment.failed', function(r) {
+      alert('Payment failed: ' + r.error.description);
+      resetBtn(payBtn);
+    });
     rzp.open();
   }
-  function resetBtn(btn) { btn.disabled=false; btn.innerHTML='🎮 REGISTER &amp; PAY ₹999 →'; }
-  function flashError(id,msg) {
-    const el=document.getElementById(id);
-    el.style.borderColor='var(--red)'; el.style.boxShadow='0 0 0 3px rgba(255,68,68,0.18)';
-    alert(msg); el.focus();
-    setTimeout(()=>{el.style.borderColor='';el.style.boxShadow='';},3500);
+
+  function resetBtn(btn) {
+    btn.disabled = false;
+    btn.innerHTML = '🎮 REGISTER &amp; PAY ₹999 →';
   }
+
+  function flashError(id, msg) {
+    const el = document.getElementById(id);
+    el.style.borderColor = 'var(--red)';
+    el.style.boxShadow   = '0 0 0 3px rgba(255,68,68,0.18)';
+    alert(msg);
+    el.focus();
+    setTimeout(() => { el.style.borderColor=''; el.style.boxShadow=''; }, 3500);
+  }
+
   function showSuccess(waLink) {
     launchConfetti();
-    document.getElementById('wa-btn').href=waLink;
+    document.getElementById('wa-btn').href = waLink;
     document.getElementById('success-overlay').classList.add('active');
-    let count=5; const ct=document.getElementById('cd-counter');
-    const t=setInterval(()=>{count--;ct.textContent=count;if(count<=0){clearInterval(t);window.open(waLink,'_blank');}},1000);
+    let count = 5;
+    const ct = document.getElementById('cd-counter');
+    const t  = setInterval(() => {
+      count--;
+      ct.textContent = count;
+      if (count <= 0) {
+        clearInterval(t);
+        window.open(waLink, '_blank');
+      }
+    }, 1000);
   }
 </script>
 </body>
