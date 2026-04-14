@@ -111,10 +111,13 @@
        HERO
     =========================== */
     .hero {
-      position: relative; min-height:100vh;
-      display:flex; align-items:center; justify-content:center;
+      position:relative;
+      min-height:95vh; display:flex; align-items:center; justify-content:center;
       text-align:center; padding:130px 24px 80px;
       z-index:1; overflow:hidden;
+      background: radial-gradient(at 0% 0%, rgba(79, 70, 229, 0.08) 0, transparent 50%), 
+                  radial-gradient(at 100% 0%, rgba(14, 165, 233, 0.08) 0, transparent 50%), 
+                  radial-gradient(at 50% 100%, rgba(217, 119, 6, 0.05) 0, transparent 50%);
     }
     .hero-glow { display:none; }
     .hero-inner { position:relative; z-index:1; max-width:900px; width:100%; }
@@ -154,7 +157,8 @@
       font-family: var(--font-game);
       font-size: clamp(56px, 12vw, 110px);
       font-weight:800; line-height:0.95; letter-spacing:-0.04em;
-      color: var(--txt);
+      background: linear-gradient(135deg, var(--txt) 0%, var(--purple) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
       margin-bottom:12px;
     }
     .hero-sub {
@@ -196,7 +200,7 @@
     @keyframes scan { 0%{transform:translateX(-100%);} 100%{transform:translateX(100%);} }
     .cd-num {
       display:block; font-family:var(--font-game); font-size:42px; font-weight:700;
-      color:#fff; line-height:1;
+      color:var(--purple); line-height:1;
     }
     .cd-lbl {
       display:block; font-size:10px; color:var(--txt-muted);
@@ -256,26 +260,14 @@
       font-family:var(--font-game); font-size:10px; letter-spacing:4px;
       color:var(--cyan); text-transform:uppercase; margin-bottom:12px;
     }
-    .sec-title {
-      font-family:var(--font-game); font-size:clamp(26px,5vw,46px);
-      font-weight:900; line-height:1.1; margin-bottom:16px;
+    .sec-title { 
+      font-family:var(--font-game); font-size:clamp(32px, 8vw, 56px); font-weight:800; 
+      line-height:1.1; margin-bottom:20px; letter-spacing:-0.03em;
+      background: linear-gradient(135deg, var(--txt) 0%, var(--purple) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
     .sec-body {
       font-size:18px; color:var(--txt-muted); max-width:740px; line-height:1.75;
-    }
-
-    /* ===========================
-       SOCIAL PROOF
-    =========================== */
-    .proof-row {
-      display:flex; justify-content:center; align-items:center; gap:40px; flex-wrap:wrap;
-      padding:40px 24px; opacity:0.6; filter:grayscale(1); transition:opacity 0.3s;
-    }
-    .proof-row:hover { opacity:1; filter:none; }
-    .proof-logo { height:24px; opacity:0.8; }
-    .proof-label {
-      font-size:11px; font-weight:700; color:var(--txt-muted); letter-spacing:2px;
-      text-transform:uppercase; margin-bottom:12px; display:block; text-align:center;
     }
 
     /* ===========================
@@ -301,10 +293,14 @@
     .testi-grid {
       display:grid; grid-template-columns:repeat(auto-fit,minmax(330px,1fr)); gap:24px; margin-top:50px;
     }
+    #proof {
+      background: #fffbef;
+    }
     .testi-card {
       background:#ffffff; border:1px solid rgba(0,0,0,0.05);
+      border-top: 5px solid var(--gold);
       border-radius:24px; padding:36px; position:relative;
-      box-shadow:0 4px 15px rgba(0,0,0,0.02);
+      box-shadow:0 10px 30px rgba(217, 119, 6, 0.05);
     }
     .testi-quote { font-size:16px; font-style:italic; color:var(--txt); line-height:1.8; margin-bottom:24px; }
     .testi-author { display:flex; align-items:center; gap:16px; }
@@ -346,7 +342,7 @@
        ABOUT SECTION
     =========================== */
     .about-bg {
-      background: var(--bg-secondary);
+      background: #f5f7ff;
     }
     .about-grid {
       display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center;
@@ -354,8 +350,9 @@
     .boss-card {
       background: #ffffff;
       border: 1px solid rgba(0,0,0,0.05);
+      border-top: 5px solid var(--gold);
       border-radius:24px; padding:40px; text-align:center;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.05); position:relative; overflow:hidden;
+      box-shadow: 0 20px 40px rgba(217, 119, 6, 0.08); position:relative; overflow:hidden;
     }
     .boss-card::before {
       content:''; position:absolute; top:0; left:0; right:0; height:1px;
@@ -370,7 +367,7 @@
     @keyframes float { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-15px);} }
     .boss-card-title {
       font-family:var(--font-game); font-size:22px; font-weight:800;
-      color:#fff; margin-bottom:12px; tracking-tighter;
+      color:var(--txt); margin-bottom:12px;
     }
     .boss-card-sub { font-size:14px; color:var(--txt-muted); margin-bottom:28px; }
     .info-row {
@@ -390,10 +387,10 @@
     .steps { display:flex; flex-direction:column; gap:24px; margin-top:32px; }
     .step { display:flex; gap:18px; align-items:flex-start; }
     .step-num {
-      width:42px; height:42px; min-width:42px;
-      background:linear-gradient(135deg,var(--purple),var(--purple-light));
+      width:44px; height:44px; background: linear-gradient(135deg, var(--purple), var(--purple-light));
       border-radius:50%; display:flex; align-items:center; justify-content:center;
-      font-family:var(--font-game); font-size:14px; font-weight:700; color:#fff;
+      color:#fff; font-weight:800; flex-shrink:0;
+      box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
     }
     .step-h { font-size:16px; font-weight:700; margin-bottom:4px; }
     .step-p { font-size:14px; color:var(--txt-muted); line-height:1.6; }
@@ -401,14 +398,19 @@
     /* ===========================
        FEATURES
     =========================== */
+    #features {
+      background: #f0f9ff;
+    }
     .features-grid {
       display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:22px; margin-top:52px;
     }
     .feat-card {
       background: #ffffff;
-      border: 1px solid rgba(0,0,0,0.05); border-radius:20px; padding:32px;
+      border: 1px solid rgba(0,0,0,0.05); 
+      border-top: 5px solid var(--cyan);
+      border-radius:20px; padding:32px;
       transition:all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position:relative; overflow:hidden;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+      box-shadow: 0 10px 30px rgba(14, 165, 233, 0.05);
     }
     .feat-card::before {
       content:''; position:absolute; top:0; left:0; right:0; height:1px;
@@ -702,20 +704,6 @@
   </div>
 </section>
 
-<div class="divider"></div>
-
-<!-- ==================== SOCIAL PROOF ==================== -->
-<div class="wrap" style="padding: 40px 24px;">
-  <span class="proof-label">PLATFORMS & STRATEGIES FEATURED</span>
-  <div class="proof-row" style="display:flex; justify-content:center; align-items:center; gap:40px; flex-wrap:wrap; opacity:0.6; filter:grayscale(1);">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" alt="ChatGPT" class="proof-logo" style="height:24px;">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/7/7a/Canva_icon_2021.svg" alt="Canva AI" class="proof-logo" style="height:24px;">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/Claude_AI_logo.svg" alt="Claude AI" class="proof-logo" style="height:24px;">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Gemini_language_model_logo.png" alt="Google Gemini" class="proof-logo" style="height:24px;">
-  </div>
-</div>
-
-<div class="divider"></div>
 
 <!-- ==================== PROBLEM / SOLUTION ==================== -->
 <section id="why-this-matters">
@@ -1058,7 +1046,10 @@
 <div class="sticky-cta" id="sticky-cta">
   <div class="sticky-info">
     <span class="sticky-tag">Limited Seats Left ⏳</span>
-    <span class="sticky-price">₹999 <small style="font-size:10px; opacity:0.6; text-decoration:line-through;">₹2999</small></span>
+    <div class="sticky-price">
+      <span style="color:var(--green)">₹999</span> 
+      <small style="font-size:10px; opacity:0.6; text-decoration:line-through; color:var(--txt-muted);">₹2999</small>
+    </div>
   </div>
   <button class="btn-sticky" onclick="openRegModal()">
     🚀 REGISTER NOW
