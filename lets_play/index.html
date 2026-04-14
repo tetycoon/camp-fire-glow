@@ -868,15 +868,9 @@
       <div class="form-sub">Fill in your details &amp; secure your spot instantly</div>
 
       <form id="boss-form" onsubmit="return false;">
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label" for="f-name">Full Name *</label>
-            <input type="text" id="f-name" class="form-input" placeholder="Your full name" required autocomplete="name">
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="f-city">City *</label>
-            <input type="text" id="f-city" class="form-input" placeholder="Your city" required>
-          </div>
+        <div class="form-group">
+          <label class="form-label" for="f-name">Full Name *</label>
+          <input type="text" id="f-name" class="form-input" placeholder="Your full name" required autocomplete="name">
         </div>
 
         <div class="form-group">
@@ -889,15 +883,9 @@
           <input type="tel" id="f-phone" class="form-input" placeholder="10-digit WhatsApp number" required maxlength="10" inputmode="numeric">
         </div>
 
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label" for="f-age">Age</label>
-            <input type="number" id="f-age" class="form-input" placeholder="Age" min="16" max="70">
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="f-occ">Occupation</label>
-            <input type="text" id="f-occ" class="form-input" placeholder="Entrepreneur…">
-          </div>
+        <div class="form-group">
+          <label class="form-label" for="f-occ">Occupation</label>
+          <input type="text" id="f-occ" class="form-input" placeholder="Entrepreneur…">
         </div>
 
         <div class="form-secure">
@@ -1194,15 +1182,12 @@
     const name  = document.getElementById('f-name').value.trim();
     const email = document.getElementById('f-email').value.trim();
     const phone = document.getElementById('f-phone').value.trim();
-    const city  = document.getElementById('f-city').value.trim();
-    const age   = document.getElementById('f-age').value.trim();
     const occ   = document.getElementById('f-occ').value.trim();
 
     // --- Validation ---
     if (!name)  { flashError('f-name', 'Please enter your full name'); return; }
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { flashError('f-email', 'Please enter a valid email address'); return; }
     if (!phone || !/^[6-9]\d{9}$/.test(phone)) { flashError('f-phone', 'Please enter a valid 10-digit Indian mobile number'); return; }
-    if (!city)  { flashError('f-city', 'Please enter your city'); return; }
 
     const payBtn = document.getElementById('pay-btn');
     payBtn.disabled = true;
@@ -1214,7 +1199,7 @@
       const res = await fetch(APPS_SCRIPT_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action:'createOrder', name, email, phone, city, age, occupation:occ })
+        body: JSON.stringify({ action:'createOrder', name, email, phone, occupation:occ })
       });
       const data = await res.json();
       if (!data.success || !data.orderId) {
@@ -1252,7 +1237,7 @@
               razorpay_order_id:   response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature:  response.razorpay_signature,
-              name, email, phone, city
+              name, email, phone
             })
           });
           const vData = await vRes.json();
