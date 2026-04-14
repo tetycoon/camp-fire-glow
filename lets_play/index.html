@@ -496,11 +496,38 @@
     .float-cta:hover { box-shadow:0 14px 44px rgba(124,58,237,0.65); transform:translateX(-50%) translateY(-4px); }
 
     /* ===========================
+       REGISTRATION MODAL
+    =========================== */
+    .modal-overlay {
+      position:fixed; inset:0; background:rgba(3,7,17,0.85);
+      z-index:1000; display:flex; align-items:center; justify-content:center;
+      opacity:0; pointer-events:none; transition:all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      backdrop-filter: blur(12px); padding:20px;
+    }
+    .modal-overlay.active { opacity:1; pointer-events:all; }
+    .modal-container {
+      max-width:550px; width:100%; position:relative;
+      transform:scale(0.9) translateY(20px); transition:all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .modal-overlay.active .modal-container { transform:scale(1) translateY(0); }
+    
+    .modal-close {
+      position:absolute; top:-50px; right:0;
+      width:40px; height:40px; border-radius:50%;
+      background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);
+      color:#fff; font-size:24px; display:flex; align-items:center; justify-content:center;
+      cursor:pointer; transition:all 0.3s; z-index:1001;
+    }
+    .modal-close:hover { background:var(--red); border-color:var(--red); transform:rotate(90deg); }
+    
+    body.no-scroll { overflow:hidden; }
+
+    /* ===========================
        SUCCESS OVERLAY
     =========================== */
     .success-overlay {
       position:fixed; inset:0; background:rgba(3,7,17,0.98);
-      z-index:200; display:flex; align-items:center; justify-content:center;
+      z-index:1100; display:flex; align-items:center; justify-content:center;
       opacity:0; pointer-events:none; transition:opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
       backdrop-filter: blur(15px);
     }
@@ -565,7 +592,7 @@
       <div class="nav-logo-tag">GAME EVENTS</div>
     </div>
   </div>
-  <button class="nav-btn" onclick="document.getElementById('register').scrollIntoView({behavior:'smooth'})">
+  <button class="nav-btn" onclick="openRegModal()">
     REGISTER — ₹999
   </button>
 </nav>
@@ -594,7 +621,7 @@
     </div>
 
     <div class="hero-ctas">
-      <button class="btn-primary" id="hero-reg-btn" onclick="document.getElementById('register').scrollIntoView({behavior:'smooth'})">
+      <button class="btn-primary" id="hero-reg-btn" onclick="openRegModal()">
         🎮 SECURE YOUR SPOT — ₹999
       </button>
       <button class="btn-outline" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">
@@ -711,90 +738,89 @@
 <!-- ==================== REGISTRATION ==================== -->
 <section class="reg-bg" id="register">
   <div class="wrap">
-    <div class="reg-grid">
+    <div class="reg-grid" style="grid-template-columns: 1fr; text-align: center;">
 
-      <!-- Left: Info -->
-      <div>
+      <!-- Info -->
+      <div style="max-width: 800px; margin: 0 auto;">
         <div class="sec-label reveal">LIMITED SPOTS AVAILABLE</div>
         <h2 class="sec-title reveal" style="font-family:var(--font-game)">
           Secure Your Seat<br>at the Table 🎮
         </h2>
-        <p class="sec-body reveal">
+        <p class="sec-body reveal" style="margin: 0 auto 32px;">
           Don't miss your chance to play, compete, network, and prove yourself at Tamil Nadu's most exciting live business game event.
         </p>
 
-          <div class="highlights">
-            <div class="hl-item reveal"><div class="hl-icon">🎟️</div>Full-day access on Saturday, 17th April 2026</div>
-            <div class="hl-item reveal"><div class="hl-icon">🎲</div>Multiple competitive game rounds</div>
-            <div class="hl-item reveal"><div class="hl-icon">🎁</div>Boss Kit with game materials on arrival</div>
-            <div class="hl-item reveal"><div class="hl-icon">🤝</div>Network with 50+ ambitious professionals</div>
-          </div>
-
-        <div class="price-block reveal">
-          <div>
-            <div class="price-only">Registration Fee</div>
-            <div class="price-amount">₹999</div>
-          </div>
-          <div>
-            <div class="price-once">One-time payment</div>
-            <div class="price-secure">✓ Secure Razorpay Checkout</div>
-          </div>
+        <div class="highlights" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); text-align: left; gap: 16px;">
+          <div class="hl-item reveal"><div class="hl-icon">🎟️</div>Full-day access on 17th April 2026</div>
+          <div class="hl-item reveal"><div class="hl-icon">🎲</div>Multiple competitive game rounds</div>
+          <div class="hl-item reveal"><div class="hl-icon">🎁</div>Boss Kit with game materials</div>
+          <div class="hl-item reveal"><div class="hl-icon">🤝</div>Network with 50+ professionals</div>
         </div>
-      </div>
 
-      <!-- Right: Form -->
-      <div>
-        <div class="form-card reveal" id="reg-form-card">
-          <div class="form-title">🎮 Register to Play</div>
-          <div class="form-sub">Fill in your details &amp; secure your spot instantly</div>
-
-          <form id="boss-form" onsubmit="return false;">
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label" for="f-name">Full Name *</label>
-                <input type="text" id="f-name" class="form-input" placeholder="Your full name" required autocomplete="name">
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="f-city">City *</label>
-                <input type="text" id="f-city" class="form-input" placeholder="Your city" required>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label class="form-label" for="f-email">Email Address *</label>
-              <input type="email" id="f-email" class="form-input" placeholder="your@email.com" required autocomplete="email">
-            </div>
-
-            <div class="form-group">
-              <label class="form-label" for="f-phone">WhatsApp Number *</label>
-              <input type="tel" id="f-phone" class="form-input" placeholder="10-digit WhatsApp number" required maxlength="10" inputmode="numeric">
-            </div>
-
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label" for="f-age">Age</label>
-                <input type="number" id="f-age" class="form-input" placeholder="Your age" min="16" max="70">
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="f-occ">Occupation</label>
-                <input type="text" id="f-occ" class="form-input" placeholder="Entrepreneur / Student…">
-              </div>
-            </div>
-
-            <div class="form-secure">
-              🔒 Your data is 100% secure. Payments powered by Razorpay.
-            </div>
-
-            <button type="button" class="btn-pay" id="pay-btn" onclick="submitAndPay()">
-              🎮 REGISTER &amp; PAY ₹999 →
-            </button>
-          </form>
+        <div style="margin-top: 50px;">
+          <button class="btn-primary" onclick="openRegModal()" style="padding: 24px 60px; font-size: 16px;">
+            🎮 REGISTER NOW — ₹999
+          </button>
         </div>
       </div>
 
     </div>
   </div>
 </section>
+
+<!-- ==================== REGISTRATION MODAL ==================== -->
+<div id="reg-modal" class="modal-overlay" onclick="handleOverlayClick(event)">
+  <div class="modal-container">
+    <button class="modal-close" onclick="closeRegModal()">&times;</button>
+    
+    <div class="form-card" id="reg-form-card">
+      <div class="form-title">🎮 Register to Play</div>
+      <div class="form-sub">Fill in your details &amp; secure your spot instantly</div>
+
+      <form id="boss-form" onsubmit="return false;">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="f-name">Full Name *</label>
+            <input type="text" id="f-name" class="form-input" placeholder="Your full name" required autocomplete="name">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="f-city">City *</label>
+            <input type="text" id="f-city" class="form-input" placeholder="Your city" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="f-email">Email Address *</label>
+          <input type="email" id="f-email" class="form-input" placeholder="your@email.com" required autocomplete="email">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="f-phone">WhatsApp Number *</label>
+          <input type="tel" id="f-phone" class="form-input" placeholder="10-digit WhatsApp number" required maxlength="10" inputmode="numeric">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="f-age">Age</label>
+            <input type="number" id="f-age" class="form-input" placeholder="Age" min="16" max="70">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="f-occ">Occupation</label>
+            <input type="text" id="f-occ" class="form-input" placeholder="Entrepreneur…">
+          </div>
+        </div>
+
+        <div class="form-secure">
+          🔒 Secured by Razorpay Encryption.
+        </div>
+
+        <button type="button" class="btn-pay" id="pay-btn" onclick="submitAndPay()">
+          ⚡ PAY ₹999 &amp; REGISTER →
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
 
 <div class="divider"></div>
 
@@ -880,7 +906,7 @@
 </footer>
 
 <!-- ==================== FLOATING CTA ==================== -->
-<button class="float-cta" id="float-cta" onclick="document.getElementById('register').scrollIntoView({behavior:'smooth'})">
+<button class="float-cta" id="float-cta" onclick="openRegModal()">
   🎮 REGISTER NOW — ₹999
 </button>
 
@@ -986,6 +1012,21 @@
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); ro.unobserve(e.target); } });
   }, { threshold: .1 });
   document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
+
+  /* =====================================================
+     🖼️  REGISTRATION MODAL
+  ===================================================== */
+  function openRegModal() {
+    document.getElementById('reg-modal').classList.add('active');
+    document.body.classList.add('no-scroll');
+  }
+  function closeRegModal() {
+    document.getElementById('reg-modal').classList.remove('active');
+    document.body.classList.remove('no-scroll');
+  }
+  function handleOverlayClick(e) {
+    if (e.target.id === 'reg-modal') closeRegModal();
+  }
 
   /* =====================================================
      ❓  FAQ ACCORDION
