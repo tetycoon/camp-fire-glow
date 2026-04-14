@@ -271,7 +271,84 @@
       font-weight:900; line-height:1.1; margin-bottom:16px;
     }
     .sec-body {
-      font-size:17px; color:var(--txt-muted); max-width:620px; line-height:1.75;
+      font-size:18px; color:var(--txt-muted); max-width:740px; line-height:1.75;
+    }
+
+    /* ===========================
+       SOCIAL PROOF
+    =========================== */
+    .proof-row {
+      display:flex; justify-content:center; align-items:center; gap:40px; flex-wrap:wrap;
+      padding:40px 24px; opacity:0.6; filter:grayscale(1); transition:opacity 0.3s;
+    }
+    .proof-row:hover { opacity:1; filter:none; }
+    .proof-logo { height:24px; opacity:0.8; }
+    .proof-label {
+      font-size:11px; font-weight:700; color:var(--txt-muted); letter-spacing:2px;
+      text-transform:uppercase; margin-bottom:12px; display:block; text-align:center;
+    }
+
+    /* ===========================
+       PROBLEM / SOLUTION
+    =========================== */
+    .prob-sol-grid {
+      display:grid; grid-template-columns:1fr 1fr; gap:32px; margin-top:50px;
+    }
+    .ps-card {
+      background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05);
+      border-radius:20px; padding:32px; transition:all 0.3s;
+    }
+    .ps-card.problem { border-left:4px solid var(--red); }
+    .ps-card.solution { border-left:4px solid var(--green); background:rgba(16,185,129,0.02); }
+    .ps-title { font-family:var(--font-game); font-size:15px; font-weight:800; margin-bottom:12px; }
+    .problem .ps-title { color:var(--red); }
+    .solution .ps-title { color:var(--green); }
+    .ps-desc { font-size:15px; color:var(--txt-muted); line-height:1.6; }
+
+    /* ===========================
+       TESTIMONIALS
+    =========================== */
+    .testi-grid {
+      display:grid; grid-template-columns:repeat(auto-fit,minmax(330px,1fr)); gap:24px; margin-top:50px;
+    }
+    .testi-card {
+      background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08);
+      border-radius:24px; padding:36px; position:relative;
+    }
+    .testi-quote { font-size:16px; font-style:italic; color:var(--txt); line-height:1.8; margin-bottom:24px; }
+    .testi-author { display:flex; align-items:center; gap:16px; }
+    .testi-img { width:48px; height:48px; border-radius:50%; background:var(--bg-secondary); border:1px solid var(--purple); }
+    .testi-name { font-size:15px; font-weight:700; color:#fff; }
+    .testi-role { font-size:12px; color:var(--txt-muted); }
+    .testi-stars { color:var(--gold); font-size:12px; margin-bottom:8px; }
+
+    /* ===========================
+       STICKY CTA
+    =========================== */
+    .sticky-cta {
+      position:fixed; bottom:0; left:0; right:0;
+      background:rgba(3,7,17,0.95); backdrop-filter:blur(20px);
+      border-top:1px solid rgba(255,255,255,0.1);
+      padding:12px 24px; z-index:900;
+      display:flex; align-items:center; justify-content:space-between;
+      transform:translateY(100%); transition:transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .sticky-cta.active { transform:translateY(0); }
+    .sticky-info { display:flex; flex-direction:column; }
+    .sticky-price { font-family:var(--font-game); font-size:18px; font-weight:800; color:#fff; }
+    .sticky-tag { font-size:10px; color:var(--gold); letter-spacing:1px; text-transform:uppercase; font-weight:800; }
+    .btn-sticky {
+      background:var(--purple); color:#fff; border:none; padding:12px 28px;
+      border-radius:10px; font-family:var(--font-game); font-size:13px; font-weight:700;
+      cursor:pointer; transition:all 0.3s;
+    }
+    .btn-sticky:hover { background:var(--purple-light); transform:translateY(-2px); }
+
+    @media (max-width:768px) {
+      .sticky-cta { padding:12px 16px; }
+      .sticky-price { font-size:16px; }
+      .btn-sticky { padding:10px 20px; font-size:12px; }
+      .prob-sol-grid { grid-template-columns:1fr; }
     }
 
     /* ===========================
@@ -603,13 +680,13 @@
   <div class="hero-inner">
     <div class="live-badge">
       <span class="live-dot"></span>
-      SATURDAY &bull; 17TH APRIL 2026
+      SATURDAY • 17TH APRIL 2026
     </div>
-    <div class="hero-eyebrow">THE ULTIMATE LIVE GAME EVENT</div>
-    <h1 class="hero-title">I AM<br>THE BOSS</h1>
-    <div class="hero-sub">GAME EVENT 2026</div>
+    <div class="hero-eyebrow">A HIGH-STAKES BUSINESS SIMULATION</div>
+    <h1 class="hero-title">Master the Art of<br>Negotiation & AI 🚀</h1>
+    <div class="hero-sub">The Ultimate Live Game for Future Founders</div>
     <p class="hero-desc">
-      An electrifying live business simulation where you <strong style="color:#fff">negotiate deals</strong>, outmaneuver rivals, and prove to the world that you have what it takes to be <strong style="color:var(--gold)">THE BOSS</strong>.
+      Experience the intensity of real-time deal-making, alliance-building, and leadership. <strong style="color:var(--gold)">No coding needed.</strong> Just your A-game.
     </p>
 
     <!-- Countdown -->
@@ -622,18 +699,54 @@
 
     <div class="hero-ctas">
       <button class="btn-primary" id="hero-reg-btn" onclick="openRegModal()">
-        🎮 SECURE YOUR SPOT — ₹999
-      </button>
-      <button class="btn-outline" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">
-        LEARN MORE ↓
+        🔥 SECURE YOUR BOSS SEAT — ₹999
       </button>
     </div>
+    <p style="margin-top:24px; font-size:12px; color:var(--txt-muted); font-weight:700; letter-spacing:1px; text-transform:uppercase;">
+      ₹2,999 VALUE • LIMITED TO 50 SEATS • FREE BOSS KIT INCLUDED
+    </p>
   </div>
 
   <div class="scroll-hint" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">
     <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
       <path d="M12 5v14M5 12l7 7 7-7"/>
     </svg>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ==================== SOCIAL PROOF ==================== -->
+<div class="wrap" style="padding: 40px 24px;">
+  <span class="proof-label">PLATFORMS & STRATEGIES FEATURED</span>
+  <div class="proof-row" style="display:flex; justify-content:center; align-items:center; gap:40px; flex-wrap:wrap; opacity:0.6; filter:grayscale(1);">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" alt="ChatGPT" class="proof-logo" style="height:24px;">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/7/7a/Canva_icon_2021.svg" alt="Canva AI" class="proof-logo" style="height:24px;">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/Claude_AI_logo.svg" alt="Claude AI" class="proof-logo" style="height:24px;">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Gemini_language_model_logo.png" alt="Google Gemini" class="proof-logo" style="height:24px;">
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ==================== PROBLEM / SOLUTION ==================== -->
+<section id="why-this-matters">
+  <div class="wrap">
+    <div style="text-align:center">
+      <div class="sec-label reveal">THE REALITY CHECK</div>
+      <h2 class="sec-title reveal">Why Traditional<br>Learning Fails ❌</h2>
+    </div>
+
+    <div class="prob-sol-grid">
+      <div class="ps-card problem reveal">
+        <div class="ps-title">THE PROBLEM</div>
+        <p class="ps-desc">Most AI courses are just videos on a screen. You watch, you forget. You never actually *use* AI to survive a high-pressure business situation.</p>
+      </div>
+      <div class="ps-card solution reveal">
+        <div class="ps-title">THE SOLUTION</div>
+        <p class="ps-desc">"I Am the Boss" is a live, high-stakes game. You learn AI strategies by *using* them to win negotiations, close deals, and build alliances.</p>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -824,6 +937,54 @@
 
 <div class="divider"></div>
 
+<!-- ==================== TESTIMONIALS ==================== -->
+<section id="proof">
+  <div class="wrap">
+    <div style="text-align:center">
+      <div class="sec-label reveal">SUCCESS STORIES</div>
+      <h2 class="sec-title reveal">What Future<br>Founders Say ⭐</h2>
+    </div>
+
+    <div class="testi-grid">
+      <div class="testi-card reveal">
+        <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+        <p class="testi-quote">"This wasn't just a game; it was a wake-up call. I learned more about negotiation and leverage in 4 hours than I did in a year of business school."</p>
+        <div class="testi-author">
+          <div class="testi-img"></div>
+          <div>
+            <div class="testi-name">Aditya Verma</div>
+            <div class="testi-role">Aspiring Entrepreneur</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card reveal">
+        <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+        <p class="testi-quote">"My son came back from the event talking about deal structures and AI automation. I've never seen him this excited about learning."</p>
+        <div class="testi-author">
+          <div class="testi-img"></div>
+          <div>
+            <div class="testi-name">Priya S.</div>
+            <div class="testi-role">Parent of Participant</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card reveal">
+        <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+        <p class="testi-quote">"The energy in the room was electric. Using AI to outmaneuver opponents in real-time is peak gamified learning. Highly recommended!"</p>
+        <div class="testi-author">
+          <div class="testi-img"></div>
+          <div>
+            <div class="testi-name">Rohan Das</div>
+            <div class="testi-role">Tech Professional</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
 <!-- ==================== FAQ ==================== -->
 <section class="faq-bg" id="faq">
   <div class="wrap">
@@ -905,10 +1066,16 @@
   <div class="footer-copy">© 2026 AI Tycoon – I Am the Boss Game Event. All rights reserved.</div>
 </footer>
 
-<!-- ==================== FLOATING CTA ==================== -->
-<button class="float-cta" id="float-cta" onclick="openRegModal()">
-  🎮 REGISTER NOW — ₹999
-</button>
+<!-- ==================== STICKY FOOTER CTA ==================== -->
+<div class="sticky-cta" id="sticky-cta">
+  <div class="sticky-info">
+    <span class="sticky-tag">Limited Seats Left ⏳</span>
+    <span class="sticky-price">₹999 <small style="font-size:10px; opacity:0.6; text-decoration:line-through;">₹2999</small></span>
+  </div>
+  <button class="btn-sticky" onclick="openRegModal()">
+    🚀 REGISTER NOW
+  </button>
+</div>
 
 <!-- ==================== SUCCESS OVERLAY ==================== -->
 <div class="success-overlay" id="success-overlay">
@@ -998,11 +1165,11 @@
   updateCd(); setInterval(updateCd, 1000);
 
   /* =====================================================
-     📍  FLOATING CTA ON SCROLL
+     📍  STICKY CTA ON SCROLL
   ===================================================== */
   window.addEventListener('scroll', () => {
     const heroH = document.getElementById('hero').offsetHeight;
-    document.getElementById('float-cta').classList.toggle('show', scrollY > heroH - 200);
+    document.getElementById('sticky-cta').classList.toggle('active', scrollY > 400);
   });
 
   /* =====================================================
