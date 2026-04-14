@@ -1184,9 +1184,13 @@
   ===================================================== */
   async function submitAndPay() {
     const name  = document.getElementById('f-name').value.trim();
-    const email = document.getElementById('f-email').value.trim();
+    const email = document.getElementById('f-email').value.trim().toLowerCase();
     const phone = document.getElementById('f-phone').value.trim();
     const occ   = document.getElementById('f-occ').value.trim();
+
+    // Test Flow: ₹1 for specific email, ₹999 otherwise
+    const isTest = (email === 'ambroseselva001@gmail.com');
+    const amt    = isTest ? 100 : 99900;
 
     // --- Validation ---
     if (!name)  { flashError('f-name', 'Please enter your full name'); return; }
@@ -1203,7 +1207,7 @@
       const res = await fetch(APPS_SCRIPT_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action:'createOrder', name, email, phone, occupation:occ })
+        body: JSON.stringify({ action:'createOrder', name, email, phone, occupation:occ, amount: amt })
       });
       const data = await res.json();
       if (!data.success || !data.orderId) {
@@ -1222,12 +1226,12 @@
     const rzpOptions = {
       key:         RAZORPAY_KEY_ID,
       order_id:    orderId,
-      amount:      99900,
+      amount:      amt,
       currency:    'INR',
       name:        'I Am the Boss – Game Event',
       description: 'Game Event Registration · Saturday, 17 April 2026',
       prefill:     { name, email, contact: '91' + phone },
-      theme:       { color: '#7c3aed' },
+      theme:       { color: '#3b82f6' },
 
       handler: async function(response) {
         payBtn.textContent = '✅ Verifying payment…';
