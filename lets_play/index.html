@@ -295,7 +295,12 @@
       content:''; position:absolute; top:0; left:0; right:0; height:3px;
       background:linear-gradient(90deg,var(--purple),var(--cyan),var(--purple));
     }
-    .boss-emoji { font-size:88px; display:block; margin-bottom:20px; animation:float 3s ease-in-out infinite; }
+    .boss-image { 
+      width: 100%; height: auto; border-radius: 12px; margin-bottom: 24px;
+      box-shadow: var(--shadow);
+      display: block; border: 1px solid rgba(0,0,0,0.05);
+      animation: float 3s ease-in-out infinite;
+    }
     @keyframes float { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-12px);} }
     .boss-card-title {
       font-family:var(--font-game); font-size:18px; font-weight:700;
@@ -651,7 +656,7 @@
       <!-- Right: Card -->
       <div class="reveal">
         <div class="boss-card">
-          <span class="boss-emoji">👔</span>
+          <img src="boss_game_hero.png" alt="I Am the Boss Game" class="boss-image">
           <div class="boss-card-title">Will YOU be the BOSS?</div>
           <div class="boss-card-sub">Only one can wear the crown on April 17th</div>
           <div class="info-row"><span class="info-key">📅 Event Date</span><span class="info-val val-cyan">Saturday, 17 April 2026</span></div>
