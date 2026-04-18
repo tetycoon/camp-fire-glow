@@ -36,20 +36,57 @@
     @keyframes shimmer {
       100% { transform: translateX(100%); }
     }
+    @keyframes fade-up {
+      0% { opacity: 0; transform: translateY(40px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fade-in {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+    @keyframes scale-in {
+      0% { opacity: 0; transform: scale(0.95); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    @keyframes ambient-glow {
+      0%, 100% { transform: scale(1) translate(0, 0); opacity: 0.5; }
+      33% { transform: scale(1.1) translate(3%, -3%); opacity: 0.7; }
+      66% { transform: scale(0.9) translate(-3%, 3%); opacity: 0.4; }
+    }
+    .animate-fade-up {
+      opacity: 0;
+      animation: fade-up 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .animate-scale-in {
+      opacity: 0;
+      animation: scale-in 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .animate-ambient-1 {
+      animation: ambient-glow 12s ease-in-out infinite;
+    }
+    .animate-ambient-2 {
+      animation: ambient-glow 15s ease-in-out infinite reverse;
+    }
+    .delay-100 { animation-delay: 100ms; }
+    .delay-200 { animation-delay: 200ms; }
+    .delay-300 { animation-delay: 300ms; }
+    .delay-400 { animation-delay: 400ms; }
+    .delay-500 { animation-delay: 500ms; }
+    .delay-700 { animation-delay: 700ms; }
   </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center p-6 lg:p-12 relative selection:bg-blue-500/30">
   
   <!-- Interactive Background Element -->
   <div class="absolute inset-0 overflow-hidden pointer-events-none z-0">
-    <div class="absolute top-[-20%] left-[-10%] w-[50vw] h-[50vw] bg-blue-600/20 rounded-full blur-[120px] mix-blend-screen opacity-50"></div>
-    <div class="absolute bottom-[-20%] right-[-10%] w-[40vw] h-[40vw] bg-purple-600/20 rounded-full blur-[120px] mix-blend-screen opacity-50"></div>
+    <div class="absolute top-[-20%] left-[-10%] w-[50vw] h-[50vw] bg-blue-600/30 rounded-full blur-[120px] mix-blend-screen animate-ambient-1"></div>
+    <div class="absolute bottom-[-20%] right-[-10%] w-[40vw] h-[40vw] bg-purple-600/30 rounded-full blur-[120px] mix-blend-screen animate-ambient-2"></div>
   </div>
 
   <!-- Header / Navigation -->
-  <div class="w-full max-w-6xl flex justify-between items-center mb-10 z-10">
+  <div class="w-full max-w-6xl flex justify-between items-center mb-10 z-10 animate-fade-up">
     <div class="flex items-center gap-4">
-      <div class="w-12 h-12 bg-white/10 backdrop-blur-md rounded-xl flex items-center justify-center p-1.5 shadow-lg border border-white/10">
+      <div class="w-12 h-12 bg-white/10 backdrop-blur-md rounded-xl flex items-center justify-center p-1.5 shadow-lg border border-white/10 transition-transform duration-500 hover:rotate-6 hover:scale-110">
         <img src="../logo.png" alt="Tech Tycoon Logo" class="w-full h-full object-contain" />
       </div>
       <div>
@@ -60,7 +97,7 @@
   </div>
 
   <!-- Main Content Card -->
-  <main class="w-full max-w-6xl glass-card rounded-[40px] p-8 lg:p-14 z-10 flex flex-col lg:flex-row items-center gap-12 lg:gap-20 transition-all duration-500 hover:border-white/20 hover:shadow-2xl">
+  <main class="w-full max-w-6xl glass-card rounded-[40px] p-8 lg:p-14 z-10 flex flex-col lg:flex-row items-center gap-12 lg:gap-20 transition-all duration-700 hover:border-white/20 hover:shadow-[0_0_80px_rgba(37,99,235,0.15)] animate-scale-in delay-100">
     
     <!-- Image Section -->
     <div class="w-full lg:w-1/2 flex justify-center relative">
@@ -70,22 +107,22 @@
 
     <!-- Details Section -->
     <div class="w-full lg:w-1/2 flex flex-col items-start text-left">
-      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-[10px] font-black uppercase tracking-widest mb-6">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-[10px] font-black uppercase tracking-widest mb-6 animate-fade-up delay-200">
         <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
         This Week's Game
       </div>
       
-      <h2 class="game-font text-4xl lg:text-6xl font-black mb-4 leading-[1.1] tracking-tight text-white">
+      <h2 class="game-font text-4xl lg:text-6xl font-black mb-4 leading-[1.1] tracking-tight text-white animate-fade-up delay-300">
         I Am the Boss
         <span class="block gradient-text italic mt-2 text-3xl lg:text-4xl">Live Simulation Session</span>
       </h2>
       
-      <p class="text-slate-400 text-lg mb-10 leading-relaxed font-medium">
+      <p class="text-slate-400 text-lg mb-10 leading-relaxed font-medium animate-fade-up delay-400">
         A high-stakes live business simulation game. Negotiate powerfully, strategize your partnerships, and prove you're the ultimate BOSS in real-time deal-making.
       </p>
 
-      <div class="flex flex-col gap-4 w-full mb-10">
-        <div class="flex justify-between items-center bg-white/5 border border-white/10 p-5 rounded-2xl hover:bg-white/10 transition-colors">
+      <div class="flex flex-col gap-4 w-full mb-10 animate-fade-up delay-500">
+        <div class="flex justify-between items-center bg-white/5 border border-white/10 p-5 rounded-2xl hover:bg-white/10 transition-all duration-300 hover:scale-[1.02]">
           <div class="flex items-center gap-4">
             <div class="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center text-blue-400">
               <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
@@ -95,7 +132,7 @@
           <span class="text-white font-bold tracking-wide">Sun, 25 April 2026</span>
         </div>
         
-        <div class="flex justify-between items-center bg-white/5 border border-white/10 p-5 rounded-2xl hover:bg-white/10 transition-colors">
+        <div class="flex justify-between items-center bg-white/5 border border-white/10 p-5 rounded-2xl hover:bg-white/10 transition-all duration-300 hover:scale-[1.02]">
           <div class="flex items-center gap-4">
             <div class="w-10 h-10 rounded-xl bg-yellow-500/20 flex items-center justify-center text-yellow-400">
               <span class="text-lg font-bold">₹</span>
@@ -107,11 +144,13 @@
       </div>
       
       <!-- CTA Button -->
-      <button onclick="openRegModal()" class="group relative w-full inline-flex items-center justify-center px-10 py-5 font-bold text-white transition-all duration-300 bg-blue-600 rounded-2xl hover:bg-blue-500 hover:scale-[1.02] active:scale-95 shadow-xl shadow-blue-600/30 overflow-hidden border border-blue-400/50">
-        <div class="absolute inset-0 -translate-x-[100%] bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover:animate-[shimmer_1.5s_infinite]"></div>
-        <span class="relative z-10 font-game text-[15px] tracking-[0.2em] uppercase">Reserve Your Seat</span>
-        <svg class="relative z-10 w-5 h-5 ml-4 transition-transform group-hover:translate-x-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-      </button>
+      <div class="w-full animate-fade-up delay-700">
+        <button onclick="openRegModal()" class="group relative w-full inline-flex items-center justify-center px-10 py-5 font-bold text-white transition-all duration-300 bg-blue-600 rounded-2xl hover:bg-blue-500 hover:scale-[1.02] active:scale-95 shadow-xl shadow-blue-600/30 overflow-hidden border border-blue-400/50">
+          <div class="absolute inset-0 -translate-x-[100%] bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover:animate-[shimmer_1.5s_infinite]"></div>
+          <span class="relative z-10 font-game text-[15px] tracking-[0.2em] uppercase">Reserve Your Seat</span>
+          <svg class="relative z-10 w-5 h-5 ml-4 transition-transform group-hover:translate-x-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+        </button>
+      </div>
     </div>
 
   </main>
