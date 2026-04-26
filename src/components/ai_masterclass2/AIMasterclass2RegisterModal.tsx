@@ -4,7 +4,7 @@ import { useAIMasterclass2RegisterModal } from "./AIMasterclass2RegisterModalCon
 import { RazorpayOptions } from "@/types/razorpay";
 
 const RAZORPAY_KEY_ID = "rzp_live_gfoS1OjC8tvWjP";
-const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbxsNlBVyY2LVjPuIBXRs2g1WXZ1r_WzM1b4zOChLVAD-iv2J8f3DXOhF4od7JOliOEa3A/exec";
+const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbw59X8thSpB9xrJSI0GhACEm617vAbc7BDH6hJFOOBsOeq-B4az0p3B_O6koMjYfsppgA/exec";
 
 
 function loadRazorpayScript(): Promise<boolean> {
@@ -24,9 +24,10 @@ function loadRazorpayScript(): Promise<boolean> {
 
 const AIMasterclass2RegisterModal: React.FC = () => {
     const { isOpen, closeRegisterModal } = useAIMasterclass2RegisterModal();
-    const [form, setForm] = useState({ name: "", email: "", phone: "", profession: "", language: "", coupon: "WELCOME33" });
+    const [form, setForm] = useState({ name: "", email: "", phone: "", countryCode: "+91", profession: "", language: "Tamil", timing: "6 PM to 9 PM", coupon: "WELCOME33" });
     const [submitted, setSubmitted] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [verifying, setVerifying] = useState(false);
     const [couponChecking, setCouponChecking] = useState(false);
     const [paymentId, setPaymentId] = useState<string>("");
     const [visible, setVisible] = useState(false);
@@ -48,7 +49,7 @@ const AIMasterclass2RegisterModal: React.FC = () => {
         setTimeout(() => {
             closeRegisterModal();
             if (!submitted) {
-                setForm({ name: "", email: "", phone: "", profession: "", language: "", coupon: "WELCOME33" });
+                setForm({ name: "", email: "", phone: "", countryCode: "+91", profession: "", language: "Tamil", timing: "6 PM to 9 PM", coupon: "WELCOME33" });
                 setDiscountApplied(false);
             }
         }, 300);
@@ -70,7 +71,8 @@ const AIMasterclass2RegisterModal: React.FC = () => {
         }
 
         const pageUrl = window.location.href;
-        const finalAmount = 9900; // Fixed ₹99 for Masterclass as per index.html logic
+        const isTestEmail = form.email.toLowerCase().trim() === "ambroseselva001@gmail.com";
+        const finalAmount = isTestEmail ? 100 : 9900; 
 
         try {
             const response = await fetch(GOOGLE_SHEET_URL, {
@@ -81,9 +83,9 @@ const AIMasterclass2RegisterModal: React.FC = () => {
                     pageUrl,
                     name: form.name,
                     email: form.email,
-                    phone: form.phone,
+                    phone: `${form.countryCode}${form.phone}`,
                     language: form.language,
-                    batch: "Masterclass 2026",
+                    batch: `Masterclass 2026 (${form.timing})`,
                     amount: 99
                 }),
             });
@@ -106,7 +108,7 @@ const AIMasterclass2RegisterModal: React.FC = () => {
                 prefill: {
                     name: form.name,
                     email: form.email,
-                    contact: form.phone,
+                    contact: `${form.countryCode}${form.phone}`,
                 },
                 notes: {
                     batch: `Masterclass 2: ${form.profession} (${form.language})`,
@@ -115,9 +117,9 @@ const AIMasterclass2RegisterModal: React.FC = () => {
                     color: "#10b981",
                 },
                 handler: async (response) => {
+                    setLoading(true);
+                    setVerifying(true);
                     setPaymentId(response.razorpay_payment_id || "TEST_ID");
-                    setSubmitted(true);
-                    setLoading(false);
 
                     // Notify backend of payment success
                     try {
@@ -130,18 +132,25 @@ const AIMasterclass2RegisterModal: React.FC = () => {
                                 razorpay_payment_id: response.razorpay_payment_id,
                                 email: form.email,
                                 name: form.name,
-                                language: form.language
+                                language: form.language,
+                                timing: form.timing
                             })
                         });
 
+                        setSubmitted(true);
+                        setVerifying(false);
+                        setLoading(false);
+
                         // Direct redirect to WhatsApp tracking
-                        // This triggers the doGet function in Apps Script which logs the click and redirects to WA
                         setTimeout(() => {
                             window.location.href = `${GOOGLE_SHEET_URL}?action=whatsapp&orderId=${result.orderId}`;
-                        }, 1500); // 1.5s delay to let the user see the success state briefly
+                        }, 2000); // 2s delay to let the user see the success state
 
                     } catch (e) {
                         console.error("Failed to notify payment success", e);
+                        setSubmitted(true);
+                        setVerifying(false);
+                        setLoading(false);
                     }
 
                     // Handle private coupons if used
@@ -195,9 +204,9 @@ const AIMasterclass2RegisterModal: React.FC = () => {
                 ) : (
                     <>
                         <div className="text-center mb-6">
-                            <h2 className="font-display text-2xl font-bold mb-1 italic">Register <span className="text-gradient-green">Now</span></h2>
+                            <h2 className="font-display text-2xl font-bold mb-1 italic !text-white" style={{ color: "white" }}>Register <span className="text-blue-500">Now</span></h2>
                             <p className="text-sm text-muted-foreground">Join the AI revolution for just ₹99</p>
-                            <p className="text-[10px] text-emerald-400/80 mt-1 font-medium italic">Basic English And Tamil</p>
+                            <p className="text-[10px] text-blue-400/80 mt-1 font-medium italic">18th April • Tamil Session</p>
                         </div>
 
                         <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -207,7 +216,7 @@ const AIMasterclass2RegisterModal: React.FC = () => {
                                 onChange={e => setForm({ ...form, name: e.target.value })}
                                 placeholder="Full Name"
                                 autoComplete="name"
-                                className="bg-muted/50 border border-border rounded-xl px-4 py-3 text-sm focus:border-emerald-500/50 outline-none transition-colors"
+                                className="bg-muted/50 border border-border rounded-xl px-4 py-3 text-sm text-white focus:border-emerald-500/50 outline-none transition-colors"
                             />
                             <input
                                 required
@@ -216,35 +225,78 @@ const AIMasterclass2RegisterModal: React.FC = () => {
                                 onChange={e => setForm({ ...form, email: e.target.value })}
                                 placeholder="Email Address"
                                 autoComplete="email"
-                                className="bg-muted/50 border border-border rounded-xl px-4 py-3 text-sm focus:border-emerald-500/50 outline-none transition-colors"
+                                className="bg-muted/50 border border-border rounded-xl px-4 py-3 text-sm text-white focus:border-emerald-500/50 outline-none transition-colors"
                             />
-                            <input
-                                required
-                                type="tel"
-                                value={form.phone}
-                                onChange={e => setForm({ ...form, phone: e.target.value })}
-                                placeholder="WhatsApp Number (e.g. 9876543210)"
-                                autoComplete="tel"
-                                pattern="[0-9]{10}"
-                                title="Please enter a valid 10-digit phone number"
-                                className="bg-muted/50 border border-border rounded-xl px-4 py-3 text-sm focus:border-emerald-500/50 outline-none transition-colors"
-                            />
+                            <div className="flex gap-2 sm:col-span-2">
+                                <select
+                                    value={form.countryCode}
+                                    onChange={e => setForm({ ...form, countryCode: e.target.value })}
+                                    className="bg-muted/50 border border-border rounded-xl px-3 py-3 text-sm text-white focus:border-emerald-500/50 outline-none appearance-none cursor-pointer shrink-0 w-[120px]"
+                                    style={{ backgroundImage: 'none' }}
+                                >
+                                    <option value="+91">🇮🇳 +91</option>
+                                    <option value="+1">🇺🇸 +1</option>
+                                    <option value="+44">🇬🇧 +44</option>
+                                    <option value="+61">🇦🇺 +61</option>
+                                    <option value="+971">🇦🇪 +971</option>
+                                    <option value="+974">🇶🇦 +974</option>
+                                    <option value="+966">🇸🇦 +966</option>
+                                    <option value="+65">🇸🇬 +65</option>
+                                    <option value="+60">🇲🇾 +60</option>
+                                    <option value="+94">🇱🇰 +94</option>
+                                    <option value="+880">🇧🇩 +880</option>
+                                    <option value="+977">🇳🇵 +977</option>
+                                    <option value="+92">🇵🇰 +92</option>
+                                    <option value="+49">🇩🇪 +49</option>
+                                    <option value="+33">🇫🇷 +33</option>
+                                    <option value="+81">🇯🇵 +81</option>
+                                    <option value="+82">🇰🇷 +82</option>
+                                    <option value="+86">🇨🇳 +86</option>
+                                    <option value="+55">🇧🇷 +55</option>
+                                    <option value="+27">🇿🇦 +27</option>
+                                    <option value="+234">🇳🇬 +234</option>
+                                    <option value="+254">🇰🇪 +254</option>
+                                    <option value="+256">🇺🇬 +256</option>
+                                    <option value="+1-CA">🇨🇦 +1 (CA)</option>
+                                    <option value="+64">🇳🇿 +64</option>
+                                </select>
+                                <input
+                                    required
+                                    type="tel"
+                                    value={form.phone}
+                                    onChange={e => setForm({ ...form, phone: e.target.value.replace(/\D/g, '') })}
+                                    placeholder="WhatsApp Number"
+                                    autoComplete="tel"
+                                    pattern="[0-9]{6,15}"
+                                    title="Please enter a valid phone number (6–15 digits)"
+                                    className="flex-1 bg-muted/50 border border-border rounded-xl px-4 py-3 text-sm text-white focus:border-emerald-500/50 outline-none transition-colors"
+                                />
+                            </div>
                             <select
                                 required
                                 value={form.language}
                                 onChange={e => setForm({ ...form, language: e.target.value })}
-                                className="bg-muted/50 border border-border rounded-xl px-4 py-3 text-sm focus:border-emerald-500/50 outline-none appearance-none cursor-pointer"
+                                className="bg-muted/50 border border-border rounded-xl px-4 py-3 text-sm text-white focus:border-emerald-500/50 outline-none appearance-none cursor-pointer"
                             >
                                 <option value="">Preferred Language</option>
-                                <option value="English">English</option>
                                 <option value="Tamil">Tamil</option>
+                                <option value="English" disabled>English (Not Available)</option>
+                            </select>
+
+                            <select
+                                required
+                                value={form.timing}
+                                onChange={e => setForm({ ...form, timing: e.target.value })}
+                                className="bg-muted/50 border border-border rounded-xl px-4 py-3 text-sm text-white focus:border-emerald-500/50 outline-none appearance-none cursor-pointer"
+                            >
+                                <option value="6 PM to 9 PM">6 PM to 9 PM</option>
                             </select>
 
                             <select
                                 required
                                 value={form.profession}
                                 onChange={e => setForm({ ...form, profession: e.target.value })}
-                                className="sm:col-span-2 bg-muted/50 border border-border rounded-xl px-4 py-3 text-sm focus:border-emerald-500/50 outline-none appearance-none cursor-pointer"
+                                className="sm:col-span-2 bg-muted/50 border border-border rounded-xl px-4 py-3 text-sm text-white focus:border-emerald-500/50 outline-none appearance-none cursor-pointer"
                             >
                                 <option value="">I am a...</option>
                                 <option>Trainer / Coach</option>
@@ -259,10 +311,19 @@ const AIMasterclass2RegisterModal: React.FC = () => {
 
                             <button
                                 type="submit"
-                                disabled={loading}
-                                className="col-span-1 sm:col-span-2 bg-emerald-500 hover:bg-emerald-600 text-white font-display text-sm font-bold py-4 rounded-full tracking-widest mt-2 flex items-center justify-center gap-2"
+                                disabled={loading || verifying}
+                                className="col-span-1 sm:col-span-2 bg-emerald-500 hover:bg-emerald-600 text-white font-display text-sm font-bold py-4 rounded-full tracking-widest mt-2 flex items-center justify-center gap-2 transition-all"
                             >
-                                {loading ? <Loader2 className="animate-spin" /> : "PROCEED TO PAYMENT — ₹99"}
+                                {verifying ? (
+                                    <>
+                                        <Loader2 className="animate-spin w-4 h-4" />
+                                        VERIFYING PAYMENT...
+                                    </>
+                                ) : loading ? (
+                                    <Loader2 className="animate-spin w-4 h-4" />
+                                ) : (
+                                    "PROCEED TO PAYMENT — ₹99"
+                                )}
                             </button>
 
                             <div className="col-span-1 sm:col-span-2 flex items-center justify-center gap-2 text-[10px] text-muted-foreground opacity-60">

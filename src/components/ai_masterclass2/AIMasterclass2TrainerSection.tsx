@@ -4,7 +4,7 @@ import { useAIMasterclass2RegisterModal } from "./AIMasterclass2RegisterModalCon
 import { CheckCircle, Globe, Linkedin, Instagram } from "lucide-react";
 
 const stats = [
-    { value: "4.8K+", label: "Students Trained", color: "text-emerald-400" },
+    { value: "4,800", label: "Students Trained", color: "text-emerald-400" },
     { value: "50+", label: "Corporate Workshops", color: "text-blue-400" },
     { value: "10+", label: "AI Tools Covered", color: "text-amber-400" },
     { value: "7-Fig", label: "Business Built", color: "text-purple-400" },

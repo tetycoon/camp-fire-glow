@@ -2,10 +2,10 @@ import React, { useEffect, useRef, useState } from "react";
 import trainerImg from "@/assets/trainer-photo.png";
 
 const stats = [
-  { value: 50, label: "Programs Conducted", color: "text-gradient-cyan" },
-  { value: 20, label: "Corporate Sectors", color: "text-gradient" },
-  { value: 100, label: "Schools Reached", color: "text-gradient-orange" },
-  { value: 5000, label: "People Impacted", color: "text-gradient-green" },
+  { value: 50, label: "Programs Conducted", color: "text-brand-500" },
+  { value: 20, label: "Corporate Sectors", color: "text-brand-400" },
+  { value: 100, label: "Schools Reached", color: "text-indigo-400" },
+  { value: 5000, label: "People Impacted", color: "text-brand-600" },
 ];
 
 function CountUp({ target, duration = 2000 }: { target: number; duration?: number }) {
@@ -35,10 +35,10 @@ function CountUp({ target, duration = 2000 }: { target: number; duration?: numbe
 }
 
 const statCardBg = [
-  { border: "hsl(183 100% 55% / 0.35)", bg: "hsl(183 100% 55% / 0.07)" },
-  { border: "hsl(265 85% 65% / 0.35)", bg: "hsl(265 85% 65% / 0.07)" },
-  { border: "hsl(25 100% 60% / 0.35)", bg: "hsl(25 100% 60% / 0.07)" },
-  { border: "hsl(142 70% 50% / 0.35)", bg: "hsl(142 70% 50% / 0.07)" },
+  { border: "rgba(99, 102, 241, 0.2)", bg: "rgba(99, 102, 241, 0.05)" },
+  { border: "rgba(99, 102, 241, 0.2)", bg: "rgba(99, 102, 241, 0.05)" },
+  { border: "rgba(99, 102, 241, 0.2)", bg: "rgba(99, 102, 241, 0.05)" },
+  { border: "rgba(99, 102, 241, 0.2)", bg: "rgba(99, 102, 241, 0.05)" },
 ];
 
 const TrainerSection: React.FC = () => {
@@ -50,9 +50,9 @@ const TrainerSection: React.FC = () => {
 
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="text-center mb-16">
-          <div className="section-label mb-4 mx-auto w-fit">👨‍💻 Your Guide</div>
-          <h2 className="font-display text-3xl sm:text-5xl font-bold text-foreground mb-4">
-            Meet Your <span className="text-gradient">Trainer</span>
+          <div className="section-label mb-4 mx-auto w-fit tracking-[0.3em]">✦ THE EXPERTISE</div>
+          <h2 className="font-display text-4xl sm:text-6xl font-extrabold text-foreground mb-4 tracking-tight">
+            Meet Your <span className="text-brand-500">Instructor</span>
           </h2>
         </div>
 
@@ -60,30 +60,29 @@ const TrainerSection: React.FC = () => {
           {/* Image */}
           <div className="flex justify-center">
             <div className="relative">
-              <div className="absolute inset-0 rounded-3xl blur-3xl scale-110" style={{ background: "linear-gradient(135deg, hsl(199 100% 55% / 0.35), hsl(265 85% 65% / 0.25))" }} />
-              <div className="absolute -inset-1 rounded-3xl" style={{ background: "linear-gradient(135deg, hsl(199 100% 55% / 0.5), hsl(265 85% 65% / 0.4), hsl(25 100% 60% / 0.3))", padding: "2px" }}>
-                <div className="w-full h-full rounded-3xl" style={{ background: "hsl(222 40% 7%)" }} />
+              <div className="absolute inset-0 rounded-3xl blur-3xl opacity-20" style={{ background: "var(--brand-500)" }} />
+              <div className="absolute -inset-1 rounded-[2rem] p-0.5" style={{ background: "linear-gradient(135deg, var(--brand-500), transparent, var(--brand-400))" }}>
+                <div className="w-full h-full rounded-[1.95rem] bg-background" />
               </div>
               <img
                 src={trainerImg}
                 alt="Antony Praveen - AI Trainer"
-                className="relative z-10 w-64 h-64 sm:w-80 sm:h-80 rounded-3xl object-cover"
+                className="relative z-10 w-64 h-64 sm:w-80 sm:h-80 rounded-[1.9rem] object-cover grayscale-[0.2] hover:grayscale-0 transition-all duration-500 shadow-2xl"
               />
               {/* Floating badge */}
-              <div className="absolute -bottom-4 -right-4 z-20 rounded-2xl px-4 py-3 text-center"
-                style={{ background: "linear-gradient(135deg, hsl(199 100% 55%), hsl(265 85% 65%))", boxShadow: "0 0 30px hsl(199 100% 55% / 0.5)" }}>
-                <div className="font-display text-xl font-black" style={{ color: "hsl(222 47% 5%)" }}>5K+</div>
-                <div className="font-body text-xs font-semibold" style={{ color: "hsl(222 47% 5% / 0.8)" }}>Impacted</div>
+              <div className="absolute -bottom-6 -right-6 z-20 rounded-2xl px-6 py-4 text-center border border-white/10 backdrop-blur-xl bg-brand-500 shadow-xl shadow-brand-500/20">
+                <div className="font-display text-2xl font-black text-white">5K+</div>
+                <div className="font-body text-[10px] font-bold text-white/80 uppercase tracking-widest">Impacted</div>
               </div>
             </div>
           </div>
 
           {/* Info */}
           <div>
-            <h3 className="font-display text-2xl sm:text-3xl font-bold text-foreground mb-2">Antony Praveen</h3>
-            <p className="font-body text-sm font-semibold mb-6 tracking-wider text-gradient-cyan">Founder, Tech Tycoon Digital Solutions</p>
-            <p className="font-body text-muted-foreground leading-relaxed mb-10">
-              A seasoned AI trainer and digital transformation expert with a proven track record across schools and academic institutions. Antony has empowered thousands of school students with cutting-edge AI skills, helping them excel in academics and prepare for a future powered by artificial intelligence.
+            <h3 className="font-display text-3xl sm:text-4xl font-extrabold text-foreground mb-2 tracking-tight">Antony Praveen</h3>
+            <p className="font-body text-sm font-bold mb-6 tracking-widest text-brand-500 uppercase">Founder, Tech Tycoon Digital Solutions</p>
+            <p className="font-body text-base text-muted-foreground leading-relaxed mb-10">
+              A visionary AI strategist and educator dedicated to democratizing digital intelligence. With extensive experience in institutional transformation, Antony has pioneered practical AI frameworks that empower students and professionals to excel in the rapidly evolving technological landscape.
             </p>
 
             <div className="grid grid-cols-2 gap-4">

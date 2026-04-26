@@ -3,7 +3,7 @@ import trainerImg from "@/assets/trainer-photo.png";
 import { CheckCircle, Globe, Linkedin, Instagram } from "lucide-react";
 
 const stats = [
-    { value: "4.8K+", label: "Students Trained" },
+    { value: "4,800", label: "Students Trained" },
     { value: "50+", label: "Corporate Workshops" },
     { value: "10+", label: "AI Tools Covered" },
     { value: "7-Fig", label: "Business Built" },

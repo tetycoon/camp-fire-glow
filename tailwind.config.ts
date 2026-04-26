@@ -14,11 +14,24 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ["Orbitron", "monospace"],
-        body: ["Space Grotesk", "sans-serif"],
+        display: ["Plus Jakarta Sans", "sans-serif"],
+        body: ["Inter", "sans-serif"],
       },
       colors: {
-          brandGreen: "#b5d88f",
+        brand: {
+          50: "#f5f7ff",
+          100: "#ebedff",
+          200: "#d6dbff",
+          300: "#b3bbff",
+          400: "#858fff",
+          500: "#6366f1", // Professional Indigo
+          600: "#4f46e5",
+          700: "#4338ca",
+          800: "#3730a3",
+          900: "#312e81",
+          950: "#1e1b4b",
+        },
+        brandGreen: "#b5d88f",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

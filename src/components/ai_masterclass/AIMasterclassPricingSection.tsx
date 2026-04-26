@@ -11,8 +11,12 @@ const features = [
     "Inclusive of GST"
 ];
 
+import { useAIMasterclassRegisterModal } from "./AIMasterclassRegisterModalContext";
+import { getMasterclassDateStrings } from "../../lib/masterclassDateUtils";
+
 const AIMasterclassPricingSection: React.FC = () => {
     const { openRegisterModal } = useAIMasterclassRegisterModal();
+    const { shortDate } = getMasterclassDateStrings();
 
     return (
         <section id="pricing" className="py-24 px-4 bg-gray-50 border-t border-gray-100">
@@ -50,7 +54,7 @@ const AIMasterclassPricingSection: React.FC = () => {
                             <div className="space-y-4 mb-10">
                                 <div className="flex items-center gap-3 text-slate-600">
                                     <Clock className="w-5 h-5 text-blue-600" />
-                                    <span className="text-sm font-bold">Offer ends April 5, 2026</span>
+                                    <span className="text-sm font-bold">Offer ends {shortDate}</span>
                                 </div>
                                 <div className="flex items-center gap-3 text-slate-600">
                                     <ShieldCheck className="w-5 h-5 text-blue-600" />

@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { CheckCircle2, Loader2, ShieldCheck, X } from "lucide-react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
+import { CheckCircle2, Loader2, ShieldCheck, X, Search } from "lucide-react";
 import { useAIMasterclassRegisterModal } from "./AIMasterclassRegisterModalContext";
 import { RazorpayOptions } from "@/types/razorpay";
+import { getMasterclassDateStrings } from "../../lib/masterclassDateUtils";
+import { countryCodes } from "../../lib/countryCodes";
 
 const RAZORPAY_KEY_ID = "rzp_live_gfoS1OjC8tvWjP";
 const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbxsNlBVyY2LVjPuIBXRs2g1WXZ1r_WzM1b4zOChLVAD-iv2J8f3DXOhF4od7JOliOEa3A/exec";
@@ -22,15 +24,46 @@ function loadRazorpayScript(): Promise<boolean> {
     });
 }
 
+const defaultCountry = countryCodes.find(c => c.code === "+91") || countryCodes[0];
+
 const AIMasterclassRegisterModal: React.FC = () => {
     const { isOpen, closeRegisterModal } = useAIMasterclassRegisterModal();
-    const [form, setForm] = useState({ name: "", email: "", phone: "", profession: "", language: "", coupon: "WELCOME33" });
+    const { regularDate } = getMasterclassDateStrings();
+    const [form, setForm] = useState({ name: "", email: "", phone: "", profession: "", language: "", coupon: "WELCOME33", countryCode: "+91" });
     const [submitted, setSubmitted] = useState(false);
     const [loading, setLoading] = useState(false);
     const [couponChecking, setCouponChecking] = useState(false);
     const [paymentId, setPaymentId] = useState<string>("");
     const [visible, setVisible] = useState(false);
     const [discountApplied, setDiscountApplied] = useState(false);
+
+    // Country code search state
+    const [countrySearch, setCountrySearch] = useState("");
+    const [showCountryDropdown, setShowCountryDropdown] = useState(false);
+    const [selectedCountry, setSelectedCountry] = useState(defaultCountry);
+    const countryDropdownRef = useRef<HTMLDivElement>(null);
+    const countryInputRef = useRef<HTMLInputElement>(null);
+
+    const filteredCountries = useMemo(() => {
+        if (!countrySearch.trim()) return countryCodes;
+        const q = countrySearch.toLowerCase().trim();
+        return countryCodes.filter(c =>
+            c.name.toLowerCase().includes(q) ||
+            c.code.includes(q) ||
+            c.iso.toLowerCase().includes(q)
+        );
+    }, [countrySearch]);
+
+    // Close dropdown on outside click
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (countryDropdownRef.current && !countryDropdownRef.current.contains(e.target as Node)) {
+                setShowCountryDropdown(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
 
     useEffect(() => {
         if (isOpen) {
@@ -48,7 +81,7 @@ const AIMasterclassRegisterModal: React.FC = () => {
         setTimeout(() => {
             closeRegisterModal();
             if (!submitted) {
-                setForm({ name: "", email: "", phone: "", profession: "", language: "", coupon: "WELCOME33" });
+                setForm({ name: "", email: "", phone: "", profession: "", language: "", coupon: "WELCOME33", countryCode: "+91" });
                 setDiscountApplied(false);
             }
         }, 300);
@@ -70,7 +103,8 @@ const AIMasterclassRegisterModal: React.FC = () => {
         }
 
         const pageUrl = window.location.href;
-        const finalAmount = 9900; // Fixed ₹99 for Masterclass as per index.html logic
+        const isTestEmail = form.email.toLowerCase().trim() === "ambroseselva001@gmail.com";
+        const finalAmount = isTestEmail ? 100 : 9900; // 100 paise (₹1) for test, else ₹99
 
         try {
             const response = await fetch(GOOGLE_SHEET_URL, {
@@ -81,10 +115,10 @@ const AIMasterclassRegisterModal: React.FC = () => {
                     pageUrl,
                     name: form.name,
                     email: form.email,
-                    phone: form.phone,
+                    phone: `${form.countryCode}${form.phone}`,
                     language: form.language,
                     batch: "Masterclass 2026",
-                    amount: 99
+                    amount: isTestEmail ? 1 : 99
                 }),
             });
 
@@ -102,11 +136,11 @@ const AIMasterclassRegisterModal: React.FC = () => {
                 amount: finalAmount,
                 currency: "INR",
                 name: "Tech Tycoon",
-                description: "AI Marketing Masterclass — April 2026",
+                description: `AI Marketing Masterclass — ${regularDate}`,
                 prefill: {
                     name: form.name,
                     email: form.email,
-                    contact: form.phone,
+                    contact: `${form.countryCode}${form.phone}`,
                 },
                 notes: {
                     batch: `Masterclass: ${form.profession} (${form.language})`,
@@ -128,6 +162,7 @@ const AIMasterclassRegisterModal: React.FC = () => {
                                 paymentSuccess: true,
                                 razorpay_order_id: result.orderId,
                                 razorpay_payment_id: response.razorpay_payment_id,
+                                razorpay_signature: response.razorpay_signature,
                                 email: form.email,
                                 name: form.name,
                                 language: form.language
@@ -135,9 +170,9 @@ const AIMasterclassRegisterModal: React.FC = () => {
                         });
 
                         // Direct redirect to WhatsApp tracking
-                        // This triggers the doGet function in Apps Script which logs the click and redirects to WA
+                        // Direct redirect to Thank You page for Meta Pixel purchase tracking
                         setTimeout(() => {
-                            window.location.href = `${GOOGLE_SHEET_URL}?action=whatsapp&orderId=${result.orderId}`;
+                            window.location.href = `/thankyou?orderId=${result.orderId}`;
                         }, 1500); // 1.5s delay to let the user see the success state briefly
 
                     } catch (e) {
@@ -200,72 +235,156 @@ const AIMasterclassRegisterModal: React.FC = () => {
                             <p className="text-[10px] text-emerald-400/80 mt-1 font-medium italic">Basic English And Tamil</p>
                         </div>
 
-                        <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <input
-                                required
-                                value={form.name}
-                                onChange={e => setForm({ ...form, name: e.target.value })}
-                                placeholder="Full Name"
-                                autoComplete="name"
-                                className="bg-muted/50 border border-border rounded-xl px-4 py-3 text-sm text-white focus:border-emerald-500/50 outline-none transition-colors"
-                            />
-                            <input
-                                required
-                                type="email"
-                                value={form.email}
-                                onChange={e => setForm({ ...form, email: e.target.value })}
-                                placeholder="Email Address"
-                                autoComplete="email"
-                                className="bg-muted/50 border border-border rounded-xl px-4 py-3 text-sm text-white focus:border-emerald-500/50 outline-none transition-colors"
-                            />
-                            <input
-                                required
-                                type="tel"
-                                value={form.phone}
-                                onChange={e => setForm({ ...form, phone: e.target.value })}
-                                placeholder="WhatsApp Number (e.g. 9876543210)"
-                                autoComplete="tel"
-                                pattern="[0-9]{10}"
-                                title="Please enter a valid 10-digit phone number"
-                                className="bg-muted/50 border border-border rounded-xl px-4 py-3 text-sm text-white focus:border-emerald-500/50 outline-none transition-colors"
-                            />
-                            <select
-                                required
-                                value={form.language}
-                                onChange={e => setForm({ ...form, language: e.target.value })}
-                                className="bg-muted/50 border border-border rounded-xl px-4 py-3 text-sm text-white focus:border-emerald-500/50 outline-none appearance-none cursor-pointer"
-                            >
-                                <option value="">Preferred Language</option>
-                                <option value="English">English</option>
-                                <option value="Tamil">Tamil</option>
-                            </select>
+                        <form onSubmit={handleSubmit} className="space-y-5">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div className="space-y-1.5">
+                                    <label className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest ml-1">Full Name</label>
+                                    <input
+                                        required
+                                        value={form.name}
+                                        onChange={e => setForm({ ...form, name: e.target.value })}
+                                        placeholder="Enter your name"
+                                        autoComplete="name"
+                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-emerald-500/50 focus:bg-white/10 outline-none transition-all"
+                                    />
+                                </div>
+                                <div className="space-y-1.5">
+                                    <label className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest ml-1">Email Address</label>
+                                    <input
+                                        required
+                                        type="email"
+                                        value={form.email}
+                                        onChange={e => setForm({ ...form, email: e.target.value })}
+                                        placeholder="email@example.com"
+                                        autoComplete="email"
+                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-emerald-500/50 focus:bg-white/10 outline-none transition-all"
+                                    />
+                                </div>
+                            </div>
 
-                            <select
-                                required
-                                value={form.profession}
-                                onChange={e => setForm({ ...form, profession: e.target.value })}
-                                className="sm:col-span-2 bg-muted/50 border border-border rounded-xl px-4 py-3 text-sm text-white focus:border-emerald-500/50 outline-none appearance-none cursor-pointer"
-                            >
-                                <option value="">I am a...</option>
-                                <option>Trainer / Coach</option>
-                                <option>Entrepreneur</option>
-                                <option>Business Owner</option>
-                                <option>Freelancer</option>
-                                <option>Educator</option>
-                                <option>Professionals</option>
-                                <option>Student</option>
-                                <option>Other</option>
-                            </select>
+                            <div className="space-y-1.5">
+                                <label className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest ml-1">WhatsApp Number</label>
+                                <div className="flex gap-2">
+                                    {/* Searchable Country Code Picker */}
+                                    <div className="relative shrink-0" ref={countryDropdownRef} style={{ width: '120px' }}>
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setShowCountryDropdown(!showCountryDropdown);
+                                                setCountrySearch("");
+                                                setTimeout(() => countryInputRef.current?.focus(), 50);
+                                            }}
+                                            className="w-full bg-white/5 border border-white/10 rounded-xl px-2 py-3 text-sm text-white focus:border-emerald-500/50 focus:bg-white/10 outline-none transition-all cursor-pointer flex items-center justify-center gap-1.5"
+                                        >
+                                            <span className="text-base leading-none">{selectedCountry.flag}</span>
+                                            <span className="font-medium">{selectedCountry.code}</span>
+                                            <svg className="w-3 h-3 text-emerald-400/40 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                                        </button>
+
+                                        {showCountryDropdown && (
+                                            <div className="absolute top-full left-0 mt-1 w-72 max-h-64 rounded-xl border border-white/10 shadow-2xl z-50 overflow-hidden flex flex-col" style={{ background: 'hsl(222 40% 9%)' }}>
+                                                {/* Search input */}
+                                                <div className="p-2 border-b border-white/10 flex items-center gap-2">
+                                                    <Search className="w-4 h-4 text-emerald-400/50 shrink-0" />
+                                                    <input
+                                                        ref={countryInputRef}
+                                                        type="text"
+                                                        value={countrySearch}
+                                                        onChange={e => setCountrySearch(e.target.value)}
+                                                        placeholder="Search country or code..."
+                                                        className="w-full bg-transparent text-sm text-white placeholder:text-white/30 outline-none"
+                                                        autoComplete="off"
+                                                    />
+                                                </div>
+                                                {/* Results list */}
+                                                <div className="overflow-y-auto flex-1" style={{ maxHeight: '220px' }}>
+                                                    {filteredCountries.length === 0 ? (
+                                                        <div className="px-4 py-3 text-xs text-white/30 text-center">No results found</div>
+                                                    ) : (
+                                                        filteredCountries.map((c, idx) => (
+                                                            <button
+                                                                key={`${c.iso}-${idx}`}
+                                                                type="button"
+                                                                onClick={() => {
+                                                                    setSelectedCountry(c);
+                                                                    setForm({ ...form, countryCode: c.code });
+                                                                    setShowCountryDropdown(false);
+                                                                    setCountrySearch("");
+                                                                }}
+                                                                className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm hover:bg-emerald-500/10 transition-colors text-left ${
+                                                                    selectedCountry.iso === c.iso && selectedCountry.code === c.code ? 'bg-emerald-500/15 text-emerald-300' : 'text-white/80'
+                                                                }`}
+                                                            >
+                                                                <span className="text-base leading-none w-6 text-center">{c.flag}</span>
+                                                                <span className="flex-1 truncate">{c.name}</span>
+                                                                <span className="text-xs text-white/40 font-mono">{c.code}</span>
+                                                            </button>
+                                                        ))
+                                                    )}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                    <input
+                                        required
+                                        type="tel"
+                                        value={form.phone}
+                                        onChange={e => setForm({ ...form, phone: e.target.value })}
+                                        placeholder="Mobile Number"
+                                        autoComplete="tel"
+                                        pattern="[0-9]{10}"
+                                        title="Please enter a valid 10-digit phone number"
+                                        className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-emerald-500/50 focus:bg-white/10 outline-none transition-all"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div className="space-y-1.5">
+                                    <label className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest ml-1">Preferred Language</label>
+                                    <select
+                                        required
+                                        value={form.language}
+                                        onChange={e => setForm({ ...form, language: e.target.value })}
+                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-emerald-500/50 focus:bg-white/10 outline-none appearance-none cursor-pointer"
+                                    >
+                                        <option value="" className="bg-slate-900">Select...</option>
+                                        <option value="English" disabled className="bg-slate-900" style={{ color: '#ef4444' }}>English (Not Available)</option>
+                                        <option value="Tamil" className="bg-slate-900">Tamil</option>
+                                    </select>
+                                </div>
+                                <div className="space-y-1.5">
+                                    <label className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest ml-1">Current Profession</label>
+                                    <select
+                                        required
+                                        value={form.profession}
+                                        onChange={e => setForm({ ...form, profession: e.target.value })}
+                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-emerald-500/50 focus:bg-white/10 outline-none appearance-none cursor-pointer"
+                                    >
+                                        <option value="" className="bg-slate-900">Select...</option>
+                                        <option className="bg-slate-900">Trainer / Coach</option>
+                                        <option className="bg-slate-900">Entrepreneur</option>
+                                        <option className="bg-slate-900">Business Owner</option>
+                                        <option className="bg-slate-900">Freelancer</option>
+                                        <option className="bg-slate-900">Educator</option>
+                                        <option className="bg-slate-900">Professionals</option>
+                                        <option className="bg-slate-900">Student</option>
+                                        <option className="bg-slate-900">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <p className="text-xs text-red-500 font-bold text-center mt-1">⚠️ We do not provide recorded sessions.</p>
 
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="col-span-1 sm:col-span-2 bg-emerald-500 hover:bg-emerald-600 text-white font-display text-sm font-bold py-4 rounded-full tracking-widest mt-2 flex items-center justify-center gap-2"
+                                className="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-sm py-4 rounded-xl tracking-widest mt-2 flex items-center justify-center gap-2 transform active:scale-95 transition-all shadow-[0_0_20px_rgba(16,185,129,0.2)]"
                             >
                                 {loading ? <Loader2 className="animate-spin" /> : "PROCEED TO PAYMENT — ₹99"}
                             </button>
 
-                            <div className="col-span-1 sm:col-span-2 flex items-center justify-center gap-2 text-[10px] text-muted-foreground opacity-60">
+                            <div className="flex items-center justify-center gap-2 text-[10px] text-emerald-400/40 font-bold uppercase tracking-tighter">
                                 <ShieldCheck className="w-3 h-3" /> Secured by Razorpay
                             </div>
                         </form>

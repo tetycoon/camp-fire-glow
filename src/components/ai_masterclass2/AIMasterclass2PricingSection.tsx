@@ -4,8 +4,8 @@ import { useAIMasterclass2RegisterModal } from "./AIMasterclass2RegisterModalCon
 
 const features = [
     "Complete 3-hour AI Basic to intermediate Training",
-    "Every sunday Live Session",
-    "Basic English And Tamil",
+    "Every Saturday Live Session",
+    "Exclusive Tamil Session",
     "10+ AI Tools Mastery",
     "WhatsApp Private Community",
     "Inclusive of GST"
@@ -46,7 +46,7 @@ const AIMasterclass2PricingSection: React.FC = () => {
                             <div className="space-y-4 mb-10">
                                 <div className="flex items-center gap-3 text-muted-foreground">
                                     <Clock className="w-5 h-5 text-emerald-400" />
-                                    <span className="text-sm font-medium">Offer ends April 5, 2026</span>
+                                    <span className="text-sm font-medium">Offer ends April 18, 2026</span>
                                 </div>
                                 <div className="flex items-center gap-3 text-muted-foreground">
                                     <ShieldCheck className="w-5 h-5 text-emerald-400" />

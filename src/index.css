@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Outfit:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,100..900;1,100..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,33 +6,33 @@
 
 @layer base {
   :root {
-    --background: 224 55% 3%;
-    --foreground: 210 40% 96%;
+    --background: 224 55% 4%;
+    --foreground: 210 40% 98%;
 
-    --card: 222 40% 8%;
-    --card-foreground: 210 40% 96%;
+    --card: 224 55% 5%;
+    --card-foreground: 210 40% 98%;
 
-    --popover: 222 40% 8%;
-    --popover-foreground: 210 40% 96%;
+    --popover: 224 55% 5%;
+    --popover-foreground: 210 40% 98%;
 
-    --primary: 199 100% 50%;
-    --primary-foreground: 222 47% 5%;
+    --primary: 243 75% 59%;
+    --primary-foreground: 210 40% 98%;
 
     --secondary: 265 80% 60%;
     --secondary-foreground: 210 40% 98%;
 
-    --muted: 222 30% 14%;
-    --muted-foreground: 215 20% 55%;
+    --muted: 224 30% 12%;
+    --muted-foreground: 215 20% 65%;
 
-    --accent: 199 100% 50%;
-    --accent-foreground: 222 47% 5%;
+    --accent: 243 75% 59%;
+    --accent-foreground: 210 40% 98%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 222 30% 18%;
-    --input: 222 30% 14%;
-    --ring: 199 100% 50%;
+    --border: 224 30% 16%;
+    --input: 224 30% 16%;
+    --ring: 243 75% 59%;
 
     --radius: 0.75rem;
 
@@ -93,27 +93,27 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Inter', sans-serif;
     background-image:
-      radial-gradient(ellipse 80% 50% at 20% 10%, hsl(199 100% 55% / 0.06), transparent),
-      radial-gradient(ellipse 60% 40% at 80% 80%, hsl(265 85% 65% / 0.05), transparent);
+      radial-gradient(ellipse 80% 50% at 20% 10%, hsl(243 75% 59% / 0.05), transparent),
+      radial-gradient(ellipse 60% 40% at 80% 80%, hsl(265 85% 65% / 0.04), transparent);
     background-attachment: fixed;
   }
 
   h1,
   h2,
   h3 {
-    font-family: 'Bricolage Grotesque', sans-serif;
+    font-family: 'Plus Jakarta Sans', sans-serif;
   }
 }
 
 @layer utilities {
   .font-display {
-    font-family: 'Bricolage Grotesque', sans-serif;
+    font-family: 'Plus Jakarta Sans', sans-serif;
   }
 
   .font-body {
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Inter', sans-serif;
   }
 
   .text-gradient {

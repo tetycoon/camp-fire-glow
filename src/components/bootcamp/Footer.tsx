@@ -10,19 +10,16 @@ const Footer: React.FC = () => {
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-2">
-            <div className="rounded-full p-1.5" style={{ background: "hsl(199 100% 55% / 0.12)", border: "1px solid hsl(199 100% 55% / 0.25)" }}>
-              <Zap className="w-4 h-4 text-primary" />
+            <div className="rounded-full p-1.5 bg-brand-500/10 border border-brand-500/20">
+              <Zap className="w-4 h-4 text-brand-500" />
             </div>
-            <span className="font-display text-sm font-bold tracking-wider text-gradient">TECH TYCOON DIGITAL SOLUTIONS</span>
+            <span className="font-display text-sm font-bold tracking-[0.2em] text-foreground uppercase">TECH TYCOON DIGITAL SOLUTIONS</span>
           </div>
 
           <div className="flex items-center gap-3">
             {[Twitter, Instagram, Linkedin].map((Icon, i) => (
-              <div key={i} className="w-9 h-9 rounded-full flex items-center justify-center cursor-pointer transition-all hover:scale-110"
-                style={{ background: "hsl(199 100% 55% / 0.1)", border: "1px solid hsl(199 100% 55% / 0.2)" }}
-                onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.background = "hsl(199 100% 55% / 0.2)"; (e.currentTarget as HTMLDivElement).style.borderColor = "hsl(199 100% 55% / 0.5)"; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.background = "hsl(199 100% 55% / 0.1)"; (e.currentTarget as HTMLDivElement).style.borderColor = "hsl(199 100% 55% / 0.2)"; }}>
-                <Icon className="w-4 h-4 text-primary" />
+              <div key={i} className="w-9 h-9 rounded-full flex items-center justify-center cursor-pointer transition-all hover:scale-110 bg-white/5 border border-white/10 hover:border-brand-500/40 hover:bg-brand-500/10 group">
+                <Icon className="w-4 h-4 text-muted-foreground group-hover:text-brand-500 transition-colors" />
               </div>
             ))}
           </div>
@@ -32,10 +29,10 @@ const Footer: React.FC = () => {
           </p>
         </div>
 
-        <div className="mt-8 pt-6 text-center" style={{ borderTop: "1px solid hsl(var(--border))" }}>
-          <p className="font-body text-xs text-muted-foreground">
+        <div className="mt-8 pt-6 text-center border-t border-white/5">
+          <p className="font-body text-[10px] text-muted-foreground/60 tracking-widest uppercase font-bold">
             AI Summer Bootcamp 2026 · Powered by Tech Tycoon Digital Solutions ·{" "}
-            <span className="text-gradient font-semibold">Shaping Tomorrow's Leaders</span>
+            <span className="text-brand-500">Shaping Tomorrow's Leaders</span>
           </p>
         </div>
       </div>

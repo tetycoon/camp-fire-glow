@@ -4,7 +4,7 @@ import { useRegisterModal } from "./RegisterModalContext";
 import { RazorpayOptions } from "@/types/razorpay";
 
 const RAZORPAY_KEY_ID = "rzp_live_gfoS1OjC8tvWjP";
-const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbxsNlBVyY2LVjPuIBXRs2g1WXZ1r_WzM1b4zOChLVAD-iv2J8f3DXOhF4od7JOliOEa3A/exec";
+const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbw59X8thSpB9xrJSI0GhACEm617vAbc7BDH6hJFOOBsOeq-B4az0p3B_O6koMjYfsppgA/exec";
 
 const batches = [
     { value: "batch2", label: "May Batch — May 1–30, 2026" },
@@ -28,7 +28,7 @@ function loadRazorpayScript(): Promise<boolean> {
 
 const RegisterModal: React.FC = () => {
     const { isOpen, closeRegisterModal } = useRegisterModal();
-    const [form, setForm] = useState({ name: "", email: "", phone: "", batch: "batch2", coupon: "WELCOME33" });
+    const [form, setForm] = useState({ name: "", email: "", phone: "", schoolName: "", batch: "batch2", timing: "10 AM to 1 PM", coupon: "WELCOME33" });
     const [submitted, setSubmitted] = useState(false);
     const [loading, setLoading] = useState(false);
     const [couponChecking, setCouponChecking] = useState(false);
@@ -59,7 +59,7 @@ const RegisterModal: React.FC = () => {
             closeRegisterModal();
             // Reset form when closing (but keep submitted state if payment done)
             if (!submitted) {
-                setForm({ name: "", email: "", phone: "", batch: "batch2", coupon: "WELCOME33" });
+                setForm({ name: "", email: "", phone: "", schoolName: "", batch: "batch2", timing: "10 AM to 1 PM", coupon: "WELCOME33" });
                 setDiscountApplied(true);
                 setFriendCouponApplied(false);
             }
@@ -109,7 +109,8 @@ const RegisterModal: React.FC = () => {
                     name: form.name,
                     email: form.email,
                     phone: form.phone,
-                    batch: form.batch,
+                    schoolName: form.schoolName,
+                    batch: `${form.batch} (${form.timing})`,
                     amount: finalAmount / 100
                 }),
             });
@@ -142,7 +143,7 @@ const RegisterModal: React.FC = () => {
                 contact: form.phone,
             },
             notes: {
-                batch: batchLabel,
+                batch: `${batchLabel} (${form.timing})`,
             },
             theme: {
                 color: "#6C63FF",
@@ -174,7 +175,7 @@ const RegisterModal: React.FC = () => {
             onClick={handleBackdropClick}
         >
             <div
-                className={`relative w-full max-w-md rounded-3xl p-4 sm:p-10 transition-all duration-300 ${visible ? "scale-100 translate-y-0" : "scale-95 translate-y-4"
+                className={`relative w-full max-w-xl rounded-3xl p-6 sm:p-8 transition-all duration-300 ${visible ? "scale-100 translate-y-0" : "scale-95 translate-y-4"
                     }`}
                 style={{
                     background: "linear-gradient(145deg, hsl(222 40% 10%), hsl(222 40% 7%))",
@@ -185,109 +186,144 @@ const RegisterModal: React.FC = () => {
                 {/* Close button */}
                 <button
                     onClick={handleClose}
-                    className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all"
+                    className="absolute top-4 right-4 w-9 h-9 flex items-center justify-center rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all z-10"
                 >
                     <X className="w-5 h-5" />
                 </button>
 
                 {submitted ? (
-                    <div className="text-center py-6">
+                    <div className="text-center py-8">
                         <div className="w-20 h-20 rounded-full bg-primary/10 border border-primary/30 flex items-center justify-center mx-auto mb-6 animate-pulse-glow">
                             <CheckCircle2 className="w-10 h-10 text-primary" />
                         </div>
                         <h3 className="font-display text-2xl font-bold text-foreground mb-3">Payment Successful!</h3>
-                        <p className="font-body text-muted-foreground mb-4">
-                            Welcome to the AI Summer Bootcamp 2026! You're officially enrolled.
+                        <p className="font-body text-base text-muted-foreground mb-4 max-w-md mx-auto">
+                            Welcome to the AI Summer Bootcamp 2026! You're officially enrolled in the future.
                         </p>
                         {paymentId && (
-                            <div className="inline-block badge-module font-body text-xs px-4 py-2 rounded-full">
-                                Payment ID: {paymentId}
+                            <div className="inline-block badge-module font-body text-xs px-5 py-2 rounded-full mb-4">
+                                Receipt ID: {paymentId}
                             </div>
                         )}
-                        <p className="font-body text-xs text-muted-foreground mt-4">
-                            A confirmation will be sent to <span className="text-primary">{form.email}</span>
+                        <p className="font-body text-xs text-muted-foreground">
+                            A confirmation email has been sent to <span className="text-primary font-semibold">{form.email}</span>
                         </p>
                         <button
                             onClick={handleClose}
-                            className="mt-6 font-display text-xs font-bold px-6 py-2.5 rounded-full tracking-wider border border-primary/30 text-primary hover:bg-primary/10 transition-all"
+                            className="mt-8 font-display text-xs font-bold px-8 py-3 rounded-full tracking-wider border border-primary/30 text-primary hover:bg-primary/10 transition-all uppercase"
                         >
-                            CLOSE
+                            CLOSE PORTAL
                         </button>
                     </div>
                 ) : (
                     <>
                         {/* Header */}
-                        <div className="text-center mb-4 sm:mb-6">
-                            <p className="font-body text-[10px] sm:text-xs tracking-[0.3em] text-primary uppercase font-semibold mb-1 sm:mb-2">Enroll Now</p>
-                            <h2 className="font-display text-xl sm:text-3xl font-bold text-foreground mb-0.5 sm:mb-1">
-                                Register <span className="text-gradient">Now</span>
+                        <div className="text-center mb-6">
+                            <p className="font-body text-[10px] tracking-[0.4em] text-primary uppercase font-bold mb-2">AI Summer Bootcamp 2026</p>
+                            <h2 className="font-display text-2xl sm:text-3xl font-bold text-white mb-1">
+                                Professional <span className="text-gradient">Registration</span>
                             </h2>
-                            <p className="font-body text-xs sm:text-sm text-muted-foreground">Secure your spot in the AI revolution</p>
+                            <p className="font-body text-xs text-muted-foreground">Fill in your details to secure your specialized training slot</p>
                         </div>
 
-                        <form onSubmit={handleSubmit} className="flex flex-col gap-3 sm:gap-4">
+                        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-3.5">
                             <div className="flex flex-col gap-1">
-                                <label className="font-body text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">Full Name</label>
+                                <label className="font-body text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">Full Name</label>
                                 <input
                                     id="name"
                                     type="text"
                                     required
                                     value={form.name}
                                     onChange={e => setForm({ ...form, name: e.target.value })}
-                                    placeholder="Enter your name"
-                                    className="bg-muted/50 border border-border rounded-xl px-3 sm:px-4 py-2 sm:py-3 font-body text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 focus:bg-primary/5 transition-all"
+                                    placeholder="e.g. John Doe"
+                                    className="bg-muted/30 border border-border/50 rounded-xl px-4 py-2.5 font-body text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/50 focus:bg-primary/5 transition-all shadow-inner"
                                 />
                             </div>
                             <div className="flex flex-col gap-1">
-                                <label className="font-body text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">Email</label>
+                                <label className="font-body text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">Email Address</label>
                                 <input
                                     id="email"
                                     type="email"
                                     required
                                     value={form.email}
                                     onChange={e => setForm({ ...form, email: e.target.value })}
-                                    placeholder="Enter email address"
-                                    className="bg-muted/50 border border-border rounded-xl px-3 sm:px-4 py-2 sm:py-3 font-body text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 focus:bg-primary/5 transition-all"
+                                    placeholder="john@example.com"
+                                    className="bg-muted/30 border border-border/50 rounded-xl px-4 py-2.5 font-body text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/50 focus:bg-primary/5 transition-all shadow-inner"
                                 />
                             </div>
                             <div className="flex flex-col gap-1">
-                                <label className="font-body text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">Phone</label>
+                                <label className="font-body text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">WhatsApp Number</label>
                                 <input
                                     id="phone"
                                     type="tel"
                                     required
                                     value={form.phone}
                                     onChange={e => setForm({ ...form, phone: e.target.value })}
-                                    placeholder="Enter phone number"
-                                    className="bg-muted/50 border border-border rounded-xl px-3 sm:px-4 py-2 sm:py-3 font-body text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 focus:bg-primary/5 transition-all"
+                                    placeholder="+91 00000 00000"
+                                    className="bg-muted/30 border border-border/50 rounded-xl px-4 py-2.5 font-body text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/50 focus:bg-primary/5 transition-all shadow-inner"
                                 />
                             </div>
                             <div className="flex flex-col gap-1">
-                                <label className="font-body text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">Select Batch</label>
-                                <select
-                                    id="batch"
+                                <label className="font-body text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">School & Location</label>
+                                <input
+                                    id="schoolName"
+                                    type="text"
                                     required
-                                    value={form.batch}
-                                    onChange={e => setForm({ ...form, batch: e.target.value })}
-                                    className="bg-muted/50 border border-border rounded-xl px-3 sm:px-4 py-2 sm:py-3 font-body text-sm text-foreground focus:outline-none focus:border-primary/50 focus:bg-primary/5 transition-all appearance-none cursor-pointer"
-                                >
-                                    <option value="" className="bg-card">Choose batch</option>
-                                    {batches.map(b => (
-                                        <option key={b.value} value={b.value} className="bg-card">{b.label}</option>
-                                    ))}
-                                </select>
+                                    value={form.schoolName}
+                                    onChange={e => setForm({ ...form, schoolName: e.target.value })}
+                                    placeholder="School name, City"
+                                    className="bg-muted/30 border border-border/50 rounded-xl px-4 py-2.5 font-body text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/50 focus:bg-primary/5 transition-all shadow-inner"
+                                />
+                            </div>
+                            <div className="flex flex-col gap-1">
+                                <label className="font-body text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">Enrollment Batch</label>
+                                <div className="relative">
+                                    <select
+                                        id="batch"
+                                        required
+                                        value={form.batch}
+                                        onChange={e => setForm({ ...form, batch: e.target.value })}
+                                        className="w-full bg-muted/30 border border-border/50 rounded-xl px-4 py-2.5 font-body text-sm text-foreground focus:outline-none focus:border-primary/50 focus:bg-primary/5 transition-all appearance-none cursor-pointer shadow-inner"
+                                    >
+                                        <option value="" className="bg-slate-900">Select Batch</option>
+                                        {batches.map(b => (
+                                            <option key={b.value} value={b.value} className="bg-slate-900">{b.label}</option>
+                                        ))}
+                                    </select>
+                                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                                    </div>
+                                </div>
                             </div>
 
                             <div className="flex flex-col gap-1">
-                                <label className="font-body text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">Coupon Code</label>
+                                <label className="font-body text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">Preferred Timing</label>
+                                <div className="relative">
+                                    <select
+                                        id="timing"
+                                        required
+                                        value={form.timing}
+                                        onChange={e => setForm({ ...form, timing: e.target.value })}
+                                        className="w-full bg-muted/30 border border-border/50 rounded-xl px-4 py-2.5 font-body text-sm text-foreground focus:outline-none focus:border-primary/50 focus:bg-primary/5 transition-all appearance-none cursor-pointer shadow-inner"
+                                    >
+                                        <option value="10 AM to 1 PM" className="bg-slate-900">10:00 AM — 01:00 PM</option>
+                                    </select>
+                                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="flex flex-col gap-1 md:col-span-2 mt-1">
+                                <label className="font-body text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">Promotion / Group Referral Code</label>
                                 <div className="flex gap-2">
                                     <input
                                         id="coupon"
                                         type="text"
                                         value={form.coupon}
                                         onChange={e => setForm({ ...form, coupon: e.target.value.toUpperCase() })}
-                                        placeholder="Optional"
-                                        className="bg-muted/50 border border-border rounded-xl px-3 sm:px-4 py-2 sm:py-3 font-body text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 focus:bg-primary/5 transition-all flex-1"
+                                        placeholder="Enter code (if any)"
+                                        className="bg-muted/20 border border-border/40 rounded-xl px-5 py-2.5 font-body text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-primary/50 transition-all flex-1 tracking-wider uppercase shadow-inner"
                                     />
                                     <button
                                         type="button"
@@ -297,39 +333,43 @@ const RegisterModal: React.FC = () => {
                                             if (code === "WELCOME33") {
                                                 setDiscountApplied(true);
                                                 setFriendCouponApplied(false);
-                                                alert("Early Bird discount applied! Price: ₹9,999");
+                                                alert("✨ Optimization successful! Early Bird price applied: ₹9,999");
                                             } else if (code === "AMIABLE30") {
                                                 setDiscountApplied(true);
                                                 setFriendCouponApplied(true);
-                                                alert("Special discount applied! Price reduced to ₹7,999");
+                                                alert("🚀 Elite Referral Applied! Final Price: ₹7,999");
                                             } else {
-                                                alert("Invalid coupon code. Please try again.");
+                                                alert("Code verification failed. Please check the character sequence.");
                                                 setDiscountApplied(false);
                                                 setFriendCouponApplied(false);
                                             }
                                         }}
-                                        className="font-display text-[10px] sm:text-xs font-bold px-3 sm:px-4 rounded-xl border border-primary/30 text-primary hover:bg-primary/10 transition-all uppercase tracking-wider disabled:opacity-50"
+                                        className="font-display text-[10px] font-black px-5 rounded-xl border border-primary/40 text-primary hover:bg-primary/10 transition-all uppercase tracking-widest disabled:opacity-50 whitespace-nowrap"
                                     >
-                                        {couponChecking ? "..." : "Apply"}
+                                        {couponChecking ? "VERIFYING..." : "APPLY CODE"}
                                     </button>
                                 </div>
                             </div>
 
-                            <button
-                                type="submit"
-                                disabled={loading}
-                                className="btn-glow text-primary-foreground font-display text-xs sm:text-sm font-bold px-4 py-3 sm:py-4 rounded-full tracking-widest flex items-center justify-center gap-2 sm:gap-3 mt-1 disabled:opacity-70"
-                            >
-                                {loading ? (
-                                    <>
-                                        <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
-                                        <span>OPENING PAYMENT...</span>
-                                    </>
-                                ) : (
-                                    <span>PAY {friendCouponApplied ? "₹7,999" : discountApplied ? "₹9,999" : "₹14,999"}</span>
-                                )}
-                            </button>
-
+                            <div className="md:col-span-2 mt-3">
+                                <button
+                                    type="submit"
+                                    disabled={loading}
+                                    className="w-full btn-glow text-primary-foreground font-display text-sm font-bold py-4 rounded-xl tracking-[0.2em] flex items-center justify-center gap-3 disabled:opacity-70 transition-transform active:scale-[0.98]"
+                                >
+                                    {loading ? (
+                                        <>
+                                            <Loader2 className="w-5 h-5 animate-spin" />
+                                            <span>SYNCHRONIZING WITH GATEWAY...</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <span>FINALIZE ENROLLMENT ({friendCouponApplied ? "₹7,999" : discountApplied ? "₹9,999" : "₹14,999"})</span>
+                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                                        </>
+                                    )}
+                                </button>
+                            </div>
                             {/* Trust badge */}
                             <div className="flex items-center justify-center gap-2 mt-1">
                                 <ShieldCheck className="w-4 h-4 text-muted-foreground" />

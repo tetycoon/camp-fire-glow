@@ -1,19 +1,19 @@
 import React, { useState } from "react";
-import { Brain, MessageSquare, Bot, BookOpen, Target, GraduationCap, Globe, Shield, Wrench, Code, Compass, Rocket, ChevronDown } from "lucide-react";
+import { Brain, MessageSquare, Bot, BookOpen, Target, GraduationCap, Globe, Shield, Wrench, Code, Compass, Rocket, ChevronDown, CheckCircle, Lightbulb } from "lucide-react";
 
 const iconColors = [
-  { iconColor: "text-cyan-400", iconClass: "icon-box-cyan" },
-  { iconColor: "text-purple-400", iconClass: "icon-box-purple" },
-  { iconColor: "text-orange-400", iconClass: "icon-box-orange" },
-  { iconColor: "text-emerald-400", iconClass: "icon-box-green" },
-  { iconColor: "text-cyan-400", iconClass: "icon-box-cyan" },
-  { iconColor: "text-purple-400", iconClass: "icon-box-purple" },
-  { iconColor: "text-orange-400", iconClass: "icon-box-orange" },
-  { iconColor: "text-emerald-400", iconClass: "icon-box-green" },
-  { iconColor: "text-cyan-400", iconClass: "icon-box-cyan" },
-  { iconColor: "text-purple-400", iconClass: "icon-box-purple" },
-  { iconColor: "text-orange-400", iconClass: "icon-box-orange" },
-  { iconColor: "text-emerald-400", iconClass: "icon-box-green" },
+  { iconColor: "text-brand-500", iconClass: "icon-box-cyan" },
+  { iconColor: "text-brand-500", iconClass: "icon-box-cyan" },
+  { iconColor: "text-brand-500", iconClass: "icon-box-cyan" },
+  { iconColor: "text-brand-500", iconClass: "icon-box-cyan" },
+  { iconColor: "text-brand-500", iconClass: "icon-box-cyan" },
+  { iconColor: "text-brand-500", iconClass: "icon-box-cyan" },
+  { iconColor: "text-brand-500", iconClass: "icon-box-cyan" },
+  { iconColor: "text-brand-500", iconClass: "icon-box-cyan" },
+  { iconColor: "text-brand-500", iconClass: "icon-box-cyan" },
+  { iconColor: "text-brand-500", iconClass: "icon-box-cyan" },
+  { iconColor: "text-brand-500", iconClass: "icon-box-cyan" },
+  { iconColor: "text-brand-500", iconClass: "icon-box-cyan" },
 ];
 
 const modules = [
@@ -21,241 +21,229 @@ const modules = [
     icon: Brain,
     title: "Generative AI Fundamentals",
     num: "01",
-    goal: "Help students understand what AI is and remove fear or confusion.",
+    goal: "Architectural understanding of neural intelligence vs algorithmic patterns.",
     skills: [
-      "What is Artificial Intelligence?",
-      "Difference between AI, Machine Learning, and Robotics",
-      "How AI works in daily life",
-      "Examples: YouTube recommendations, Google Maps, ChatGPT",
-      "Types of AI (Narrow AI vs General AI)",
-      "AI myths vs reality",
+      "Deconstructing LLM Architectures",
+      "Narrow vs General Intelligence Spectra",
+      "Real-world Cognitive Automation Samples",
+      "The Math behind 'Next Token Prediction'",
+      "AI Myths: Biological vs Synthetic Brains",
     ],
     activities: [
-      "Identify AI tools used daily",
-      "AI vs Human decision games",
-      "Simple AI demonstrations",
+      "Neural Pattern Discovery Session",
+      "Decision Tree Logic Games",
+      "Live AI Hallucination Stress-Test",
     ],
-    takeaway: "Builds curiosity and awareness.",
+    takeaway: "Master the foundational syntax of the future.",
   },
   {
     icon: MessageSquare,
-    title: "Prompt Engineering",
+    title: "Elite Prompt Engineering",
     num: "02",
-    goal: "Teach students how to communicate effectively with AI tools to get the best results.",
+    goal: "Transforming natural language into high-fidelity code and logic.",
     skills: [
-      "What is a prompt and why it matters",
-      "Anatomy of a great prompt",
-      "Zero-shot, few-shot, and chain-of-thought prompting",
-      "Prompt techniques for ChatGPT, Gemini, and Copilot",
-      "Common mistakes and how to fix them",
-      "Crafting prompts for different subjects and tasks",
+      "Token Optimization Strategies",
+      "Chain-of-Thought (CoT) Logic Chains",
+      "Zero-shot vs Recursive Refinement",
+      "System Message Hierarchy & Roleplaying",
+      "Multimodal Prompting (Vision + Text)",
     ],
     activities: [
-      "Prompt battle: who gets the best AI response?",
-      "Rewrite bad prompts into great ones",
-      "Create a prompt library for school subjects",
+      "Competitive Prompt Architecting",
+      "Prompt Reverse Engineering",
+      "Context-Window Management Drills",
     ],
-    takeaway: "Unlocks the full power of AI assistants.",
+    takeaway: "Communicate with surgical precision.",
   },
   {
     icon: Bot,
-    title: "Agentic AI",
+    title: "Autonomous Agentic AI",
     num: "03",
-    goal: "Introduce students to AI agents that can perform tasks autonomously.",
+    goal: "Scaling from static chat to goal-oriented autonomous agents.",
     skills: [
-      "What are AI agents and how they differ from chatbots",
-      "How AI agents plan, reason, and take action",
-      "Tools and frameworks behind agentic AI",
-      "Real-world use cases: auto-research, scheduling, coding",
-      "Understanding agent workflows and loops",
-      "Safety and guardrails for AI agents",
+      "Agent Reasoning Loops (ReAct)",
+      "Tool-Calling & External API Integration",
+      "Autonomous Workflow Orchestration",
+      "Multi-Agent Collaboration Frameworks",
+      "Guardrails for Non-Deterministic Outputs",
     ],
     activities: [
-      "Build a simple AI agent workflow",
-      "Experiment with auto-GPT style tools",
-      "Design an AI agent for a school task",
+      "Design an Auto-Researcher Agent",
+      "Workflow Logic Mapping",
+      "Agent Failure Analysis Labs",
     ],
-    takeaway: "Prepares students for the next wave of AI.",
+    takeaway: "Build systems that work while you sleep.",
   },
   {
     icon: BookOpen,
-    title: "AI for Exam Preparation",
+    title: "AI Exam & Study Optimization",
     num: "04",
-    goal: "Help students use AI as a smart study companion for board and competitive exams.",
+    goal: "Leveraging custom RAG systems for competitive exam dominance.",
     skills: [
-      "Using AI to create study plans and schedules",
-      "Generating practice questions and mock tests",
-      "Summarizing textbook chapters with AI",
-      "Explaining difficult concepts in simple language",
-      "Creating flashcards and revision notes with AI",
-      "Analyzing weak areas and targeted practice",
+      "AI Summarization of Mega-Data (Textbooks)",
+      "Custom GPTs for Personal Tutoring",
+      "Synthetic Mock Paper Generation",
+      "Weak-Point Detection via AI Analytics",
+      "Flashcard Automation from Complex Texts",
     ],
     activities: [
-      "Create an AI-powered study plan for upcoming exams",
-      "Generate a mock test paper using AI",
-      "Summarize a chapter and compare with textbook",
+      "Build a Board-Exam Strategy Engine",
+      "Synthetic Paper 'Solve-athon'",
+      "Concept Compression Exercises",
     ],
-    takeaway: "Makes exam preparation smarter and more efficient.",
+    takeaway: "Outlearn the competition with technology.",
   },
   {
     icon: Target,
-    title: "AI-Powered Study Techniques",
+    title: "Cognitive Productivity",
     num: "05",
-    goal: "Teach advanced study methods enhanced by AI tools.",
+    goal: "Enhancing human bandwidth through AI-integrated workflows.",
     skills: [
-      "Spaced repetition with AI scheduling",
-      "Active recall techniques using AI quizzes",
-      "Mind mapping and concept linking with AI",
-      "Note-taking strategies powered by AI",
-      "Visual learning: AI-generated diagrams and charts",
-      "Time management and focus techniques",
+      "AI-Optimized Spaced Repetition",
+      "Neural Note-taking & Mind Mapping",
+      "Deep-Focus Sprints with AI assistance",
+      "Information Triage & Management",
+      "Automated Knowledge Retrieval",
     ],
     activities: [
-      "Build a spaced repetition schedule with AI",
-      "Create visual mind maps for a topic",
-      "Design a personalized study routine",
+      "Create a Neural Knowledge Base",
+      "Productivity Bottleneck Analysis",
+      "AI-Assisted Task Mapping",
     ],
-    takeaway: "Transforms how students learn and retain information.",
+    takeaway: "Upgrade your mental processing power.",
   },
   {
     icon: GraduationCap,
-    title: "Student Productivity",
+    title: "Professional Workflows",
     num: "06",
-    goal: "Boost everyday productivity using AI-powered tools and workflows.",
+    goal: "Acing the professional world with zero-delay execution.",
     skills: [
-      "AI tools for writing essays and assignments",
-      "Automating repetitive school tasks",
-      "Organizing notes, files, and schedules with AI",
-      "Presentation creation with AI assistance",
-      "Email and communication drafting",
-      "Research and information gathering with AI",
+      "AI-Assisted Technical Writing",
+      "Ultra-Fast High-Quality Presentations",
+      "Data Interpretation & Narrative Building",
+      "Email Automation & Ghost-Writing",
+      "Autonomous Research & Information Triage",
     ],
     activities: [
-      "Create a presentation using AI in 15 minutes",
-      "Automate a weekly school task",
-      "Build a personal productivity dashboard",
+      "15-Minute Executive Brief Building",
+      "Workflow Automation Sprint",
+      "AI Communication Audit",
     ],
-    takeaway: "Saves time and improves quality of school work.",
+    takeaway: "Become a 10x more effective professional.",
   },
   {
     icon: Globe,
-    title: "Digital Skills & Online Presence",
+    title: "Digital Branding & Influence",
     num: "07",
-    goal: "Equip students with essential digital literacy and online branding skills.",
+    goal: "Crafting an undeniable online persona via AI content stacks.",
     skills: [
-      "Building a positive digital footprint",
-      "Creating content with AI (blogs, videos, social posts)",
-      "Understanding social media algorithms",
-      "Online safety and privacy essentials",
-      "Basic website and portfolio creation",
-      "Digital communication etiquette",
+      "AI-powered Content Ideation",
+      "Voice & Persona consistency in AI",
+      "Algorithmic Presence Multipliers",
+      "Synthetic Media Generation (Image/Video)",
+      "Digital Impact Metrics & Optimization",
     ],
     activities: [
-      "Create a personal brand bio using AI",
-      "Design a mini portfolio website",
-      "Analyze your digital footprint",
+      "Build a Digital Portfolio in 60 mins",
+      "AI Personification Workshop",
+      "Content Matrix Generation",
     ],
-    takeaway: "Builds confidence in the digital world.",
+    takeaway: "Master the digital attention economy.",
   },
   {
     icon: Shield,
-    title: "Ethical AI & Responsible Use",
+    title: "AI Ethics & Safety Architecture",
     num: "08",
-    goal: "Teach students to use AI responsibly and understand its societal impact.",
+    goal: "Navigating the legal and moral complexity of synthetic intelligence.",
     skills: [
-      "AI bias: what it is and why it matters",
-      "Deepfakes and misinformation detection",
-      "Copyright and plagiarism in the age of AI",
-      "Privacy concerns with AI tools",
-      "Responsible AI usage guidelines",
-      "The future of AI and jobs",
+      "Bias Recognition & Mitigation",
+      "Misinformation & Deepfake Forensics",
+      "Copyright & IP in Generative Systems",
+      "Privacy Encryption & AI Guardrails",
+      "Responsible AI Development Ethics",
     ],
     activities: [
-      "Spot the deepfake challenge",
-      "Debate: Should AI write school essays?",
-      "Create an ethical AI usage pledge",
+      "Deepfake Detection Challenge",
+      "The 'Moral Machine' AI Ethics Lab",
+      "Build an AI Safety Checklist",
     ],
-    takeaway: "Develops critical thinking about technology.",
+    takeaway: "Rule the machine, don't let it rule you.",
   },
   {
     icon: Wrench,
-    title: "Hands-on AI Tools",
+    title: "Mastering the AI Ecosystem",
     num: "09",
-    goal: "Give students practical experience with the best AI tools available today.",
+    goal: "Expert-level navigation across the top 1% of AI platforms.",
     skills: [
-      "ChatGPT, Gemini, Claude: choosing the right AI",
-      "AI image generators: Midjourney, DALL·E, Canva AI",
-      "AI video and audio tools",
-      "AI coding assistants and no-code builders",
-      "AI for data analysis and visualization",
-      "Comparing free vs paid AI tools",
+      "Advanced ChatGPT, Claude, & Gemini Pro",
+      "High-Fidelity Art with Midjourney/Flux",
+      "No-Code AI App Development (Replit/Cursor)",
+      "Audio/Video Synthesis Professionalism",
+      "Custom Workflow Hooking with Zapier/Make",
     ],
     activities: [
-      "Complete a project using 5 different AI tools",
-      "Create an AI tool comparison chart",
-      "Build something creative with AI image generators",
+      "Multi-Tool Project Orchestration",
+      "Tool Sensitivity Stress-test",
+      "Workflow Cost-Benefit Analysis",
     ],
-    takeaway: "Hands-on mastery of the AI ecosystem.",
+    takeaway: "Command the entire AI stack.",
   },
   {
     icon: Code,
-    title: "AI + Coding Basics",
+    title: "Foundational AI Prototyping",
     num: "10",
-    goal: "Introduce coding fundamentals through the lens of AI and automation.",
+    goal: "Bridging human logic with Python-assisted AI development.",
     skills: [
-      "What is coding and why it matters in the AI era",
-      "Introduction to Python basics with AI assistance",
-      "Using AI to write, debug, and explain code",
-      "Building simple programs with AI copilots",
-      "Understanding how AI models work at a basic level",
-      "No-code and low-code AI platforms",
+      "Python for Non-Coders (Assisted)",
+      "Debugging via Context-Injection",
+      "Writing Scripted Automations with AI",
+      "API Logic and System Integration",
+      "Building your first Neural-assisted App",
     ],
     activities: [
-      "Write your first Python program with AI help",
-      "Debug a broken code using AI assistants",
-      "Build a simple chatbot with no-code tools",
+      "Build a Terminal Bot in 20 mins",
+      "Live Debugging 'Bug-Hunt'",
+      "Algorithm Logic Mapping",
     ],
-    takeaway: "Bridges the gap between AI users and AI creators.",
+    takeaway: "From user to creator in 30 days.",
   },
   {
     icon: Compass,
-    title: "AI for Career Awareness",
+    title: "Career & Stream Projection",
     num: "11",
-    goal: "Help students explore future career paths shaped by AI across industries.",
+    goal: "Future-proofing your education for jobs that don't exist yet.",
     skills: [
-      "AI-powered careers: what jobs will exist in 2030?",
-      "How AI is transforming different industries",
-      "Skills employers will look for in the AI age",
-      "Building an AI-ready resume and portfolio",
-      "Choosing the right stream and courses for an AI career",
-      "Scholarships and opportunities in AI and tech",
+      "Career Trends (Pre-2030 Roadmap)",
+      "AI-First Job Market Analysis",
+      "Building an AI-Optimized Resume",
+      "Mock Interviews with Peerless AI",
+      "Scholarship & Growth Matrix Exploration",
     ],
     activities: [
-      "Research an AI-powered career and present findings",
-      "Create a future career roadmap using AI",
-      "Mock interview with AI feedback",
+      "2030 Career Visioning Lab",
+      "The AI-Ready Portfolio Audit",
+      "Streaming Strategy Session",
     ],
-    takeaway: "Gives clarity and direction for future careers.",
+    takeaway: "Predict and conquer the future market.",
   },
   {
     icon: Rocket,
-    title: "Real-Life Mini Project",
+    title: "The Great AI Demo Day",
     num: "12",
-    goal: "Apply everything learned in a hands-on capstone project using AI tools.",
+    goal: "Final capstone project showcasing unified AI mastery.",
     skills: [
-      "Project planning and ideation with AI",
-      "Combining multiple AI tools for a single project",
-      "Presentation and storytelling with AI",
-      "Peer review and feedback using AI",
-      "Documenting and showcasing your work",
-      "Pitching your AI project to an audience",
+      "Complex System Integration",
+      "Technical Pitching & Storytelling",
+      "Product-Market Fit for AI Concepts",
+      "Documenting Technical Architectures",
+      "Post-Bootcamp Growth Loops",
     ],
     activities: [
-      "Choose a real-world problem and solve it with AI",
-      "Build a complete project using at least 3 AI tools",
-      "Present your project in a demo day format",
+      "The 24-Hour Capstone Challenge",
+      "Live Peer Showcase & Feedback",
+      "Industry-Ready Presentation Pitch",
     ],
-    takeaway: "Proves readiness to use AI in the real world.",
+    takeaway: "Launch your career as an AI native.",
   },
 ];
 
@@ -269,83 +257,103 @@ interface ModuleCardProps {
 const ModuleCard: React.FC<ModuleCardProps> = ({ module, colors, isOpen, onToggle }) => {
   return (
     <div
-      className={`card-glow rounded-2xl overflow-hidden transition-all duration-500 cursor-pointer ${isOpen ? "col-span-1 sm:col-span-2 lg:col-span-3" : ""}`}
+      className={`group relative rounded-[2rem] overflow-hidden transition-all duration-500 cursor-pointer ${
+        isOpen 
+          ? "col-span-1 sm:col-span-2 lg:col-span-3 card-glow border-primary/50 bg-white/10 ring-1 ring-primary/20 shadow-2xl" 
+          : "bg-white/5 border border-white/10 hover:border-white/20 hover:bg-white/[0.08]"
+      }`}
       onClick={onToggle}
     >
-      <div className="p-6 flex items-center gap-5 group relative">
-        <div
-          className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-          style={{ background: "radial-gradient(circle at 0% 50%, hsl(199 100% 55% / 0.07), transparent 60%)" }}
-        />
-        <div className="number-tag font-display text-lg font-black text-gradient-cyan min-w-[2.5rem] text-center flex-shrink-0">
-          {module.num}
+      <div className="p-6 sm:p-8 flex items-center gap-6 relative z-10">
+        <div className="flex-shrink-0 relative">
+          <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+          <div className="relative w-14 h-14 rounded-2xl flex items-center justify-center icon-box-cyan transform group-hover:scale-110 transition-transform duration-500">
+             <module.icon className={`w-7 h-7 ${colors.iconColor}`} />
+          </div>
+          <div className="absolute -top-2 -right-2 bg-background border border-border w-6 h-6 rounded-lg text-[10px] font-black flex items-center justify-center text-primary group-hover:border-primary/50 transition-colors">
+            {module.num}
+          </div>
         </div>
-        <div className={`w-10 h-10 rounded-xl ${colors.iconClass} flex items-center justify-center flex-shrink-0`}>
-          <module.icon className={`w-5 h-5 ${colors.iconColor}`} />
+        
+        <div className="flex-1">
+          <h3 className="font-display text-lg sm:text-xl font-black text-white leading-tight mb-1 group-hover:text-primary transition-colors">
+            {module.title}
+          </h3>
+          <p className="font-body text-[11px] text-muted-foreground uppercase tracking-widest font-bold opacity-60">
+            Phase Dynamics
+          </p>
         </div>
-        <h3 className="font-display text-xs sm:text-sm font-bold text-foreground leading-tight group-hover:text-primary transition-colors flex-1">
-          {module.title}
-        </h3>
-        <ChevronDown
-          className={`w-5 h-5 text-muted-foreground transition-transform duration-300 flex-shrink-0 ${isOpen ? "rotate-180 text-primary" : ""}`}
-        />
+
+        <div className={`w-10 h-10 rounded-full border border-white/10 flex items-center justify-center transition-all ${isOpen ? "bg-primary border-primary rotate-180" : "group-hover:bg-white/5 group-hover:border-white/20"}`}>
+           <ChevronDown className={`w-5 h-5 ${isOpen ? "text-white" : "text-muted-foreground group-hover:text-white"}`} />
+        </div>
       </div>
 
       <div
-        className="overflow-hidden transition-all duration-500 ease-in-out"
-        style={{ maxHeight: isOpen ? "800px" : "0px", opacity: isOpen ? 1 : 0 }}
+        className="overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.4, 0, 0.2, 1)]"
+        style={{ maxHeight: isOpen ? "1200px" : "0px", opacity: isOpen ? 1 : 0 }}
       >
-        <div className="px-6 pb-8 pt-2">
-          <div className="border-t border-white/10 pt-6">
-            {/* Goal */}
-            <div className="mb-6">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold mb-3"
-                style={{ background: "hsl(199 100% 55% / 0.1)", border: "1px solid hsl(199 100% 55% / 0.25)", color: "hsl(199 100% 55%)" }}>
-                🎯 Goal
-              </div>
-              <p className="font-body text-sm text-muted-foreground leading-relaxed">{module.goal}</p>
+        <div className="px-8 pb-10 pt-4 relative z-10 border-t border-white/10 bg-gradient-to-b from-white/[0.02] to-transparent">
+            {/* Goal Card */}
+            <div className="mb-10 p-6 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm">
+                <div className="flex items-center gap-3 mb-4">
+                   <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+                      <Target className="w-4 h-4" />
+                   </div>
+                   <h4 className="font-display text-sm font-black text-white uppercase tracking-widest">Architectural Goal</h4>
+                </div>
+                <p className="font-body text-base text-muted-foreground italic leading-relaxed">
+                   "{module.goal}"
+                </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Skills */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+              {/* Technical Proficiencies */}
               <div>
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold mb-3"
-                  style={{ background: "hsl(265 85% 65% / 0.1)", border: "1px solid hsl(265 85% 65% / 0.25)", color: "hsl(265 85% 65%)" }}>
-                  📘 Skills to Teach
+                <div className="flex items-center gap-3 mb-6">
+                   <div className="w-8 h-8 rounded-lg bg-primary/10 border border-primary/30 flex items-center justify-center text-primary">
+                      <CheckCircle className="w-4 h-4" />
+                   </div>
+                   <h4 className="font-display text-sm font-black text-white uppercase tracking-widest">Technical Proficiency</h4>
                 </div>
-                <ul className="space-y-2">
+                <ul className="space-y-4">
                   {module.skills.map((skill, j) => (
-                    <li key={j} className="font-body text-sm text-muted-foreground flex items-start gap-2">
-                      <span className="text-primary mt-0.5 flex-shrink-0">▸</span>
-                      {skill}
+                    <li key={j} className="font-body text-sm text-muted-foreground flex items-start gap-4 group/li">
+                      <span className="text-primary font-black mt-0.5 group-hover/li:translate-x-1 transition-transform opacity-60">0{j+1}</span>
+                      <span className="group-hover/li:text-white transition-colors">{skill}</span>
                     </li>
                   ))}
                 </ul>
               </div>
 
-              {/* Activities */}
-              <div>
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold mb-3"
-                  style={{ background: "hsl(25 100% 60% / 0.1)", border: "1px solid hsl(25 100% 60% / 0.25)", color: "hsl(25 100% 60%)" }}>
-                  🧪 Activities
+              {/* Lab Simulations */}
+              <div className="flex flex-col h-full">
+                <div className="flex items-center gap-3 mb-6">
+                   <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
+                      <Lightbulb className="w-4 h-4" />
+                   </div>
+                   <h4 className="font-display text-sm font-black text-white uppercase tracking-widest">Lab Simulations</h4>
                 </div>
-                <ul className="space-y-2">
+                <ul className="space-y-4 mb-8">
                   {module.activities.map((activity, j) => (
-                    <li key={j} className="font-body text-sm text-muted-foreground flex items-start gap-2">
-                      <span className="text-orange-400 mt-0.5 flex-shrink-0">▸</span>
+                    <li key={j} className="font-body text-sm text-muted-foreground flex items-center gap-4 py-2 px-3 rounded-lg hover:bg-white/5 transition-all group/activity">
+                      <div className="w-2 h-2 rounded-full bg-amber-500/40 group-hover/activity:scale-150 transition-transform" />
                       {activity}
                     </li>
                   ))}
                 </ul>
 
-                <div className="mt-6 flex items-center gap-2 px-4 py-3 rounded-xl"
-                  style={{ background: "hsl(142 70% 50% / 0.08)", border: "1px solid hsl(142 70% 50% / 0.2)" }}>
-                  <span className="text-emerald-400 text-sm">✅</span>
-                  <span className="font-body text-sm text-emerald-400 font-medium">{module.takeaway}</span>
+                <div className="mt-auto p-5 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 backdrop-blur-xl flex items-center gap-4">
+                   <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400">
+                      <Rocket className="w-5 h-5" />
+                   </div>
+                   <div>
+                      <p className="font-display text-[10px] font-black text-emerald-400 uppercase tracking-widest leading-none mb-1">Outcome Matrix</p>
+                      <p className="font-body text-sm text-white font-medium leading-tight">{module.takeaway}</p>
+                   </div>
                 </div>
               </div>
             </div>
-          </div>
         </div>
       </div>
     </div>
@@ -356,23 +364,29 @@ const ModulesSection: React.FC = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <section id="modules" className="section-border py-24 px-4 relative overflow-hidden">
-      <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, hsl(222 40% 6%), hsl(222 47% 5%))" }} />
-      <div className="absolute inset-0 grid-bg opacity-25" />
-      <div className="absolute top-20 right-20 w-96 h-96 rounded-full blur-3xl pointer-events-none" style={{ background: "radial-gradient(circle, hsl(265 85% 65% / 0.1), transparent 70%)" }} />
-      <div className="absolute bottom-20 left-20 w-80 h-80 rounded-full blur-3xl pointer-events-none" style={{ background: "radial-gradient(circle, hsl(25 100% 60% / 0.08), transparent 70%)" }} />
+    <section id="modules" className="section-border py-24 sm:py-32 px-4 relative overflow-hidden bg-background">
+      {/* Background FX */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_0%_0%,hsl(var(--primary)_/_0.05),transparent_40%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_100%_100%,hsl(var(--secondary)_/_0.05),transparent_40%)]" />
+      <div className="absolute inset-0 grid-bg opacity-15" />
 
       <div className="max-w-7xl mx-auto relative z-10">
-        <div className="text-center mb-16">
-          <div className="section-label mb-4 mx-auto w-fit">📚 Curriculum</div>
-          <h2 className="font-display text-3xl sm:text-5xl font-bold text-foreground mb-4">
-            Core <span className="text-gradient">Modules</span>
+        <div className="text-center mb-20">
+          <div className="section-label mb-6 mx-auto w-fit tracking-[0.4em] glow-text">✦ MASTER SYLLABUS</div>
+          <h2 className="font-display text-4xl sm:text-7xl font-[1000] text-white mb-6 tracking-tighter">
+            Architectural <span className="text-gradient">Logic</span>
           </h2>
-          <p className="font-body text-muted-foreground">12 comprehensive modules designed for real-world AI mastery</p>
-          <p className="font-body text-xs text-muted-foreground/60 mt-2">Click any module to see full details</p>
+          <p className="font-body text-base sm:text-lg text-muted-foreground/80 max-w-3xl mx-auto leading-relaxed">
+            A high-fidelity curriculum engineered to provide non-linear growth in AI proficiency, from theoretical physics of data to autonomous agency.
+          </p>
+          <div className="flex items-center justify-center gap-3 mt-8">
+             <div className="h-px w-10 bg-white/20" />
+             <p className="font-body text-[10px] text-primary/80 font-black tracking-[0.3em] uppercase animate-pulse">Select a module to decrypt</p>
+             <div className="h-px w-10 bg-white/20" />
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-min">
           {modules.map((m, i) => {
             const colors = iconColors[i];
             return (
@@ -387,6 +401,18 @@ const ModulesSection: React.FC = () => {
           })}
         </div>
 
+        <div className="mt-24 text-center">
+            <div className="inline-block glass-panel p-8 rounded-[2.5rem] border border-white/10 max-w-2xl">
+                <p className="font-display text-xl sm:text-2xl font-black text-white mb-4">Ready to begin your specialization?</p>
+                <p className="font-body text-sm text-muted-foreground mb-8">Join the elite few who aren't just using AI, but mastering the architectural logic behind the machine.</p>
+                <button 
+                   onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })}
+                   className="btn-glow text-white font-display text-xs font-black px-12 py-5 rounded-2xl tracking-[0.3em] uppercase"
+                >
+                   VIEW PATHWAY OPTIONS
+                </button>
+            </div>
+        </div>
       </div>
     </section>
   );

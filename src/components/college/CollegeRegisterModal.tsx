@@ -4,7 +4,7 @@ import { useCollegeRegisterModal } from "./CollegeRegisterModalContext";
 import { RazorpayOptions } from "@/types/razorpay";
 
 const RAZORPAY_KEY_ID = "rzp_live_gfoS1OjC8tvWjP";
-const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbxsNlBVyY2LVjPuIBXRs2g1WXZ1r_WzM1b4zOChLVAD-iv2J8f3DXOhF4od7JOliOEa3A/exec";
+const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbw59X8thSpB9xrJSI0GhACEm617vAbc7BDH6hJFOOBsOeq-B4az0p3B_O6koMjYfsppgA/exec";
 
 const batches = [
     { value: "batch1", label: "Batch 1 — April 1–30, 2026" },
