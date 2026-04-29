@@ -168,6 +168,10 @@ const Index: React.FC = () => {
                 Mentor
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-brandGreen transition-all group-hover:w-full"></span>
               </button>
+              <Link to="/main" className="text-[13px] font-black text-slate-500 hover:text-slate-900 uppercase tracking-widest transition-colors relative group">
+                Vision
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-brandGreen transition-all group-hover:w-full"></span>
+              </Link>
               <button onClick={() => scrollTo("training")} className="bg-slate-900 hover:bg-slate-800 text-white text-[12px] font-black tracking-widest uppercase px-7 py-3 rounded-full transition-all hover:shadow-[0_10px_20px_rgba(0,0,0,0.1)] active:scale-95">
                 Join Now
               </button>
