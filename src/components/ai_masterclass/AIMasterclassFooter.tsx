@@ -103,7 +103,7 @@ const AIMasterclassFooter: React.FC = () => {
                                 <span className="text-xs font-bold uppercase tracking-wider">Payments Secured</span>
                             </div>
                             <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest leading-relaxed">
-                                © 2026 Tech Tycoon Digital Solutions<br />All Rights Reserved
+                                © 2026 Tech Tycoon Digital Solution<br />All Rights Reserved
                             </p>
                         </div>
                     </div>

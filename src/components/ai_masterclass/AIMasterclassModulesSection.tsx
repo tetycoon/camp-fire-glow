@@ -1,5 +1,5 @@
 import React from "react";
-import { CheckCircle2, Sparkles, Terminal, Briefcase, ChevronDown } from "lucide-react";
+import { CheckCircle2, Sparkles, Terminal, Briefcase, BookOpen } from "lucide-react";
 import {
   Accordion,
   AccordionContent,

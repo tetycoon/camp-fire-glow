@@ -6,7 +6,7 @@ import { getMasterclassDateStrings } from "../../lib/masterclassDateUtils";
 import { countryCodes } from "../../lib/countryCodes";
 
 const RAZORPAY_KEY_ID = "rzp_live_gfoS1OjC8tvWjP";
-const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbxsNlBVyY2LVjPuIBXRs2g1WXZ1r_WzM1b4zOChLVAD-iv2J8f3DXOhF4od7JOliOEa3A/exec";
+const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbzUwK8DNYomJfz_NmcXoRyQ3dMZgqL_ZLNQBnHw8PY27kSE_SjS80q801WJ5uDkPTl1/exec";
 
 
 function loadRazorpayScript(): Promise<boolean> {
@@ -103,7 +103,8 @@ const AIMasterclassRegisterModal: React.FC = () => {
         }
 
         const pageUrl = window.location.href;
-        const isTestEmail = form.email.toLowerCase().trim() === "ambroseselva001@gmail.com";
+        const testEmails = ["ambroseselva001@gmail.com", "techtycoondigitalsolutions@gmail.com"];
+        const isTestEmail = testEmails.includes(form.email.toLowerCase().trim());
         const finalAmount = isTestEmail ? 100 : 9900; // 100 paise (₹1) for test, else ₹99
 
         try {
@@ -125,7 +126,7 @@ const AIMasterclassRegisterModal: React.FC = () => {
             const result = await response.json();
 
             if (!result.success || !result.orderId) {
-                alert("Failed to create order.");
+                alert(`Order creation failed: ${result.error || "Please check your network and try again."}`);
                 setLoading(false);
                 return;
             }
@@ -153,31 +154,25 @@ const AIMasterclassRegisterModal: React.FC = () => {
                     setSubmitted(true);
                     setLoading(false);
 
-                    // Notify backend of payment success
-                    try {
-                        await fetch(GOOGLE_SHEET_URL, {
-                            method: "POST",
-                            headers: { "Content-Type": "text/plain;charset=utf-8" },
-                            body: JSON.stringify({
-                                paymentSuccess: true,
-                                razorpay_order_id: result.orderId,
-                                razorpay_payment_id: response.razorpay_payment_id,
-                                razorpay_signature: response.razorpay_signature,
-                                email: form.email,
-                                name: form.name,
-                                language: form.language
-                            })
-                        });
+                    // 1. Fire and forget tracking (Background)
+                    fetch(GOOGLE_SHEET_URL, {
+                        method: "POST",
+                        headers: { "Content-Type": "text/plain;charset=utf-8" },
+                        body: JSON.stringify({
+                            paymentSuccess: true,
+                            razorpay_order_id: result.orderId,
+                            razorpay_payment_id: response.razorpay_payment_id,
+                            email: form.email,
+                            name: form.name,
+                            language: form.language
+                        })
+                    }).catch(() => {});
 
-                        // Direct redirect to WhatsApp tracking
-                        // Direct redirect to Thank You page for Meta Pixel purchase tracking
-                        setTimeout(() => {
-                            window.location.href = `/thankyou?orderId=${result.orderId}`;
-                        }, 1500); // 1.5s delay to let the user see the success state briefly
-
-                    } catch (e) {
-                        console.error("Failed to notify payment success", e);
-                    }
+                    // 2. INSTANT JUMP TO WHATSAPP
+                    const TRIGGER_MESSAGE = "Hi I am complete the registration of AI- Secret Revealed webinar";
+                    const waChatLink = `https://wa.me/917010340494?text=${encodeURIComponent(TRIGGER_MESSAGE)}`;
+                    
+                    window.location.href = waChatLink;
 
                     // Handle private coupons if used
                     const privateCoupons = ["ATY7K2BX9QM4", "CP3ZN8DW6RL5", "EK4YT1FJ8HP3", "GN2VA6HM5XB9", "IQ7CW2JR1UD4", "KP8MZ3LT5YN1", "MX2QA9NV6BR4", "OW4EC7PF1GS6", "QH9DK5RJ3LV2", "ST7NB8UW4CM6"];
@@ -375,6 +370,19 @@ const AIMasterclassRegisterModal: React.FC = () => {
                             </div>
 
                             <p className="text-xs text-red-500 font-bold text-center mt-1">⚠️ We do not provide recorded sessions.</p>
+
+                            <div className="flex items-start gap-2 ml-1">
+                                <input 
+                                    type="checkbox" 
+                                    required 
+                                    id="wa-opt-in"
+                                    defaultChecked
+                                    className="mt-1 w-4 h-4 rounded border-white/10 bg-white/5 text-emerald-500 focus:ring-emerald-500 focus:ring-offset-0"
+                                />
+                                <label htmlFor="wa-opt-in" className="text-[10px] text-emerald-400/60 leading-tight">
+                                    I agree to receive workshop updates and automated reminders on WhatsApp.
+                                </label>
+                            </div>
 
                             <button
                                 type="submit"

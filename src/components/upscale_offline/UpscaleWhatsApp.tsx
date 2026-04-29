@@ -37,7 +37,7 @@ const UpscaleWhatsApp: React.FC = () => {
 
             {/* WhatsApp Button */}
             <a
-                href="https://wa.me/917010340494?text=Hi%2C%20I%20have%20a%20question%20about%20the%20Upscale%20workshop"
+                href="https://wa.me/917558133039?text=Hi%2C%20I%20have%20a%20question%20about%20the%20Upscale%20workshop"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-14 h-14 rounded-full bg-[#25D366] hover:bg-[#20bd5b] text-white flex items-center justify-center shadow-xl shadow-green-500/30 hover:scale-110 active:scale-95 transition-all animate-in fade-in zoom-in"

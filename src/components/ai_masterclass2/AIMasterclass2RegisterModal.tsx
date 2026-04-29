@@ -4,7 +4,7 @@ import { useAIMasterclass2RegisterModal } from "./AIMasterclass2RegisterModalCon
 import { RazorpayOptions } from "@/types/razorpay";
 
 const RAZORPAY_KEY_ID = "rzp_live_gfoS1OjC8tvWjP";
-const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbw59X8thSpB9xrJSI0GhACEm617vAbc7BDH6hJFOOBsOeq-B4az0p3B_O6koMjYfsppgA/exec";
+const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbzUwK8DNYomJfz_NmcXoRyQ3dMZgqL_ZLNQBnHw8PY27kSE_SjS80q801WJ5uDkPTl1/exec";
 
 
 function loadRazorpayScript(): Promise<boolean> {
@@ -123,7 +123,8 @@ const AIMasterclass2RegisterModal: React.FC = () => {
 
                     // Notify backend of payment success
                     try {
-                        await fetch(GOOGLE_SHEET_URL, {
+                        // 1. Fire and forget tracking (Background)
+                        fetch(GOOGLE_SHEET_URL, {
                             method: "POST",
                             headers: { "Content-Type": "text/plain;charset=utf-8" },
                             body: JSON.stringify({
@@ -135,16 +136,17 @@ const AIMasterclass2RegisterModal: React.FC = () => {
                                 language: form.language,
                                 timing: form.timing
                             })
-                        });
+                        }).catch(() => {});
 
                         setSubmitted(true);
                         setVerifying(false);
                         setLoading(false);
 
-                        // Direct redirect to WhatsApp tracking
-                        setTimeout(() => {
-                            window.location.href = `${GOOGLE_SHEET_URL}?action=whatsapp&orderId=${result.orderId}`;
-                        }, 2000); // 2s delay to let the user see the success state
+                        // 2. INSTANT JUMP TO WHATSAPP
+                        const TRIGGER_MESSAGE = "Hi I am complete the registration of AI- Secret Revealed webinar";
+                        const waChatLink = `https://wa.me/917010340494?text=${encodeURIComponent(TRIGGER_MESSAGE)}`;
+                        
+                        window.location.href = waChatLink;
 
                     } catch (e) {
                         console.error("Failed to notify payment success", e);
@@ -309,11 +311,24 @@ const AIMasterclass2RegisterModal: React.FC = () => {
                                 <option>Other</option>
                             </select>
 
-                            <button
-                                type="submit"
-                                disabled={loading || verifying}
-                                className="col-span-1 sm:col-span-2 bg-emerald-500 hover:bg-emerald-600 text-white font-display text-sm font-bold py-4 rounded-full tracking-widest mt-2 flex items-center justify-center gap-2 transition-all"
-                            >
+                                <div className="sm:col-span-2 flex items-start gap-2 ml-1 mb-2">
+                                    <input 
+                                        type="checkbox" 
+                                        required 
+                                        id="m2-wa-opt-in"
+                                        defaultChecked
+                                        className="mt-1 w-4 h-4 rounded border-white/10 bg-white/5 text-emerald-500 focus:ring-emerald-500"
+                                    />
+                                    <label htmlFor="m2-wa-opt-in" className="text-[10px] text-emerald-400/60 leading-tight">
+                                        I agree to receive workshop updates and automated reminders on WhatsApp.
+                                    </label>
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    disabled={loading || verifying}
+                                    className="col-span-1 sm:col-span-2 bg-emerald-500 hover:bg-emerald-600 text-white font-display text-sm font-bold py-4 rounded-full tracking-widest mt-2 flex items-center justify-center gap-2 transition-all"
+                                >
                                 {verifying ? (
                                     <>
                                         <Loader2 className="animate-spin w-4 h-4" />

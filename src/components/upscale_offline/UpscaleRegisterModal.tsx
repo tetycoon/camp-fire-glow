@@ -95,18 +95,18 @@ const UpscaleRegisterModal: React.FC = () => {
             return;
         }
 
-        const isTestEmail = form.email.toLowerCase().trim() === "ambroseselva001@gmail.com";
+        const testEmails = ["ambroseselva001@gmail.com", "techtycoondigitalsolutions@gmail.com"];
+        const isTestEmail = testEmails.includes(form.email.toLowerCase().trim());
         const finalAmount = isTestEmail ? 100 : 499900;
 
         const payloadObj = {
-            userType: form.profession || "Professional",
-            pageUrl: window.location.href,
             name: form.name,
             email: form.email,
             phone: `${form.countryCode}${form.phone}`,
+            userType: form.profession || "Professional",
             language: "Chennai Offline",
-            batch: "UPSCALE OFFLINE MAY 31",
-            amount: isTestEmail ? 1 : 4999
+            amount: isTestEmail ? 1 : 4999,
+            paymentSuccess: false
         };
 
         try {
@@ -159,6 +159,15 @@ const UpscaleRegisterModal: React.FC = () => {
                     setSubmitted(true);
                     setVerifying(false);
                     setLoading(false);
+
+                    // Automatic Redirection to WhatsApp
+                    const TRIGGER_MESSAGE = "Hi I am complete Registration of AI- Business Generative Model workshop in chennai";
+                    const waChatLink = `https://wa.me/917558133039?text=${encodeURIComponent(TRIGGER_MESSAGE)}`;
+                    
+                    // Small delay to let the user see the "Complete" state before jumping
+                    setTimeout(() => {
+                        window.location.href = waChatLink;
+                    }, 1500);
                 },
                 modal: { ondismiss: () => setLoading(false) },
             };
@@ -220,7 +229,7 @@ const UpscaleRegisterModal: React.FC = () => {
                                 <div className="bg-slate-50 p-6 rounded-[32px] border border-slate-100 mb-8">
                                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Final Step: Join the community</p>
                                     <a 
-                                        href={`https://wa.me/917010340494?text=${encodeURIComponent("Hai I am complete the registration of Level -2 Offline Session")}`}
+                                        href={`https://wa.me/917558133039?text=${encodeURIComponent("Hi I am complete Registration of AI- Business Generative Model workshop in chennai")}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="inline-flex items-center gap-3 bg-[#25D366] hover:bg-[#20bd5b] text-white px-8 py-4 rounded-2xl font-black text-sm shadow-xl shadow-green-200 transition-all active:scale-95"
@@ -365,6 +374,19 @@ const UpscaleRegisterModal: React.FC = () => {
                                                 <svg width="10" height="6" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                                             </div>
                                         </div>
+                                    </div>
+
+                                    <div className="flex items-start gap-2 px-1 mb-2">
+                                        <input 
+                                            type="checkbox" 
+                                            required 
+                                            id="upscale-wa-opt-in"
+                                            defaultChecked
+                                            className="mt-1 w-4 h-4 rounded border-slate-200 text-blue-600 focus:ring-blue-500"
+                                        />
+                                        <label htmlFor="upscale-wa-opt-in" className="text-[10px] text-slate-400 font-bold leading-tight">
+                                            I agree to receive workshop updates and automated reminders on WhatsApp.
+                                        </label>
                                     </div>
 
                                     <button 

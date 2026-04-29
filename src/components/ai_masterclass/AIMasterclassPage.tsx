@@ -9,6 +9,7 @@ import AIMasterclassFooter from "./AIMasterclassFooter";
 import AIMasterclassRegisterModal from "./AIMasterclassRegisterModal";
 import { AIMasterclassRegisterModalProvider } from "./AIMasterclassRegisterModalContext";
 import TestimonialCarousel from "./TestimonialCarousel";
+import AIMasterclassWhatsApp from "./AIMasterclassWhatsApp";
 
 const AIMasterclassPage: React.FC = () => {
     useEffect(() => {
@@ -50,6 +51,7 @@ const AIMasterclassPage: React.FC = () => {
                 <AIMasterclassPricingSection />
                 <AIMasterclassFooter />
                 <AIMasterclassRegisterModal />
+                <AIMasterclassWhatsApp />
             </div>
         </AIMasterclassRegisterModalProvider>
     );
