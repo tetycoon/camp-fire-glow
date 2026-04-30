@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { CheckCircle2, Loader2, Phone, X } from "lucide-react";
 import { useRegisterModal } from "./RegisterModalContext";
 
-const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbzUwK8DNYomJfz_NmcXoRyQ3dMZgqL_ZLNQBnHw8PY27kSE_SjS80q801WJ5uDkPTl1/exec";
+const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbzMlMVIAGQbGNkdmdVjlrakzCuGFRQxmMSmRZs_QgKf0PabRGlhOUzMiz1gkQjdtRw/exec";
 
 const batches = [
     { value: "batch2", label: "May Batch — May 1–30, 2026" },
