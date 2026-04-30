@@ -104,7 +104,7 @@ const Navbar: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 h-10 flex items-center justify-between gap-4">
           <div className="hidden sm:flex items-center gap-2">
             <span className="text-[0.65rem] font-body font-semibold uppercase tracking-widest" style={{ color: "hsl(199 100% 70%)" }}>
-              ⚡ Batch 2 starts May 1 — Limited seats!
+              ⚡ Batch 2 Admissions Open — Limited seats!
             </span>
           </div>
 
@@ -165,7 +165,7 @@ const Navbar: React.FC = () => {
                 onClick={openRegisterModal}
                 className="hover:text-primary transition-colors capitalize font-medium relative group"
               >
-                Register
+                Enquire
                 <span className="absolute -bottom-1 left-0 w-0 h-px bg-primary transition-all duration-300 group-hover:w-full" />
               </button>
             </div>
@@ -246,7 +246,7 @@ const Navbar: React.FC = () => {
                   className="group flex items-center justify-between text-2xl font-display font-bold text-foreground hover:text-primary transition-all duration-300"
                   style={{ transitionDelay: "400ms" }}
                 >
-                  <span>Register Now</span>
+                  <span>Enquire Now</span>
                   <span className="w-8 h-px bg-primary/30 group-hover:w-12 transition-all" />
                 </button>
               </div>
@@ -257,13 +257,13 @@ const Navbar: React.FC = () => {
                 onClick={() => { openRegisterModal(); setOpen(false); }}
                 className="w-full btn-glow text-primary-foreground font-display text-sm font-bold py-4 rounded-2xl tracking-widest"
               >
-                🔒 SECURE YOUR SEAT
+                ENQUIRE FOR ACCESS
               </button>
 
               <div className="mt-6 flex items-center justify-center gap-4 py-4 rounded-2xl bg-white/5 border border-white/10">
                 <Clock className="w-4 h-4 text-orange-400" />
                 <div className="flex items-center gap-2">
-                  <span className="font-body text-[0.7rem] text-muted-foreground uppercase tracking-wider">Registration closes in</span>
+                  <span className="font-body text-[0.7rem] text-muted-foreground uppercase tracking-wider">Admissions close in</span>
                   <CountdownTimer compact />
                 </div>
               </div>
@@ -281,7 +281,7 @@ const Navbar: React.FC = () => {
           className="btn-glow text-primary-foreground font-display text-[0.65rem] sm:text-xs font-bold pl-5 pr-6 py-3 sm:py-4 rounded-full tracking-wider flex items-center gap-3 whitespace-nowrap"
           style={{ boxShadow: "0 8px 32px hsl(199 100% 55% / 0.5)" }}
         >
-          <span>🔒 SECURE YOUR SEAT</span>
+          <span>ENQUIRE FOR ACCESS</span>
           <span
             className="flex items-center gap-1 px-2 py-0.5 rounded-full"
             style={{ background: "hsl(222 47% 5% / 0.5)", border: "1px solid hsl(199 100% 55% / 0.3)" }}

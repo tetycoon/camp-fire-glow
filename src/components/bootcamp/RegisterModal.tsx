@@ -1,30 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { CheckCircle2, Loader2, ShieldCheck, X } from "lucide-react";
+import { CheckCircle2, Loader2, Phone, X } from "lucide-react";
 import { useRegisterModal } from "./RegisterModalContext";
-import { RazorpayOptions } from "@/types/razorpay";
 
-const RAZORPAY_KEY_ID = "rzp_live_gfoS1OjC8tvWjP";
 const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbzUwK8DNYomJfz_NmcXoRyQ3dMZgqL_ZLNQBnHw8PY27kSE_SjS80q801WJ5uDkPTl1/exec";
 
 const batches = [
     { value: "batch2", label: "May Batch — May 1–30, 2026" },
 ];
-
-
-function loadRazorpayScript(): Promise<boolean> {
-    return new Promise((resolve) => {
-        if (document.getElementById("razorpay-script")) {
-            resolve(true);
-            return;
-        }
-        const script = document.createElement("script");
-        script.id = "razorpay-script";
-        script.src = "https://checkout.razorpay.com/v1/checkout.js";
-        script.onload = () => resolve(true);
-        script.onerror = () => resolve(false);
-        document.body.appendChild(script);
-    });
-}
 
 const RegisterModal: React.FC = () => {
     const { isOpen, closeRegisterModal } = useRegisterModal();
@@ -32,17 +14,12 @@ const RegisterModal: React.FC = () => {
     const [submitted, setSubmitted] = useState(false);
     const [loading, setLoading] = useState(false);
     const [couponChecking, setCouponChecking] = useState(false);
-    const [paymentId, setPaymentId] = useState<string>("");
     const [visible, setVisible] = useState(false);
-    const [discountApplied, setDiscountApplied] = useState(true);  // WELCOME33 → ₹9,999
-    const [friendCouponApplied, setFriendCouponApplied] = useState(false); // 12-digit → ₹7,999
 
     // Animate in/out
     useEffect(() => {
         if (isOpen) {
-            // Small delay for mount animation
             requestAnimationFrame(() => setVisible(true));
-            // Prevent body scroll
             document.body.style.overflow = "hidden";
         } else {
             setVisible(false);
@@ -57,11 +34,8 @@ const RegisterModal: React.FC = () => {
         setVisible(false);
         setTimeout(() => {
             closeRegisterModal();
-            // Reset form when closing (but keep submitted state if payment done)
             if (!submitted) {
                 setForm({ name: "", email: "", phone: "", schoolName: "", batch: "batch2", timing: "10 AM to 1 PM", coupon: "WELCOME33" });
-                setDiscountApplied(true);
-                setFriendCouponApplied(false);
             }
         }, 300);
     };
@@ -76,28 +50,7 @@ const RegisterModal: React.FC = () => {
         e.preventDefault();
         setLoading(true);
 
-        const loaded = await loadRazorpayScript();
-        if (!loaded) {
-            alert("Failed to load payment gateway. Please check your internet connection.");
-            setLoading(false);
-            return;
-        }
-
-        const batchLabel = batches.find(b => b.value === form.batch)?.label || form.batch;
-
-        // 🔥 SEND PAGE URL & CATEGORY
         const pageUrl = window.location.href;
-        const path = window.location.pathname.toLowerCase();
-
-        let category = "school students";
-        if (path.includes("college") || pageUrl.toLowerCase().includes("/college")) {
-            category = "college students";
-        }
-        console.log("Category detected:", category); // DEBUG
-
-        // Capture lead and generate Razorpay Order ID
-        let result: any;
-        const finalAmount = friendCouponApplied ? 799900 : discountApplied ? 999900 : 1499900;
 
         try {
             const response = await fetch(GOOGLE_SHEET_URL, {
@@ -105,64 +58,29 @@ const RegisterModal: React.FC = () => {
                 headers: { "Content-Type": "text/plain;charset=utf-8" },
                 body: JSON.stringify({
                     userType: "school students",
-                    pageUrl,   // 👈 category decided from this in GAS
+                    pageUrl,
                     name: form.name,
                     email: form.email,
                     phone: form.phone,
                     schoolName: form.schoolName,
                     batch: `${form.batch} (${form.timing})`,
-                    amount: finalAmount / 100
+                    amount: 0 // Enquire mode
                 }),
             });
 
-            result = await response.json();
+            const result = await response.json();
 
-            if (!result.success || !result.orderId) {
-                alert("Failed to create payment order. Please try again.");
-                setLoading(false);
-                return;
+            if (result.success) {
+                setSubmitted(true);
+            } else {
+                alert("Failed to submit enquiry. Please try again.");
             }
-
         } catch (error) {
             alert("Server error. Please try again later.");
-            console.error("Error capturing lead/creating order:", error);
+            console.error("Error submitting enquiry:", error);
+        } finally {
             setLoading(false);
-            return;
         }
-
-        const options: RazorpayOptions = {
-            key: RAZORPAY_KEY_ID,
-            order_id: result.orderId,
-            amount: finalAmount,
-            currency: "INR",
-            name: "Tech Tycoon Digital Solutions",
-            description: `AI Summer Bootcamp 2026 — ${batchLabel}`,
-            prefill: {
-                name: form.name,
-                email: form.email,
-                contact: form.phone,
-            },
-            notes: {
-                batch: `${batchLabel} (${form.timing})`,
-            },
-            theme: {
-                color: "#6C63FF",
-            },
-            handler: async (response) => {
-                setPaymentId(response.razorpay_payment_id || "TEST_PAYMENT_ID");
-                setSubmitted(true);
-                setLoading(false);
-                // Removed single-use private coupon tracking
-            },
-            modal: {
-                ondismiss: () => {
-                    setLoading(false);
-                },
-            },
-        };
-
-        const rzp = new window.Razorpay(options);
-        rzp.open();
     };
 
     if (!isOpen) return null;
@@ -183,7 +101,6 @@ const RegisterModal: React.FC = () => {
                     boxShadow: "0 0 60px hsl(199 100% 55% / 0.15), 0 25px 50px hsl(222 47% 5% / 0.5)",
                 }}
             >
-                {/* Close button */}
                 <button
                     onClick={handleClose}
                     className="absolute top-4 right-4 w-9 h-9 flex items-center justify-center rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all z-10"
@@ -196,34 +113,39 @@ const RegisterModal: React.FC = () => {
                         <div className="w-20 h-20 rounded-full bg-primary/10 border border-primary/30 flex items-center justify-center mx-auto mb-6 animate-pulse-glow">
                             <CheckCircle2 className="w-10 h-10 text-primary" />
                         </div>
-                        <h3 className="font-display text-2xl font-bold text-foreground mb-3">Payment Successful!</h3>
-                        <p className="font-body text-base text-muted-foreground mb-4 max-w-md mx-auto">
-                            Welcome to the AI Summer Bootcamp 2026! You're officially enrolled in the future.
+                        <h3 className="font-display text-2xl font-bold text-foreground mb-3">Enquiry Received</h3>
+                        <p className="font-body text-base text-muted-foreground mb-6 max-w-md mx-auto leading-relaxed">
+                            Thank you for enquiring about our <span className="text-white font-bold">AI Summer Bootcamp '26</span>. Our admissions team will review your profile shortly.
                         </p>
-                        {paymentId && (
-                            <div className="inline-block badge-module font-body text-xs px-5 py-2 rounded-full mb-4">
-                                Receipt ID: {paymentId}
+                        
+                        <div className="bg-primary/5 border border-primary/20 rounded-2xl p-6 mb-8">
+                            <p className="font-body text-sm text-primary/80 mb-4 font-medium uppercase tracking-wider">To Confirm Your Seat Immediately</p>
+                            <div className="flex flex-col items-center gap-3">
+                                <a href="tel:+917558133039" className="flex items-center gap-3 font-display text-xl sm:text-2xl font-black text-white hover:text-primary transition-colors">
+                                    <Phone className="w-6 h-6 text-primary animate-bounce" />
+                                    +91 7558133039
+                                </a>
+                                <p className="font-body text-xs text-muted-foreground px-4">
+                                    Please call our program coordinator to discuss pricing details and finalize your enrollment.
+                                </p>
                             </div>
-                        )}
-                        <p className="font-body text-xs text-muted-foreground">
-                            A confirmation email has been sent to <span className="text-primary font-semibold">{form.email}</span>
-                        </p>
+                        </div>
+
                         <button
                             onClick={handleClose}
-                            className="mt-8 font-display text-xs font-bold px-8 py-3 rounded-full tracking-wider border border-primary/30 text-primary hover:bg-primary/10 transition-all uppercase"
+                            className="font-display text-xs font-bold px-8 py-3 rounded-full tracking-wider border border-primary/30 text-primary hover:bg-primary/10 transition-all uppercase"
                         >
                             CLOSE PORTAL
                         </button>
                     </div>
                 ) : (
                     <>
-                        {/* Header */}
                         <div className="text-center mb-6">
                             <p className="font-body text-[10px] tracking-[0.4em] text-primary uppercase font-bold mb-2">AI Summer Bootcamp 2026</p>
                             <h2 className="font-display text-2xl sm:text-3xl font-bold text-white mb-1">
-                                Professional <span className="text-gradient">Registration</span>
+                                Professional <span className="text-gradient">Enquiry</span>
                             </h2>
-                            <p className="font-body text-xs text-muted-foreground">Fill in your details to secure your specialized training slot</p>
+                            <p className="font-body text-xs text-muted-foreground">Submit your interest to receive detailed program and pricing information</p>
                         </div>
 
                         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-3.5">
@@ -314,44 +236,7 @@ const RegisterModal: React.FC = () => {
                                 </div>
                             </div>
 
-                            <div className="flex flex-col gap-1 md:col-span-2 mt-1">
-                                <label className="font-body text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">Promotion / Group Referral Code</label>
-                                <div className="flex gap-2">
-                                    <input
-                                        id="coupon"
-                                        type="text"
-                                        value={form.coupon}
-                                        onChange={e => setForm({ ...form, coupon: e.target.value.toUpperCase() })}
-                                        placeholder="Enter code (if any)"
-                                        className="bg-muted/20 border border-border/40 rounded-xl px-5 py-2.5 font-body text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-primary/50 transition-all flex-1 tracking-wider uppercase shadow-inner"
-                                    />
-                                    <button
-                                        type="button"
-                                        disabled={couponChecking}
-                                        onClick={async () => {
-                                            const code = form.coupon.trim();
-                                            if (code === "WELCOME33") {
-                                                setDiscountApplied(true);
-                                                setFriendCouponApplied(false);
-                                                alert("✨ Optimization successful! Early Bird price applied: ₹9,999");
-                                            } else if (code === "AMIABLE30") {
-                                                setDiscountApplied(true);
-                                                setFriendCouponApplied(true);
-                                                alert("🚀 Elite Referral Applied! Final Price: ₹7,999");
-                                            } else {
-                                                alert("Code verification failed. Please check the character sequence.");
-                                                setDiscountApplied(false);
-                                                setFriendCouponApplied(false);
-                                            }
-                                        }}
-                                        className="font-display text-[10px] font-black px-5 rounded-xl border border-primary/40 text-primary hover:bg-primary/10 transition-all uppercase tracking-widest disabled:opacity-50 whitespace-nowrap"
-                                    >
-                                        {couponChecking ? "VERIFYING..." : "APPLY CODE"}
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div className="md:col-span-2 mt-3">
+                            <div className="md:col-span-2 mt-4">
                                 <button
                                     type="submit"
                                     disabled={loading}
@@ -360,20 +245,15 @@ const RegisterModal: React.FC = () => {
                                     {loading ? (
                                         <>
                                             <Loader2 className="w-5 h-5 animate-spin" />
-                                            <span>SYNCHRONIZING WITH GATEWAY...</span>
+                                            <span>SUBMITTING ENQUIRY...</span>
                                         </>
                                     ) : (
                                         <>
-                                            <span>FINALIZE ENROLLMENT ({friendCouponApplied ? "₹7,999" : discountApplied ? "₹9,999" : "₹14,999"})</span>
+                                            <span>SUBMIT ENQUIRY</span>
                                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                                         </>
                                     )}
                                 </button>
-                            </div>
-                            {/* Trust badge */}
-                            <div className="flex items-center justify-center gap-2 mt-1">
-                                <ShieldCheck className="w-4 h-4 text-muted-foreground" />
-                                <span className="font-body text-xs text-muted-foreground">Secured by Razorpay · 256-bit SSL</span>
                             </div>
                         </form>
                     </>

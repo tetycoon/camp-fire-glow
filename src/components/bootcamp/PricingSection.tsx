@@ -78,23 +78,25 @@ const PricingSection: React.FC = () => {
 
                 {/* Price Display */}
                 <div>
-                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6 bg-red-500/10 border border-red-500/20 text-red-500 animate-pulse">
+                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6 bg-amber-500/10 border border-amber-500/20 text-amber-500">
                     <span className="font-display text-[10px] font-black tracking-widest uppercase">
-                      ⌛ Limited Early Bird Windows Closing
+                      ⌛ Enrollment Windows Closing
                     </span>
                   </div>
 
-                  <div className="flex items-baseline gap-4 mb-2">
-                    <span className="font-display text-2xl sm:text-3xl text-muted-foreground/30 line-through decoration-amber-500/40">₹14,999</span>
-                    <span className="font-display text-6xl sm:text-9xl font-black text-white glow-text tracking-tighter">
-                      <span className="text-4xl sm:text-6xl text-amber-500 mr-2">₹</span>9,999
+                  <div className="flex flex-col gap-2 mb-6">
+                    <span className="font-display text-4xl sm:text-6xl font-black text-white glow-text tracking-tighter uppercase">
+                      Enquire for <span className="text-amber-500">Pricing</span>
                     </span>
+                    <p className="font-body text-sm text-muted-foreground/60 italic">
+                      Special cohort pricing available upon enquiry
+                    </p>
                   </div>
                   
                   <div className="flex items-center gap-3 mt-6">
                     <div className="badge-green px-4 py-2 rounded-full font-display text-[11px] font-black tracking-widest flex items-center gap-2">
                       <Zap className="w-3.5 h-3.5 fill-current" />
-                      33% OPTIMIZATION SAVINGS
+                      PREMIUM ACCESS
                     </div>
                     <div className="bg-amber-500/10 border border-amber-500/20 text-amber-500 px-4 py-2 rounded-full font-display text-[11px] font-black tracking-widest flex items-center gap-2">
                       <Users className="w-3.5 h-3.5" />
@@ -122,11 +124,11 @@ const PricingSection: React.FC = () => {
                   <div className="mt-10 pt-10 border-t border-white/10">
                     <div className="flex items-center gap-4 mb-8">
                        <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-500">
-                          <ShieldCheck className="w-7 h-7" />
+                          <Calendar className="w-7 h-7" />
                        </div>
                        <div>
-                          <p className="font-display text-sm font-bold text-white">Secure Gateway</p>
-                          <p className="font-body text-[11px] text-muted-foreground">Certified 256-bit AES Encryption</p>
+                          <p className="font-display text-sm font-bold text-white">Admissions Open</p>
+                          <p className="font-body text-[11px] text-muted-foreground">Limited Selection Cohort</p>
                        </div>
                     </div>
                     
@@ -135,13 +137,13 @@ const PricingSection: React.FC = () => {
                       className="w-full btn-gold font-display text-sm font-black py-5 rounded-2xl tracking-[0.3em] uppercase group"
                     >
                       <span className="flex items-center justify-center gap-3">
-                         INITIATE ENROLLMENT
+                         ENQUIRE NOW
                          <Zap className="w-4 h-4 fill-current group-hover:animate-bounce" />
                       </span>
                     </button>
                     
                     <p className="text-[10px] text-center text-muted-foreground/40 mt-6 font-medium tracking-tight">
-                        *Inclusive of all government taxes and platform overheads
+                        *Program schedule and logistics provided upon successful enquiry
                     </p>
                   </div>
                 </div>

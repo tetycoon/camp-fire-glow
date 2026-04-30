@@ -58,7 +58,7 @@ const HeroSection: React.FC = () => {
             <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
             <span className="relative flex items-center justify-center gap-3">
               <Rocket className="w-5 h-5 animate-bounce" />
-              SECURE YOUR PORTAL
+              ENQUIRE NOW
             </span>
           </button>
           <button
@@ -76,9 +76,9 @@ const HeroSection: React.FC = () => {
             { icon: Cpu, value: "3hrs", label: "Daily Session", sub: "Live / Recorded" },
             { icon: Sparkles, value: "12+", label: "Elite Modules", sub: "Expert Crafted" },
             { 
-                value: "₹9,999", 
-                label: "Early Bird Price", 
-                sub: "Ends April 25",
+                value: "Price", 
+                label: "Enquire for Price", 
+                sub: "Best in Industry",
                 special: true
             },
           ].map((stat, i) => (

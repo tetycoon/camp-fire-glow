@@ -60,7 +60,7 @@ const courses: Course[] = [
     title: "AI Summer Bootcamp",
     tag: "Certification",
     intro: "A rigorous 30-day architectural immersion. Master agentic workflows, LLM orchestration, and the foundations of professional AI autonomy.",
-    fees: "₹9,999",
+    fees: "Enquire for Pricing",
     date: "Starting May 1st",
     timing: "3 Hrs Daily (Flexi Slots)",
     image: "/images/summer_camp.jpg",
@@ -356,7 +356,7 @@ const Index: React.FC = () => {
                        to={course.link}
                        className="w-full bg-slate-900 hover:bg-slate-800 text-white font-black py-5 rounded-2xl flex items-center justify-center gap-3 transition-all tracking-widest uppercase text-xs hover:shadow-xl active:scale-95 group/btn"
                      >
-                       Reserve Seat <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
+                       {course.link === "/bootcamp" ? "Enquire Now" : "Reserve Seat"} <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
                      </Link>
                    )}
                 </div>
