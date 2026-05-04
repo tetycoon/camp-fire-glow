@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="/logo.png" />
+  <title>AI Bootcamp</title>
+  <meta name="description" content="AI Summer Bootcamp 2026 — Master AI tools shaping tomorrow in just 30 days.">
+  <meta name="author" content="Tech Tycoon Digital Solutions" />
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+
+
+
+  <meta property="og:type" content="website" />
+  <meta property="og:image"
+    content="https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/a41032ad-f935-45fd-9e25-ec46d01c7f5f/id-preview-217115d2--919ce958-eebf-44b3-8d50-89d545a3a825.lovable.app-1771503762684.png">
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@TechTycoon" />
+  <meta name="twitter:image"
+    content="https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/a41032ad-f935-45fd-9e25-ec46d01c7f5f/id-preview-217115d2--919ce958-eebf-44b3-8d50-89d545a3a825.lovable.app-1771503762684.png">
+  <meta property="og:title" content="AI Bootcamp">
+  <meta name="twitter:title" content="AI Bootcamp">
+  <meta property="og:description" content="AI Summer Bootcamp 2026 — Master AI tools shaping tomorrow in just 30 days.">
+  <meta name="twitter:description"
+    content="AI Summer Bootcamp 2026 — Master AI tools shaping tomorrow in just 30 days.">
+  <script type="text/javascript">
+    // Single Page Apps for GitHub Pages
+    // https://github.com/rafgraph/spa-github-pages
+    // This script checks to see if a redirect is present in the query string
+    // and converts it back into the correct url and adds it to the
+    // browser's history using window.history.replaceState(...),
+    // which un-does the redirect made by the 404.html page
+    (function (l) {
+      if (l.search) {
+        var q = {};
+        l.search.slice(1).split('&').forEach(function (v) {
+          var a = v.split('=');
+          q[a[0]] = a.slice(1).join('=').replace(/~and~/g, '&');
+        });
+        if (q.p !== undefined) {
+          window.history.replaceState(null, null,
+            l.pathname.slice(0, -1) + (q.p || '') +
+            (q.q ? ('?' + q.q) : '') +
+            l.hash
+          );
+        }
+      }
+    }(window.location))
+  </script>
+  <!-- Meta Pixel Code -->
+  <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '945954808248207');
+    fbq('track', 'PageView');
+  </script>
+  <!-- End Meta Pixel Code -->
+  <script type="module" crossorigin src="/assets/index-DnJfIQ8e.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-BMpQlLRY.css">
+</head>
+
+<body>
+  <noscript>
+    <img height="1" width="1" style="display:none"
+      src="https://www.facebook.com/tr?id=945954808248207&ev=PageView&noscript=1" />
+  </noscript>
+  <div id="root"></div>
+  <script>
+    async function submitAndPay() {
+
+      // ==============================
+      // 1️⃣ GET FORM VALUES
+      // ==============================
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const batch = document.getElementById("batch").value;
+
+      if (!name || !email || !phone) {
+        alert("Please fill all required fields");
+        return;
+      }
+
+      // ==============================
+      // 2️⃣ DETECT PAGE URL (CATEGORY)
+      // ==============================
+      const pageUrl = window.location.href;
+
+      // ==============================
+      // 3️⃣ CALL APPS SCRIPT
+      // → Creates Razorpay order
+      // → Saves INITIATED row
+      // ==============================
+      let result;
+      try {
+        const response = await fetch("https://script.google.com/macros/s/AKfycbw59X8thSpB9xrJSI0GhACEm617vAbc7BDH6hJFOOBsOeq-B4az0p3B_O6koMjYfsppgA/exec", {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({
+            userType: "school students",
+            pageUrl,
+            name,
+            email,
+            phone,
+            batch
+          })
+        });
+
+        result = await response.json();
+
+        if (!result.success || !result.orderId) {
+          alert("Failed to create payment order. Please try again.");
+          return;
+        }
+
+      } catch (err) {
+        alert("Server error. Please try again later.");
+        console.error(err);
+        return;
+      }
+
+      // ==============================
+      // 4️⃣ OPEN RAZORPAY CHECKOUT
+      // ==============================
+      const options = {
+        key: "rzp_live_gfoS1OjC8tvWjP", // ✅ LIVE KEY ID ONLY
+        order_id: result.orderId,      // 🔥 RESTORED to allow tracking
+        amount: 999900,                // ₹9,999 in paise
+        currency: "INR",
+        name: "AI Summer Bootcamp 2026",
+        description: "Bootcamp Enrollment",
+
+        handler: function (response) {
+          // ⚠️ DO NOT update sheet here
+          // ⚠️ DO NOT send email here
+          // Webhook will handle everything
+          alert("Payment successful! You will receive a confirmation email shortly.");
+        },
+
+        prefill: {
+          name: name,
+          email: email,
+          contact: phone
+        },
+
+        theme: {
+          color: "#6C63FF"
+        }
+      };
+
+      const rzp = new Razorpay(options);
+      rzp.open();
+    }
+  </script>
+</body>
+
+</html>
