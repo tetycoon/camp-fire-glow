@@ -12,7 +12,7 @@ const ThankYou = () => {
         const params = new URLSearchParams(window.location.search);
         const orderId = params.get("orderId");
         if (orderId) {
-            const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbzUwK8DNYomJfz_NmcXoRyQ3dMZgqL_ZLNQBnHw8PY27kSE_SjS80q801WJ5uDkPTl1/exec";
+            const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycby0fX7tjbOciJbg0Mw1SRMhlazBe4FG1Ko-f5mIFCW6Y7zGKHGZjdUZQKXclfye1FzegA/exec";
             const waRedirect = GOOGLE_SHEET_URL + "?action=whatsapp&orderId=" + orderId;
             setTimeout(() => {
                 window.location.href = waRedirect;
@@ -25,7 +25,7 @@ const ThankYou = () => {
         const params = new URLSearchParams(window.location.search);
         const orderId = params.get("orderId");
         if (orderId) {
-            const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbzUwK8DNYomJfz_NmcXoRyQ3dMZgqL_ZLNQBnHw8PY27kSE_SjS80q801WJ5uDkPTl1/exec";
+            const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycby0fX7tjbOciJbg0Mw1SRMhlazBe4FG1Ko-f5mIFCW6Y7zGKHGZjdUZQKXclfye1FzegA/exec";
             window.location.href = GOOGLE_SHEET_URL + "?action=whatsapp&orderId=" + orderId;
         } else {
             alert("Please check your email for the WhatsApp link or wait for the automatic redirect.");
