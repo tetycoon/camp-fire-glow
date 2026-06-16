@@ -3,8 +3,8 @@ import { CheckCircle2, Loader2, ShieldCheck, X } from "lucide-react";
 import { useCollegeRegisterModal } from "./CollegeRegisterModalContext";
 import { RazorpayOptions } from "@/types/razorpay";
 
-const RAZORPAY_KEY_ID = "rzp_live_gfoS1OjC8tvWjP";
-const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbzUwK8DNYomJfz_NmcXoRyQ3dMZgqL_ZLNQBnHw8PY27kSE_SjS80q801WJ5uDkPTl1/exec";
+const RAZORPAY_KEY_ID = "rzp_live_T2CbVONQc6qrqj";
+const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycby0fX7tjbOciJbg0Mw1SRMhlazBe4FG1Ko-f5mIFCW6Y7zGKHGZjdUZQKXclfye1FzegA/exec";
 
 const batches = [
     { value: "batch1", label: "Batch 1 — April 1–30, 2026" },
@@ -114,13 +114,13 @@ const CollegeRegisterModal: React.FC = () => {
             result = await response.json();
 
             if (!result.success || !result.orderId) {
-                alert("Failed to create payment order. Please try again.");
+                alert("Failed to create payment order. Please try again. If payment failed please contact +91 7558133039");
                 setLoading(false);
                 return;
             }
 
         } catch (error) {
-            alert("Server error. Please try again later.");
+            alert("Server error. Please try again later. If payment failed please contact +91 7558133039");
             console.error("Error capturing lead/creating order:", error);
             setLoading(false);
             return;
@@ -158,6 +158,9 @@ const CollegeRegisterModal: React.FC = () => {
         };
 
         const rzp = new window.Razorpay(options);
+        rzp.on('payment.failed', function (response: any) {
+            alert(`Payment failed. Please contact +91 7558133039`);
+        });
         rzp.open();
     };
 

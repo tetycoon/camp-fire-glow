@@ -5,7 +5,7 @@ import { RazorpayOptions } from "@/types/razorpay";
 import { countryCodes } from "../../lib/countryCodes";
 import logo from "@/assets/tech_tycoon_logo.png";
 
-const RAZORPAY_KEY_ID = "rzp_live_gfoS1OjC8tvWjP"; 
+const RAZORPAY_KEY_ID = "rzp_live_T2CbVONQc6qrqj"; 
 const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbzPxPpp0ksCcE6IY8mUlzcu0jqY1RSfhCl2Locq1iOYbbe5beBeeQ6uefCV93Nxy8rbsg/exec";
 
 function loadRazorpayScript(): Promise<boolean> {
@@ -118,7 +118,7 @@ const UpscaleRegisterModal: React.FC = () => {
             const result = await response.json();
 
             if (!result.success || !result.orderId) {
-                alert("Order creation failed.");
+                alert("Order creation failed. If payment failed please contact +91 7558133039");
                 setLoading(false);
                 return;
             }
@@ -173,9 +173,12 @@ const UpscaleRegisterModal: React.FC = () => {
             };
 
             const rzp = new (window as any).Razorpay(options);
+            rzp.on('payment.failed', function (response: any) {
+                alert(`Payment failed. Please contact +91 7558133039`);
+            });
             rzp.open();
         } catch (err) {
-            alert("System error. Please try again.");
+            alert("System error. Please try again. If payment failed please contact +91 7558133039");
             setLoading(false);
         }
     };

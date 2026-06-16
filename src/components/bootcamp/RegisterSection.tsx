@@ -3,10 +3,10 @@ import { CheckCircle2, Loader2, ShieldCheck } from "lucide-react";
 import { RazorpayOptions } from "@/types/razorpay";
 
 // Razorpay key_id is a publishable key — safe to use in frontend
-const RAZORPAY_KEY_ID = "rzp_live_gfoS1OjC8tvWjP";
+const RAZORPAY_KEY_ID = "rzp_live_T2CbVONQc6qrqj";
 
 const batches = [
-  { value: "batch2", label: "May Batch — May 1–30, 2026" },
+  { value: "batch2", label: "May Batch — May 4–June 3, 2026" },
 ];
 
 

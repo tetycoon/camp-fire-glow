@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import { CheckCircle2, Loader2, ShieldCheck, X } from "lucide-react";
 import { useAIMasterclass2RegisterModal } from "./AIMasterclass2RegisterModalContext";
 import { RazorpayOptions } from "@/types/razorpay";
+import { getMasterclassDateStrings } from "../../lib/masterclassDateUtils";
 
-const RAZORPAY_KEY_ID = "rzp_live_gfoS1OjC8tvWjP";
-const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbzUwK8DNYomJfz_NmcXoRyQ3dMZgqL_ZLNQBnHw8PY27kSE_SjS80q801WJ5uDkPTl1/exec";
+const RAZORPAY_KEY_ID = "rzp_live_T2CbVONQc6qrqj";
+const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycby0fX7tjbOciJbg0Mw1SRMhlazBe4FG1Ko-f5mIFCW6Y7zGKHGZjdUZQKXclfye1FzegA/exec";
 
 
 function loadRazorpayScript(): Promise<boolean> {
@@ -24,6 +25,7 @@ function loadRazorpayScript(): Promise<boolean> {
 
 const AIMasterclass2RegisterModal: React.FC = () => {
     const { isOpen, closeRegisterModal } = useAIMasterclass2RegisterModal();
+    const { regularDate } = getMasterclassDateStrings();
     const [form, setForm] = useState({ name: "", email: "", phone: "", countryCode: "+91", profession: "", language: "Tamil", timing: "6 PM to 9 PM", coupon: "WELCOME33" });
     const [submitted, setSubmitted] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -86,14 +88,16 @@ const AIMasterclass2RegisterModal: React.FC = () => {
                     phone: `${form.countryCode}${form.phone}`,
                     language: form.language,
                     batch: `Masterclass 2026 (${form.timing})`,
-                    amount: 99
+                    amount: 99,
+                    sessionDate: regularDate,
+                    sessionTime: form.timing
                 }),
             });
 
             const result = await response.json();
 
             if (!result.success || !result.orderId) {
-                alert("Failed to create order.");
+                alert("Failed to create order. If payment failed please contact +91 7558133039");
                 setLoading(false);
                 return;
             }
@@ -134,7 +138,9 @@ const AIMasterclass2RegisterModal: React.FC = () => {
                                 email: form.email,
                                 name: form.name,
                                 language: form.language,
-                                timing: form.timing
+                                timing: form.timing,
+                                sessionDate: regularDate,
+                                sessionTime: form.timing
                             })
                         }).catch(() => {});
 
@@ -143,7 +149,7 @@ const AIMasterclass2RegisterModal: React.FC = () => {
                         setLoading(false);
 
                         // 2. INSTANT JUMP TO WHATSAPP
-                        const TRIGGER_MESSAGE = "Hi I am complete the registration of AI- Secret Revealed webinar";
+                        const TRIGGER_MESSAGE = `Hi, I have completed the registration for the AI Secrets Revealed webinar on ${regularDate} at ${form.timing}`;
                         const waChatLink = `https://wa.me/917010340494?text=${encodeURIComponent(TRIGGER_MESSAGE)}`;
                         
                         window.location.href = waChatLink;
@@ -169,10 +175,13 @@ const AIMasterclass2RegisterModal: React.FC = () => {
             };
 
             const rzp = new window.Razorpay(options);
+            rzp.on('payment.failed', function (response: any) {
+                alert(`Payment failed. Please contact +91 7558133039`);
+            });
             rzp.open();
 
         } catch (error) {
-            alert("Server error.");
+            alert("Server error. If payment failed please contact +91 7558133039");
             setLoading(false);
         }
     };
