@@ -135,7 +135,7 @@ const UpscaleRegisterModal: React.FC = () => {
                     email: form.email,
                     contact: `${form.countryCode}${form.phone}`,
                 },
-                notes: { batch: "OFFLINE_CHENNAI_MAY31" },
+                notes: { batch: "OFFLINE_CHENNAI_AUG29" },
                 theme: { color: "#2563eb" },
                 handler: async (resp) => {
                     if (paymentHandled.current) return;
@@ -227,7 +227,7 @@ const UpscaleRegisterModal: React.FC = () => {
                                     <CheckCircle2 className="w-10 h-10" />
                                 </div>
                                 <h3 className="text-3xl font-black text-slate-900 mb-2">Registration Complete!</h3>
-                                <p className="text-slate-500 font-bold mb-8">Your payment was successful and your seat is secured for May 31.</p>
+                                <p className="text-slate-500 font-bold mb-8">Your payment was successful and your seat is secured for August 29 (Tentative).</p>
                                 
                                 <div className="bg-slate-50 p-6 rounded-[32px] border border-slate-100 mb-8">
                                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Final Step: Join the community</p>

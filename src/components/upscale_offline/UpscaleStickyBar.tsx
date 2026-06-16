@@ -35,7 +35,7 @@ const UpscaleStickyBar: React.FC = () => {
                         </div>
                         <div className="whitespace-nowrap">
                             <div className="text-[8px] font-black uppercase text-slate-400 tracking-widest">DATE</div>
-                            <div className="text-sm font-black text-slate-900 leading-none mt-0.5">May 31, 2026</div>
+                            <div className="text-sm font-black text-slate-900 leading-none mt-0.5">August 29, 2026 (Tentative)</div>
                         </div>
                     </div>
 
