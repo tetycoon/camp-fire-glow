@@ -3,7 +3,7 @@ import { Coffee, GraduationCap, Utensils, Timer } from "lucide-react";
 
 const schedule = [
     {
-        time: "09:30 AM",
+        time: "09:00 AM",
         title: "9 Principles of AI Business Generative Models",
         desc: "Mastering the foundational architecture for building and scaling high-ROI AI business systems.",
         type: "session"

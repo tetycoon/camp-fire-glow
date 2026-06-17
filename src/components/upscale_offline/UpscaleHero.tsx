@@ -100,7 +100,7 @@ const UpscaleHero: React.FC = () => {
                         </div>
                         <div className="whitespace-nowrap">
                             <div className="text-[9px] font-black uppercase text-slate-400 tracking-widest">SCHEDULE</div>
-                            <div className="text-sm font-black text-slate-900 leading-none mt-1">9:30 AM - 5:30 PM</div>
+                            <div className="text-sm font-black text-slate-900 leading-none mt-1">9:00 AM - 5:30 PM</div>
                         </div>
                     </div>
 
