@@ -3,43 +3,45 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>4 Days AI Live MasterClass — Tech Tycoon</title>
+<title>3 Days AI Live MasterClass — Tech Tycoon</title>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#f8fafc;--bg2:#f1f5f9;--white:#ffffff;
-  --navy:#0f172a;--slate:#334155;--muted:#64748b;--border:#e2e8f0;
-  --blue:#1d4ed8;--blue-d:#1e3a8a;--blue-l:#dbeafe;--blue-m:#3b82f6;
+  --bg:#fafafa;--bg2:#f4f4f5;--white:#ffffff;
+  --navy:#09090b;--slate:#27272a;--muted:#71717a;--border:#e4e4e7;
+  --blue:#4f46e5;--blue-d:#3730a3;--blue-l:#e0e7ff;--blue-m:#6366f1;
   --accent:#f59e0b;
   --hd:'Outfit',sans-serif;--bd:'Inter',sans-serif;
-  --shadow:0 4px 24px rgba(15,23,42,0.08);
-  --shadow-lg:0 12px 48px rgba(15,23,42,0.14);
+  --shadow:0 8px 32px rgba(9, 9, 11, 0.05);
+  --shadow-lg:0 24px 48px rgba(9, 9, 11, 0.1);
 }
 html{scroll-behavior:smooth}
 body{font-family:var(--bd);background:var(--bg);color:var(--slate);overflow-x:hidden;line-height:1.6}
 ::selection{background:var(--blue);color:#fff}
 
 /* NAV */
-.nav{position:fixed;top:24px;left:50%;transform:translateX(-50%);width:96%;max-width:1200px;z-index:200;height:72px;background:rgba(255,255,255,0.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.5);border-radius:100px;display:flex;align-items:center;justify-content:space-between;padding:0 12px 0 32px;box-shadow:0 12px 40px rgba(15,23,42,0.06), inset 0 1px 0 rgba(255,255,255,1)}
+.nav{position:fixed;top:24px;left:50%;transform:translateX(-50%);width:96%;max-width:1200px;z-index:200;height:72px;background:rgba(255,255,255,0.7);backdrop-filter:blur(32px) saturate(180%);-webkit-backdrop-filter:blur(32px) saturate(180%);border:1px solid rgba(255,255,255,0.8);border-radius:100px;display:flex;align-items:center;justify-content:space-between;padding:0 12px 0 32px;box-shadow:var(--shadow), inset 0 1px 1px rgba(255,255,255,0.9)}
 .nav-brand{font-family:var(--hd);font-size:18px;font-weight:900;letter-spacing:1.5px;color:var(--navy);text-decoration:none;display:flex;align-items:center;gap:10px}
 .nav-logo{height:34px;width:auto;object-fit:contain}
 .nav-brand span{color:var(--blue)}
 .nav-links{display:flex;gap:36px;align-items:center}
 .nav-link{font-size:12.5px;font-weight:600;color:var(--slate);text-decoration:none;transition:color 0.2s;text-transform:uppercase;letter-spacing:1.5px}
 .nav-link:hover{color:var(--blue)}
-.nav-enroll{font-family:var(--hd);font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#fff;background:var(--blue);border:none;padding:14px 32px;border-radius:100px;cursor:pointer;transition:all 0.3s ease;box-shadow:0 4px 14px rgba(29,78,216,0.3)}
-.nav-enroll:hover{background:var(--blue-d);transform:translateY(-2px);box-shadow:0 8px 24px rgba(29,78,216,0.4)}
+.nav-enroll{font-family:var(--hd);font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#fff;background:linear-gradient(135deg,var(--blue-m) 0%,var(--blue-d) 100%);border:none;padding:14px 32px;border-radius:100px;cursor:pointer;transition:all 0.3s ease;box-shadow:0 8px 20px rgba(79, 70, 229, 0.25)}
+.nav-enroll:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(79, 70, 229, 0.4)}
+.nav-enroll:active{transform:translateY(0);box-shadow:0 4px 12px rgba(79, 70, 229, 0.2)}
 @media(max-width:768px){.nav-links{display:none} .nav{top:12px;width:92%;padding:0 12px 0 20px;border-radius:20px;height:64px}}
 
 /* HERO */
-.hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:100px 24px 60px;overflow:hidden;background:linear-gradient(135deg,#f8fafc 0%,#eff6ff 50%,#dbeafe 100%)}
-.hero-grid-bg{position:absolute;inset:0;opacity:0.4;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:1}
-.hero-img-bg{position:absolute;inset:0;background-image:url('hero-ai-bg.png');background-size:cover;background-position:center;background-repeat:no-repeat;opacity:0.35;pointer-events:none;z-index:0;mix-blend-mode:multiply}
-.hero-blob{position:absolute;top:-10%;right:-5%;width:600px;height:600px;background:radial-gradient(circle,rgba(59,130,246,0.15) 0%,transparent 70%);pointer-events:none;border-radius:50%;z-index:1}
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:120px 24px 60px;overflow:hidden;background:linear-gradient(135deg,#fafafa 0%,#e0e7ff 50%,#c7d2fe 100%)}
+.hero-grid-bg{position:absolute;inset:0;opacity:0.3;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:1}
+.hero-img-bg{position:absolute;inset:0;background-image:url('hero-ai-bg.png');background-size:cover;background-position:center;background-repeat:no-repeat;opacity:0.25;pointer-events:none;z-index:0;mix-blend-mode:multiply}
+.hero-blob{position:absolute;top:-10%;right:-5%;width:600px;height:600px;background:radial-gradient(circle,rgba(79,70,229,0.2) 0%,transparent 70%);pointer-events:none;border-radius:50%;z-index:1;animation:floatBlob 12s ease-in-out infinite}
+@keyframes floatBlob{0%,100%{transform:translate(0,0)}50%{transform:translate(-30px,30px)}}
 .hero-inner{position:relative;z-index:2;max-width:1280px;margin:0 auto;width:100%;display:grid;grid-template-columns:1.1fr 480px;gap:56px;align-items:center}
-.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 20px;border-radius:100px;border:1px solid rgba(255,255,255,0.8);background:rgba(255,255,255,0.6);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);font-size:10px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:var(--blue-d);margin-bottom:28px;box-shadow:0 4px 16px rgba(15,23,42,0.04)}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 20px;border-radius:100px;border:1px solid rgba(255,255,255,0.9);background:rgba(255,255,255,0.7);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);font-size:10px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:var(--blue-d);margin-bottom:28px;box-shadow:var(--shadow)}
 .hero-badge-dot{width:8px;height:8px;border-radius:50%;background:#22c55e;animation:ping 1.5s ease infinite}
 @keyframes ping{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,0.5)}70%{box-shadow:0 0 0 6px rgba(34,197,94,0)}}
 .hero-h1{font-family:var(--hd);font-size:clamp(42px,5.5vw,72px);font-weight:900;line-height:1.05;letter-spacing:-0.03em;color:var(--navy);margin-bottom:24px}
@@ -51,16 +53,18 @@ body{font-family:var(--bd);background:var(--bg);color:var(--slate);overflow-x:hi
 .hero-stars span{font-size:13px;color:var(--muted)}
 .hero-stars span strong{color:var(--navy)}
 .hero-cta-row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
-.btn-primary{display:inline-flex;align-items:center;gap:8px;padding:18px 40px;background:linear-gradient(135deg,var(--blue-m) 0%,var(--blue-d) 100%);color:#fff;border:none;border-radius:100px;font-family:var(--hd);font-size:13px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all 0.3s cubic-bezier(0.16,1,0.3,1);box-shadow:0 10px 32px rgba(29,78,216,0.3)}
-.btn-primary:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(29,78,216,0.45)}
-.btn-secondary{padding:18px 36px;background:rgba(255,255,255,0.8);backdrop-filter:blur(10px);border:1.5px solid rgba(255,255,255,1);border-radius:100px;font-family:var(--hd);font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--navy);cursor:pointer;transition:all 0.3s cubic-bezier(0.16,1,0.3,1);box-shadow:0 8px 24px rgba(15,23,42,0.04)}
-.btn-secondary:hover{border-color:var(--blue);color:var(--blue);transform:translateY(-2px);box-shadow:0 12px 32px rgba(15,23,42,0.08)}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;padding:18px 40px;background:linear-gradient(135deg,var(--blue-m) 0%,var(--blue-d) 100%);color:#fff;border:none;border-radius:100px;font-family:var(--hd);font-size:13px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all 0.3s cubic-bezier(0.16,1,0.3,1);box-shadow:0 12px 32px rgba(79,70,229,0.3)}
+.btn-primary:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(79,70,229,0.45)}
+.btn-primary:active{transform:translateY(0);box-shadow:0 8px 24px rgba(79,70,229,0.25)}
+.btn-secondary{padding:18px 36px;background:rgba(255,255,255,0.7);backdrop-filter:blur(16px);border:1.5px solid rgba(255,255,255,1);border-radius:100px;font-family:var(--hd);font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--navy);cursor:pointer;transition:all 0.3s cubic-bezier(0.16,1,0.3,1);box-shadow:var(--shadow)}
+.btn-secondary:hover{border-color:var(--blue);color:var(--blue);transform:translateY(-2px);box-shadow:0 12px 32px rgba(9,9,11,0.08)}
+.btn-secondary:active{transform:translateY(0)}
 
 /* Hero Card */
-.hero-card{background:rgba(255,255,255,0.8);backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);border-radius:24px;padding:40px;box-shadow:0 24px 64px rgba(15,23,42,0.08), inset 0 1px 0 rgba(255,255,255,1);border:1px solid rgba(255,255,255,0.6)}
+.hero-card{background:rgba(255,255,255,0.7);backdrop-filter:blur(40px) saturate(200%);-webkit-backdrop-filter:blur(40px) saturate(200%);border-radius:24px;padding:40px;box-shadow:var(--shadow-lg), inset 0 1px 1px rgba(255,255,255,0.8);border:1px solid rgba(255,255,255,0.8)}
 .hero-card-label{font-size:9px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:var(--blue);margin-bottom:24px}
-.hero-detail{display:flex;align-items:flex-start;gap:14px;padding:14px 12px;border-bottom:1px solid rgba(15,23,42,0.04);transition:all 0.3s ease;border-radius:12px;margin:0 -12px}
-.hero-detail:hover{background:rgba(255,255,255,0.7);box-shadow:0 4px 16px rgba(15,23,42,0.03);transform:translateX(4px)}
+.hero-detail{display:flex;align-items:flex-start;gap:14px;padding:14px 12px;border-bottom:1px solid rgba(9,9,11,0.04);transition:all 0.3s ease;border-radius:12px;margin:0 -12px}
+.hero-detail:hover{background:rgba(255,255,255,0.8);box-shadow:var(--shadow);transform:translateX(4px)}
 .hero-detail:last-of-type{border-bottom:none}
 .hero-detail-row{display:grid;grid-template-columns:1.05fr 0.95fr;gap:20px;border-bottom:1px solid rgba(15,23,42,0.04)}
 .hero-detail-row .hero-detail{border-bottom:none;margin:0}
@@ -99,11 +103,11 @@ body{font-family:var(--bd);background:var(--bg);color:var(--slate);overflow-x:hi
 
 /* PROCESS */
 .proc-sec{background:var(--white)}
-.proc-row{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:60px;position:relative}
+.proc-row{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:60px;position:relative;max-width:1000px;margin-left:auto;margin-right:auto}
 .proc-row::before{content:'';position:absolute;top:44px;left:12%;right:12%;height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent)}
 .proc-step{text-align:center;padding:0 20px}
-.proc-num-wrap{width:88px;height:88px;border-radius:50%;border:2px solid var(--border);background:var(--white);margin:0 auto 20px;display:flex;align-items:center;justify-content:center;position:relative;z-index:1;box-shadow:0 8px 24px rgba(15,23,42,0.04);transition:transform 0.3s}
-.proc-step:hover .proc-num-wrap{transform:scale(1.05);border-color:var(--blue-l)}
+.proc-num-wrap{width:88px;height:88px;border-radius:50%;border:2px solid var(--border);background:var(--white);margin:0 auto 20px;display:flex;align-items:center;justify-content:center;position:relative;z-index:1;box-shadow:var(--shadow);transition:transform 0.4s cubic-bezier(0.16,1,0.3,1), border-color 0.4s}
+.proc-step:hover .proc-num-wrap{transform:scale(1.1);border-color:var(--blue-m);box-shadow:0 12px 32px rgba(79,70,229,0.15)}
 .proc-num{font-family:var(--hd);font-size:32px;font-weight:900;background:linear-gradient(135deg,var(--blue-m) 0%,var(--blue-d) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .proc-h{font-family:var(--hd);font-size:14px;font-weight:700;color:var(--navy);margin-bottom:8px}
 .proc-p{font-size:12px;color:var(--muted);line-height:1.6}
@@ -111,15 +115,15 @@ body{font-family:var(--bd);background:var(--bg);color:var(--slate);overflow-x:hi
 /* CURRICULUM */
 .curric-sec{background:var(--bg2)}
 .curric-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:56px}
-.mod-card{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:32px;transition:all 0.4s cubic-bezier(0.16,1,0.3,1);position:relative;overflow:hidden;box-shadow:0 4px 20px rgba(15,23,42,0.03)}
-.mod-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--blue-m),var(--blue-d));transform:scaleX(0);transform-origin:left;transition:transform 0.4s cubic-bezier(0.16,1,0.3,1)}
-.mod-card:hover{transform:translateY(-6px);border-color:var(--blue-l);box-shadow:0 24px 48px rgba(15,23,42,0.08)}
+.mod-card{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:32px;transition:all 0.4s cubic-bezier(0.16,1,0.3,1);position:relative;overflow:hidden;box-shadow:var(--shadow)}
+.mod-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--blue-m),var(--blue-d));transform:scaleX(0);transform-origin:left;transition:transform 0.5s cubic-bezier(0.16,1,0.3,1)}
+.mod-card:hover{transform:translateY(-8px);border-color:var(--blue-l);box-shadow:var(--shadow-lg)}
 .mod-card:hover::before{transform:scaleX(1)}
 .mod-tag{display:inline-block;padding:3px 10px;border-radius:4px;background:var(--blue-l);font-size:9px;font-weight:700;letter-spacing:1px;color:var(--blue);text-transform:uppercase;margin-bottom:16px}
 .mod-icon{font-size:26px;display:block;margin-bottom:12px}
 .mod-h{font-family:var(--hd);font-size:16px;font-weight:700;color:var(--navy);margin-bottom:8px}
 .mod-p{font-size:13px;color:var(--muted);line-height:1.6}
-.mod-num{position:absolute;right:16px;top:12px;font-family:var(--hd);font-size:42px;font-weight:900;color:rgba(29,78,216,0.05)}
+.mod-num{position:absolute;right:16px;top:12px;font-family:var(--hd);font-size:42px;font-weight:900;color:rgba(79,70,229,0.05)}
 
 /* BONUSES */
 .bonus-sec{background:var(--white)}
@@ -134,9 +138,9 @@ body{font-family:var(--bd);background:var(--bg);color:var(--slate);overflow-x:hi
 /* PRICING */
 .price-sec{background:var(--bg2)}
 .price-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:900px;margin:56px auto 0}
-.pri-card{background:var(--white);border:1px solid var(--border);border-radius:24px;padding:44px;transition:all 0.4s cubic-bezier(0.16,1,0.3,1);box-shadow:0 4px 24px rgba(15,23,42,0.04)}
-.pri-card:hover{transform:translateY(-6px);box-shadow:0 24px 64px rgba(15,23,42,0.08)}
-.pri-card.hot{border-color:var(--blue-m);box-shadow:0 12px 48px rgba(29,78,216,0.12), inset 0 0 0 1px var(--blue-m)}
+.pri-card{background:var(--white);border:1px solid var(--border);border-radius:24px;padding:44px;transition:all 0.4s cubic-bezier(0.16,1,0.3,1);box-shadow:var(--shadow)}
+.pri-card:hover{transform:translateY(-8px);box-shadow:var(--shadow-lg)}
+.pri-card.hot{border-color:var(--blue-m);box-shadow:0 12px 48px rgba(79,70,229,0.15), inset 0 0 0 1px var(--blue-m);position:relative}
 .hot-badge{display:inline-block;padding:4px 14px;background:var(--blue);color:#fff;border-radius:50px;font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-bottom:18px}
 .pri-label{font-family:var(--hd);font-size:15px;font-weight:700;color:var(--slate);margin-bottom:8px}
 .pri-old{font-size:13px;color:var(--muted);text-decoration:line-through;margin-bottom:4px}
@@ -266,9 +270,9 @@ footer{background:var(--navy);padding:44px 5%;display:flex;align-items:center;ju
   <div class="hero-blob"></div>
   <div class="hero-inner">
     <div class="hero-left sr">
-      <div class="hero-badge"><span class="hero-badge-dot"></span>Executive AI Mastery Program &bull; May 2026</div>
+      <div class="hero-badge"><span class="hero-badge-dot"></span>Executive AI Mastery Program &bull; July &amp; Aug 2026</div>
       <h1 class="hero-h1">Double Your <span class="hl">Business Turnover</span> With Executive AI</h1>
-      <p class="hero-sub">Stop guessing. Start scaling. We train business owners & entrepreneurs to automate growth, build high-converting websites, and generate viral AI business videos. <strong>4 Days. Live Practice. Real Results.</strong></p>
+      <p class="hero-sub">Stop guessing. Start scaling. We train business owners & entrepreneurs to automate growth, build high-converting websites, and generate viral AI business videos. <strong>3 Days. Live Practice. Real Results.</strong></p>
       <div class="hero-stars">
         <svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
         <svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
@@ -287,7 +291,7 @@ footer{background:var(--navy);padding:44px 5%;display:flex;align-items:center;ju
       <div class="hero-detail-row">
         <div class="hero-detail">
           <div class="hero-detail-icon cal">&#128197;</div>
-          <div><div class="hero-detail-title">16, 17, 23, 24 May</div><div class="hero-detail-sub">Sat &amp; Sun (4 Days)</div></div>
+          <div><div class="hero-detail-title">31 July, 1 &amp; 2 August</div><div class="hero-detail-sub">Fri, Sat &amp; Sun (3 Days)</div></div>
         </div>
         <div class="hero-detail">
           <div class="hero-detail-icon clk">&#128336;</div>
@@ -296,7 +300,7 @@ footer{background:var(--navy);padding:44px 5%;display:flex;align-items:center;ju
       </div>
       <div class="hero-detail">
         <div class="hero-detail-icon lng">&#127760;</div>
-        <div><div class="hero-detail-title">English &amp; Tamil</div><div class="hero-detail-sub">Session Language</div></div>
+        <div><div class="hero-detail-title">Tamil mix with English</div><div class="hero-detail-sub">Session Language</div></div>
       </div>
       <div class="hero-detail">
         <div class="hero-detail-icon prc">&#128187;</div>
@@ -346,7 +350,7 @@ footer{background:var(--navy);padding:44px 5%;display:flex;align-items:center;ju
   <div class="sec-inner">
     <div style="text-align:center;display:flex;flex-direction:column;align-items:center">
       <div class="sec-tag">Your Journey</div>
-      <h2 class="sec-h2">Your <em>4-Day</em> AI Journey</h2>
+      <h2 class="sec-h2">Your <em>3-Day</em> AI Journey</h2>
       <p class="sec-p" style="text-align:center">Each session builds on the last — from generative business principles to professional AI video consistency.</p>
     </div>
     <div class="proc-row sr">
@@ -362,13 +366,8 @@ footer{background:var(--navy);padding:44px 5%;display:flex;align-items:center;ju
       </div>
       <div class="proc-step">
         <div class="proc-num-wrap"><span class="proc-num">03</span></div>
-        <div class="proc-h">Digital Dominance</div>
-        <p class="proc-p">Build high-converting static & dynamic websites with zero coding skills.</p>
-      </div>
-      <div class="proc-step">
-        <div class="proc-num-wrap"><span class="proc-num">04</span></div>
-        <div class="proc-h">Visual Authority</div>
-        <p class="proc-p">Master character-consistent AI videos that position you as an industry leader.</p>
+        <div class="proc-h">Digital Dominance & Visual Authority</div>
+        <p class="proc-p">Build high-converting websites and master character-consistent AI videos.</p>
       </div>
     </div>
   </div>
@@ -379,7 +378,7 @@ footer{background:var(--navy);padding:44px 5%;display:flex;align-items:center;ju
   <div class="sec-inner">
     <div class="sec-tag">Curriculum</div>
     <h2 class="sec-h2">9 Building Blocks of the <em>Business Model Canvas</em></h2>
-    <p class="sec-p">We cover this 9-principle model with AI in the first 3 days. On the 4th day, we master AI video generation and AI websites.</p>
+    <p class="sec-p">We cover this 9-principle model with AI in the first 2 days. On the 3rd day, we master AI video generation and AI websites.</p>
     
     <div style="background:var(--white);border:1px solid var(--border);border-radius:12px;padding:24px;margin-top:24px;box-shadow:0 4px 16px rgba(15,23,42,0.03)">
       <h3 style="font-family:var(--hd);font-size:16px;font-weight:800;color:var(--navy);margin-bottom:6px">Reality Check</h3>
@@ -527,7 +526,7 @@ footer{background:var(--navy);padding:44px 5%;display:flex;align-items:center;ju
   <div class="sec-inner" style="text-align:center;display:flex;flex-direction:column;align-items:center">
     <div class="sec-tag">Investment</div>
     <h2 class="sec-h2">Choose Your <em>Seat</em></h2>
-    <p class="sec-p" style="text-align:center">Only <strong>25 seats</strong> available for this exclusive May cohort. Lock in the early-bird premium rate today.</p>
+    <p class="sec-p" style="text-align:center">Only <strong>25 seats</strong> available for this exclusive July/August cohort. Lock in the early-bird premium rate today.</p>
     <div class="price-grid">
       <div class="pri-card sr">
         <div class="pri-label">Partial Enrollment</div>
@@ -538,7 +537,7 @@ footer{background:var(--navy);padding:44px 5%;display:flex;align-items:center;ju
         <div class="pri-alt">Pay balance <strong>Rs. 6,499/-</strong> before class</div>
         <div class="pri-div"></div>
         <ul class="pri-feats">
-          <li><span class="chk-icon">&#10003;</span>4 Days Live AI MasterClass</li>
+          <li><span class="chk-icon">&#10003;</span>3 Days Live AI MasterClass</li>
           <li><span class="chk-icon">&#10003;</span>All 6 Curriculum Modules</li>
           <li><span class="chk-icon">&#10003;</span>Step-by-Step AI Workflows</li>
           <li><span class="chk-icon">&#10003;</span>1-on-1 Strategy Session (10 min)</li>
@@ -558,7 +557,7 @@ footer{background:var(--navy);padding:44px 5%;display:flex;align-items:center;ju
         <div class="pri-alt">Instant access — <strong>no balance remaining</strong></div>
         <div class="pri-div"></div>
         <ul class="pri-feats">
-          <li><span class="chk-icon">&#10003;</span>4 Days Live AI MasterClass</li>
+          <li><span class="chk-icon">&#10003;</span>3 Days Live AI MasterClass</li>
           <li><span class="chk-icon">&#10003;</span>All 6 Curriculum Modules</li>
           <li><span class="chk-icon">&#10003;</span>1-on-1 Consultation (10 min)</li>
           <li><span class="chk-icon">&#10003;</span>Canva Masterclass Recording</li>
@@ -623,22 +622,35 @@ footer{background:var(--navy);padding:44px 5%;display:flex;align-items:center;ju
       <label class="form-label">Phone Number</label>
       <div class="form-row">
         <select class="phone-code" id="regCode">
-          <option value="+91">&#127470;&#127475; +91</option>
-          <option value="+1">&#127482;&#127480; +1</option>
-          <option value="+44">&#127468;&#127463; +44</option>
-          <option value="+971">&#127462;&#127466; +971</option>
+          <option value="+91">&#127470;&#127475; +91 (IN)</option>
+          <option value="+1">&#127482;&#127480; +1 (US/CA)</option>
+          <option value="+44">&#127468;&#127463; +44 (UK)</option>
+          <option value="+971">&#127462;&#127466; +971 (UAE)</option>
+          <option value="+65">&#127480;&#127468; +65 (SG)</option>
+          <option value="+60">&#127474;&#127481; +60 (MY)</option>
+          <option value="+966">&#127480;&#127462; +966 (SA)</option>
+          <option value="+968">&#127476;&#127474; +968 (OM)</option>
+          <option value="+974">&#127478;&#127462; +974 (QA)</option>
+          <option value="+965">&#127472;&#127480; +965 (KW)</option>
+          <option value="+973">&#127463;&#127469; +973 (BH)</option>
+          <option value="+61">&#127462;&#127482; +61 (AU)</option>
+          <option value="+49">&#127465;&#127469; +49 (DE)</option>
+          <option value="+33">&#127467;&#127479; +33 (FR)</option>
+          <option value="+39">&#127470;&#127481; +39 (IT)</option>
+          <option value="+31">&#127475;&#127473; +31 (NL)</option>
+          <option value="+353">&#127470;&#127466; +353 (IE)</option>
+          <option value="+64">&#127475;&#127487; +64 (NZ)</option>
+          <option value="+27">&#127487;&#127462; +27 (ZA)</option>
+          <option value="+81">&#127471;&#127477; +81 (JP)</option>
+          <option value="+82">&#127472;&#127479; +82 (KR)</option>
+          <option value="+94">&#127473;&#127472; +94 (LK)</option>
+          <option value="+880">&#127463;&#127465; +880 (BD)</option>
+          <option value="+977">&#127475;&#127477; +977 (NP)</option>
         </select>
         <input type="tel" id="regPhone" class="form-input" placeholder="98765 43210">
       </div>
     </div>
-    <div class="form-group">
-      <label class="form-label">Preferred Language</label>
-      <select id="regLang" class="form-input">
-        <option value="English">English</option>
-        <option value="Tamil">Tamil</option>
-        <option value="Both">English &amp; Tamil</option>
-      </select>
-    </div>
+
     <div class="form-group">
       <label class="form-label">I am a...</label>
       <select id="regProfession" class="form-input">
@@ -752,7 +764,8 @@ async function processPayment() {
           `• Phone: ${phone}\n` +
           `• Amount Paid: ₹${currentAmount.toLocaleString()}\n` +
           `• Transaction ID: ${txId}\n` +
-          `• Plan: ${currentAmount === 500 ? 'Partial Enrollment (₹500)' : 'Full Enrollment (₹4,999)'}\n\n` +
+          `• Plan: ${currentAmount === 500 ? 'Partial Enrollment (₹500)' : 'Full Enrollment (₹4,999)'}\n` +
+          `• Session Language: Tamil mix with English\n\n` +
           `Please confirm my seat and share the session link. Thank you! 🙏`
         );
         const whatsappUrl = `https://wa.me/${bizPhone}?text=${waMessage}`;

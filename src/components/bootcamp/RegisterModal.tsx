@@ -5,7 +5,7 @@ import { useRegisterModal } from "./RegisterModalContext";
 const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbzMlMVIAGQbGNkdmdVjlrakzCuGFRQxmMSmRZs_QgKf0PabRGlhOUzMiz1gkQjdtRw/exec";
 
 const batches = [
-    { value: "batch2", label: "May Batch — May 1–30, 2026" },
+    { value: "batch2", label: "May Batch — May 4–June 3, 2026" },
 ];
 
 const RegisterModal: React.FC = () => {
@@ -121,9 +121,9 @@ const RegisterModal: React.FC = () => {
                         <div className="bg-primary/5 border border-primary/20 rounded-2xl p-6 mb-8">
                             <p className="font-body text-sm text-primary/80 mb-4 font-medium uppercase tracking-wider">To Confirm Your Seat Immediately</p>
                             <div className="flex flex-col items-center gap-3">
-                                <a href="tel:+917558133039" className="flex items-center gap-3 font-display text-xl sm:text-2xl font-black text-white hover:text-primary transition-colors">
+                                <a href="tel:+918438940599" className="flex items-center gap-3 font-display text-xl sm:text-2xl font-black text-white hover:text-primary transition-colors">
                                     <Phone className="w-6 h-6 text-primary animate-bounce" />
-                                    +91 7558133039
+                                    +91 8438940599
                                 </a>
                                 <p className="font-body text-xs text-muted-foreground px-4">
                                     Please call our program coordinator to discuss pricing details and finalize your enrollment.

@@ -2,20 +2,30 @@ import { isAfter, isSaturday, nextSaturday, set, format } from "date-fns";
 
 export function getNextMasterclassDate() {
     const now = new Date();
-    // Candidate for this week's Saturday at 18:00 (6:00 PM) local time
-    let candidate = set(now, { hours: 18, minutes: 0, seconds: 0, milliseconds: 0 });
     
-    // If today is not Saturday, move to the next instance of Saturday
-    if (!isSaturday(now)) {
-        candidate = nextSaturday(candidate);
-    } else {
-        // If today is Saturday, but it is past 6:00 PM, move to the *next* Saturday
-        if (isAfter(now, candidate)) {
-            candidate = nextSaturday(candidate);
-        }
+    // Special scheduling: Friday, July 24th, 2026 at 6:00 PM (month index 6 for July)
+    const specialSession = new Date(2026, 6, 24, 18, 0, 0);
+    
+    if (now < specialSession) {
+        return specialSession;
     }
     
-    return candidate;
+    // Set target to today at 18:00:00 (6:00 PM)
+    let target = set(now, { hours: 18, minutes: 0, seconds: 0, milliseconds: 0 });
+    
+    if (isSaturday(now)) {
+        // If today is Saturday and it is past 6:00 PM, target the next Saturday
+        if (isAfter(now, target)) {
+            target = nextSaturday(now);
+            target = set(target, { hours: 18, minutes: 0, seconds: 0, milliseconds: 0 });
+        }
+    } else {
+        // If today is not Saturday, target the next Saturday
+        target = nextSaturday(now);
+        target = set(target, { hours: 18, minutes: 0, seconds: 0, milliseconds: 0 });
+    }
+    
+    return target;
 }
 
 export function getMasterclassDateStrings() {
@@ -26,6 +36,9 @@ export function getMasterclassDateStrings() {
         regularDate: format(targetDate, "do MMMM yyyy (EEEE)"),
         
         // "April 25, 2026"
-        shortDate: format(targetDate, "MMMM d, yyyy")
+        shortDate: format(targetDate, "MMMM d, yyyy"),
+
+        // "20TH JUNE 2026"
+        upperDate: format(targetDate, "do MMMM yyyy").toUpperCase()
     };
 }

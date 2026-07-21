@@ -18,7 +18,6 @@ const ThankYou = () => {
                 window.location.href = waRedirect;
             }, 5000);
         }
-
     }, []);
 
     const handleManualRedirect = () => {
@@ -37,7 +36,10 @@ const ThankYou = () => {
             <div className="bg-white rounded-3xl p-10 max-w-lg w-full text-center shadow-xl border border-blue-100">
                 <CheckCircle className="w-20 h-20 text-emerald-500 mx-auto mb-6" />
                 <h1 className="text-4xl font-black text-slate-900 mb-4">Payment Successful!</h1>
-                <p className="text-lg text-slate-600 mb-8 font-medium">Thank you for registering for the AI Masterclass. You will be redirected to our WhatsApp community in just a moment...</p>
+                <p className="text-lg text-slate-600 mb-4 font-medium">Thank you for registering for the AI Masterclass.</p>
+                <div className="bg-emerald-50 text-emerald-800 p-4 rounded-xl mb-8 border border-emerald-200">
+                    <p className="font-bold">Your exclusive Webinar Watch Room link has been successfully sent to your WhatsApp and Email! 🎉</p>
+                </div>
                 <div className="flex justify-center">
                     <button 
                         onClick={handleManualRedirect}

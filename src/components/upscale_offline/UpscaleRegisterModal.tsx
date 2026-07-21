@@ -135,7 +135,7 @@ const UpscaleRegisterModal: React.FC = () => {
                     email: form.email,
                     contact: `${form.countryCode}${form.phone}`,
                 },
-                notes: { batch: "OFFLINE_CHENNAI_AUG29" },
+                notes: { batch: "OFFLINE_CHENNAI_AUG09" },
                 theme: { color: "#2563eb" },
                 handler: async (resp) => {
                     if (paymentHandled.current) return;
@@ -162,7 +162,7 @@ const UpscaleRegisterModal: React.FC = () => {
 
                     // Automatic Redirection to WhatsApp
                     const TRIGGER_MESSAGE = "Hi I am complete Registration of AI- Business Generative Model workshop in chennai";
-                    const waChatLink = `https://wa.me/917558133039?text=${encodeURIComponent(TRIGGER_MESSAGE)}`;
+                    const waChatLink = `https://wa.me/917010340494?text=${encodeURIComponent(TRIGGER_MESSAGE)}`;
                     
                     // Small delay to let the user see the "Complete" state before jumping
                     setTimeout(() => {
@@ -227,12 +227,12 @@ const UpscaleRegisterModal: React.FC = () => {
                                     <CheckCircle2 className="w-10 h-10" />
                                 </div>
                                 <h3 className="text-3xl font-black text-slate-900 mb-2">Registration Complete!</h3>
-                                <p className="text-slate-500 font-bold mb-8">Your payment was successful and your seat is secured for August 29 (Tentative).</p>
+                                <p className="text-slate-500 font-bold mb-8">Your payment was successful and your seat is secured for 9th August 2026 (Sunday).</p>
                                 
                                 <div className="bg-slate-50 p-6 rounded-[32px] border border-slate-100 mb-8">
                                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Final Step: Join the community</p>
                                     <a 
-                                        href={`https://wa.me/917558133039?text=${encodeURIComponent("Hi I am complete Registration of AI- Business Generative Model workshop in chennai")}`}
+                                        href={`https://wa.me/917010340494?text=${encodeURIComponent("Hi I am complete Registration of AI- Business Generative Model workshop in chennai")}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="inline-flex items-center gap-3 bg-[#25D366] hover:bg-[#20bd5b] text-white px-8 py-4 rounded-2xl font-black text-sm shadow-xl shadow-green-200 transition-all active:scale-95"

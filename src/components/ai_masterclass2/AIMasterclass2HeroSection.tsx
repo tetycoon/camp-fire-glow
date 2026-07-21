@@ -1,9 +1,11 @@
 import React from "react";
 import { ChevronDown, Calendar, Clock, MapPin, IndianRupee, Zap, Languages } from "lucide-react";
 import { useAIMasterclass2RegisterModal } from "./AIMasterclass2RegisterModalContext";
+import { getMasterclassDateStrings } from "../../lib/masterclassDateUtils";
 
 const AIMasterclass2HeroSection: React.FC = () => {
     const { openRegisterModal } = useAIMasterclass2RegisterModal();
+    const { upperDate, regularDate } = getMasterclassDateStrings();
     const scrollTo = (id: string) => {
         document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
     };
@@ -36,7 +38,7 @@ const AIMasterclass2HeroSection: React.FC = () => {
                         <div className="inline-flex items-center gap-2 mb-8 px-4 py-2 rounded-full bg-[#fce7f3] border border-pink-200">
                             <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
                             <span className="font-display text-[10px] font-bold text-blue-600 uppercase tracking-[0.2em]">
-                                LIVE MASTERCLASS • 18TH APRIL 2026 • 6:00 PM IST
+                                LIVE MASTERCLASS • {upperDate} • 6:00 PM IST
                             </span>
                         </div>
 
@@ -85,7 +87,7 @@ const AIMasterclass2HeroSection: React.FC = () => {
                                         <Calendar className="w-6 h-6 text-blue-500" />
                                     </div>
                                     <div>
-                                        <div className="font-display text-xl font-black text-slate-900 leading-none">18th April 2026</div>
+                                        <div className="font-display text-xl font-black text-slate-900 leading-none">{regularDate.split(" (")[0]}</div>
                                         <div className="font-body text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">SATURDAY</div>
                                     </div>
                                 </div>

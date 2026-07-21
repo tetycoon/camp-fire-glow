@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Menu, X, Clock, Download } from "lucide-react";
 import { useRegisterModal } from "./RegisterModalContext";
 
-// ── Countdown to Batch 2 start: May 1, 2026 ──
-const TARGET_DATE = new Date("2026-05-01T00:00:00");
+// ── Countdown to Batch 2 start: May 4, 2026 ──
+const TARGET_DATE = new Date("2026-05-04T00:00:00");
 
 function getTimeLeft() {
   const diff = TARGET_DATE.getTime() - Date.now();

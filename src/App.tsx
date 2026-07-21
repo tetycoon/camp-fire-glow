@@ -14,6 +14,7 @@ const ScrollToTop = () => {
 
   return null;
 };
+import ClaudeMasterclassPage from "./pages/ClaudeMasterclassPage";
 import Index from "./pages/Index";
 import MainPage from "./pages/MainPage";
 import BootcampPage from "./components/bootcamp/BootcampPage";
@@ -24,6 +25,8 @@ import UpscalePage from "./components/upscale_offline/UpscalePage";
 import ThankYou from "./pages/ThankYou";
 import Privacy from "./pages/Privacy";
 import NotFound from "./pages/NotFound";
+import WebinarAccess from "./pages/WebinarAccess";
+import WatchRoom from "./pages/WatchRoom";
 
 const queryClient = new QueryClient();
 
@@ -41,12 +44,27 @@ const App = () => (
           <Route path="/college" element={<College />} />
           <Route path="/ai-masterclass" element={<AIMasterclassPage />} />
           <Route path="/ai_masterclass" element={<AIMasterclassPage />} />
+          <Route path="/claude_masterclass" element={<ClaudeMasterclassPage />} />
+          <Route path="/claude-masterclass" element={<ClaudeMasterclassPage />} />
+          <Route path="/claude_masterclass/thank-you" element={<ThankYou />} />
+          <Route path="/claude_masterclass/thankyou" element={<ThankYou />} />
+          <Route path="/ai_masterclass/webinar" element={<WebinarAccess />} />
+          <Route path="/ai_masterclass/watch" element={<WatchRoom />} />
+          <Route path="/ai_masterclass/webinar-watch" element={<WatchRoom />} />
+          <Route path="/ai_masterclass/thank-you" element={<ThankYou />} />
+          <Route path="/ai_masterclass/thankyou" element={<ThankYou />} />
+          <Route path="/ai_masterclass/webinar-access" element={<WebinarAccess />} />
+          
           <Route path="/ai_masterclass2" element={<AIMasterclass2Page />} />
           <Route path="/ai-masterclass2" element={<AIMasterclass2Page />} />
           <Route path="/upscale" element={<UpscalePage />} />
           <Route path="/thank-you" element={<ThankYou />} />
           <Route path="/thankyou" element={<ThankYou />} />
           <Route path="/privacy" element={<Privacy />} />
+          <Route path="/webinar-access" element={<WebinarAccess />} />
+          <Route path="/webinar" element={<WebinarAccess />} />
+          <Route path="/watch" element={<WatchRoom />} />
+          <Route path="/webinar-watch" element={<WatchRoom />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

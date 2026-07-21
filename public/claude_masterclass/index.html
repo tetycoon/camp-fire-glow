@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Masterclass — 2-Day Live Interactive Session by Tech Tycoon</title>
+    <meta name="description" content="Master Claude AI, Model Context Protocols (MCP), Claude Code CLI, and web application building in 2 days. 100% Tamil instruction by Mr. Antony Praveen.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Razorpay SDK -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body class="claude-theme">
+
+    <!-- Top Announcement Bar -->
+    <div class="announcement-bar">
+        <div class="container announcement-content">
+            <div class="announcement-left">
+                <span class="badge-founding">FOUNDING BATCH</span>
+                <span>Join the inaugural 2-day live Claude Masterclass</span>
+            </div>
+            <div class="announcement-right">
+                <span><i class="fa-solid fa-[#D85A30] fa-globe"></i> 100% Tamil (தமிழ்)</span>
+                <span class="dot-separator">•</span>
+                <span><i class="fa-regular fa-calendar"></i> July 25 & 26, 2026</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sticky Header / Navigation -->
+    <header class="navbar">
+        <div class="container nav-container">
+            <a href="#" class="brand-logo">
+                <img src="images/tech_tycoon_logo.png" alt="Tech Tycoon Digital Solutions" class="logo-img">
+                <div class="logo-text">
+                    <span class="logo-title">Claude Masterclass</span>
+                    <span class="logo-sub">by Tech Tycoon</span>
+                </div>
+            </a>
+            
+            <div class="nav-right">
+                <div class="nav-meta">
+                    <span>July 25 & 26</span>
+                    <span class="dot">•</span>
+                    <span>5:00 PM – 8:30 PM IST</span>
+                </div>
+                <button class="btn btn-primary btn-sm" onclick="openPaymentModal(299)">
+                    Join founding batch <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO SECTION — Two Column Layout -->
+    <section class="hero-section">
+        <div class="container hero-grid">
+            
+            <!-- Left Column: Copy & Action -->
+            <div class="hero-copy">
+                <div class="hero-pill">
+                    <i class="fa-solid fa-sparkles text-terracotta"></i>
+                    <span>Founding batch • Small group size</span>
+                </div>
+
+                <h1 class="hero-title">
+                    Master <span class="text-terracotta">Claude AI</span>, MCPs & Code Automation in 2 Days
+                </h1>
+
+                <p class="hero-description">
+                    Learn how to build custom Model Context Protocols (MCP), prompt like an expert, construct web applications, and automate complex workflows with Anthropic's Claude 3.5.
+                </p>
+
+                <!-- Direct Access Note -->
+                <div class="direct-access-card">
+                    <i class="fa-solid fa-circle-check text-terracotta"></i>
+                    <span>Direct access to Antony across both days • Live Q&A and practical exercises</span>
+                </div>
+
+                <!-- Hero CTA Buttons -->
+                <div class="hero-actions">
+                    <button class="btn btn-primary btn-lg" onclick="openPaymentModal(299)">
+                        Join founding batch <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                    <a href="#curriculum" class="btn btn-secondary btn-lg">
+                        View curriculum
+                    </a>
+                </div>
+
+                <!-- Honest Scoped Trust Stat -->
+                <div class="trust-stat-row">
+                    <div class="avatar-stack">
+                        <span class="avatar avatar-ap">AP</span>
+                        <span class="avatar avatar-tt">TT</span>
+                    </div>
+                    <span class="trust-text"><strong>5,000+ students trained</strong> (career total across AI sessions)</span>
+                </div>
+            </div>
+
+            <!-- Right Column: Info Card & Countdown -->
+            <div class="hero-card-side">
+                <div class="info-card">
+                    <div class="card-header">
+                        <span class="card-tag">SESSION DETAILS</span>
+                        <span class="zoom-badge"><i class="fa-solid fa-video"></i> Live Zoom</span>
+                    </div>
+
+                    <div class="info-items-list">
+                        <div class="info-item">
+                            <div class="info-icon icon-terracotta"><i class="fa-regular fa-calendar"></i></div>
+                            <div>
+                                <strong>Date & Days</strong>
+                                <p>July 25 & 26, 2026 (Saturday & Sunday)</p>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <div class="info-icon icon-purple"><i class="fa-regular fa-clock"></i></div>
+                            <div>
+                                <strong>Timing</strong>
+                                <p>5:00 PM – 8:30 PM IST (3.5 Hours / day)</p>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <div class="info-icon icon-terracotta"><i class="fa-solid fa-language"></i></div>
+                            <div>
+                                <strong>Medium of Instruction</strong>
+                                <p>100% Tamil (தமிழ்)</p>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <div class="info-icon icon-purple"><i class="fa-solid fa-user-check"></i></div>
+                            <div>
+                                <strong>Lead Instructor</strong>
+                                <p>Mr. Antony Praveen (Founder, Tech Tycoon)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Countdown Box -->
+                    <div class="countdown-box">
+                        <span class="countdown-label">LIVE SESSION STARTS IN</span>
+                        <div class="countdown-timer">
+                            <div class="timer-unit"><span id="cd-days">04</span><small>DAYS</small></div>
+                            <div class="timer-unit"><span id="cd-hours">02</span><small>HOURS</small></div>
+                            <div class="timer-unit"><span id="cd-mins">15</span><small>MINS</small></div>
+                            <div class="timer-unit"><span id="cd-secs">30</span><small>SECS</small></div>
+                        </div>
+                    </div>
+
+                    <div class="card-pricing-footer">
+                        <span>Standard Pass starting at</span>
+                        <strong class="text-terracotta price-big">₹299 INR</strong>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- WHY JOIN SECTION -->
+    <section class="section-why">
+        <div class="container">
+            <div class="section-heading text-center">
+                <span class="section-subtitle">CORE SKILLS COVERED</span>
+                <h2 class="section-title">Why join the Claude Masterclass?</h2>
+                <p class="section-desc">Go beyond generic chatting. Learn how to turn Claude 3.5 Sonnet into your dedicated software engineer and workflow assistant.</p>
+            </div>
+
+            <div class="grid-3">
+                <div class="feature-card">
+                    <div class="feature-icon icon-terracotta"><i class="fa-solid fa-bolt"></i></div>
+                    <h3>Advanced Prompting & Hacks</h3>
+                    <p>System prompts, context caching tricks, structured outputs, and getting exact code logic on the first prompt.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon icon-purple"><i class="fa-solid fa-plug"></i></div>
+                    <h3>Build Custom MCP Servers</h3>
+                    <p>Connect Claude directly to your local file system, APIs, databases, and custom tools with Model Context Protocol.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon icon-terracotta"><i class="fa-solid fa-terminal"></i></div>
+                    <h3>Claude Code & CLI Workflows</h3>
+                    <p>Master terminal-based coding automation to edit multi-file projects, refactor codebases, and run debug cycles.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon icon-purple"><i class="fa-solid fa-laptop-code"></i></div>
+                    <h3>Websites & App Building</h3>
+                    <p>Construct complete web applications, interactive dashboards, and SaaS landing pages live with Claude Artifacts.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon icon-terracotta"><i class="fa-solid fa-gift"></i></div>
+                    <h3>Free vs Paid Tier Optimization</h3>
+                    <p>Learn how to maximize Claude's free tier without hitting limits, and evaluate when upgrading to Pro pays off.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon icon-purple"><i class="fa-solid fa-file-code"></i></div>
+                    <h3>100+ Claude Prompt Library</h3>
+                    <p>Get instant access to curated prompt templates, cheat sheets, and starter project repositories.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CURRICULUM SECTION -->
+    <section class="section-curriculum" id="curriculum">
+        <div class="container">
+            <div class="section-heading text-center">
+                <span class="section-subtitle">2-DAY LIVE ROADMAP</span>
+                <h2 class="section-title">Structured Masterclass Curriculum</h2>
+                <p class="section-desc">7 total hours of hands-on, live interactive training across Saturday and Sunday.</p>
+            </div>
+
+            <div class="curriculum-days">
+                
+                <!-- Day 1 Card -->
+                <div class="day-card">
+                    <div class="day-header">
+                        <div class="day-title-grp">
+                            <span class="badge-day badge-terracotta">DAY 1</span>
+                            <div>
+                                <h3>Saturday, July 25th • 5:00 PM – 8:30 PM IST</h3>
+                                <p>Foundations, Prompt Architecture & Building Custom MCPs</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modules-grid">
+                        <div class="module-item">
+                            <span class="mod-no text-terracotta">Module 01</span>
+                            <h4>Claude Architecture & Artifacts</h4>
+                            <p>System prompts, token context caching, and free vs paid optimization.</p>
+                        </div>
+                        <div class="module-item">
+                            <span class="mod-no text-terracotta">Module 02</span>
+                            <h4>Advanced Prompt Engineering</h4>
+                            <p>Structured JSON outputs, few-shot prompting, and bug elimination.</p>
+                        </div>
+                        <div class="module-item">
+                            <span class="mod-no text-terracotta">Module 03</span>
+                            <h4>Model Context Protocol (MCP)</h4>
+                            <p>Connecting Claude to local files, external tools, and custom APIs.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Day 2 Card -->
+                <div class="day-card">
+                    <div class="day-header">
+                        <div class="day-title-grp">
+                            <span class="badge-day badge-purple">DAY 2</span>
+                            <div>
+                                <h3>Sunday, July 26th • 5:00 PM – 8:30 PM IST</h3>
+                                <p>Claude Code CLI, Web App Construction & Live Projects</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modules-grid">
+                        <div class="module-item">
+                            <span class="mod-no text-purple">Module 04</span>
+                            <h4>Claude Code & Terminal Automation</h4>
+                            <p>Command line workflows, codebase refactoring, and automated testing.</p>
+                        </div>
+                        <div class="module-item">
+                            <span class="mod-no text-purple">Module 05</span>
+                            <h4>Building Web Apps & Dashboards</h4>
+                            <p>Creating full-stack responsive web tools and SaaS UIs live in class.</p>
+                        </div>
+                        <div class="module-item">
+                            <span class="mod-no text-purple">Module 06</span>
+                            <h4>Real Projects & Q&A Session</h4>
+                            <p>Freelance workflows, client deliverables automation, and live Q&A.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- INSTRUCTOR SECTION -->
+    <section class="section-instructor">
+        <div class="container">
+            <div class="instructor-card">
+                <div class="instructor-left">
+                    <img src="images/antony_praveen.jpg" alt="Mr. Antony Praveen" class="instructor-photo">
+                    <span class="instructor-badge"><i class="fa-solid fa-award"></i> Lead Instructor</span>
+                </div>
+                <div class="instructor-right">
+                    <span class="section-subtitle">MEET YOUR MENTOR</span>
+                    <h2>Mr. Antony Praveen</h2>
+                    <p class="instructor-role">AI Specialist & Founder, Tech Tycoon</p>
+                    <p class="instructor-bio">Antony Praveen has trained thousands of students, developers, and business owners in AI adoption, prompt engineering, and modern developer tools. With hands-on expertise in production AI agents and custom MCPs, he breaks down complex technical workflows into clear Tamil instruction.</p>
+                    
+                    <div class="instructor-metrics">
+                        <div class="metric-box">
+                            <strong>5,000+</strong>
+                            <span>Students trained (career total)</span>
+                        </div>
+                        <div class="metric-box">
+                            <strong>100+</strong>
+                            <span>Live sessions conducted</span>
+                        </div>
+                        <div class="metric-box">
+                            <strong>4.9 ★</strong>
+                            <span>Average participant rating</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRICING SECTION -->
+    <section class="section-pricing" id="pricing">
+        <div class="container">
+            <div class="section-heading text-center">
+                <span class="section-subtitle">REGISTRATION OPTIONS</span>
+                <h2 class="section-title">Select your pass for the founding batch</h2>
+                <p class="section-desc">Choose between the standard live interactive pass or the VIP pass with lifetime recorded access.</p>
+            </div>
+
+            <div class="pricing-grid">
+                
+                <!-- Standard Pass ₹299 -->
+                <div class="pricing-card">
+                    <span class="card-type">STANDARD LIVE PASS</span>
+                    <div class="price-row">
+                        <strong class="price-val">₹299</strong>
+                        <span class="currency">INR</span>
+                    </div>
+                    <p class="card-sub">Ideal for live interactive participation across both days.</p>
+
+                    <ul class="feature-list">
+                        <li><i class="fa-solid fa-check text-terracotta"></i> 2-Day Live Zoom Session (July 25 & 26)</li>
+                        <li><i class="fa-solid fa-check text-terracotta"></i> 100% Tamil Language Instruction</li>
+                        <li><i class="fa-solid fa-check text-terracotta"></i> Direct Q&A with Antony Praveen</li>
+                        <li><i class="fa-solid fa-check text-terracotta"></i> 100+ Prompt Template Collection</li>
+                        <li class="disabled"><i class="fa-solid fa-xmark"></i> Lifetime Video Recording Access</li>
+                        <li class="disabled"><i class="fa-solid fa-xmark"></i> Session Source Code & App Templates</li>
+                    </ul>
+
+                    <button class="btn btn-secondary btn-block" onclick="openPaymentModal(299)">
+                        Select Live Pass @ ₹299
+                    </button>
+                </div>
+
+                <!-- VIP Pass ₹999 -->
+                <div class="pricing-card card-recommended">
+                    <span class="badge-recommended">RECOMMENDED</span>
+                    <span class="card-type text-terracotta">VIP ALL-ACCESS PASS</span>
+                    <div class="price-row">
+                        <strong class="price-val">₹999</strong>
+                        <span class="currency">INR</span>
+                    </div>
+                    <p class="card-sub">Full package with lifetime video recordings & source code.</p>
+
+                    <ul class="feature-list">
+                        <li class="font-bold"><i class="fa-solid fa-check text-terracotta"></i> Everything in Standard Live Pass</li>
+                        <li class="highlight-item"><i class="fa-solid fa-star text-terracotta"></i> Lifetime recorded video access</li>
+                        <li class="highlight-item"><i class="fa-solid fa-star text-terracotta"></i> Session source code & project templates</li>
+                        <li><i class="fa-solid fa-check text-terracotta"></i> Custom MCP server code repository</li>
+                        <li><i class="fa-solid fa-check text-terracotta"></i> Community WhatsApp group access</li>
+                    </ul>
+
+                    <button class="btn btn-primary btn-block" onclick="openPaymentModal(999)">
+                        Select VIP pass @ ₹999 <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ SECTION -->
+    <section class="section-faq">
+        <div class="container">
+            <div class="section-heading text-center">
+                <span class="section-subtitle">FREQUENTLY ASKED QUESTIONS</span>
+                <h2 class="section-title">Everything you need to know</h2>
+            </div>
+
+            <div class="faq-list">
+                <div class="faq-item active">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>What language will the Masterclass be conducted in?</span>
+                        <i class="fa-solid fa-chevron-down text-terracotta"></i>
+                    </button>
+                    <div class="faq-answer">
+                        The entire session will be taught 100% in Tamil (தமிழ்) by Mr. Antony Praveen for clear, practical understanding.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>What is the difference between the ₹299 pass and ₹999 VIP pass?</span>
+                        <i class="fa-solid fa-chevron-down text-terracotta"></i>
+                    </button>
+                    <div class="faq-answer">
+                        The ₹299 pass grants live interactive Zoom participation on July 25 & 26 + 100+ prompt templates. The ₹999 VIP pass includes everything in the ₹299 pass PLUS lifetime recorded video access, complete source code of all live build projects, and community access.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>How will I receive the Zoom meeting link?</span>
+                        <i class="fa-solid fa-chevron-down text-terracotta"></i>
+                    </button>
+                    <div class="faq-answer">
+                        Immediately upon successful registration, your Zoom link and session details will be sent to your email and WhatsApp number.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>Do I need a paid Claude Pro account to participate?</span>
+                        <i class="fa-solid fa-chevron-down text-terracotta"></i>
+                    </button>
+                    <div class="faq-answer">
+                        No. A free Claude account is sufficient. We specifically teach how to utilize the free version effectively without hitting rate limits.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>Do I need prior coding experience?</span>
+                        <i class="fa-solid fa-chevron-down text-terracotta"></i>
+                    </button>
+                    <div class="faq-answer">
+                        No prior software development background is required. The session is structured step-by-step from foundational prompting to AI-assisted coding.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <div class="container footer-content text-center">
+            <div class="footer-logo">
+                <img src="images/tech_tycoon_logo.png" alt="Tech Tycoon" class="footer-logo-img">
+                <span>Claude Masterclass</span>
+            </div>
+            <p>Conducted by Tech Tycoon Digital Solutions • July 25 & 26, 2026</p>
+            <div class="footer-copy">
+                &copy; 2026 Tech Tycoon. All rights reserved. | aitycoon.in/claude_masterclass
+            </div>
+        </div>
+    </footer>
+
+    <!-- BOTTOM CENTER FLOATING WIDGET -->
+    <div class="bottom-floating-widget">
+        <div class="floating-widget-content">
+            <div class="widget-info">
+                <div class="widget-item">
+                    <i class="fa-regular fa-calendar text-terracotta"></i>
+                    <div>
+                        <strong>July 25 & 26</strong>
+                        <small>Sat & Sun</small>
+                    </div>
+                </div>
+                <div class="widget-divider"></div>
+                <div class="widget-item">
+                    <i class="fa-regular fa-clock text-purple"></i>
+                    <div>
+                        <strong>5:00 PM – 8:30 PM</strong>
+                        <small>IST</small>
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="openPaymentModal(299)">
+                Join founding batch <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- 2-STEP PAYMENT & REGISTRATION MODAL -->
+    <div class="modal-overlay" id="payment-modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closePaymentModal()"><i class="fa-solid fa-xmark"></i></button>
+
+            <!-- STEP 1: PASS SELECTION -->
+            <div id="modal-step-1">
+                <div class="modal-header text-center">
+                    <span class="modal-tag"><i class="fa-solid fa-shield-halved"></i> SECURE CHECKOUT</span>
+                    <h3>Select your registration pass</h3>
+                    <p>Choose your preferred option to continue</p>
+                </div>
+
+                <div class="modal-options">
+                    <div class="modal-option selected" id="opt-299" onclick="selectPass(299)">
+                        <div class="opt-radio"><div class="radio-dot"></div></div>
+                        <div class="opt-info">
+                            <div class="opt-title-row">
+                                <strong>Standard Live Pass</strong>
+                                <span class="opt-price text-terracotta">₹299</span>
+                            </div>
+                            <p>Live Zoom Session + 100+ Prompts (No Video Recording Access).</p>
+                        </div>
+                    </div>
+
+                    <div class="modal-option" id="opt-999" onclick="selectPass(999)">
+                        <div class="opt-radio"><div class="radio-dot"></div></div>
+                        <div class="opt-info">
+                            <div class="opt-title-row">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <strong>VIP All-Access Pass</strong>
+                                    <span class="badge-opt-rec">RECOMMENDED</span>
+                                </div>
+                                <span class="opt-price text-terracotta">₹999</span>
+                            </div>
+                            <p>Live Zoom + <strong>Full Recorded Video Access</strong> + Source Code & App Templates.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer-step1">
+                    <div class="total-row">
+                        <span>Selected Pass Total:</span>
+                        <strong class="total-val text-terracotta" id="selected-pass-total">₹299 INR</strong>
+                    </div>
+                    <button class="btn btn-primary btn-block" onclick="goToStep2()">
+                        Proceed to details <i class="fa-solid fa-lock"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- STEP 2: USER DETAILS FORM -->
+            <div id="modal-step-2" style="display: none;">
+                <button class="back-link" onclick="goToStep1()">
+                    <i class="fa-solid fa-arrow-left"></i> Change pass selection (<span id="back-pass-price">₹299</span>)
+                </button>
+
+                <div class="modal-header text-center">
+                    <h3>Join founding batch</h3>
+                    <p>Registration fee: <strong class="text-terracotta" id="form-fee-display">₹299 INR</strong></p>
+                    <div class="session-pill"><i class="fa-regular fa-calendar"></i> July 25 & 26, 2026 • 5:00 PM IST</div>
+                </div>
+
+                <form id="registration-form" onsubmit="handleFormSubmit(event)" class="modal-form">
+                    <div class="form-group">
+                        <label>FULL NAME</label>
+                        <input type="text" id="cust-name" required placeholder="Enter your name">
+                    </div>
+
+                    <div class="form-group">
+                        <label>EMAIL ADDRESS</label>
+                        <input type="email" id="cust-email" required placeholder="email@example.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label>WHATSAPP NUMBER</label>
+                        <div class="phone-input-grp">
+                            <span class="country-code">IN +91</span>
+                            <input type="tel" id="cust-phone" required maxlength="10" placeholder="10-digit mobile number">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>CURRENT PROFESSION</label>
+                        <select id="cust-profession" required>
+                            <option value="">Select profession...</option>
+                            <option value="Trainer / Coach">Trainer / Coach</option>
+                            <option value="Entrepreneur">Entrepreneur</option>
+                            <option value="Business Owner">Business Owner</option>
+                            <option value="Educator">Educator</option>
+                            <option value="IT Professional">IT Professional</option>
+                            <option value="Student">Student</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="pass-warning-note" id="pass-note">
+                        ⚠️ Live session only (No recorded access in ₹299 pass)
+                    </div>
+
+                    <div class="form-checkbox">
+                        <input type="checkbox" id="agree-wa" checked>
+                        <label for="agree-wa">I agree to receive workshop updates and automated reminders on WhatsApp.</label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block" id="pay-submit-btn">
+                        Proceed to payment — <span id="btn-fee-display">₹299</span>
+                    </button>
+
+                    <div class="secured-footer">
+                        <i class="fa-solid fa-shield-halved"></i> SECURED BY RAZORPAY
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

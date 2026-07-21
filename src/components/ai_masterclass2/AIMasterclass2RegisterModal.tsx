@@ -4,8 +4,8 @@ import { useAIMasterclass2RegisterModal } from "./AIMasterclass2RegisterModalCon
 import { RazorpayOptions } from "@/types/razorpay";
 import { getMasterclassDateStrings } from "../../lib/masterclassDateUtils";
 
-const RAZORPAY_KEY_ID = "rzp_live_T2CbVONQc6qrqj";
-const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycby0fX7tjbOciJbg0Mw1SRMhlazBe4FG1Ko-f5mIFCW6Y7zGKHGZjdUZQKXclfye1FzegA/exec";
+const RAZORPAY_KEY_ID = "rzp_live_gfoS1OjC8tvWjP";
+const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbylIyBX6wgBhb5BUJoc6x_eqe_ArHdDcCmwS6zi49FjbAAhZnkmiTAkHMYfcLubxCTHmQ/exec";
 
 
 function loadRazorpayScript(): Promise<boolean> {
@@ -63,6 +63,12 @@ const AIMasterclass2RegisterModal: React.FC = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        const message = `This session is on "${regularDate} at ${form.timing}".\n\nPlease check your availability.\n\nDo you want to proceed to payment?`;
+        if (!window.confirm(message)) {
+            return;
+        }
+
         setLoading(true);
 
         const loaded = await loadRazorpayScript();
@@ -217,7 +223,9 @@ const AIMasterclass2RegisterModal: React.FC = () => {
                         <div className="text-center mb-6">
                             <h2 className="font-display text-2xl font-bold mb-1 italic !text-white" style={{ color: "white" }}>Register <span className="text-blue-500">Now</span></h2>
                             <p className="text-sm text-muted-foreground">Join the AI revolution for just ₹99</p>
-                            <p className="text-[10px] text-blue-400/80 mt-1 font-medium italic">18th April • Tamil Session</p>
+                            <div className="mt-3 inline-block bg-blue-500/10 border border-blue-500/20 text-blue-400 px-4 py-2 rounded-2xl text-xs font-bold tracking-wide shadow-sm">
+                                📅 Session: {regularDate} at {form.timing}
+                            </div>
                         </div>
 
                         <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -283,16 +291,7 @@ const AIMasterclass2RegisterModal: React.FC = () => {
                                     className="flex-1 bg-muted/50 border border-border rounded-xl px-4 py-3 text-sm text-white focus:border-emerald-500/50 outline-none transition-colors"
                                 />
                             </div>
-                            <select
-                                required
-                                value={form.language}
-                                onChange={e => setForm({ ...form, language: e.target.value })}
-                                className="bg-muted/50 border border-border rounded-xl px-4 py-3 text-sm text-white focus:border-emerald-500/50 outline-none appearance-none cursor-pointer"
-                            >
-                                <option value="">Preferred Language</option>
-                                <option value="Tamil">Tamil</option>
-                                <option value="English" disabled>English (Not Available)</option>
-                            </select>
+
 
                             <select
                                 required
@@ -313,9 +312,8 @@ const AIMasterclass2RegisterModal: React.FC = () => {
                                 <option>Trainer / Coach</option>
                                 <option>Entrepreneur</option>
                                 <option>Business Owner</option>
-                                <option>Freelancer</option>
                                 <option>Educator</option>
-                                <option>Professionals</option>
+                                <option>IT Professional</option>
                                 <option>Student</option>
                                 <option>Other</option>
                             </select>

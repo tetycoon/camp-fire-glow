@@ -4,7 +4,6 @@ import { useAIMasterclass2RegisterModal } from "./AIMasterclass2RegisterModalCon
 
 const features = [
     "Complete 3-hour AI Basic to intermediate Training",
-    "Every Saturday Live Session",
     "Exclusive Tamil Session",
     "10+ AI Tools Mastery",
     "WhatsApp Private Community",

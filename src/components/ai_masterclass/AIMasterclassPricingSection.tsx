@@ -4,14 +4,12 @@ import { useAIMasterclassRegisterModal } from "./AIMasterclassRegisterModalConte
 
 const features = [
     "Complete 3-hour AI Basic to intermediate Training",
-    "Every sunday Live Session",
     "Basic English And Tamil",
     "10+ AI Tools Mastery",
     "WhatsApp Private Community",
     "Inclusive of GST"
 ];
 
-import { useAIMasterclassRegisterModal } from "./AIMasterclassRegisterModalContext";
 import { getMasterclassDateStrings } from "../../lib/masterclassDateUtils";
 
 const AIMasterclassPricingSection: React.FC = () => {

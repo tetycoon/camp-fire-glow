@@ -3,7 +3,7 @@ import { Calendar, Users, CheckCircle2, Zap, ShieldCheck } from "lucide-react";
 import { useRegisterModal } from "./RegisterModalContext";
 
 const batches = [
-  { id: "batch2", name: "Executive Cohort", dates: "May 1 – May 30, 2026", color: "gold" },
+  { id: "batch2", name: "Executive Cohort", dates: "May 4 – June 3, 2026", color: "gold" },
 ];
 
 const features = [

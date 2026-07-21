@@ -29,7 +29,7 @@ const defaultCountry = countryCodes.find(c => c.code === "+91") || countryCodes[
 const AIMasterclassRegisterModal: React.FC = () => {
     const { isOpen, closeRegisterModal } = useAIMasterclassRegisterModal();
     const { regularDate } = getMasterclassDateStrings();
-    const [form, setForm] = useState({ name: "", email: "", phone: "", profession: "", language: "", coupon: "WELCOME33", countryCode: "+91" });
+    const [form, setForm] = useState({ name: "", email: "", phone: "", profession: "", language: "Tamil", coupon: "WELCOME33", countryCode: "+91" });
     const [submitted, setSubmitted] = useState(false);
     const [loading, setLoading] = useState(false);
     const [couponChecking, setCouponChecking] = useState(false);
@@ -81,7 +81,7 @@ const AIMasterclassRegisterModal: React.FC = () => {
         setTimeout(() => {
             closeRegisterModal();
             if (!submitted) {
-                setForm({ name: "", email: "", phone: "", profession: "", language: "", coupon: "WELCOME33", countryCode: "+91" });
+                setForm({ name: "", email: "", phone: "", profession: "", language: "Tamil", coupon: "WELCOME33", countryCode: "+91" });
                 setDiscountApplied(false);
             }
         }, 300);
@@ -93,6 +93,12 @@ const AIMasterclassRegisterModal: React.FC = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        const message = `This session is on "${regularDate} at 6:00 PM IST".\n\nPlease check your availability.\n\nDo you want to proceed to payment?`;
+        if (!window.confirm(message)) {
+            return;
+        }
+
         setLoading(true);
 
         const loaded = await loadRazorpayScript();
@@ -234,7 +240,9 @@ const AIMasterclassRegisterModal: React.FC = () => {
                         <div className="text-center mb-6">
                             <h2 className="font-display text-2xl font-bold mb-1 italic !text-white" style={{ color: "white" }}>Register <span className="text-gradient-green">Now</span></h2>
                             <p className="text-sm text-muted-foreground">Join the AI revolution for just ₹99</p>
-                            <p className="text-[10px] text-emerald-400/80 mt-1 font-medium italic">Basic English And Tamil</p>
+                            <div className="mt-3 inline-block bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 px-4 py-2 rounded-2xl text-xs font-bold tracking-wide shadow-sm">
+                                📅 Session: {regularDate} at 6:00 PM IST
+                            </div>
                         </div>
 
                         <form onSubmit={handleSubmit} className="space-y-5">
@@ -341,39 +349,23 @@ const AIMasterclassRegisterModal: React.FC = () => {
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div className="space-y-1.5">
-                                    <label className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest ml-1">Preferred Language</label>
-                                    <select
-                                        required
-                                        value={form.language}
-                                        onChange={e => setForm({ ...form, language: e.target.value })}
-                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-emerald-500/50 focus:bg-white/10 outline-none appearance-none cursor-pointer"
-                                    >
-                                        <option value="" className="bg-slate-900">Select...</option>
-                                        <option value="English" disabled className="bg-slate-900" style={{ color: '#ef4444' }}>English (Not Available)</option>
-                                        <option value="Tamil" className="bg-slate-900">Tamil</option>
-                                    </select>
-                                </div>
-                                <div className="space-y-1.5">
-                                    <label className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest ml-1">Current Profession</label>
-                                    <select
-                                        required
-                                        value={form.profession}
-                                        onChange={e => setForm({ ...form, profession: e.target.value })}
-                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-emerald-500/50 focus:bg-white/10 outline-none appearance-none cursor-pointer"
-                                    >
-                                        <option value="" className="bg-slate-900">Select...</option>
-                                        <option className="bg-slate-900">Trainer / Coach</option>
-                                        <option className="bg-slate-900">Entrepreneur</option>
-                                        <option className="bg-slate-900">Business Owner</option>
-                                        <option className="bg-slate-900">Freelancer</option>
-                                        <option className="bg-slate-900">Educator</option>
-                                        <option className="bg-slate-900">Professionals</option>
-                                        <option className="bg-slate-900">Student</option>
-                                        <option className="bg-slate-900">Other</option>
-                                    </select>
-                                </div>
+                            <div className="space-y-1.5">
+                                <label className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest ml-1">Current Profession</label>
+                                <select
+                                    required
+                                    value={form.profession}
+                                    onChange={e => setForm({ ...form, profession: e.target.value })}
+                                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-emerald-500/50 focus:bg-white/10 outline-none appearance-none cursor-pointer"
+                                >
+                                    <option value="" className="bg-slate-900">Select...</option>
+                                    <option className="bg-slate-900">Trainer / Coach</option>
+                                    <option className="bg-slate-900">Entrepreneur</option>
+                                    <option className="bg-slate-900">Business Owner</option>
+                                    <option className="bg-slate-900">Educator</option>
+                                    <option className="bg-slate-900">IT Professional</option>
+                                    <option className="bg-slate-900">Student</option>
+                                    <option className="bg-slate-900">Other</option>
+                                </select>
                             </div>
 
                             <p className="text-xs text-red-500 font-bold text-center mt-1">⚠️ We do not provide recorded sessions.</p>
