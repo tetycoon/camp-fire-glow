@@ -31,6 +31,57 @@ function doGet(e) {
     return ContentService.createTextOutput(e.parameter['hub.challenge']);
   }
   
+  // 🌟 ADMIN PANEL LIVE SYNC ENDPOINT
+  if (e.parameter.action === 'getRegistrations') {
+    if (e.parameter.token !== VERIFY_TOKEN) {
+      return createJsonResponse({ success: false, error: "Unauthorized token" });
+    }
+    try {
+      const ss = SpreadsheetApp.getActiveSpreadsheet();
+      const sheet = ss.getSheetByName(SHEET_NAME_REG) || ss.getSheets()[0];
+      const data = sheet.getDataRange().getValues();
+      
+      const registrations = [];
+      for (let i = 1; i < data.length; i++) {
+        const row = data[i];
+        if (!row[0] && !row[1] && !row[2]) continue;
+        
+        let dateStr = "";
+        if (row[0]) {
+          try {
+            dateStr = new Date(row[0]).toISOString();
+          } catch (errDate) {
+            dateStr = row[0].toString();
+          }
+        }
+
+        registrations.push({
+          timestamp: dateStr,
+          name: row[1] || "",
+          email: row[2] || "",
+          phone: row[3] ? row[3].toString() : "",
+          profession: row[4] || "",
+          language: row[5] || "Tamil",
+          amount: Number(row[6] || 0),
+          status: row[7] || "INITIATED",
+          orderId: row[8] || "",
+          paymentId: row[9] || "",
+          emailStatus: row[10] || "",
+          whatsappClicked: row[11] || "",
+          pageUrl: "https://aitycoon.in/ai_masterclass",
+          batch: "AI Masterclass",
+          sessionDate: "Upcoming Weekend",
+          sessionTime: "6:00 PM IST"
+        });
+      }
+      
+      registrations.reverse();
+      return createJsonResponse({ success: true, registrations: registrations, count: registrations.length });
+    } catch (err) {
+      return createJsonResponse({ success: false, error: err.message });
+    }
+  }
+
   if (e.parameter.action === 'whatsapp') {
     markWhatsappClicked(e.parameter.orderId);
     const waChatLink = `https://wa.me/${WHATSAPP_CONFIG.PHONE_NUMBER}?text=${encodeURIComponent(TRIGGER_MESSAGE)}`;
@@ -40,7 +91,7 @@ function doGet(e) {
     </body></html>`;
     return HtmlService.createHtmlOutput(html).setTitle("Redirecting...");
   }
-  return ContentService.createTextOutput("OK");
+  return ContentService.createTextOutput("AI Masterclass Automation is running.");
 }
 
 // ------------------------------------------------------------

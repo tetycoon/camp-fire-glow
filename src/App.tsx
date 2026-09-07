@@ -27,6 +27,9 @@ import Privacy from "./pages/Privacy";
 import NotFound from "./pages/NotFound";
 import WebinarAccess from "./pages/WebinarAccess";
 import WatchRoom from "./pages/WatchRoom";
+import AdminPanelPage from "./pages/AdminPanelPage";
+
+import AcademyPreRegisterPage from "./pages/AcademyPreRegisterPage";
 
 const queryClient = new QueryClient();
 
@@ -39,13 +42,22 @@ const App = () => (
         <ScrollToTop />
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/academy" element={<AcademyPreRegisterPage />} />
+          <Route path="/academy-preregister" element={<AcademyPreRegisterPage />} />
+          <Route path="/academy_preregister" element={<AcademyPreRegisterPage />} />
+          <Route path="/academy/preregister" element={<AcademyPreRegisterPage />} />
+          <Route path="/preregister" element={<AcademyPreRegisterPage />} />
           <Route path="/main" element={<MainPage />} />
           <Route path="/bootcamp" element={<BootcampPage />} />
           <Route path="/college" element={<College />} />
           <Route path="/ai-masterclass" element={<AIMasterclassPage />} />
           <Route path="/ai_masterclass" element={<AIMasterclassPage />} />
           <Route path="/claude_masterclass" element={<ClaudeMasterclassPage />} />
+          <Route path="/claude_masterclass/online" element={<ClaudeMasterclassPage />} />
+          <Route path="/claude_masterclass/offline" element={<ClaudeMasterclassPage />} />
           <Route path="/claude-masterclass" element={<ClaudeMasterclassPage />} />
+          <Route path="/claude-masterclass/online" element={<ClaudeMasterclassPage />} />
+          <Route path="/claude-masterclass/offline" element={<ClaudeMasterclassPage />} />
           <Route path="/claude_masterclass/thank-you" element={<ThankYou />} />
           <Route path="/claude_masterclass/thankyou" element={<ThankYou />} />
           <Route path="/ai_masterclass/webinar" element={<WebinarAccess />} />
@@ -57,7 +69,11 @@ const App = () => (
           
           <Route path="/ai_masterclass2" element={<AIMasterclass2Page />} />
           <Route path="/ai-masterclass2" element={<AIMasterclass2Page />} />
+          <Route path="/advanced_masterclass" element={<AIMasterclass2Page />} />
+          <Route path="/advanced-masterclass" element={<AIMasterclass2Page />} />
           <Route path="/upscale" element={<UpscalePage />} />
+          <Route path="/admin-panel" element={<AdminPanelPage />} />
+          <Route path="/admin" element={<AdminPanelPage />} />
           <Route path="/thank-you" element={<ThankYou />} />
           <Route path="/thankyou" element={<ThankYou />} />
           <Route path="/privacy" element={<Privacy />} />

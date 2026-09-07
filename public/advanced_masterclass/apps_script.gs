@@ -4,13 +4,86 @@
 
 const SPREADSHEET_ID = "1aczs49JlSNZGyg7Q_8BJkZYkqZQmU_pjwOwll0-GvVE";
 const SHEET_NAME = "Sheet1";
+const VERIFY_TOKEN = "ai_tycoon_auto_662";
 
-const RZP_KEY_ID = "rzp_live_T2CbVONQc6qrqj"; 
-const RZP_KEY_SECRET = "0ZmzKfvHIwbnvkTCPxkWC1a6";
+// Upcoming Session Schedule Configuration
+const SESSION_DATES = "October 30, 31 & November 1st, 2026";
+const SESSION_TIME = "6:00 PM – 9:00 PM IST";
+
+// Razorpay Credentials (Domestic / Default)
+const RZP_KEY_ID_DOMESTIC = "rzp_live_T2CbVONQc6qrqj"; 
+const RZP_KEY_SECRET_DOMESTIC = "0ZmzKfvHIwbnvkTCPxkWC1a6";
+
+// Razorpay Credentials (International / Overseas)
+const RZP_KEY_ID_INTL = "rzp_live_gfoS1OjC8tvWjP";
+const RZP_KEY_SECRET_INTL = "B0q7JAz8YhMat2QkTa3YCUGd";
+
 const WEBHOOK_SECRET = "TECHTYCOON";
 
 // 🔴 YOUR FUNNELSDONE WEBHOOK URL GOES HERE 🔴
 const FUNNELSDONE_WEBHOOK_URL = "https://services.leadconnectorhq.com/hooks/uUUUKRH7EP2A0oJBv4Zb/webhook-trigger/5b2b531d-7b8b-4510-843e-212e14bad24c";
+
+function doGet(e) {
+    if (e.parameter['hub.mode'] === 'subscribe' && e.parameter['hub.verify_token'] === VERIFY_TOKEN) {
+        return ContentService.createTextOutput(e.parameter['hub.challenge']);
+    }
+
+    // 🌟 ADMIN PANEL LIVE SYNC ENDPOINT
+    if (e.parameter.action === 'getRegistrations') {
+        if (e.parameter.token !== VERIFY_TOKEN) {
+            return ContentService.createTextOutput(JSON.stringify({ success: false, error: "Unauthorized token" })).setMimeType(ContentService.MimeType.JSON);
+        }
+        try {
+            const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+            const sheet = ss.getSheetByName(SHEET_NAME) || ss.getSheets()[0];
+            const data = sheet.getDataRange().getValues();
+
+            const registrations = [];
+            for (let i = 1; i < data.length; i++) {
+                const row = data[i];
+                if (!row[0] && !row[1] && !row[2]) continue;
+
+                let dateStr = "";
+                if (row[0]) {
+                    try {
+                        dateStr = row[0] instanceof Date ? row[0].toISOString() : new Date(row[0]).toISOString();
+                    } catch (errDate) {
+                        dateStr = row[0].toString();
+                    }
+                }
+
+                const rawStatus = (row[10] || "").toString().toLowerCase();
+                const isPaid = rawStatus === "captured" || rawStatus === "webhook-captured" || rawStatus.includes("paid") || rawStatus.includes("success");
+
+                registrations.push({
+                    timestamp: dateStr,
+                    name: row[1] || "",
+                    email: row[2] || "",
+                    phone: row[3] ? row[3].toString() : "",
+                    profession: row[4] || "",
+                    language: row[5] || "Advance AI Masterclass",
+                    amount: Number(row[8] || row[7] || 0),
+                    status: isPaid ? "✅ PAID" : "INITIATED",
+                    orderId: row[6] || "",
+                    paymentId: row[13] || "",
+                    emailStatus: row[14] === "Yes" ? "SENT ✅" : "PENDING",
+                    whatsappClicked: "NO",
+                    pageUrl: "https://aitycoon.in/advanced_masterclass",
+                    batch: "Advance AI Masterclass",
+                    sessionDate: "Upcoming Session",
+                    sessionTime: "Live"
+                });
+            }
+
+            registrations.reverse();
+            return ContentService.createTextOutput(JSON.stringify({ success: true, registrations: registrations, count: registrations.length })).setMimeType(ContentService.MimeType.JSON);
+        } catch (err) {
+            return ContentService.createTextOutput(JSON.stringify({ success: false, error: err.message })).setMimeType(ContentService.MimeType.JSON);
+        }
+    }
+
+    return ContentService.createTextOutput("Advance AI Masterclass Automation is running.");
+}
 
 function doPost(e) {
     try {
@@ -56,9 +129,10 @@ function handleLeadAndOrder(sheet, data) {
     const amountInPaise = data.amount * 100;
     const timestamp = new Date();
 
-    const rzpOrder = createRazorpayOrder(amountInPaise);
+    const isIntl = !!data.isInternational;
+    const rzpOrder = createRazorpayOrder(amountInPaise, isIntl, data.name, data.email);
     if (!rzpOrder || !rzpOrder.id) {
-        throw new Error("Failed to generate Razorpay Order ID.");
+        throw new Error("Failed to generate Razorpay Order ID. Response: " + JSON.stringify(rzpOrder));
     }
     const orderId = rzpOrder.id;
     
@@ -78,10 +152,22 @@ function handleLeadAndOrder(sheet, data) {
     return ContentService.createTextOutput(JSON.stringify({ success: true, orderId: orderId })).setMimeType(ContentService.MimeType.JSON);
 }
 
-function createRazorpayOrder(amount) {
+function createRazorpayOrder(amount, isIntl, customerName, customerEmail) {
+    const keyId = isIntl ? RZP_KEY_ID_INTL : RZP_KEY_ID_DOMESTIC;
+    const keySecret = isIntl ? RZP_KEY_SECRET_INTL : RZP_KEY_SECRET_DOMESTIC;
+
     const url = "https://api.razorpay.com/v1/orders";
-    const auth = "Basic " + Utilities.base64Encode(RZP_KEY_ID + ":" + RZP_KEY_SECRET);
-    const payload = { amount: amount, currency: "INR", receipt: "rcpt_" + Math.random().toString(36).substr(2, 9) };
+    const auth = "Basic " + Utilities.base64Encode(keyId + ":" + keySecret);
+    const payload = { 
+        amount: amount, 
+        currency: "INR", 
+        receipt: "rcpt_" + Math.random().toString(36).substr(2, 9),
+        notes: {
+            product: "advanced_masterclass",
+            customer_name: customerName || "",
+            customer_email: customerEmail || ""
+        }
+    };
     const options = { method: "POST", headers: { "Authorization": auth, "Content-Type": "application/json" }, payload: JSON.stringify(payload), muteHttpExceptions: true };
     return JSON.parse(UrlFetchApp.fetch(url, options).getContentText());
 }
@@ -207,7 +293,7 @@ function sendToFunnelsdone(name, email, phone, amount, orderId, transactionId) {
 }
 
 function sendConfirmationEmail(email, name, amount) {
-    let subject = "🎉 Welcome to the Tech Tycoon AI Live MasterClass!";
+    let subject = "Welcome to the Tech Tycoon AI Live MasterClass!";
     
     let htmlBody = `
     <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f8fafc; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
@@ -216,19 +302,28 @@ function sendConfirmationEmail(email, name, amount) {
             <p style="color: #818cf8; margin: 10px 0 0; font-size: 16px; font-weight: 600;">Advanced AI Live MasterClass</p>
         </div>
         <div style="padding: 40px 30px; background-color: #ffffff;">
-            <h2 style="color: #0f172a; font-size: 22px; margin-top: 0;">Hi ${name}, <span style="font-size: 24px;">🎉</span></h2>
+            <h2 style="color: #0f172a; font-size: 22px; margin-top: 0;">Hi ${name},</h2>
             <p style="color: #475569; font-size: 16px; line-height: 1.6;">Your registration for the <strong>Tech Tycoon AI Live MasterClass</strong> is officially confirmed!</p>
+            
             <div style="background-color: #f1f5f9; border-left: 4px solid #4f46e5; padding: 20px; margin: 30px 0; border-radius: 0 8px 8px 0;">
-                <h3 style="color: #1e293b; margin: 0 0 15px 0; font-size: 16px; text-transform: uppercase; letter-spacing: 1px;">Registration Details</h3>
-                <p style="margin: 0 0 10px; color: #334155; font-size: 15px;"><strong>Amount Paid:</strong> ₹${amount.toLocaleString()}</p>
-                <p style="margin: 0; color: #334155; font-size: 15px;"><strong>Session Language:</strong> Tamil mix with English</p>
+                <h3 style="color: #1e293b; margin: 0 0 15px 0; font-size: 16px; text-transform: uppercase; letter-spacing: 1px;">Schedule & Details</h3>
+                <p style="margin: 0 0 10px; color: #334155; font-size: 15px;"><strong>Dates:</strong> ${SESSION_DATES}</p>
+                <p style="margin: 0 0 10px; color: #334155; font-size: 15px;"><strong>Time:</strong> ${SESSION_TIME}</p>
+                <p style="margin: 0 0 10px; color: #334155; font-size: 15px;"><strong>Session Language:</strong> Tamil mix with English</p>
+                <p style="margin: 0; color: #334155; font-size: 15px;"><strong>Amount Paid:</strong> Rs. ${amount.toLocaleString()}/-</p>
             </div>
+            
+            <p style="color: #475569; font-size: 16px; line-height: 1.6;">The online classroom link and pre-joining instructions will be shared with you closer to the start of the session.</p>
+            <p style="color: #475569; font-size: 16px; line-height: 1.6;">If you have any questions, feel free to reach out to us.</p>
+            
+            <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 30px 0;">
+            <p style="color: #94a3b8; font-size: 13px; text-align: center; margin: 0;">Tech Tycoon Digital Solutions &copy; 2026</p>
         </div>
     </div>
     `;
 
     try {
-        GmailApp.sendEmail(email, subject, "Your registration is confirmed. Tamil mix with English.", {
+        GmailApp.sendEmail(email, subject, "Your registration is confirmed. Schedule: " + SESSION_DATES + " at " + SESSION_TIME, {
             htmlBody: htmlBody, name: "Tech Tycoon MasterClass"
         });
     } catch (e) {

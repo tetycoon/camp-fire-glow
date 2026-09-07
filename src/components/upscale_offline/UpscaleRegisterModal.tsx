@@ -31,6 +31,7 @@ const UpscaleRegisterModal: React.FC = () => {
     const [submitted, setSubmitted] = useState(false);
     const [loading, setLoading] = useState(false);
     const [verifying, setVerifying] = useState(false);
+    const [seatsCount, setSeatsCount] = useState(1);
     const [paymentId, setPaymentId] = useState<string>("");
     const [visible, setVisible] = useState(false);
     const paymentHandled = useRef(false);
@@ -97,16 +98,20 @@ const UpscaleRegisterModal: React.FC = () => {
 
         const testEmails = ["ambroseselva001@gmail.com", "techtycoondigitalsolutions@gmail.com"];
         const isTestEmail = testEmails.includes(form.email.toLowerCase().trim());
-        const finalAmount = isTestEmail ? 100 : 499900;
+        const finalAmount = isTestEmail ? 100 : (499900 * seatsCount);
 
         const payloadObj = {
-            name: form.name,
+            name: form.name + (seatsCount > 1 ? ` (+ ${seatsCount - 1} Seats)` : ""),
             email: form.email,
             phone: `${form.countryCode}${form.phone}`,
+            countryCode: form.countryCode,
             userType: form.profession || "Professional",
             language: "Chennai Offline",
-            amount: isTestEmail ? 1 : 4999,
-            paymentSuccess: false
+            amount: isTestEmail ? 1 : (4999 * seatsCount),
+            paymentSuccess: false,
+            companyName: "",
+            gstin: "",
+            seats: seatsCount
         };
 
         try {
@@ -124,12 +129,12 @@ const UpscaleRegisterModal: React.FC = () => {
             }
 
             const options: RazorpayOptions = {
-                key: RAZORPAY_KEY_ID,
+                key: form.countryCode !== "+91" ? "rzp_live_gfoS1OjC8tvWjP" : RAZORPAY_KEY_ID,
                 order_id: result.orderId,
                 amount: finalAmount,
                 currency: "INR",
                 name: "Tech Tycoon",
-                description: "UPSCALE: 1-Day AI Mastery Chennai",
+                description: `UPSCALE: 1-Day AI Mastery Chennai (${seatsCount} Seats)`,
                 prefill: {
                     name: form.name,
                     email: form.email,
@@ -379,6 +384,26 @@ const UpscaleRegisterModal: React.FC = () => {
                                         </div>
                                     </div>
 
+                                    {/* Seat quantity selector */}
+                                    <div className="grid grid-cols-2 gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                                        <div className="space-y-1">
+                                            <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest px-1">Number of Seats</label>
+                                            <select
+                                                value={seatsCount}
+                                                onChange={e => setSeatsCount(Number(e.target.value))}
+                                                className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2 text-sm font-bold text-slate-900 outline-none appearance-none cursor-pointer"
+                                            >
+                                                {[1, 2, 3, 4, 5, 10, 15, 20].map(n => (
+                                                    <option key={n} value={n}>{n} {n === 1 ? "Seat" : "Seats"}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div className="space-y-1 flex flex-col justify-end items-end pr-2">
+                                            <div className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Fee</div>
+                                            <div className="text-lg font-black text-blue-600">₹{(4999 * seatsCount).toLocaleString()}</div>
+                                        </div>
+                                    </div>
+
                                     <div className="flex items-start gap-2 px-1 mb-2">
                                         <input 
                                             type="checkbox" 
@@ -397,7 +422,7 @@ const UpscaleRegisterModal: React.FC = () => {
                                         disabled={loading || verifying}
                                         className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-black text-base shadow-lg shadow-blue-200 mt-2 transition-all active:scale-95 disabled:opacity-50"
                                     >
-                                        {verifying ? "VERIFYING..." : loading ? "CONNECTING..." : "PAY & ENROLL — ₹4,999"}
+                                        {verifying ? "VERIFYING..." : loading ? "CONNECTING..." : `PAY & ENROLL — ₹${(4999 * seatsCount).toLocaleString()}`}
                                     </button>
 
                                     <div className="flex items-center justify-center gap-4 pt-4 text-[10px] font-black text-slate-400 uppercase tracking-widest opacity-60">

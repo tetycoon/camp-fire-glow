@@ -270,7 +270,7 @@ footer{background:var(--navy);padding:44px 5%;display:flex;align-items:center;ju
   <div class="hero-blob"></div>
   <div class="hero-inner">
     <div class="hero-left sr">
-      <div class="hero-badge"><span class="hero-badge-dot"></span>Executive AI Mastery Program &bull; July &amp; Aug 2026</div>
+      <div class="hero-badge"><span class="hero-badge-dot"></span>Executive AI Mastery Program &bull; Oct &amp; Nov 2026</div>
       <h1 class="hero-h1">Double Your <span class="hl">Business Turnover</span> With Executive AI</h1>
       <p class="hero-sub">Stop guessing. Start scaling. We train business owners & entrepreneurs to automate growth, build high-converting websites, and generate viral AI business videos. <strong>3 Days. Live Practice. Real Results.</strong></p>
       <div class="hero-stars">
@@ -291,7 +291,7 @@ footer{background:var(--navy);padding:44px 5%;display:flex;align-items:center;ju
       <div class="hero-detail-row">
         <div class="hero-detail">
           <div class="hero-detail-icon cal">&#128197;</div>
-          <div><div class="hero-detail-title">31 July, 1 &amp; 2 August</div><div class="hero-detail-sub">Fri, Sat &amp; Sun (3 Days)</div></div>
+          <div><div class="hero-detail-title">30, 31 Oct &amp; 1 Nov</div><div class="hero-detail-sub">Fri, Sat &amp; Sun (3 Days)</div></div>
         </div>
         <div class="hero-detail">
           <div class="hero-detail-icon clk">&#128336;</div>
@@ -526,7 +526,7 @@ footer{background:var(--navy);padding:44px 5%;display:flex;align-items:center;ju
   <div class="sec-inner" style="text-align:center;display:flex;flex-direction:column;align-items:center">
     <div class="sec-tag">Investment</div>
     <h2 class="sec-h2">Choose Your <em>Seat</em></h2>
-    <p class="sec-p" style="text-align:center">Only <strong>25 seats</strong> available for this exclusive July/August cohort. Lock in the early-bird premium rate today.</p>
+    <p class="sec-p" style="text-align:center">Only <strong>25 seats</strong> available for this exclusive Oct/Nov cohort. Lock in the early-bird premium rate today.</p>
     <div class="price-grid">
       <div class="pri-card sr">
         <div class="pri-label">Partial Enrollment</div>
@@ -717,12 +717,13 @@ async function processPayment() {
   const btn = document.getElementById('payBtn');
   btn.innerText = 'Initializing...';
   btn.disabled = true;
+  const isInternational = document.getElementById('regCode').value !== "+91";
 
   try {
     const response = await fetch("https://script.google.com/macros/s/AKfycbw59X8thSpB9xrJSI0GhACEm617vAbc7BDH6hJFOOBsOeq-B4az0p3B_O6koMjYfsppgA/exec", {
       method: "POST",
       headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify({ userType: "advanced_masterclass", name, email, phone, profession, amount: amountToPay })
+      body: JSON.stringify({ userType: "advanced_masterclass", name, email, phone, profession, amount: amountToPay, isInternational: isInternational })
     });
 
     const result = await response.json();
@@ -735,7 +736,7 @@ async function processPayment() {
     }
 
     const rzp = new Razorpay({
-      key: "rzp_live_T2CbVONQc6qrqj",
+      key: isInternational ? "rzp_live_gfoS1OjC8tvWjP" : "rzp_live_T2CbVONQc6qrqj",
       amount: amountToPay * 100,
       currency: "INR",
       name: "Tech Tycoon MasterClass",
@@ -812,7 +813,7 @@ async function processPayment() {
           if (el) el.textContent = countdown;
           if (countdown <= 0) {
             clearInterval(timer);
-            window.open(whatsappUrl, '_blank');
+            window.location.href = whatsappUrl;
           }
         }, 1000);
       },

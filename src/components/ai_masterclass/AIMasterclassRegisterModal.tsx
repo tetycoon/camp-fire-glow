@@ -30,6 +30,7 @@ const AIMasterclassRegisterModal: React.FC = () => {
     const { isOpen, closeRegisterModal } = useAIMasterclassRegisterModal();
     const { regularDate } = getMasterclassDateStrings();
     const [form, setForm] = useState({ name: "", email: "", phone: "", profession: "", language: "Tamil", coupon: "WELCOME33", countryCode: "+91" });
+    const [seatsCount, setSeatsCount] = useState(1);
     const [submitted, setSubmitted] = useState(false);
     const [loading, setLoading] = useState(false);
     const [couponChecking, setCouponChecking] = useState(false);
@@ -94,11 +95,6 @@ const AIMasterclassRegisterModal: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const message = `This session is on "${regularDate} at 6:00 PM IST".\n\nPlease check your availability.\n\nDo you want to proceed to payment?`;
-        if (!window.confirm(message)) {
-            return;
-        }
-
         setLoading(true);
 
         const loaded = await loadRazorpayScript();
@@ -111,7 +107,7 @@ const AIMasterclassRegisterModal: React.FC = () => {
         const pageUrl = window.location.href;
         const testEmails = ["ambroseselva001@gmail.com", "techtycoondigitalsolutions@gmail.com"];
         const isTestEmail = testEmails.includes(form.email.toLowerCase().trim());
-        const finalAmount = isTestEmail ? 100 : 9900; // 100 paise (₹1) for test, else ₹99
+        const finalAmount = isTestEmail ? 100 : (9900 * seatsCount); // 100 paise (₹1) for test, else ₹99
 
         try {
             const response = await fetch(GOOGLE_SHEET_URL, {
@@ -120,14 +116,18 @@ const AIMasterclassRegisterModal: React.FC = () => {
                 body: JSON.stringify({
                     userType: form.profession || "Professional",
                     pageUrl,
-                    name: form.name,
+                    name: form.name + (seatsCount > 1 ? ` (+ ${seatsCount - 1} Seats)` : ""),
                     email: form.email,
                     phone: `${form.countryCode}${form.phone}`,
+                    countryCode: form.countryCode,
                     language: form.language,
                     batch: "Masterclass 2026",
-                    amount: isTestEmail ? 1 : 99,
+                    amount: isTestEmail ? 1 : (99 * seatsCount),
                     sessionDate: regularDate,
-                    sessionTime: "6:00 PM IST"
+                    sessionTime: "6:00 PM IST",
+                    companyName: "",
+                    gstin: "",
+                    seats: seatsCount
                 }),
             });
 
@@ -140,12 +140,12 @@ const AIMasterclassRegisterModal: React.FC = () => {
             }
 
             const options: RazorpayOptions = {
-                key: RAZORPAY_KEY_ID,
+                key: form.countryCode !== "+91" ? "rzp_live_gfoS1OjC8tvWjP" : RAZORPAY_KEY_ID,
                 order_id: result.orderId,
                 amount: finalAmount,
                 currency: "INR",
                 name: "Tech Tycoon",
-                description: `AI Marketing Masterclass — ${regularDate}`,
+                description: `AI Marketing Masterclass — ${regularDate} (${seatsCount} Seats)`,
                 prefill: {
                     name: form.name,
                     email: form.email,
@@ -388,7 +388,7 @@ const AIMasterclassRegisterModal: React.FC = () => {
                                 disabled={loading}
                                 className="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-sm py-4 rounded-xl tracking-widest mt-2 flex items-center justify-center gap-2 transform active:scale-95 transition-all shadow-[0_0_20px_rgba(16,185,129,0.2)]"
                             >
-                                {loading ? <Loader2 className="animate-spin" /> : "PROCEED TO PAYMENT — ₹99"}
+                                {loading ? <Loader2 className="animate-spin" /> : `PROCEED TO PAYMENT — ₹${99 * seatsCount}`}
                             </button>
 
                             <div className="flex items-center justify-center gap-2 text-[10px] text-emerald-400/40 font-bold uppercase tracking-tighter">

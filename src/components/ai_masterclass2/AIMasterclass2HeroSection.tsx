@@ -120,7 +120,7 @@ const AIMasterclass2HeroSection: React.FC = () => {
                                         <MapPin className="w-6 h-6 text-cyan-500" />
                                     </div>
                                     <div>
-                                        <div className="font-display text-xl font-black text-slate-900 leading-none">Zoom / Google Meet</div>
+                                        <div className="font-display text-xl font-black text-slate-900 leading-none">Online Live Session</div>
                                         <div className="font-body text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">LINK SENT AFTER REGISTRATION</div>
                                     </div>
                                 </div>

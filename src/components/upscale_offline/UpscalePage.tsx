@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import UpscaleNavbar from "./UpscaleNavbar";
 import UpscaleHero from "./UpscaleHero";
 import UpscaleBMC from "./UpscaleBMC";
@@ -17,6 +17,10 @@ import UpscaleWhatsApp from "./UpscaleWhatsApp";
 import { UpscaleRegisterModalProvider } from "./UpscaleRegisterModalContext";
 
 const UpscalePage: React.FC = () => {
+    useEffect(() => {
+        document.title = "Level-2 Offline AI Workshop (Chennai) — Tech Tycoon";
+    }, []);
+
     return (
         <UpscaleRegisterModalProvider>
             <div className="min-h-screen bg-white font-sans selection:bg-blue-100 selection:text-blue-900">

@@ -77,6 +77,24 @@ const UpscaleHero: React.FC = () => {
                 </div>
             </div>
 
+            {/* B2B Trust Builder */}
+            <div className="max-w-7xl mx-auto px-6 mt-16 pt-12 border-t border-slate-100 text-center">
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6">TRUSTED BY TEAMS & PROFESSIONALS FROM LEADING CORPORATES</p>
+                <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-6 opacity-45 hover:opacity-80 transition-opacity duration-300">
+                    <div className="text-xs font-black text-slate-800 tracking-tighter uppercase">Amazon Web Services</div>
+                    <span className="hidden sm:block text-slate-300">•</span>
+                    <div className="text-xs font-black text-slate-800 tracking-tighter uppercase">Cognizant Tech</div>
+                    <span className="hidden sm:block text-slate-300">•</span>
+                    <div className="text-xs font-black text-slate-800 tracking-tighter uppercase">TATA Consultancy Services</div>
+                    <span className="hidden sm:block text-slate-300">•</span>
+                    <div className="text-xs font-black text-slate-800 tracking-tighter uppercase">Infosys Limited</div>
+                    <span className="hidden sm:block text-slate-300">•</span>
+                    <div className="text-xs font-black text-slate-800 tracking-tighter uppercase">HCL Technologies</div>
+                    <span className="hidden sm:block text-slate-300">•</span>
+                    <div className="text-xs font-black text-slate-800 tracking-tighter uppercase">Zoho Corp</div>
+                </div>
+            </div>
+
 
 
             {/* Linear Utility Row — responsive */}

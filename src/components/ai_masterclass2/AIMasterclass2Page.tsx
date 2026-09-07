@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import NeuralNetworkBackground from "../bootcamp/NeuralNetworkBackground";
 import AIMasterclass2Navbar from "./AIMasterclass2Navbar";
 import AIMasterclass2HeroSection from "./AIMasterclass2HeroSection";
@@ -11,6 +11,10 @@ import AIMasterclass2RegisterModal from "./AIMasterclass2RegisterModal";
 import { AIMasterclass2RegisterModalProvider } from "./AIMasterclass2RegisterModalContext";
 
 const AIMasterclass2Page: React.FC = () => {
+    useEffect(() => {
+        document.title = "Advanced AI Masterclass — Masterclass 2 by Tech Tycoon";
+    }, []);
+
     return (
         <AIMasterclass2RegisterModalProvider>
             <div className="min-h-screen bg-background text-foreground overflow-x-hidden relative">

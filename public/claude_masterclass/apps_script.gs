@@ -1,73 +1,143 @@
 /**
  * ============================================================================
- * CLAUDE MASTERCLASS 2026 — COMPLETE GOOGLE APPS SCRIPT AUTOMATION SYSTEM
+ * CLAUDE MASTERCLASS 2026 — EXCLUSIVE GOOGLE APPS SCRIPT AUTOMATION SYSTEM
  * Technical logs go to "Logs" | Registrations go to "Sheet1"
  * 
  * Google Sheet URL: https://docs.google.com/spreadsheets/d/1JA3FZf8xkpZ8GjuYiETXz9R0ivfW80-rf3PZIzQum9g/edit?gid=0#gid=0
+ * THIS SHEET & SCRIPT ARE STRICTLY FOR CLAUDE MASTERCLASS (ONLINE & OFFLINE ONLY)
  * ============================================================================
  */
 
+// Domestic Razorpay Credentials (India +91)
 const RAZORPAY_KEY_ID = "rzp_live_T2CbVONQc6qrqj";
-const RAZORPAY_KEY_SECRET = "0ZmzKfvHlwbnvkTCPxkWC1a6";
-const SPREADSHEET_ID = "1JA3FZf8xkpZ8GjuYiETXz9R0ivfW80-rf3PZIzQum9g";
+const RAZORPAY_KEY_SECRET = "0ZmzKfvHIwbnvkTCPxkWC1a6";
+
+// International Razorpay Credentials (for non-India / away from India users)
+const RAZORPAY_KEY_ID_INTL = "rzp_live_gfoS1OjC8tvWjP";
+const RAZORPAY_KEY_SECRET_INTL = "B0q7JAz8YhMat2QkTa3YCUGd";
+
+const SPREADSHEET_ID = "1JA3FZf8xkpZ8GjuYiETXz9R0ivfW80-rf3PZIzQum9g"; // Claude Masterclass Sheet ID
 const SHEET_NAME_REG = "Sheet1";
 const SHEET_NAME_LOGS = "Logs"; 
-const VERIFY_TOKEN = "claude_masterclass_auto_2026"; 
+const VERIFY_TOKEN = "ai_tycoon_auto_662"; 
 
 const WHATSAPP_CONFIG = {
   ACCESS_TOKEN: "EAAU3qgM444cBRSPzgBf8ZADgHdtVimYAdkzvo3fD0p8ldhlnPOMpr7U8t3RQ9H6rvcvmZCs3EZAnKtHv1dHOB1a4hSyWLjGluThXneEyCKGuvgUBnAV2WTSFZCLL4YFZAvoc5h8axCbIVCLZAZB7YHyGgb2aTLudh04SV5XUIZCbUevZBQukQuCZBaeFdFPZBhv0R1iLQZDZD",
   PHONE_NUMBER_ID: "1089787377552637",
   PHONE_NUMBER: "917010340494", 
-  WA_GROUP_LINK: "https://chat.whatsapp.com/ILDnUfU4dqRB4HvjMADgjL",
-  POSTER_URL: "https://aitycoon.in/images/logo.png" 
+  WA_GROUP_LINK_CLAUDE_ONLINE: "https://chat.whatsapp.com/HfVfYc6ea7iEHAMFjOb4WS", // Claude Online Community
+  WA_GROUP_LINK_CLAUDE_OFFLINE: "https://chat.whatsapp.com/DMp2tRRhjwN1fziYujeQhb", // Claude Offline Group
+  POSTER_URL: "https://aitycoon.in/claude_masterclass/images/poster_v2.jpg" 
 };
 
-const TRIGGER_MESSAGE = "HI I am completed registration of Claude MasterClass";
+const TRIGGER_MESSAGE_ONLINE = "Hello Tech Tycoon Team I successfully complete the registration of claude masterclass online session";
+const TRIGGER_MESSAGE_OFFLINE = "Hello Tech Tycoon Team I successfully complete the registration claude masterclass offline session";
 
 /**
- * Computes the upcoming Claude MasterClass webinar start time.
- * Target: Saturday, July 25th, 2026 at 5:00 PM (17:00 IST)
+ * Ensures registration is exclusively for Claude Masterclass and filters out ₹99 AI Masterclass rows.
  */
-function getUpcomingWebinarTime() {
-  return new Date(2026, 6, 25, 17, 0, 0); // Month 6 = July (0-indexed)
+function isClaudeRegistration(data) {
+  if (!data) return false;
+  const amount = parseInt(data.amount) || 0;
+  const promo = (data.promoCode || "").toString().toUpperCase();
+  const prod = (data.product || "").toString().toLowerCase();
+  const batch = (data.batch || "").toString().toLowerCase();
+  const pageUrl = (data.pageUrl || "").toString().toLowerCase();
+  const modeOfSession = (data.modeOfSession || "").toString().toLowerCase();
+  
+  // Explicitly allow any test payment or registration originating from Claude Masterclass
+  if (pageUrl.includes("claude_masterclass") || modeOfSession.includes("online") || modeOfSession.includes("offline") || promo.includes("CLAUDE") || batch.includes("claude")) {
+    if (amount === 99 && !promo.includes("CLAUDE")) return false;
+    return true;
+  }
+  
+  // Exclude ₹99 or AI Masterclass / Secrets Revealed registrations from other apps
+  if (amount === 99) return false;
+  if (prod.includes("secret") || batch.includes("secret") || (batch.includes("ai masterclass") && !batch.includes("claude"))) return false;
+  return true;
 }
 
-// ------------------------------------------------------------
-// 0. SETUP: RUN THIS ONCE TO AUTO-FORMAT SPREADSHEET HEADERS
-// ------------------------------------------------------------
+/**
+ * Utility function to clean up non-Claude registrations (e.g. ₹99 rows) from Sheet1.
+ * Run this function directly inside Google Apps Script Editor to delete unwanted rows!
+ */
+function cleanUpNonClaudeRows() {
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const sheet = ss.getSheetByName(SHEET_NAME_REG) || ss.getSheets()[0];
+  const rows = sheet.getDataRange().getValues();
+  
+  let deletedCount = 0;
+  for (let i = rows.length - 1; i >= 1; i--) {
+    const amount = parseInt(rows[i][6]) || 0;
+    const promoCol = (rows[i][19] || "").toString().toLowerCase();
+    
+    if (amount === 99 || (promoCol.includes("secret") && !promoCol.includes("claude"))) {
+      sheet.deleteRow(i + 1);
+      deletedCount++;
+    }
+  }
+  
+  Logger.log(`Successfully deleted ${deletedCount} non-Claude (₹99) rows from the Google Sheet!`);
+}
+
+/**
+ * Calculates upcoming Saturday date dynamically for recurring weekend sessions.
+ */
+function getNextSaturday(fromDate = new Date()) {
+  const date = new Date(fromDate.getTime());
+  const day = date.getDay(); // 0 = Sun, 6 = Sat
+  const diff = (6 - day + 7) % 7;
+  if (day === 6 && fromDate.getHours() >= 18) {
+    date.setDate(date.getDate() + 7);
+  } else {
+    date.setDate(date.getDate() + diff);
+  }
+  return date;
+}
+
+/**
+ * Dynamically generates session date and time strings for Online and Offline sessions.
+ */
+function getUpcomingMasterclassDates(isOffline = false) {
+  if (isOffline) {
+    return {
+      dateText: "October 11th, 2026 (Sunday • Full Day)",
+      timeText: "9:00 AM – 5:30 PM IST",
+      venueText: "🏨 Vestin Park Hotel, Egmore, Chennai"
+    };
+  }
+
+  return {
+    dateText: "September 12 & 13, 2026 (Saturday & Sunday)",
+    timeText: "6:00 PM – 9:00 PM IST",
+    venueText: "🌐 Live Online Virtual Classroom"
+  };
+}
+
+function getUpcomingWebinarTime(isOffline = false) {
+  if (isOffline) {
+    return new Date(2026, 8, 6, 9, 0, 0);
+  }
+  const nextSat = getNextSaturday(new Date());
+  nextSat.setHours(18, 0, 0, 0);
+  return nextSat;
+}
+
 function setupSheetHeaders() {
   const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
   let sheet = ss.getSheetByName(SHEET_NAME_REG) || ss.getSheets()[0];
   
   const headers = [
-    "Date & Time",
-    "Name",
-    "Email",
-    "Phone",
-    "Profession",
-    "Preferred Language",
-    "Amount",
-    "Status",
-    "Order ID",
-    "Payment ID",
-    "Email Status",
-    "Whatsapp Clicked",
-    "WhatsApp Sent (Welcome)",
-    "1-Day Reminder Sent",
-    "60-Min Reminder Sent",
-    "30-Min Reminder Sent",
-    "10-Min Reminder Sent",
-    "5-Min Reminder Sent",
-    "Session started(Join soon)"
+    "Date & Time", "Name", "Email", "Phone", "Profession", "Mode of Session",
+    "Amount", "Status", "Order ID", "Payment ID", "Email Status", "Whatsapp Clicked",
+    "WhatsApp Sent (Welcome)", "1-Day Reminder Sent", "60-Min Reminder Sent",
+    "30-Min Reminder Sent", "10-Min Reminder Sent", "5-Min Reminder Sent",
+    "Session started(Join soon)", "Promo Code & Mode & Gateway"
   ];
   
   sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
-  
   const headerRange = sheet.getRange(1, 1, 1, headers.length);
-  headerRange.setFontWeight("bold");
-  headerRange.setBackground("#da7756");
-  headerRange.setFontColor("#ffffff");
-  headerRange.setHorizontalAlignment("center");
+  headerRange.setFontWeight("bold").setBackground("#da7756").setFontColor("#ffffff").setHorizontalAlignment("center");
   sheet.setFrozenRows(1);
   
   let logSheet = ss.getSheetByName(SHEET_NAME_LOGS);
@@ -76,28 +146,88 @@ function setupSheetHeaders() {
     logSheet.appendRow(["Timestamp", "Event Type", "Log Content"]);
     logSheet.getRange(1, 1, 1, 3).setFontWeight("bold").setBackground("#1e293b").setFontColor("#ffffff");
   }
-  
-  Logger.log("19-Column Headers successfully created and styled in Sheet1!");
 }
 
 // ------------------------------------------------------------
-// 1. WEBHOOK: GET (WhatsApp Verification & Redirect)
+// 1. WEBHOOK: GET (WhatsApp Verification & Registration Fetching)
 // ------------------------------------------------------------
 function doGet(e) {
+  // WhatsApp Verification
   if (e.parameter['hub.mode'] === 'subscribe' && e.parameter['hub.verify_token'] === VERIFY_TOKEN) {
     return ContentService.createTextOutput(e.parameter['hub.challenge']);
   }
   
+  // WhatsApp Redirect Link Action
   if (e.parameter.action === 'whatsapp') {
     markWhatsappClicked(e.parameter.orderId);
-    const waChatLink = `https://wa.me/${WHATSAPP_CONFIG.PHONE_NUMBER}?text=${encodeURIComponent(TRIGGER_MESSAGE)}`;
-    const html = `<html><body style="font-family:sans-serif;text-align:center;padding-top:50px;background:#0d0d12;color:white;">
+    const isOffline = e.parameter.mode === 'offline';
+    const msgText = isOffline ? TRIGGER_MESSAGE_OFFLINE : TRIGGER_MESSAGE_ONLINE;
+    const waChatLink = `https://wa.me/${WHATSAPP_CONFIG.PHONE_NUMBER}?text=${encodeURIComponent(msgText)}`;
+    const html = `<html><body style="font-family:sans-serif;text-align:center;padding-top:50px;background:#030712;color:white;">
       <h2>Redirecting to WhatsApp...</h2>
       <script>window.top.location.href="${waChatLink}";</script>
     </body></html>`;
     return HtmlService.createHtmlOutput(html).setTitle("Redirecting...");
   }
-  return ContentService.createTextOutput("Claude MasterClass Automation Webhook is running.");
+
+  // Dashboard Registrations Fetching (Filtered exclusively for Claude Masterclass)
+  if (e.parameter.action === 'getRegistrations') {
+    if (e.parameter.token !== VERIFY_TOKEN) {
+      return createJsonResponse({ success: false, error: "Unauthorized access token" });
+    }
+    
+    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    const sheet = ss.getSheetByName(SHEET_NAME_REG) || ss.getSheets()[0];
+    const values = sheet.getDataRange().getValues();
+    
+    const list = [];
+    for (let i = 1; i < values.length; i++) {
+      const row = values[i];
+      if (!row[0] && !row[1] && !row[2]) continue; // Skip empty rows
+      
+      const amount = Number(row[6] || 0);
+      const promoCol = (row[19] || "").toString().toLowerCase();
+      if (amount === 99 && !promoCol.includes("claude")) continue; // STRICT FILTER: Exclude ₹99 AI Masterclass rows
+
+      let dateStr = "";
+      if (row[0]) {
+        try {
+          dateStr = row[0] instanceof Date ? row[0].toISOString() : new Date(row[0]).toISOString();
+        } catch (errDate) {
+          dateStr = row[0].toString();
+        }
+      }
+
+      list.push({
+        timestamp: dateStr,
+        name: row[1] || "",
+        email: row[2] || "",
+        phone: row[3] ? row[3].toString() : "",
+        profession: row[4] || "",
+        language: row[5] || "Claude Masterclass",
+        amount: amount,
+        status: row[7] || "INITIATED",
+        orderId: row[8] || "",
+        paymentId: row[9] || "",
+        emailStatus: row[10] || "",
+        whatsappClicked: row[11] || "",
+        pageUrl: "https://aitycoon.in/claude_masterclass",
+        batch: "Claude Masterclass",
+        sessionDate: "September 12 & 13, 2026",
+        sessionTime: "6:00 PM IST"
+      });
+    }
+    
+    list.reverse();
+    return createJsonResponse({ success: true, registrations: list, count: list.length });
+  }
+
+  if (e.parameter.action === 'checkPromo') {
+    const code = (e.parameter.code || "").toUpperCase().trim();
+    return createJsonResponse({ valid: isPromoCodeValid(code) });
+  }
+
+  return ContentService.createTextOutput("Claude MasterClass Automation is running.");
 }
 
 // ------------------------------------------------------------
@@ -110,31 +240,38 @@ function doPost(e) {
   try {
     const body = JSON.parse(rawData);
 
-    // 🌟 1. Handle Razorpay Server Webhook (Direct server-to-server backup)
     if (body.event === "payment.captured" || body.event === "order.paid") {
       const paymentEntity = body.payload.payment.entity;
-      const orderId = paymentEntity.order_id;
-      const paymentId = paymentEntity.id;
-      const email = paymentEntity.email;
-      
-      updatePaymentStatusFromWebhook(orderId, paymentId, email);
+      const notes = paymentEntity.notes || {};
+      updatePaymentStatusFromWebhook(paymentEntity.order_id, paymentEntity.id, paymentEntity.email, notes, paymentEntity.amount);
       return createJsonResponse({ success: true, source: "razorpay_webhook" });
     }
 
-    // 🌟 2. Handle Browser Payment Success (Client fallback)
     if (body.paymentSuccess === true) {
+      if (!isClaudeRegistration(body)) {
+        writeToLogs("NON_CLAUDE_PAYMENT_SKIPPED", `Skipped non-Claude payment of ₹${body.amount} for ${body.email}`);
+        return createJsonResponse({ success: false, message: "Ignored non-Claude payment" });
+      }
       updatePaymentStatus(body);
       return createJsonResponse({ success: true, source: "client_browser" });
     }
 
-    // 🌟 3. Handle New Lead / Order Generation
     if (body.name && body.email && body.phone && !body.object) {
-      const orderId = createRazorpayOrder(body);
+      if (!isClaudeRegistration(body)) {
+        writeToLogs("NON_CLAUDE_LEAD_SKIPPED", `Skipped non-Claude lead of ₹${body.amount} for ${body.email}`);
+        return createJsonResponse({ success: false, message: "Ignored non-Claude lead" });
+      }
+      let orderId = "";
+      try {
+        orderId = createRazorpayOrder(body);
+      } catch (err) {
+        writeToLogs("ORDER_API_ERROR", "Razorpay order creation failed: " + err.message);
+        orderId = "ERR_" + Math.random().toString(36).substring(2, 10).toUpperCase();
+      }
       saveToSheet(body, orderId);
       return createJsonResponse({ success: true, orderId: orderId });
     }
 
-    // 🌟 4. Handle WhatsApp Webhook
     if (body.object === "whatsapp_business_account") {
       handleWhatsAppIncoming(body);
       return ContentService.createTextOutput("EVENT_RECEIVED");
@@ -148,7 +285,7 @@ function doPost(e) {
 }
 
 // ------------------------------------------------------------
-// 3. WHATSAPP & EMAIL CONFIRMATION LOGIC
+// 3. WHATSAPP & EMAIL LOGIC (EXCLUSIVE CLAUDE MASTERCLASS)
 // ------------------------------------------------------------
 function handleWhatsAppIncoming(body) {
   const message = body.entry?.[0]?.changes?.[0]?.value?.messages?.[0];
@@ -157,275 +294,384 @@ function handleWhatsAppIncoming(body) {
   const rawText = message.text.body;
   const textReceived = rawText.toLowerCase().trim();
   const phone = message.from;
+  const phone10 = getLast10Digits(phone);
 
-  // CLAUDE MASTERCLASS LOGIC
-  if (textReceived.includes("claude") || textReceived.includes("masterclass")) {
-    sendWhatsAppImage(phone, WHATSAPP_CONFIG.POSTER_URL, "Claude MasterClass 2026");
+  const isClaudeMsg = textReceived.includes("claude") || 
+                      textReceived.includes("masterclass") || 
+                      textReceived.includes("completed registration") ||
+                      textReceived.includes("complete the registration") ||
+                      textReceived.includes("tech tycoon team") ||
+                      textReceived.includes("online") ||
+                      textReceived.includes("offline");
+
+  if (!isClaudeMsg) return;
+
+  let isOfflineMsg = textReceived.includes("offline") || textReceived.includes("in-person") || textReceived.includes("chennai");
+
+  if (!isOfflineMsg && phone10) {
+    try {
+      const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+      const sheet = ss.getSheetByName(SHEET_NAME_REG) || ss.getSheets()[0];
+      const rows = sheet.getDataRange().getValues();
+      for (let i = 1; i < rows.length; i++) {
+        const rowPhone10 = getLast10Digits(rows[i][3]);
+        if (rowPhone10 && rowPhone10 === phone10) {
+          const amount = parseInt(rows[i][6]) || 499;
+          const promoMode = (rows[i][19] || "").toString().toUpperCase();
+          const colFMode = (rows[i][5] || "").toString().toUpperCase();
+          if (amount >= 4000 || promoMode.includes("OFFLINE") || colFMode.includes("OFFLINE")) {
+            isOfflineMsg = true;
+          }
+          break;
+        }
+      }
+    } catch (e) {}
+  }
+
+  const dates = getUpcomingMasterclassDates(isOfflineMsg);
+  sendWhatsAppImage(phone, WHATSAPP_CONFIG.POSTER_URL, "Claude MasterClass 2026");
+
+  if (isOfflineMsg) {
+    let welcomeMsg = "Welcome! 🎉 Your registration is confirmed for the Claude MasterClass (In-Person Workshop).\n\n";
+    welcomeMsg += `📍 Venue: ${dates.venueText}\n`;
+    welcomeMsg += `📅 Date: ${dates.dateText}\n`;
+    welcomeMsg += `🕒 Time: ${dates.timeText}\n`;
+    welcomeMsg += `🍱 Luxury Buffet Lunch & High Tea Included\n`;
+    welcomeMsg += `💻 Bring your laptop with internet connectivity\n\n`;
+    welcomeMsg += "Please join our exclusive In-Person WhatsApp Community below for venue instructions & updates:\n" + WHATSAPP_CONFIG.WA_GROUP_LINK_CLAUDE_OFFLINE;
     
-    let welcomeMsg = "Welcome! 🎉 Your registration is confirmed for the Claude MasterClass in Tamil.\n\n";
-    welcomeMsg += `📅 Date: July 25th & 26th, 2026 (Sat & Sun)\n🕒 Time: 5:00 PM – 8:30 PM IST\n📍 Platform: Zoom Live\n\n`;
-    welcomeMsg += "Please join our exclusive WhatsApp Community below to receive the webinar session link:\n" + WHATSAPP_CONFIG.WA_GROUP_LINK;
+    sendWhatsAppText(phone, welcomeMsg);
+  } else {
+    let welcomeMsg = "Welcome! 🎉 Your registration is confirmed for the Claude MasterClass (Online Live Session).\n\n";
+    welcomeMsg += `📍 Platform: ${dates.venueText}\n`;
+    welcomeMsg += `📅 Date: ${dates.dateText}\n`;
+    welcomeMsg += `🕒 Time: ${dates.timeText}\n\n`;
+    welcomeMsg += "Please join our exclusive Online WhatsApp Community below to receive session links:\n" + WHATSAPP_CONFIG.WA_GROUP_LINK_CLAUDE_ONLINE;
     
     sendWhatsAppText(phone, welcomeMsg);
   }
 }
 
-function sendMasterclassEmail(email, name, amount) {
-  const dateVal = "July 25th & 26th, 2026 (Saturday & Sunday)";
-  const timeVal = "5:00 PM – 8:30 PM IST";
-  const passType = parseInt(amount) === 999 
-    ? "VIP All-Access Pass (Live + Lifetime Video Recordings + Source Code & Templates)" 
-    : "Standard Live Session Pass";
+function sendMasterclassEmail(email, name, amount, mode) {
+  const numAmount = parseInt(amount) || 499;
+  const isOffline = (mode && mode.toString().toLowerCase() === 'offline') || numAmount >= 4000;
+  const dates = getUpcomingMasterclassDates(isOffline);
   
-  const subject = `🎉 Registration Confirmed: Claude MasterClass (July 25 & 26)`;
-  
-  const htmlBody = `<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body style="margin:0;padding:0;background-color:#0d0d12;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#f0f0f5;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#0d0d12;padding:40px 16px;">
-    <tr>
-      <td align="center">
-        <table width="600" style="max-width:600px;width:100%;background-color:#16161e;border:1px solid #da7756;border-radius:24px;overflow:hidden;box-shadow:0 10px 30px rgba(218,119,86,0.2);">
-          <tr>
-            <td style="background:linear-gradient(135deg,#e28568,#da7756);padding:40px 32px;text-align:center;">
-              <div style="font-size:48px;margin-bottom:16px;">🤖</div>
-              <h1 style="font-size:28px;font-weight:800;color:#ffffff;margin:0;letter-spacing:-0.025em;line-height:1.2;">Claude MasterClass</h1>
-              <p style="color:rgba(255,255,255,0.9);font-size:13px;letter-spacing:0.2em;margin:8px 0 0;text-transform:uppercase;font-weight:700;">Live 2-Day Workshop in Tamil</p>
-            </td>
-          </tr>
-          <tr>
-            <td style="padding:40px 36px;">
-              <h2 style="color:#ffffff;font-size:22px;margin:0 0 12px;font-weight:800;">Welcome, ${name}!</h2>
-              <p style="color:#a0a0b2;font-size:15px;line-height:1.6;margin:0 0 24px;">
-                Your payment for <strong>${passType}</strong> @ ₹${amount || 299} was successful and your seat is officially reserved! Get ready to master Claude AI, MCPs, Claude Code, and Web App Automation.
-              </p>
-              <table width="100%" style="background-color:#0b0b0f;border:1px solid rgba(255,255,255,0.1);border-radius:16px;margin-bottom:32px;">
-                <tr>
-                  <td style="padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.1);font-size:14px;color:#a0a0b2;">📅 Date</td>
-                  <td style="padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.1);font-size:14px;color:#ffffff;font-weight:700;">${dateVal}</td>
-                </tr>
-                <tr>
-                  <td style="padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.1);font-size:14px;color:#a0a0b2;">🕒 Time</td>
-                  <td style="padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.1);font-size:14px;color:#ffffff;font-weight:700;">${timeVal}</td>
-                </tr>
-                <tr>
-                  <td style="padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.1);font-size:14px;color:#a0a0b2;">🌐 Language</td>
-                  <td style="padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.1);font-size:14px;color:#da7756;font-weight:700;">100% Tamil (தமிழ்)</td>
-                </tr>
-                <tr>
-                  <td style="padding:16px 20px;font-size:14px;color:#a0a0b2;">📍 Platform</td>
-                  <td style="padding:16px 20px;font-size:14px;color:#da7756;font-weight:700;">Zoom Live (Link sent in WhatsApp Group)</td>
-                </tr>
-              </table>
-              <table width="100%" cellpadding="0" cellspacing="0">
-                <tr>
-                  <td align="center" style="padding-bottom:32px;">
-                    <a href="${WHATSAPP_CONFIG.WA_GROUP_LINK}" target="_blank" style="display:inline-block;background-color:#da7756;color:#ffffff;text-decoration:none;padding:16px 36px;border-radius:100px;font-size:16px;font-weight:700;box-shadow:0 4px 15px rgba(218,119,86,0.4);">
-                      📱 Join Official WhatsApp Community
-                    </a>
-                  </td>
-                </tr>
-              </table>
-              <div style="background-color:rgba(218,119,86,0.1);border:1px solid rgba(218,119,86,0.3);border-radius:12px;padding:20px;margin-bottom:24px;">
-                <h4 style="color:#e58a6c;font-size:14px;margin:0 0 8px;font-weight:700;">⚡ Session Instructions:</h4>
-                <p style="color:#f0f0f5;font-size:13px;margin:0 0 6px;line-height:1.5;">1. Join the WhatsApp community above to receive Zoom credentials.</p>
-                <p style="color:#f0f0f5;font-size:13px;margin:0 0 6px;line-height:1.5;">2. Log in 10 minutes before 5:00 PM IST on July 25th.</p>
-                <p style="color:#f0f0f5;font-size:13px;margin:0;line-height:1.5;">3. A free Claude account is sufficient for all live hands-on exercises.</p>
-              </div>
-              <p style="color:#6c6c80;font-size:12px;text-align:center;margin:32px 0 0;line-height:1.5;">
-                Questions? Contact support at<br>
-                <a href="mailto:techtycoondigitalsolutions@gmail.com" style="color:#da7756;text-decoration:none;font-weight:600;">techtycoondigitalsolutions@gmail.com</a>
-              </p>
-            </td>
-          </tr>
-          <tr>
-            <td style="background-color:#0b0b0f;border-top:1px solid rgba(255,255,255,0.1);padding:24px;text-align:center;">
-              <p style="color:#6c6c80;font-size:11px;margin:0;">© 2026 AI Tycoon / Tech Tycoon Digital Solutions. All rights reserved.</p>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
-</body>
-</html>`;
+  if (isOffline) {
+    const dateVal = dates.dateText;
+    const timeVal = dates.timeText;
+    const venueVal = dates.venueText;
+    const passType = "In-Person MasterClass Pass (Vestin Park Hotel, Chennai)";
+    const waGroupLink = WHATSAPP_CONFIG.WA_GROUP_LINK_CLAUDE_OFFLINE;
+    const perksText = "<p style='color:#da7756;font-weight:bold;margin:8px 0;'>🍱 Luxury Hotel Buffet Lunch & High Tea Included ✅</p><p style='color:#6B4FBB;font-weight:bold;margin:8px 0;'>💻 Bring your laptop with internet connectivity ✅</p>";
+    const subject = `🎉 Registration Confirmed: In-Person MasterClass Chennai (${dateVal})`;
 
-  MailApp.sendEmail({
-    to: email,
-    subject: subject,
-    htmlBody: htmlBody,
-    name: "Claude MasterClass Team",
-    replyTo: "techtycoondigitalsolutions@gmail.com"
-  });
+    const htmlBody = `<!DOCTYPE html><html><body style="margin:0;padding:0;background-color:#0d0d12;font-family:sans-serif;color:#f0f0f5;">
+    <div style="max-width:600px;margin:20px auto;background:#16161e;border:1px solid #da7756;border-radius:24px;padding:32px;text-align:center;">
+      <h1 style="color:#ffffff;">🏨 Claude MasterClass — In-Person Chennai</h1>
+      <p>Welcome, <strong>${name}</strong>!</p>
+      <p>Your payment for <strong>${passType}</strong> @ ₹${numAmount} was successful.</p>
+      ${perksText}
+      <p>📍 <strong>${venueVal}</strong></p>
+      <p>📅 <strong>${dateVal}</strong> | 🕒 <strong>${timeVal}</strong></p>
+      <a href="${waGroupLink}" style="display:inline-block;background:#da7756;color:#fff;padding:14px 28px;border-radius:50px;text-decoration:none;font-weight:bold;margin-top:16px;">📱 Join In-Person WhatsApp Community</a>
+    </div></body></html>`;
+
+    MailApp.sendEmail({ to: email, subject: subject, htmlBody: htmlBody, name: "Tech Tycoon", replyTo: "techtycoondigitalsolutions@gmail.com" });
+
+  } else {
+    const dateVal = dates.dateText;
+    const timeVal = dates.timeText;
+    const venueVal = dates.venueText;
+    const isRecordingPass = numAmount === 999 || numAmount >= 1800;
+    const passType = isRecordingPass ? "Live + Recording Pass (Recorded Video Access)" : "Standard Live Session Pass";
+    const waGroupLink = WHATSAPP_CONFIG.WA_GROUP_LINK_CLAUDE_ONLINE;
+    const recText = isRecordingPass ? "<p style='color:#10b981;font-weight:bold;margin:8px 0;'>⭐ Recorded Video Access Included ✅</p>" : "";
+    const subject = `🎉 Registration Confirmed: Claude MasterClass Online (${dateVal})`;
+
+    const htmlBody = `<!DOCTYPE html><html><body style="margin:0;padding:0;background-color:#0d0d12;font-family:sans-serif;color:#f0f0f5;">
+    <div style="max-width:600px;margin:20px auto;background:#16161e;border:1px solid #da7756;border-radius:24px;padding:32px;text-align:center;">
+      <h1 style="color:#ffffff;">🤖 Claude MasterClass — Online Live</h1>
+      <p>Welcome, <strong>${name}</strong>!</p>
+      <p>Your payment for <strong>${passType}</strong> @ ₹${numAmount} was successful.</p>
+      ${recText}
+      <p>📍 <strong>${venueVal}</strong></p>
+      <p>📅 <strong>${dateVal}</strong> | 🕒 <strong>${timeVal}</strong></p>
+      <a href="${waGroupLink}" style="display:inline-block;background:#da7756;color:#fff;padding:14px 28px;border-radius:50px;text-decoration:none;font-weight:bold;margin-top:16px;">📱 Join Online WhatsApp Community</a>
+    </div></body></html>`;
+
+    MailApp.sendEmail({ to: email, subject: subject, htmlBody: htmlBody, name: "Tech Tycoon", replyTo: "techtycoondigitalsolutions@gmail.com" });
+  }
 }
 
-// ------------------------------------------------------------
-// 4. RAZORPAY & SPREADSHEET SYNC
-// ------------------------------------------------------------
+function getRazorpayAccountTag(data) {
+  const phoneStr = (data.phone || "").toString();
+  const countryCode = (data.countryCode || "").toString();
+  const isIntl = data.isInternational === true || 
+                 (countryCode && countryCode !== '+91') || 
+                 (phoneStr.startsWith('+') && !phoneStr.startsWith('+91'));
+  return isIntl ? "RZP: International (rzp_live_gfoS1OjC8tvWjP)" : "RZP: Domestic India (rzp_live_T2CbVONQc6qrqj)";
+}
+
 function createRazorpayOrder(data) {
-  const credentials = Utilities.base64Encode(RAZORPAY_KEY_ID + ":" + RAZORPAY_KEY_SECRET);
-  const amount = parseInt(data.amount) || 299;
+  const isIntl = data.isInternational || (data.countryCode && data.countryCode !== '+91');
+  const keyId = isIntl ? RAZORPAY_KEY_ID_INTL : RAZORPAY_KEY_ID;
+  const keySecret = isIntl ? RAZORPAY_KEY_SECRET_INTL : RAZORPAY_KEY_SECRET;
+
+  const credentials = Utilities.base64Encode(keyId + ":" + keySecret);
+  const amount = parseInt(data.amount) || 499;
+  const mode = data.mode || (amount >= 4000 ? "OFFLINE" : "ONLINE");
 
   const options = {
     method: "post",
     headers: { Authorization: "Basic " + credentials, "Content-Type": "application/json" },
-    payload: JSON.stringify({ amount: amount * 100, currency: "INR" }),
+    payload: JSON.stringify({
+      amount: amount * 100,
+      currency: "INR",
+      notes: {
+        product: "claude_masterclass",
+        mode: mode,
+        customer_email: data.email || "",
+        customer_name: data.name || "",
+        certificate: data.wantCertificate ? "YES" : "NO"
+      }
+    }),
     muteHttpExceptions: true
   };
-
   const response = UrlFetchApp.fetch("https://api.razorpay.com/v1/orders", options);
-  const resText = response.getContentText();
-  if (response.getResponseCode() !== 200) throw new Error("Razorpay Order Failed: " + resText);
-  return JSON.parse(resText).id;
+  if (response.getResponseCode() !== 200) throw new Error("Razorpay Order Creation Failed: " + response.getContentText());
+  return JSON.parse(response.getContentText()).id;
 }
 
-// 🌟 Appends new lead to the 19 columns
+function getModeOfSessionDisplay(mode, amount) {
+  const numAmount = parseInt(amount) || 499;
+  const isOffline = (mode && mode.toString().toLowerCase() === 'offline') || numAmount >= 4000;
+  return isOffline ? "Offline Session (In-Person Chennai)" : "Online Session (Live Online)";
+}
+
 function saveToSheet(data, orderId) {
+  if (!isClaudeRegistration(data)) return;
   const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
   let sheet = ss.getSheetByName(SHEET_NAME_REG) || ss.getSheets()[0];
-  
+  const certTag = (data.wantCertificate || data.certificate === "YES (+₹1,000)") ? "YES (+₹1000)" : "NO";
+  const modeTag = (data.mode || (parseInt(data.amount) >= 4000 ? "OFFLINE" : "ONLINE")).toUpperCase();
+  const sessionModeDisplay = getModeOfSessionDisplay(data.mode, data.amount);
+  const rzpTag = getRazorpayAccountTag(data);
+
   sheet.appendRow([
-    new Date(),                       // Col 1: Date & Time
-    data.name,                        // Col 2: Name
-    data.email,                       // Col 3: Email
-    "'" + data.phone,                 // Col 4: Phone
-    data.profession || "General",     // Col 5: Profession
-    data.language || "Tamil",         // Col 6: Preferred Language
-    data.amount || 299,               // Col 7: Amount
-    "INITIATED",                      // Col 8: Status
-    orderId,                          // Col 9: Order ID
-    "",                               // Col 10: Payment ID
-    "PENDING",                        // Col 11: Email Status
-    "NO",                             // Col 12: Whatsapp Clicked
-    "NO",                             // Col 13: WhatsApp Sent (Welcome)
-    "NO",                             // Col 14: 1-Day Reminder Sent
-    "NO",                             // Col 15: 60-Min Reminder Sent
-    "NO",                             // Col 16: 30-Min Reminder Sent
-    "NO",                             // Col 17: 10-Min Reminder Sent
-    "NO",                             // Col 18: 5-Min Reminder Sent
-    "NO"                              // Col 19: Session started(Join soon)
+    new Date(), data.name, data.email, "'" + data.phone, data.profession || "General",
+    sessionModeDisplay, data.amount || 499, "INITIATED", orderId, "", "PENDING",
+    "NO", "NO", "NO", "NO", "NO", "NO", "NO", "NO", (data.promoCode || "CLAUDE") + " | MODE: " + modeTag + " | CERT: " + certTag + " | " + rzpTag
   ]);
 }
 
-// Handler for browser-side payment update
+function isPromoCodeValid(code) {
+  const promoCodes30 = ["CLD30A", "TYC30B", "AIT30C", "MCP30D", "WEB30E", "COD30F", "PRO30G", "DIS30H", "RUN30I", "TAM30J", "ENG30K", "LIVE30", "VIP30M", "REG30N", "ZOOM30", "FAST30", "BEST30", "SAVE30", "GIFT30", "PLUS30"];
+  if (code === "CLAUDE") return true;
+  if (promoCodes30.indexOf(code) === -1) return false;
+  
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const sheet = ss.getSheetByName(SHEET_NAME_REG) || ss.getSheets()[0];
+  const rows = sheet.getDataRange().getValues();
+  for (let i = 1; i < rows.length; i++) {
+    if (rows[i][7] === "✅ PAID" && rows[i][19] === code) return false;
+  }
+  return true;
+}
+
+function getLast10Digits(phoneStr) {
+  if (!phoneStr) return "";
+  const clean = phoneStr.toString().replace(/\D/g, '');
+  return clean.length >= 10 ? clean.slice(-10) : clean;
+}
+
 function updatePaymentStatus(data) {
+  if (!isClaudeRegistration(data)) return;
   const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
   const sheet = ss.getSheetByName(SHEET_NAME_REG) || ss.getSheets()[0];
   const rows = sheet.getDataRange().getValues();
 
-  for (let i = 1; i < rows.length; i++) {
-    if (rows[i][8] === data.razorpay_order_id) { // Col 9 Order ID
-      if (rows[i][7] === "✅ PAID") return; // Already updated
-      
-      sheet.getRange(i + 1, 8).setValue("✅ PAID");
-      sheet.getRange(i + 1, 10).setValue(data.razorpay_payment_id);
-      sheet.getRange(i + 1, 11).setValue("SENT ✅");
-      
-      const name = rows[i][1];
-      const email = data.email || rows[i][2];
-      const amount = rows[i][6];
-      const phoneClean = rows[i][3] ? rows[i][3].toString().replace(/\D/g, '') : "";
+  let foundIndex = -1;
+  const targetOrderId = data.razorpay_order_id;
+  const targetEmail = (data.email || "").toLowerCase().trim();
+  const targetPhone10 = getLast10Digits(data.phone);
 
-      try {
-        sendMasterclassEmail(email, name, amount);
-        triggerWhatsAppCampaign(name, email, phoneClean);
-        createCalendarInvite(email, name);
-      } catch (err) {
-        writeToLogs("EMAIL_OR_WA_ERROR", `Failed for ${email}: ${err.message}`);
-      }
-      break;
+  for (let i = 1; i < rows.length; i++) {
+    if (targetOrderId && rows[i][8] === targetOrderId) { foundIndex = i; break; }
+  }
+
+  if (foundIndex === -1) {
+    for (let i = 1; i < rows.length; i++) {
+      const rowEmail = (rows[i][2] || "").toString().toLowerCase().trim();
+      const rowPhone10 = getLast10Digits(rows[i][3]);
+      if ((targetEmail && rowEmail === targetEmail) || (targetPhone10 && rowPhone10 && rowPhone10 === targetPhone10)) { foundIndex = i; break; }
     }
+  }
+
+  const rzpTag = getRazorpayAccountTag(data);
+
+  if (foundIndex !== -1) {
+    if (rows[foundIndex][7] === "✅ PAID") return;
+    sheet.getRange(foundIndex + 1, 8).setValue("✅ PAID");
+    sheet.getRange(foundIndex + 1, 10).setValue(data.razorpay_payment_id || "");
+    sheet.getRange(foundIndex + 1, 11).setValue("SENT ✅");
+    if (targetOrderId) sheet.getRange(foundIndex + 1, 9).setValue(targetOrderId);
+    
+    const existingPromoCol = (rows[foundIndex][19] || "").toString();
+    if (!existingPromoCol.includes("RZP:")) {
+      sheet.getRange(foundIndex + 1, 20).setValue(existingPromoCol + " | " + rzpTag);
+    }
+    
+    const name = rows[foundIndex][1] || data.name;
+    const email = data.email || rows[foundIndex][2];
+    const amount = rows[foundIndex][6] || data.amount;
+    const mode = data.mode || (parseInt(amount) >= 4000 ? "OFFLINE" : "ONLINE");
+    const phoneClean = targetPhone10 || (rows[foundIndex][3] ? rows[foundIndex][3].toString().replace(/\D/g, '') : "");
+
+    try {
+      sendMasterclassEmail(email, name, amount, mode);
+      triggerWhatsAppCampaign(name, email, phoneClean);
+    } catch (err) { writeToLogs("EMAIL_ERROR", err.message); }
+  } else {
+    const mode = data.mode || (parseInt(data.amount) >= 4000 ? "OFFLINE" : "ONLINE");
+    const sessionModeDisplay = getModeOfSessionDisplay(mode, data.amount);
+
+    sheet.appendRow([
+      new Date(), data.name || "Customer", data.email || "", "'" + (data.phone || ""),
+      "General", sessionModeDisplay, data.amount || 499, "✅ PAID", data.razorpay_order_id || "",
+      data.razorpay_payment_id || "", "SENT ✅", "NO", "NO", "NO", "NO", "NO", "NO", "NO", "NO",
+      (data.promoCode || "CLAUDE") + " | MODE: " + mode.toUpperCase() + (data.wantCertificate ? " | CERT: YES" : "") + " | " + rzpTag
+    ]);
+
+    try {
+      sendMasterclassEmail(data.email, data.name || "Customer", data.amount || 499, mode);
+      triggerWhatsAppCampaign(data.name || "Customer", data.email, targetPhone10);
+    } catch (err) { writeToLogs("EMAIL_ERROR", err.message); }
   }
 }
 
-// Handler for Razorpay direct Server Webhook
-function updatePaymentStatusFromWebhook(orderId, paymentId, email) {
+function updatePaymentStatusFromWebhook(orderId, paymentId, email, notes, rawAmount) {
+  const isClaudePayment = notes && (notes.product === "claude_masterclass" || notes.masterclass === "claude");
+  const amount = rawAmount ? rawAmount / 100 : 0;
+  
+  // 1. Immediately ignore if notes indicate a different product
+  if (notes && notes.product && notes.product !== "claude_masterclass") {
+    writeToLogs("NON_CLAUDE_WEBHOOK_SKIPPED", `Ignored ${notes.product} payment for ${email} (Order: ${orderId}).`);
+    return;
+  }
+
+  // 2. Ignore typical ₹99 lead payments from non-Claude pages
+  if (amount === 99 && (!notes.product || !notes.product.toLowerCase().includes("claude"))) {
+    writeToLogs("NON_CLAUDE_WEBHOOK_SKIPPED", `Ignored ₹${amount} payment for ${email} (Order: ${orderId}) from non-Claude page.`);
+    return;
+  }
+
   const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
   const sheet = ss.getSheetByName(SHEET_NAME_REG) || ss.getSheets()[0];
   const rows = sheet.getDataRange().getValues();
 
+  let foundIndex = -1;
+  const targetEmail = (email || "").toLowerCase().trim();
+
   for (let i = 1; i < rows.length; i++) {
-    if (rows[i][8] === orderId) { // Col 9 Order ID
-      if (rows[i][7] === "✅ PAID") return; // Already updated
-      
-      sheet.getRange(i + 1, 8).setValue("✅ PAID");
-      sheet.getRange(i + 1, 10).setValue(paymentId);
-      sheet.getRange(i + 1, 11).setValue("SENT ✅");
-      
-      const name = rows[i][1];
-      const amount = rows[i][6];
-      const phoneClean = rows[i][3] ? rows[i][3].toString().replace(/\D/g, '') : "";
+    if (orderId && rows[i][8] === orderId) { foundIndex = i; break; }
+  }
+
+  if (foundIndex === -1 && targetEmail) {
+    for (let i = 1; i < rows.length; i++) {
+      const rowEmail = (rows[i][2] || "").toString().toLowerCase().trim();
+      if (rowEmail === targetEmail) { foundIndex = i; break; }
+    }
+  }
+
+  if (foundIndex !== -1) {
+    if (rows[foundIndex][7] === "✅ PAID") return;
+    sheet.getRange(foundIndex + 1, 8).setValue("✅ PAID");
+    sheet.getRange(foundIndex + 1, 10).setValue(paymentId || "");
+    sheet.getRange(foundIndex + 1, 11).setValue("SENT ✅");
+    
+    const name = rows[foundIndex][1];
+    const rowAmount = rows[foundIndex][6];
+    const mode = notes?.mode || (parseInt(rowAmount) >= 4000 ? "OFFLINE" : "ONLINE");
+    const phoneClean = rows[foundIndex][3] ? rows[foundIndex][3].toString().replace(/\D/g, '') : "";
+
+    try {
+      sendMasterclassEmail(email, name, rowAmount, mode);
+      triggerWhatsAppCampaign(name, email, phoneClean);
+    } catch (err) { writeToLogs("EMAIL_ERROR", err.message); }
+  } else {
+    // Only append a fallback row if it is explicitly verified as a Claude payment
+    if (isClaudePayment) {
+      const mode = notes?.mode || (amount >= 4000 ? "OFFLINE" : "ONLINE");
+      const sessionModeDisplay = getModeOfSessionDisplay(mode, amount);
+
+      sheet.appendRow([
+        new Date(), notes.customer_name || "Customer", email || "", "", "General", sessionModeDisplay, amount, "✅ PAID",
+        orderId || "", paymentId || "", "SENT ✅", "NO", "NO", "NO", "NO", "NO", "NO", "NO", "NO", "CLAUDE | MODE: " + mode.toUpperCase()
+      ]);
 
       try {
-        sendMasterclassEmail(email, name, amount);
-        triggerWhatsAppCampaign(name, email, phoneClean);
-        createCalendarInvite(email, name);
-      } catch (err) {
-        writeToLogs("EMAIL_OR_WA_ERROR", `Failed for ${email}: ${err.message}`);
-      }
-      break;
+        sendMasterclassEmail(email, notes.customer_name || "Customer", amount, mode);
+      } catch (err) { writeToLogs("EMAIL_ERROR", err.message); }
+    } else {
+      writeToLogs("OTHER_PAGE_WEBHOOK_SKIPPED", `Ignored payment for ${email} (Order: ${orderId}) as it is not identified as Claude.`);
     }
   }
 }
 
-// ------------------------------------------------------------
-// 5. HELPER AUTOMATIONS (WhatsApp, Calendar & Reminders)
-// ------------------------------------------------------------
+function createCalendarInvite(email, name, amount, mode) {
+  try {
+    const numAmount = parseInt(amount) || 499;
+    const isOffline = (mode && mode.toString().toLowerCase() === 'offline') || numAmount >= 4000;
+    const startTime = getUpcomingWebinarTime(isOffline);
+    const durationHours = isOffline ? 8.5 : 3;
+    const endTime = new Date(startTime.getTime() + durationHours * 60 * 60 * 1000);
+    const waGroupLink = isOffline ? WHATSAPP_CONFIG.WA_GROUP_LINK_CLAUDE_OFFLINE : WHATSAPP_CONFIG.WA_GROUP_LINK_CLAUDE_ONLINE;
+    const dates = getUpcomingMasterclassDates(isOffline);
+    
+    const title = isOffline 
+      ? "🏨 Confirmed: In-Person Claude MasterClass @ Vestin Park Hotel, Chennai"
+      : `🤖 Confirmed: Claude MasterClass (${dates.dateText})`;
+    
+    const description = isOffline
+      ? `Hi ${name},\n\nYour seat is confirmed for the 1-Day In-Person Claude MasterClass Workshop in Chennai.\n\n📍 Venue: Vestin Park Hotel, Egmore, Chennai\n📅 Date: ${dates.dateText}\n🕒 Time: 9:00 AM – 5:30 PM IST\n🍱 Luxury Hotel Buffet Lunch & High Tea Included\n💻 Bring your laptop with internet connectivity\n\nJoin the official Offline Attendees WhatsApp Group below:\n${waGroupLink}`
+      : `Hi ${name},\n\nYour seat is confirmed for the 2-Day Claude MasterClass in Tamil.\n\n📅 Date: ${dates.dateText}\n🕒 Time: 6:00 PM – 9:00 PM IST\n📍 Platform: Live Online Virtual Classroom\n\nJoin the official Online Attendees WhatsApp Group below:\n${waGroupLink}`;
+
+    const location = isOffline ? "Vestin Park Hotel, Egmore, Chennai" : "Live Online Virtual Classroom";
+
+    const calendar = CalendarApp.getDefaultCalendar();
+    calendar.createEvent(title, startTime, endTime, { description: description, location: location, guests: email, sendInvites: false });
+    writeToLogs("CALENDAR_SUCCESS", `Invite added to calendar for ${email}`);
+  } catch (err) { writeToLogs("CALENDAR_ERROR", err.message); }
+}
+
 function sendWhatsAppText(to, message) {
-  const url = "https://graph.facebook.com/v19.0/" + WHATSAPP_CONFIG.PHONE_NUMBER_ID + "/messages";
-  const options = {
-    method: "post",
-    contentType: "application/json",
-    headers: { Authorization: "Bearer " + WHATSAPP_CONFIG.ACCESS_TOKEN },
-    payload: JSON.stringify({ messaging_product: "whatsapp", to: to, type: "text", text: { body: message } }),
-    muteHttpExceptions: true
-  };
-  UrlFetchApp.fetch(url, options);
-}
-
-function sendWhatsAppTemplate(to, templateName, parameters) {
-  const url = "https://graph.facebook.com/v19.0/" + WHATSAPP_CONFIG.PHONE_NUMBER_ID + "/messages";
-  const options = {
-    method: "post",
-    contentType: "application/json",
-    headers: { Authorization: "Bearer " + WHATSAPP_CONFIG.ACCESS_TOKEN },
-    payload: JSON.stringify({
-      messaging_product: "whatsapp",
-      to: to,
-      type: "template",
-      template: {
-        name: templateName,
-        language: { code: "en" },
-        components: [
-          {
-            type: "body",
-            parameters: parameters.map(param => ({ type: "text", text: param }))
-          }
-        ]
-      }
-    }),
-    muteHttpExceptions: true
-  };
-  const response = UrlFetchApp.fetch(url, options);
-  writeToLogs("WA_TEMPLATE_SEND", `To: ${to} | Template: ${templateName} | Response: ${response.getContentText()}`);
+  try {
+    const url = "https://graph.facebook.com/v19.0/" + WHATSAPP_CONFIG.PHONE_NUMBER_ID + "/messages";
+    const options = { method: "post", contentType: "application/json", headers: { Authorization: "Bearer " + WHATSAPP_CONFIG.ACCESS_TOKEN }, payload: JSON.stringify({ messaging_product: "whatsapp", to: to, type: "text", text: { body: message } }), muteHttpExceptions: true };
+    const res = UrlFetchApp.fetch(url, options);
+    writeToLogs("WA_TEXT_SEND", `To: ${to} | Status: ${res.getResponseCode()} | Response: ${res.getContentText()}`);
+  } catch(e) {
+    writeToLogs("WA_TEXT_ERROR", `To: ${to} | Error: ${e.message}`);
+  }
 }
 
 function sendWhatsAppImage(to, imageUrl, caption) {
-  const url = "https://graph.facebook.com/v19.0/" + WHATSAPP_CONFIG.PHONE_NUMBER_ID + "/messages";
-  const options = {
-    method: "post",
-    contentType: "application/json",
-    headers: { Authorization: "Bearer " + WHATSAPP_CONFIG.ACCESS_TOKEN },
-    payload: JSON.stringify({
-      messaging_product: "whatsapp", to: to, type: "image", image: { link: imageUrl, caption: caption }
-    }),
-    muteHttpExceptions: true
-  };
-  UrlFetchApp.fetch(url, options);
+  try {
+    const url = "https://graph.facebook.com/v19.0/" + WHATSAPP_CONFIG.PHONE_NUMBER_ID + "/messages";
+    const options = { method: "post", contentType: "application/json", headers: { Authorization: "Bearer " + WHATSAPP_CONFIG.ACCESS_TOKEN }, payload: JSON.stringify({ messaging_product: "whatsapp", to: to, type: "image", image: { link: imageUrl, caption: caption } }), muteHttpExceptions: true };
+    const res = UrlFetchApp.fetch(url, options);
+    writeToLogs("WA_IMAGE_SEND", `To: ${to} | Status: ${res.getResponseCode()} | Response: ${res.getContentText()}`);
+  } catch(e) {
+    writeToLogs("WA_IMAGE_ERROR", `To: ${to} | Error: ${e.message}`);
+  }
+}
+
+function triggerWhatsAppCampaign(contactName, contactEmail, contactPhone) {
+  var url = "https://login.aifunnels.app/api/automations/6a43848a31b24/execute";
+  var payload = { "api_token": "792ca1d7ae51ce36fa29d8636acfd3dd", "contact_name": contactName, "contact_email": contactEmail, "contact_phone": contactPhone, "sf.p_name": contactName };
+  var options = { "method": "post", "contentType": "application/json", "payload": JSON.stringify(payload), "muteHttpExceptions": true };
+  try { UrlFetchApp.fetch(url, options); } catch(e) {}
 }
 
 function writeToLogs(event, data) {
@@ -445,120 +691,6 @@ function markWhatsappClicked(orderId) {
   const sheet = ss.getSheetByName(SHEET_NAME_REG) || ss.getSheets()[0];
   const data = sheet.getDataRange().getValues();
   for (let i = 1; i < data.length; i++) {
-    if (data[i][8] === orderId) { // Col 9 Order ID
-      sheet.getRange(i + 1, 12).setValue("CHATTED ✅"); // Col 12 Whatsapp Clicked
-      break;
-    }
-  }
-}
-
-function triggerWhatsAppCampaign(contactName, contactEmail, contactPhone) {
-  var url = "https://login.aifunnels.app/api/automations/6a43848a31b24/execute";
-  var payload = {
-    "api_token": "792ca1d7ae51ce36fa29d8636acfd3dd",
-    "contact_name": contactName,
-    "contact_email": contactEmail,
-    "contact_phone": contactPhone,
-    "sf.p_name": contactName
-  };
-  var options = {
-    "method": "post",
-    "contentType": "application/json",
-    "payload": JSON.stringify(payload),
-    "muteHttpExceptions": true 
-  };
-  try {
-    var response = UrlFetchApp.fetch(url, options);
-    writeToLogs("AIFUNNELS_SUCCESS", `Triggered for ${contactName}: ${response.getContentText()}`);
-  } catch(e) {
-    writeToLogs("AIFUNNELS_ERROR", `Failed for ${contactName}: ${e.message}`);
-  }
-}
-
-function createCalendarInvite(email, name) {
-  try {
-    const startTime = getUpcomingWebinarTime(); // July 25, 2026 5:00 PM IST
-    const endTime = new Date(startTime.getTime() + 3.5 * 60 * 60 * 1000); // 3.5 hrs
-
-    const title = "🤖 Confirmed: Claude MasterClass (July 25 & 26)";
-    const description = `Hi ${name},\n\nYour seat is confirmed for the 2-Day Claude MasterClass in Tamil.\n\n` +
-      `📅 Date: July 25th & 26th, 2026 (Saturday & Sunday)\n` +
-      `🕒 Time: 5:00 PM – 8:30 PM IST\n` +
-      `📍 Platform: Zoom Live\n\n` +
-      `Join official WhatsApp community:\n${WHATSAPP_CONFIG.WA_GROUP_LINK}\n\n` +
-      `AI Tycoon Team`;
-
-    const calendar = CalendarApp.getDefaultCalendar();
-    calendar.createEvent(title, startTime, endTime, {
-      description: description,
-      location: "Zoom Live Session",
-      guests: email,
-      sendInvites: true
-    });
-    writeToLogs("CALENDAR_SUCCESS", `Calendar invite sent to ${email}`);
-  } catch (err) {
-    writeToLogs("CALENDAR_ERROR", `Failed calendar invite for ${email}: ${err.message}`);
-  }
-}
-
-/**
- * Automated Cron Trigger function to deliver Reminders matching 19-Column layout:
- * Col 14: 1-Day Reminder Sent (Index 13)
- * Col 15: 60-Min Reminder Sent (Index 14)
- * Col 16: 30-Min Reminder Sent (Index 15)
- * Col 17: 10-Min Reminder Sent (Index 16)
- * Col 18: 5-Min Reminder Sent (Index 17)
- * Col 19: Session started(Join soon) (Index 18)
- */
-function checkAndSendReminders() {
-  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
-  const sheet = ss.getSheetByName(SHEET_NAME_REG) || ss.getSheets()[0];
-  const data = sheet.getDataRange().getValues();
-  const now = new Date();
-  const webinarTime = getUpcomingWebinarTime();
-  const minsLeft = (webinarTime.getTime() - now.getTime()) / (1000 * 60);
-
-  for (let i = 1; i < data.length; i++) {
-    const row = data[i];
-    if (row[7] !== "✅ PAID") continue; // Check status Col 8
-    
-    const phone = row[3] ? row[3].toString().replace(/\D/g, '') : ""; 
-    if (!phone) continue;
-    const name = row[1];
-
-    try {
-      // 1. 24-Hour (1-Day) Reminder
-      if (minsLeft <= 1440 && minsLeft > 120 && row[13] === "NO") {
-        sendWhatsAppTemplate(phone, "claude_1day_reminder", [name]);
-        sheet.getRange(i + 1, 14).setValue("SENT ✅");
-      }
-      // 2. 60-Min Reminder
-      else if (minsLeft <= 60 && minsLeft > 30 && row[14] === "NO") {
-        sendWhatsAppTemplate(phone, "claude_60min_reminder", [name]);
-        sheet.getRange(i + 1, 15).setValue("SENT ✅");
-      }
-      // 3. 30-Min Reminder
-      else if (minsLeft <= 30 && minsLeft > 10 && row[15] === "NO") {
-        sendWhatsAppTemplate(phone, "claude_30min_reminder", [name]);
-        sheet.getRange(i + 1, 16).setValue("SENT ✅");
-      }
-      // 4. 10-Min Reminder
-      else if (minsLeft <= 10 && minsLeft > 5 && row[16] === "NO") {
-        sendWhatsAppTemplate(phone, "claude_10min_reminder", [name, WHATSAPP_CONFIG.WA_GROUP_LINK]);
-        sheet.getRange(i + 1, 17).setValue("SENT ✅");
-      }
-      // 5. 5-Min Reminder
-      else if (minsLeft <= 5 && minsLeft > 0 && row[17] === "NO") {
-        sendWhatsAppTemplate(phone, "claude_5min_reminder", [name, WHATSAPP_CONFIG.WA_GROUP_LINK]);
-        sheet.getRange(i + 1, 18).setValue("SENT ✅");
-      }
-      // 6. Session Started
-      else if (minsLeft <= 0 && minsLeft > -60 && row[18] === "NO") {
-        sendWhatsAppTemplate(phone, "claude_started_reminder", [name, WHATSAPP_CONFIG.WA_GROUP_LINK]);
-        sheet.getRange(i + 1, 19).setValue("SENT ✅");
-      }
-    } catch (e) {
-      writeToLogs("REMINDER_ERROR", `Row ${i + 1}: ${e.message}`);
-    }
+    if (data[i][8] === orderId) { sheet.getRange(i + 1, 12).setValue("CHATTED ✅"); break; }
   }
 }

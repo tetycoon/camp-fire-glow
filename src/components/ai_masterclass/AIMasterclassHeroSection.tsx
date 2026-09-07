@@ -5,7 +5,7 @@ import { getMasterclassDateStrings } from "../../lib/masterclassDateUtils";
 
 const AIMasterclassHeroSection: React.FC = () => {
     const { openRegisterModal } = useAIMasterclassRegisterModal();
-    const { upperDate, regularDate } = getMasterclassDateStrings();
+    const { upperDate, regularDate, dayOfWeek } = getMasterclassDateStrings();
     const scrollTo = (id: string) => {
         document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
     };
@@ -74,7 +74,7 @@ const AIMasterclassHeroSection: React.FC = () => {
                                     </div>
                                     <div>
                                         <div className="text-lg font-black text-slate-900 leading-none">{regularDate}</div>
-                                        <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wide mt-1">SATURDAY</div>
+                                        <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wide mt-1">{dayOfWeek}</div>
                                     </div>
                                 </div>
 
@@ -106,7 +106,7 @@ const AIMasterclassHeroSection: React.FC = () => {
                                         <Video className="w-6 h-6 text-purple-600" />
                                     </div>
                                     <div>
-                                        <div className="text-lg font-black text-slate-900 leading-none">Zoom / Meet</div>
+                                        <div className="text-lg font-black text-slate-900 leading-none">Online Live Session</div>
                                         <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wide mt-1">LINK SENT AFTER REGISTRATION</div>
                                     </div>
                                 </div>
@@ -126,6 +126,24 @@ const AIMasterclassHeroSection: React.FC = () => {
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                {/* B2B Trust Builder */}
+                <div className="mt-16 pt-12 border-t border-slate-100 w-full text-center">
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6">TRUSTED BY TEAMS AT LEADING CORPORATIONS & STARTUPS</p>
+                    <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-6 opacity-40 hover:opacity-75 transition-opacity duration-300">
+                        <div className="text-sm font-black text-slate-800 tracking-tighter uppercase">Amazon Web Services</div>
+                        <span className="hidden sm:block text-slate-300">•</span>
+                        <div className="text-sm font-black text-slate-800 tracking-tighter uppercase">Cognizant Tech</div>
+                        <span className="hidden sm:block text-slate-300">•</span>
+                        <div className="text-sm font-black text-slate-800 tracking-tighter uppercase">TATA Consultancy Services</div>
+                        <span className="hidden sm:block text-slate-300">•</span>
+                        <div className="text-sm font-black text-slate-800 tracking-tighter uppercase">Infosys Limited</div>
+                        <span className="hidden sm:block text-slate-300">•</span>
+                        <div className="text-sm font-black text-slate-800 tracking-tighter uppercase">HCL Technologies</div>
+                        <span className="hidden sm:block text-slate-300">•</span>
+                        <div className="text-sm font-black text-slate-800 tracking-tighter uppercase">Zoho Corp</div>
                     </div>
                 </div>
             </div>

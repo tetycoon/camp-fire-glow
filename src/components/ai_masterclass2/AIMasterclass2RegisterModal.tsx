@@ -64,11 +64,6 @@ const AIMasterclass2RegisterModal: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const message = `This session is on "${regularDate} at ${form.timing}".\n\nPlease check your availability.\n\nDo you want to proceed to payment?`;
-        if (!window.confirm(message)) {
-            return;
-        }
-
         setLoading(true);
 
         const loaded = await loadRazorpayScript();
@@ -92,6 +87,7 @@ const AIMasterclass2RegisterModal: React.FC = () => {
                     name: form.name,
                     email: form.email,
                     phone: `${form.countryCode}${form.phone}`,
+                    countryCode: form.countryCode,
                     language: form.language,
                     batch: `Masterclass 2026 (${form.timing})`,
                     amount: 99,

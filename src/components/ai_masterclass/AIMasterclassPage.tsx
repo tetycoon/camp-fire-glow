@@ -10,6 +10,7 @@ import AIMasterclassRegisterModal from "./AIMasterclassRegisterModal";
 import { AIMasterclassRegisterModalProvider } from "./AIMasterclassRegisterModalContext";
 import TestimonialCarousel from "./TestimonialCarousel";
 import AIMasterclassWhatsApp from "./AIMasterclassWhatsApp";
+import SocialProofToast from "../common/SocialProofToast";
 
 const AIMasterclassPage: React.FC = () => {
     useEffect(() => {
@@ -28,6 +29,7 @@ const AIMasterclassPage: React.FC = () => {
             fbq('track', 'PageView');
             fbq('track', 'ViewContent');
         `;
+        document.title = "AI Secrets Revealed & Business Automation Masterclass | Tech Tycoon";
         document.head.appendChild(script);
         
         return () => {
@@ -52,6 +54,7 @@ const AIMasterclassPage: React.FC = () => {
                 <AIMasterclassFooter />
                 <AIMasterclassRegisterModal />
                 <AIMasterclassWhatsApp />
+                <SocialProofToast />
             </div>
         </AIMasterclassRegisterModalProvider>
     );
