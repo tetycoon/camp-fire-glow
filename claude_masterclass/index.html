@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude 3.5 AI MasterClass — Live Online & In-Person Workshop by Tech Tycoon</title>
+    <meta name="description" content="Master Claude AI, Model Context Protocols (MCP), Claude Code CLI, and AI web application development. Choose 2-Day Online Live Session or 1-Day In-Person Chennai Workshop. Tamil & English instruction by Antony Praveen.">
+    <meta name="keywords" content="Claude AI, Model Context Protocol, MCP, AI Code Automation, Claude 3.5 Sonnet, Anthropic, Tamil AI Workshop, Antony Praveen, Tech Tycoon">
+    
+    <!-- Favicon Logo in Browser Tab -->
+    <link rel="icon" type="image/png" href="images/tech_tycoon_logo.png">
+    <link rel="shortcut icon" type="image/png" href="images/tech_tycoon_logo.png">
+    <link rel="apple-touch-icon" href="images/tech_tycoon_logo.png">
+    <!-- Open Graph / WhatsApp / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://aitycoon.in/claude_masterclass/">
+    <meta property="og:title" content="Claude 3.5 AI MasterClass — Live Online & In-Person Workshop">
+    <meta property="og:description" content="Master Claude AI, MCPs, and full web application development. Choose 2-Day Live Zoom or 1-Day Classroom Workshop at Vestin Park Hotel, Chennai.">
+    <meta property="og:image" content="https://aitycoon.in/claude_masterclass/images/online.webp">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Claude 3.5 AI MasterClass — Tech Tycoon">
+    <meta name="twitter:description" content="Master Claude AI, MCPs, and AI code automation in Tamil & English. Online & In-Person Chennai Workshop.">
+    <meta name="twitter:image" content="https://aitycoon.in/claude_masterclass/images/online.webp">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css?v=20260812_vAnimationsEnhanced">
+    <link rel="stylesheet" href="animations.css?v=20260812_vAnimationsEnhanced">
+    
+    <style>
+        /* 3-COLUMN INLINE OVERRIDE FOR FLOATING WIDGET */
+        .bottom-floating-widget {
+            position: fixed !important;
+            bottom: 20px !important;
+            left: 50% !important;
+            transform: translate(-50%, 20px) !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+            transition: all 0.3s ease !important;
+            z-index: 99999 !important;
+            background-color: rgba(255, 255, 255, 0.96) !important;
+            backdrop-filter: blur(14px) !important;
+            -webkit-backdrop-filter: blur(14px) !important;
+            border: 1.5px solid #E6E2D9 !important;
+            border-radius: 20px !important;
+            padding: 10px 22px !important;
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.14) !important;
+            width: auto !important;
+            max-width: 92vw !important;
+            display: block !important;
+        }
+        .bottom-floating-widget.visible {
+            opacity: 1 !important;
+            pointer-events: auto !important;
+            transform: translate(-50%, 0) !important;
+        }
+        .floating-widget-content {
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            gap: 16px !important;
+            white-space: nowrap !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100% !important;
+        }
+        .widget-item {
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            gap: 10px !important;
+        }
+        .widget-item i {
+            font-size: 16px !important;
+        }
+        .widget-item strong {
+            display: block !important;
+            font-size: 12px !important;
+            font-weight: 800 !important;
+            color: #1F1E1C !important;
+            line-height: 1.2 !important;
+        }
+        .widget-item small {
+            display: block !important;
+            font-size: 10px !important;
+            color: #6E6B65 !important;
+            font-weight: 600 !important;
+        }
+        .widget-divider {
+            width: 1px !important;
+            height: 28px !important;
+            background-color: #E6E2D9 !important;
+            display: block !important;
+        }
+        .widget-cta {
+            display: flex !important;
+            align-items: center !important;
+        }
+        /* COMPACT FORM HEIGHT OVERRIDES */
+        .modal-content {
+            padding: 20px 24px !important;
+            border-radius: 16px !important;
+            max-width: 480px !important;
+        }
+        .back-link {
+            margin-bottom: 6px !important;
+            font-size: 11px !important;
+        }
+        .modal-header-step2 {
+            margin-bottom: 8px !important;
+        }
+        .modal-header-step2 h3 {
+            font-size: 17px !important;
+            margin-bottom: 1px !important;
+        }
+        .modal-header-step2 p {
+            font-size: 11px !important;
+        }
+        .session-pill {
+            padding: 2px 8px !important;
+            margin-top: 4px !important;
+            font-size: 10px !important;
+        }
+        .modal-form {
+            gap: 8px !important;
+            margin-top: 8px !important;
+        }
+        .form-group label {
+            font-size: 9px !important;
+            margin-bottom: 2px !important;
+            letter-spacing: 0.5px !important;
+        }
+        .form-group input, .form-group select {
+            padding: 7px 10px !important;
+            font-size: 12px !important;
+            border-radius: 8px !important;
+        }
+        .cert-addon-box {
+            padding: 8px 10px !important;
+            margin: 4px 0 !important;
+            border-radius: 10px !important;
+        }
+        .cert-addon-box p {
+            font-size: 10px !important;
+            line-height: 1.3 !important;
+        }
+        .wa-agree-grp {
+            margin-top: 2px !important;
+        }
+        .wa-agree-grp label {
+            font-size: 10px !important;
+            line-height: 1.2 !important;
+        }
+        /* HIDE FLOATING WIDGET WHEN MODAL IS OPEN */
+        body.modal-open .bottom-floating-widget,
+        .modal-overlay.active ~ .bottom-floating-widget {
+            display: none !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+
+        #pay-submit-btn {
+            padding: 10px 16px !important;
+            font-size: 13px !important;
+            border-radius: 10px !important;
+            margin-top: 4px !important;
+        }
+
+        /* DEDICATED MOBILE RESPONSIVE OVERRIDES (< 768px) — DESKTOP UNTOUCHED */
+        @media (max-width: 768px) {
+            #portal-selection-view .container {
+                margin: 20px auto !important;
+                padding: 0 14px !important;
+            }
+            #portal-selection-view h1 {
+                font-size: 22px !important;
+                line-height: 1.25 !important;
+                margin: 10px 0 8px !important;
+            }
+            #portal-selection-view p {
+                font-size: 13px !important;
+                margin-bottom: 20px !important;
+                line-height: 1.5 !important;
+            }
+
+            #back-to-portal-bar {
+                padding: 6px 10px !important;
+            }
+            #back-to-portal-bar button {
+                font-size: 11px !important;
+                padding: 5px 12px !important;
+            }
+
+            .header {
+                padding: 10px 12px !important;
+            }
+            .logo-img {
+                height: 24px !important;
+            }
+            .btn-header {
+                padding: 6px 12px !important;
+                font-size: 11px !important;
+            }
+
+            .section-hero {
+                padding: 16px 0 24px !important;
+            }
+            .hero-title {
+                font-size: 23px !important;
+                line-height: 1.25 !important;
+                margin-bottom: 10px !important;
+            }
+            .hero-desc {
+                font-size: 13px !important;
+                line-height: 1.5 !important;
+                margin-bottom: 14px !important;
+            }
+
+            .grid-2, .hero-grid, .grid-3, .grid-2-pricing {
+                grid-template-columns: 1fr !important;
+                gap: 16px !important;
+            }
+
+            .hero-card-side, .info-card, .feature-card, .curriculum-card, .pricing-card {
+                padding: 16px 14px !important;
+                border-radius: 14px !important;
+            }
+
+            .section-title {
+                font-size: 20px !important;
+                line-height: 1.3 !important;
+            }
+            .section-subtitle {
+                font-size: 10px !important;
+            }
+            .section-desc {
+                font-size: 12px !important;
+                margin-bottom: 18px !important;
+            }
+
+            /* Sleek 2-Item Mobile Floating Bar (< 768px) */
+            .bottom-floating-widget {
+                bottom: 10px !important;
+                padding: 7px 12px !important;
+                border-radius: 50px !important;
+                width: 94% !important;
+                max-width: 440px !important;
+                box-shadow: 0 10px 28px rgba(0,0,0,0.25) !important;
+            }
+            .floating-widget-content {
+                gap: 6px !important;
+                justify-content: space-between !important;
+            }
+            .widget-divider {
+                display: none !important;
+            }
+            .bottom-floating-widget .widget-item:nth-child(3) {
+                display: none !important;
+            }
+            .widget-item i {
+                font-size: 14px !important;
+            }
+            .widget-item strong {
+                font-size: 11.5px !important;
+                line-height: 1.1 !important;
+            }
+            .widget-item small {
+                display: block !important;
+                font-size: 9px !important;
+                color: #6E6B65 !important;
+                font-weight: 700 !important;
+            }
+            .widget-cta .btn {
+                padding: 7px 12px !important;
+                font-size: 11px !important;
+                border-radius: 50px !important;
+                font-weight: 800 !important;
+                white-space: nowrap !important;
+            }
+
+            /* Ultra-Compressed Mobile Modal Checkout (< 768px) */
+            .modal-overlay {
+                padding: 6px !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+            .modal-content {
+                padding: 14px 14px !important;
+                border-radius: 14px !important;
+                width: 94vw !important;
+                max-width: 400px !important;
+                margin: auto !important;
+                max-height: 96vh !important;
+                overflow-y: auto !important;
+            }
+            .back-link {
+                margin-bottom: 4px !important;
+                font-size: 10px !important;
+            }
+            .modal-header-step2 {
+                margin-bottom: 6px !important;
+                text-align: center !important;
+            }
+            .modal-header-step2 h3 {
+                font-size: 16px !important;
+                margin: 0 !important;
+                line-height: 1.2 !important;
+            }
+            .modal-header-step2 p {
+                font-size: 10.5px !important;
+                margin-top: 2px !important;
+            }
+            .session-pill {
+                display: inline-block !important;
+                font-size: 9.5px !important;
+                padding: 3px 8px !important;
+                margin-top: 4px !important;
+                white-space: normal !important;
+                word-break: break-word !important;
+                line-height: 1.3 !important;
+            }
+            .modal-form {
+                gap: 6px !important;
+                margin-top: 6px !important;
+            }
+            .form-group label {
+                font-size: 9px !important;
+                margin-bottom: 2px !important;
+                letter-spacing: 0.5px !important;
+            }
+            .form-group input, .form-group select {
+                padding: 6px 10px !important;
+                font-size: 12px !important;
+                border-radius: 8px !important;
+                height: 34px !important;
+            }
+            .phone-input-grp button {
+                height: 34px !important;
+                padding: 4px 8px !important;
+                font-size: 10.5px !important;
+            }
+            .cert-addon-box {
+                padding: 6px 10px !important;
+                margin: 3px 0 !important;
+                border-radius: 8px !important;
+            }
+            .cert-addon-box p {
+                font-size: 9.5px !important;
+                line-height: 1.25 !important;
+            }
+            .wa-agree-grp {
+                margin-top: 2px !important;
+            }
+            .wa-agree-grp label {
+                font-size: 9.5px !important;
+                line-height: 1.2 !important;
+            }
+            #pay-submit-btn {
+                padding: 10px 14px !important;
+                font-size: 13px !important;
+                border-radius: 8px !important;
+                margin-top: 4px !important;
+            }
+            .secured-footer {
+                font-size: 9px !important;
+                margin-top: 3px !important;
+            }
+            .modal-header h3 {
+                font-size: 16px !important;
+            }
+            .modal-option {
+                padding: 10px 12px !important;
+                gap: 8px !important;
+            }
+            .opt-title-row strong {
+                font-size: 12.5px !important;
+            }
+            .opt-price {
+                font-size: 13px !important;
+            }
+        }
+    </style>
+    
+    <!-- Razorpay SDK -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body class="claude-theme">
+
+    <!-- PORTAL SELECTION VIEW (Visible by Default) -->
+    <div id="portal-selection-view" style="min-height: 100vh; background-color: #FAF8F5; color: #1F1E1C; display: block;">
+        
+        <!-- Header Logo -->
+        <header class="navbar" style="background-color: #F7F4EE; border-bottom: 1px solid #E6E2D9;">
+            <div class="container nav-container" style="justify-content: center;">
+                <a href="#" class="brand-logo">
+                    <img src="images/tech_tycoon_logo.png" alt="Tech Tycoon Digital Solutions" class="logo-img">
+                    <div class="logo-text">
+                        <span class="logo-title" style="color: #1F1E1C;">TECH TYCOON</span>
+                        <span class="logo-sub" style="color: #D85A30;">Digital Solution LLP</span>
+                    </div>
+                </a>
+            </div>
+        </header>
+
+        <!-- Gateway Hero Container -->
+        <div class="container" style="max-width: 1040px; margin: 40px auto; padding: 0 20px; text-align: center;">
+            
+            <div style="margin-bottom: 36px;">
+                <span style="background-color: rgba(216,90,48,0.12); color: #D85A30; border: 1px solid rgba(216,90,48,0.25); font-size: 11px; font-weight: 800; padding: 6px 16px; border-radius: 50px; text-transform: uppercase; letter-spacing: 1.5px; display: inline-block; margin-bottom: 14px;">
+                    CLAUDE 3.5 AI MASTERCLASS
+                </span>
+                <h1 style="font-size: 32px; font-weight: 900; color: #1F1E1C; margin-bottom: 10px; tracking-tight: -0.5px;">
+                    Select Your Preferred MasterClass Format
+                </h1>
+                <p style="color: #524F4A; font-size: 15px; max-width: 620px; margin: 0 auto; line-height: 1.6;">
+                    Choose between our interactive 2-Day Live Online session or the 1-Day In-Person Classroom Workshop at Vestin Park Hotel, Chennai.
+                </p>
+            </div>
+
+            <!-- 2-Card Portal Grid -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; text-align: left;">
+                
+                <!-- CARD 1: ONLINE ZOOM -->
+                <div class="portal-card" onclick="openBatchPage('online')" style="background: #FFFFFF; border: 2px solid #D85A30; border-radius: 20px; padding: 24px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 10px 30px rgba(216,90,48,0.12); position: relative; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <div style="width: 100%; height: 180px; overflow: hidden; border-radius: 12px; margin-bottom: 16px; border: 1px solid #E6E2D9;">
+                            <img src="images/online.webp" alt="Claude AI Online MasterClass" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" class="portal-card-img">
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                            <span style="background: #D85A30; color: #fff; font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 50px; text-transform: uppercase;"><span class="pulse-dot" style="background:#fff;"></span>🌐 ONLINE LIVE SESSION</span>
+                            <span style="color: #D85A30; font-size: 18px; font-weight: 900;">From ₹499</span>
+                        </div>
+                        <h2 style="color: #1F1E1C; font-size: 20px; font-weight: 800; margin-bottom: 10px; line-height: 1.3;">2-Day Live Virtual MasterClass</h2>
+                        <p style="color: #524F4A; font-size: 13px; margin-bottom: 18px; line-height: 1.5;">Learn Claude AI prompt architecture, custom MCP creation, and full web application development live from anywhere.</p>
+                        
+                        <ul style="list-style: none; padding: 0; margin: 0 0 20px 0; font-size: 13px; color: #2C2A29; display: flex; flex-direction: column; gap: 10px;">
+                            <li style="display: flex; align-items: center; gap: 10px;"><i class="fa-regular fa-calendar text-terracotta"></i> <strong>September 12 & 13, 2026 (Sat & Sun)</strong></li>
+                            <li style="display: flex; align-items: center; gap: 10px;"><i class="fa-regular fa-clock text-terracotta"></i> 6:00 PM – 9:00 PM IST (3 Hours/day)</li>
+                            <li style="display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-comments text-terracotta"></i> 100% Tamil Instruction & Direct Q&A</li>
+                        </ul>
+                    </div>
+
+                    <button type="button" onclick="event.stopPropagation(); openBatchPage('online');" class="btn btn-primary btn-block" style="padding: 14px; font-size: 14px; border-radius: 12px; font-weight: 800; background-color: #D85A30; border-color: #D85A30; color: #FFFFFF; cursor: pointer;">
+                        Explore Online MasterClass <i class="fa-solid fa-arrow-right" style="margin-left: 6px;"></i>
+                    </button>
+                </div>
+
+                <!-- CARD 2: OFFLINE CHENNAI -->
+                <div class="portal-card" onclick="openBatchPage('offline')" style="background: #FFFFFF; border: 2px solid #E6E2D9; border-radius: 20px; padding: 24px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 10px 30px rgba(0,0,0,0.06); position: relative; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <div style="width: 100%; height: 180px; overflow: hidden; border-radius: 12px; margin-bottom: 16px; border: 1px solid #E6E2D9;">
+                            <img src="images/offline.webp" alt="Claude AI In-Person Workshop Chennai" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" class="portal-card-img">
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                            <span style="background: #D85A30; color: #fff; font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 50px; text-transform: uppercase;"><span class="pulse-dot" style="background:#fff;"></span>🏨 IN-PERSON CHENNAI</span>
+                            <span style="color: #D85A30; font-size: 18px; font-weight: 900;">₹4,999</span>
+                        </div>
+                        <h2 style="color: #1F1E1C; font-size: 20px; font-weight: 800; margin-bottom: 10px; line-height: 1.3;">1-Day Classroom Workshop @ Vestin Park Hotel</h2>
+                        <p style="color: #524F4A; font-size: 13px; margin-bottom: 18px; line-height: 1.5;">Full-day hands-on classroom workshop in Egmore, Chennai. Includes luxury hotel buffet lunch, morning & evening high tea.</p>
+                        
+                        <ul style="list-style: none; padding: 0; margin: 0 0 20px 0; font-size: 13px; color: #2C2A29; display: flex; flex-direction: column; gap: 10px;">
+                            <li style="display: flex; align-items: center; gap: 10px;"><i class="fa-regular fa-calendar text-terracotta"></i> <strong>October 11, 2026 (Sunday • Full Day)</strong></li>
+                            <li style="display: flex; align-items: center; gap: 10px;"><i class="fa-regular fa-clock text-terracotta"></i> 9:00 AM – 5:30 PM IST</li>
+                            <li style="display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-utensils text-terracotta"></i> <strong>Hotel Buffet Lunch & High Tea Included</strong></li>
+                        </ul>
+                    </div>
+
+                    <button type="button" onclick="event.stopPropagation(); openBatchPage('offline');" class="btn btn-primary btn-block" style="padding: 14px; font-size: 14px; border-radius: 12px; font-weight: 800; background-color: #1F1E1C; border-color: #1F1E1C; color: #FFFFFF; cursor: pointer;">
+                        Explore In-Person Workshop <i class="fa-solid fa-arrow-right" style="margin-left: 6px;"></i>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN DETAIL CONTENT VIEW (Hidden by Default) -->
+    <div id="masterclass-main-content" style="display: none;">
+
+    <!-- HERO SECTION — Two Column Layout -->
+    <section class="hero-section">
+        <!-- Claude-native ambient orbs -->
+        <div class="hero-orb hero-orb-1"></div>
+        <div class="hero-orb hero-orb-2"></div>
+        <div class="hero-orb hero-orb-3"></div>
+        <div class="container hero-grid">
+            
+            <!-- Left Column: Copy & Action -->
+            <div class="hero-copy">
+                <div class="hero-pill">
+                    <i class="fa-solid fa-sparkles text-terracotta"></i>
+                    <span id="hero-badge-text">2-DAY LIVE WORKSHOP</span>
+                </div>
+
+                <h1 class="hero-title" id="hero-title-el">
+                    Master <span class="text-terracotta">Claude AI</span>, MCPs & Code Automation in 2 Days
+                </h1>
+
+                <p class="hero-description" id="hero-desc-el">
+                    Learn how to build custom Model Context Protocols (MCP), prompt like an expert, construct web applications, and automate complex workflows with Anthropic's Claude 3.5.
+                </p>
+
+                <!-- Direct Access Note -->
+                <div class="direct-access-card">
+                    <i class="fa-solid fa-circle-check text-terracotta"></i>
+                    <span id="hero-access-text">Direct access to Antony across both days • Live Q&A and practical exercises</span>
+                </div>
+
+                <!-- Hero CTA Buttons -->
+                <div class="hero-actions">
+                    <button id="hero-cta-btn" class="btn btn-primary btn-lg" onclick="openPaymentModal(499)">
+                        Register Now @ ₹499 <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                    <a href="#curriculum" class="btn btn-secondary btn-lg">
+                        View curriculum
+                    </a>
+                </div>
+
+                <!-- Honest Scoped Trust Stat -->
+                <div class="trust-stat-row">
+                    <div class="avatar-stack">
+                        <span class="avatar avatar-ap">AP</span>
+                        <span class="avatar avatar-tt">TT</span>
+                    </div>
+                    <span class="trust-text"><strong>5,000+ students trained</strong> (career total across AI sessions)</span>
+                </div>
+            </div>
+
+            <!-- Right Column: Info Card & Countdown -->
+            <div class="hero-card-side">
+                <div class="info-card">
+                    <div class="card-header">
+                        <span class="card-tag" id="session-tag-el">SESSION DETAILS</span>
+                        <span class="zoom-badge" id="venue-badge-el"><i class="fa-solid fa-video"></i> Live Online</span>
+                    </div>
+
+                    <div class="info-items-list">
+                        <div class="info-item">
+                            <div class="info-icon icon-terracotta"><i class="fa-regular fa-calendar"></i></div>
+                            <div>
+                                <strong>Date & Days</strong>
+                                <p id="info-date-text">September 12 & 13, 2026 (Saturday & Sunday)</p>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <div class="info-icon icon-purple"><i class="fa-regular fa-clock"></i></div>
+                            <div>
+                                <strong>Timing</strong>
+                                <p id="info-time-text">6:00 PM – 9:00 PM IST</p>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <div class="info-icon icon-terracotta"><i class="fa-solid fa-location-dot"></i></div>
+                            <div>
+                                <strong>Venue & Platform</strong>
+                                <p id="info-venue-text">Live Interactive Virtual Classroom</p>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <div class="info-icon icon-purple"><i class="fa-solid fa-user-check"></i></div>
+                            <div>
+                                <strong>Lead Instructor</strong>
+                                <p>Mr. Antony Praveen (Founder, Tech Tycoon)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Countdown Box -->
+                    <div class="countdown-box">
+                        <span class="countdown-label">LIVE SESSION STARTS IN</span>
+                        <div class="countdown-timer">
+                            <div class="timer-unit"><span id="cd-days">00</span><small>DAYS</small></div>
+                            <div class="timer-unit"><span id="cd-hours">00</span><small>HOURS</small></div>
+                            <div class="timer-unit"><span id="cd-mins">00</span><small>MINS</small></div>
+                            <div class="timer-unit"><span id="cd-secs">00</span><small>SECS</small></div>
+                        </div>
+                    </div>
+
+                    <div class="card-pricing-footer">
+                        <span id="hero-card-sub-price">Standard Pass starting at</span>
+                        <strong class="text-terracotta price-big" id="hero-card-main-price">₹499 INR</strong>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- WHY JOIN SECTION -->
+    <section class="section-why">
+        <div class="container">
+            <div class="section-heading text-center">
+                <span class="section-subtitle">CORE SKILLS COVERED</span>
+                <h2 class="section-title">Why join the Claude Masterclass?</h2>
+                <p class="section-desc">Go beyond generic chatting. Learn how to turn Claude 3.5 Sonnet into your dedicated software engineer and workflow assistant.</p>
+            </div>
+
+            <div class="grid-3">
+                <div class="feature-card">
+                    <div class="feature-icon icon-terracotta"><i class="fa-solid fa-bolt"></i></div>
+                    <h3>Advanced Prompting & Hacks</h3>
+                    <p>System prompts, context caching tricks, structured outputs, and getting exact code logic on the first prompt.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon icon-purple"><i class="fa-solid fa-plug"></i></div>
+                    <h3>Build Custom MCP Servers</h3>
+                    <p>Connect Claude directly to your local file system, APIs, databases, and custom tools with Model Context Protocol.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon icon-terracotta"><i class="fa-solid fa-terminal"></i></div>
+                    <h3>Claude Code & CLI Workflows</h3>
+                    <p>Master terminal-based coding automation to edit multi-file projects, refactor codebases, and run debug cycles.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon icon-purple"><i class="fa-solid fa-laptop-code"></i></div>
+                    <h3>Websites & App Building</h3>
+                    <p>Construct complete web applications, interactive dashboards, and SaaS landing pages live with Claude Artifacts.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon icon-terracotta"><i class="fa-solid fa-gift"></i></div>
+                    <h3>Free vs Paid Tier Optimization</h3>
+                    <p>Learn how to maximize Claude's free tier without hitting limits, and evaluate when upgrading to Pro pays off.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon icon-purple"><i class="fa-solid fa-file-code"></i></div>
+                    <h3>Hands-on Live Projects</h3>
+                    <p>Build real-world projects live during the session with direct guidance and feedback from the instructor.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CURRICULUM SECTION -->
+    <section class="section-curriculum" id="curriculum">
+        <div class="container">
+            <div class="section-heading text-center">
+                <span class="section-subtitle">2-DAY LIVE ROADMAP</span>
+                <h2 class="section-title">Structured Masterclass Curriculum</h2>
+                <p class="section-desc">6 total hours of hands-on, live interactive training across Saturday and Sunday.</p>
+            </div>
+
+            <div class="curriculum-days">
+                
+                <!-- Day 1 Card -->
+                <div class="day-card">
+                    <div class="day-header">
+                        <div class="day-title-grp">
+                            <span class="badge-day badge-terracotta">DAY 1</span>
+                            <div>
+                                <h3>Saturday, September 12th • 6:00 PM – 9:00 PM IST</h3>
+                                <p>Foundations, Prompt Architecture & Building Custom MCPs</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modules-grid">
+                        <div class="module-item">
+                            <span class="mod-no text-terracotta">Module 01</span>
+                            <h4>Claude Architecture & Artifacts</h4>
+                            <p>System prompts, token context caching, and free vs paid optimization.</p>
+                        </div>
+                        <div class="module-item">
+                            <span class="mod-no text-terracotta">Module 02</span>
+                            <h4>Advanced Prompt Engineering</h4>
+                            <p>Structured JSON outputs, few-shot prompting, and bug elimination.</p>
+                        </div>
+                        <div class="module-item">
+                            <span class="mod-no text-terracotta">Module 03</span>
+                            <h4>Model Context Protocol (MCP)</h4>
+                            <p>Connecting Claude to local files, external tools, and custom APIs.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Day 2 Card -->
+                <div class="day-card">
+                    <div class="day-header">
+                        <div class="day-title-grp">
+                            <span class="badge-day badge-purple">DAY 2</span>
+                            <div>
+                                <h3>Sunday, September 13th • 6:00 PM – 9:00 PM IST</h3>
+                                <p>Claude Code CLI, Web App Construction & Live Projects</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modules-grid">
+                        <div class="module-item">
+                            <span class="mod-no text-purple">Module 04</span>
+                            <h4>Claude Code & Terminal Automation</h4>
+                            <p>Command line workflows, codebase refactoring, and automated testing.</p>
+                        </div>
+                        <div class="module-item">
+                            <span class="mod-no text-purple">Module 05</span>
+                            <h4>Building Web Apps & Dashboards</h4>
+                            <p>Creating full-stack responsive web tools and SaaS UIs live in class.</p>
+                        </div>
+                        <div class="module-item">
+                            <span class="mod-no text-purple">Module 06</span>
+                            <h4>Real Projects & Q&A Session</h4>
+                            <p>Freelance workflows, client deliverables automation, and live Q&A.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- INSTRUCTOR SECTION -->
+    <section class="section-instructor">
+        <div class="container">
+            <div class="instructor-card">
+                <div class="instructor-left">
+                    <img src="images/antony_praveen.jpg" alt="Mr. Antony Praveen" class="instructor-photo">
+                    <span class="instructor-badge"><i class="fa-solid fa-award"></i> Lead Instructor</span>
+                </div>
+                <div class="instructor-right">
+                    <span class="section-subtitle">MEET YOUR MENTOR</span>
+                    <h2>Mr. Antony Praveen</h2>
+                    <p class="instructor-role">AI Specialist & Founder, Tech Tycoon</p>
+                    <p class="instructor-bio">Antony Praveen has trained thousands of students, developers, and business owners in AI adoption, prompt engineering, and modern developer tools. With hands-on expertise in production AI agents and custom MCPs, he breaks down complex technical workflows into clear Tamil instruction.</p>
+                    
+                    <div class="instructor-metrics">
+                        <div class="metric-box">
+                            <strong>5,000+</strong>
+                            <span>Students trained (career total)</span>
+                        </div>
+                        <div class="metric-box">
+                            <strong>100+</strong>
+                            <span>Live sessions conducted</span>
+                        </div>
+                        <div class="metric-box">
+                            <strong>4.9 ★</strong>
+                            <span>Average participant rating</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRICING SECTION -->
+    <section class="section-pricing" id="pricing">
+        <div class="container">
+            <div class="section-heading text-center">
+                <span class="section-subtitle">REGISTRATION OPTIONS</span>
+                <h2 class="section-title" id="pricing-title-el">Select your pass for the live batch</h2>
+                <p class="section-desc" id="pricing-desc-el">Choose between the standard live interactive pass or the pass with recorded video access.</p>
+            </div>
+
+            <!-- ONLINE PRICING GRID -->
+            <div class="pricing-grid" id="pricing-grid-online">
+                
+                <!-- Standard Pass ₹499 -->
+                <div class="pricing-card">
+                    <span class="card-type">STANDARD LIVE PASS</span>
+                    <div class="price-row">
+                        <strong class="price-val">₹499</strong>
+                        <span class="currency">INR</span>
+                    </div>
+                    <p class="card-sub">Ideal for live interactive participation across both days.</p>
+
+                    <ul class="feature-list">
+                        <li><i class="fa-solid fa-check text-terracotta"></i> 2-Day Live Online Session (September 12 & 13)</li>
+                        <li><i class="fa-solid fa-check text-terracotta"></i> Tamil & English Instruction</li>
+                        <li><i class="fa-solid fa-check text-terracotta"></i> Direct Q&A with Antony Praveen</li>
+                        <li class="disabled"><i class="fa-solid fa-xmark"></i> Recorded Video Access</li>
+                    </ul>
+
+                    <button class="btn btn-secondary btn-block" onclick="openPaymentModal(499)">
+                        Select Live Pass @ ₹499
+                    </button>
+                </div>
+
+                <!-- Live + Recording Pass ₹999 -->
+                <div class="pricing-card card-recommended">
+                    <span class="badge-recommended">RECOMMENDED</span>
+                    <span class="card-type text-terracotta">LIVE + RECORDING PASS</span>
+                    <div class="price-row">
+                        <strong class="price-val">₹999</strong>
+                        <span class="currency">INR</span>
+                    </div>
+                    <p class="card-sub">Full package with recorded video access of these 2 live classes.</p>
+
+                    <ul class="feature-list">
+                        <li class="font-bold"><i class="fa-solid fa-check text-terracotta"></i> Everything in Standard Live Pass</li>
+                        <li class="highlight-item"><i class="fa-solid fa-star text-terracotta"></i> Recorded Video Access of 2-Day Live Classes</li>
+                    </ul>
+
+                    <button class="btn btn-primary btn-block" onclick="openPaymentModal(999)">
+                        Select Recording Pass @ ₹999 <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- OFFLINE IN-PERSON PRICING GRID -->
+            <div class="pricing-grid" id="pricing-grid-offline" style="display: none; grid-template-columns: 1fr; max-width: 520px; margin: 0 auto;">
+                
+                <!-- In-Person Pass ₹4,999 -->
+                <div class="pricing-card card-recommended">
+                    <span class="badge-recommended" style="background-color: #D85A30;">HOTEL LUNCH & SNACKS INCLUDED</span>
+                    <span class="card-type text-terracotta">IN-PERSON CHENNAI MASTERCLASS</span>
+                    <div class="price-row">
+                        <strong class="price-val">₹4,999</strong>
+                        <span class="currency">INR</span>
+                    </div>
+                    <p class="card-sub">Full-day in-person hands-on workshop at Vestin Park Hotel, Egmore, Chennai.</p>
+
+                    <ul class="feature-list">
+                        <li class="font-bold"><i class="fa-solid fa-check text-terracotta"></i> Full-Day In-Person Training (Oct 11 • 9:00 AM - 5:30 PM)</li>
+                        <li class="highlight-item"><i class="fa-solid fa-utensils text-terracotta"></i> Luxury Hotel Buffet Lunch Included</li>
+                        <li class="highlight-item"><i class="fa-solid fa-mug-hot text-terracotta"></i> Morning & Evening High Tea & Refreshments</li>
+                        <li><i class="fa-solid fa-check text-terracotta"></i> Hands on Practical Session</li>
+                        <li><i class="fa-solid fa-laptop text-terracotta"></i> Bring your own Laptop with internet connection (No -WiFi connections)</li>
+                    </ul>
+
+                    <button class="btn btn-primary btn-block" onclick="openPaymentModal(4999)">
+                        Register In-Person Pass @ ₹4,999 <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ SECTION -->
+    <section class="section-faq">
+        <div class="container">
+            <div class="section-heading text-center">
+                <span class="section-subtitle">FREQUENTLY ASKED QUESTIONS</span>
+                <h2 class="section-title">Everything you need to know</h2>
+            </div>
+
+            <div class="faq-list">
+                <div class="faq-item active">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>What language will the Masterclass be conducted in?</span>
+                        <i class="fa-solid fa-chevron-down text-terracotta"></i>
+                    </button>
+                    <div class="faq-answer">
+                        The entire session will be taught 100% in Tamil (தமிழ்) by Mr. Antony Praveen for clear, practical understanding.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>What is the difference between the ₹499 Live Pass and ₹999 Recording Pass?</span>
+                        <i class="fa-solid fa-chevron-down text-terracotta"></i>
+                    </button>
+                    <div class="faq-answer">
+                        The ₹499 pass grants live interactive participation on September 12 & 13. The ₹999 Recording Pass includes everything in the ₹499 pass PLUS recorded video access of these 2 live classes.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>How will I receive the session meeting link?</span>
+                        <i class="fa-solid fa-chevron-down text-terracotta"></i>
+                    </button>
+                    <div class="faq-answer">
+                        Immediately upon successful registration, your session link and details will be sent to your email and WhatsApp number.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>Do I need a paid Claude Pro account to participate?</span>
+                        <i class="fa-solid fa-chevron-down text-terracotta"></i>
+                    </button>
+                    <div class="faq-answer">
+                        No. A free Claude account is sufficient. We specifically teach how to utilize the free version effectively without hitting rate limits.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>Do I need prior coding experience?</span>
+                        <i class="fa-solid fa-chevron-down text-terracotta"></i>
+                    </button>
+                    <div class="faq-answer">
+                        No prior software development background is required. The session is structured step-by-step from foundational prompting to AI-assisted coding.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <div class="container footer-content text-center">
+            <div class="footer-logo">
+                <img src="images/tech_tycoon_logo.png" alt="TECH TYCOON Digital Solution LLP" class="footer-logo-img">
+            </div>
+            <p>Conducted by TECH TYCOON Digital Solution LLP • September 12 & 13, 2026</p>
+            <div class="footer-links" style="margin: 12px 0; display: flex; justify-content: center; gap: 14px; font-size: 11px; flex-wrap: wrap;">
+                <a href="#terms-modal" onclick="openTermsModal(event)" style="color: #A09C94; text-decoration: underline; cursor: pointer;">Terms & Conditions</a>
+                <span style="color: #524F4A;">•</span>
+                <a href="#terms-modal" onclick="openTermsModal(event)" style="color: #A09C94; text-decoration: underline; cursor: pointer;">Privacy Policy</a>
+                <span style="color: #524F4A;">•</span>
+                <a href="#terms-modal" onclick="openTermsModal(event)" style="color: #A09C94; text-decoration: underline; cursor: pointer;">Refund & Cancellation Policy</a>
+            </div>
+            <div class="footer-bottom">
+                &copy; 2026 TECH TYCOON Digital Solution LLP. All rights reserved. | aitycoon.in/claude_masterclass
+            </div>
+        </div>
+    </footer>
+
+    </div><!-- End #masterclass-main-content -->
+
+    <!-- BOTTOM FLOATING WIDGET (3 COLUMNS: DATE | TIME | CTA) -->
+    <div class="bottom-floating-widget">
+        <div class="floating-widget-content">
+            <!-- Column 1: Date -->
+            <div class="widget-item">
+                <i class="fa-regular fa-calendar text-terracotta"></i>
+                <div>
+                    <strong id="float-date-title">September 12 & 13</strong>
+                    <small id="float-date-sub">6:00 PM IST</small>
+                </div>
+            </div>
+
+            <div class="widget-divider"></div>
+
+            <!-- Column 2: Time -->
+            <div class="widget-item">
+                <i class="fa-regular fa-clock text-purple"></i>
+                <div>
+                    <strong id="float-time-title">6:00 PM – 9:00 PM</strong>
+                    <small id="float-time-sub">IST</small>
+                </div>
+            </div>
+
+            <div class="widget-divider"></div>
+
+            <!-- Column 3: CTA Button -->
+            <div class="widget-cta">
+                <button id="float-cta-btn" class="btn btn-primary btn-sm" onclick="openPaymentModal(499)">
+                    Register Now @ ₹499 <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2-STEP PAYMENT & REGISTRATION MODAL -->
+    <div class="modal-overlay" id="payment-modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closePaymentModal()"><i class="fa-solid fa-xmark"></i></button>
+
+            <!-- STEP 1: PASS SELECTION -->
+            <div id="modal-step-1">
+                <div class="modal-header text-center">
+                    <span class="modal-tag"><i class="fa-solid fa-shield-halved"></i> SECURE CHECKOUT</span>
+                    <h3>Select your registration pass</h3>
+                    <p>Choose your preferred option to continue</p>
+                </div>
+
+                <div class="modal-options" id="modal-options-online">
+                    <div class="modal-option selected" id="opt-499" onclick="selectPass(499)">
+                        <div class="opt-radio"><div class="radio-dot"></div></div>
+                        <div class="opt-info">
+                            <div class="opt-title-row">
+                                <strong>Standard Live Pass</strong>
+                                <span class="opt-price text-terracotta">₹499</span>
+                            </div>
+                            <p>Live Online Session (No Video Recording Access).</p>
+                        </div>
+                    </div>
+
+                    <div class="modal-option option-vip" id="opt-999" onclick="selectPass(999)">
+                        <span class="badge-opt-rec">RECOMMENDED</span>
+                        <div class="opt-radio"><div class="radio-dot"></div></div>
+                        <div class="opt-info">
+                            <div class="opt-title-row">
+                                <strong>Live + Recording Pass</strong>
+                                <span class="opt-price text-terracotta">₹999</span>
+                            </div>
+                            <p>Live Zoom + <strong>Recorded Video Access of these 2 live classes</strong>.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- OFFLINE IN-PERSON MODAL OPTION -->
+                <div class="modal-options" id="modal-options-offline" style="display: none;">
+                    <div class="modal-option selected option-vip" id="opt-4999" onclick="selectPass(4999)">
+                        <span class="badge-opt-rec" style="background-color: #D85A30;">HOTEL LUNCH INCLUDED</span>
+                        <div class="opt-radio"><div class="radio-dot"></div></div>
+                        <div class="opt-info">
+                            <div class="opt-title-row">
+                                <strong>In-Person Chennai MasterClass Pass</strong>
+                                <span class="opt-price text-terracotta">₹4,999</span>
+                            </div>
+                            <p>Full-day hands-on workshop at Vestin Park Hotel, Egmore, Chennai. <strong>Includes Hotel Buffet Lunch & High Tea</strong>.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer-step1">
+                    <div class="total-row">
+                        <span>Selected Pass Total:</span>
+                        <strong class="total-val text-terracotta" id="selected-pass-total">₹499 INR</strong>
+                    </div>
+                    <button class="btn btn-primary btn-block" onclick="goToStep2()">
+                        Proceed to details <i class="fa-solid fa-lock"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- STEP 2: USER DETAILS FORM -->
+            <div id="modal-step-2" style="display: none;">
+                <button type="button" class="modal-back-btn" onclick="goToStep1()">
+                    <i class="fa-solid fa-arrow-left"></i> Change pass selection (<span id="back-pass-price">₹499</span>)
+                </button>
+
+                <div class="modal-header text-center">
+                    <h3>Complete Your Registration</h3>
+                    <p>Registration fee: <strong class="text-terracotta" id="form-fee-display">₹499 INR</strong></p>
+                    <div class="session-pill" id="modal-session-pill"><i class="fa-regular fa-calendar"></i> September 12 & 13, 2026 • 6:00 PM IST</div>
+
+                    <!-- INTERACTIVE PASS SWITCHER TAB BAR INSIDE STEP 2 -->
+                    <div class="step2-pass-switcher" id="step2-pass-switcher" style="display: flex; background: #F7F4EE; padding: 4px; border-radius: 12px; border: 1px solid #E6E2D9; gap: 4px; margin-top: 12px;">
+                        <button type="button" id="tab-pass-499" onclick="selectPass(499)" style="flex: 1; padding: 7px 10px; border-radius: 8px; border: none; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.2s; background: #ffffff; color: #D85A30; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+                            Standard Live (₹499)
+                        </button>
+                        <button type="button" id="tab-pass-999" onclick="selectPass(999)" style="flex: 1; padding: 7px 10px; border-radius: 8px; border: none; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.2s; background: transparent; color: #6E6B65;">
+                            ⭐ Live + Recording (₹999)
+                        </button>
+                    </div>
+                </div>
+
+                <form id="registration-form" onsubmit="handleFormSubmit(event)" class="modal-form">
+                    <div class="form-group">
+                        <label>FULL NAME</label>
+                        <input type="text" id="cust-name" required placeholder="Enter your name">
+                    </div>
+
+                    <div class="form-group">
+                        <label>EMAIL ADDRESS</label>
+                        <input type="email" id="cust-email" required placeholder="email@example.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label>WHATSAPP NUMBER</label>
+                        <div class="phone-input-grp" style="display: flex; gap: 8px; align-items: center; position: relative;">
+                            <div class="custom-country-select-container" id="country-select-container" style="position: relative; width: 95px; flex-shrink: 0;">
+                                <button type="button" class="country-select-trigger" id="country-select-trigger" onclick="toggleCountryDropdown(event)" style="background: #F7F4EE; border: 1px solid #E6E2D9; border-radius: 12px; padding: 0 8px; font-size: 11px; font-weight: 700; color: #524F4A; height: 38px; display: flex; align-items: center; justify-content: space-between; gap: 4px; cursor: pointer; width: 100%;">
+                                    <span id="selected-country-label">🇮🇳 +91</span>
+                                    <i class="fa-solid fa-chevron-down" style="font-size: 9px; color: #A09C94;"></i>
+                                </button>
+                                <div class="country-select-dropdown" id="country-select-dropdown" style="display: none; position: absolute; top: calc(100% + 4px); left: 0; width: 280px; background: #ffffff; border: 1px solid #E6E2D9; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.18); z-index: 99999; overflow: hidden;">
+                                    <div style="padding: 8px; border-bottom: 1px solid #E6E2D9; background: #F7F4EE;">
+                                        <input type="text" id="country-search-input" placeholder="🔍 Search country or code..." onkeyup="filterCountries()" style="width: 100%; background: #ffffff; border: 1px solid #E6E2D9; border-radius: 8px; padding: 6px 10px; font-size: 12px; color: #1F1E1C; outline: none;">
+                                    </div>
+                                    <div id="country-options-list" style="max-height: 200px; overflow-y: auto; padding: 4px 0;">
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" id="cust-country-code" value="+91">
+                            <input type="tel" id="cust-phone" required placeholder="WhatsApp number" style="flex: 1; min-width: 0; width: 100%;">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>CURRENT PROFESSION</label>
+                        <select id="cust-profession" required>
+                            <option value="">Select profession...</option>
+                            <option value="Trainer / Coach">Trainer / Coach</option>
+                            <option value="Entrepreneur">Entrepreneur</option>
+                            <option value="Business Owner">Business Owner</option>
+                            <option value="Educator">Educator</option>
+                            <option value="IT Professional">IT Professional</option>
+                            <option value="Student">Student</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>PROMO CODE</label>
+                        <div style="display: flex; gap: 8px;">
+                            <input type="text" id="cust-promo" placeholder="Enter promo code" value="CLAUDE" style="text-transform: uppercase; flex: 1;">
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="applyPromoCode()" style="padding: 0 16px;">Apply</button>
+                        </div>
+                        <span id="promo-message" style="display: block; font-size: 11px; margin-top: 4px; color: #10b981; font-weight: 600;">CLAUDE code applied! 10% discount matches. 🎉</span>
+                    </div>
+
+                    <div class="pass-warning-note" id="pass-note">
+                        ⚠️ Live session only (No recorded access in ₹499 pass)
+                    </div>
+
+                    <!-- E-CERTIFICATE ADD-ON CHECKBOX -->
+                    <div class="certificate-addon-card" style="background: rgba(216, 90, 48, 0.06); border: 1.5px dashed #D85A30; border-radius: 12px; padding: 12px 14px; margin-bottom: 12px; transition: all 0.2s ease;">
+                        <label for="want-certificate" style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; margin: 0; user-select: none;">
+                            <input type="checkbox" id="want-certificate" onchange="toggleCertificate()" style="width: 18px; height: 18px; margin-top: 2px; flex-shrink: 0; accent-color: #D85A30; cursor: pointer;">
+                            <div>
+                                <div style="font-weight: 700; font-size: 13px; color: #1F1E1C; display: flex; align-items: center; gap: 6px;">
+                                    <span>🎓 Official E-Certificate</span>
+                                    <span style="background: #D85A30; color: white; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 6px;">+ ₹1,000</span>
+                                </div>
+                                <p style="font-size: 11px; color: #524F4A; margin: 3px 0 0 0; line-height: 1.4;">
+                                    Get an official verified E-Certificate upon masterclass completion to share on LinkedIn & Resume.
+                                </p>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-checkbox" for="agree-wa" style="display: flex; align-items: center; gap: 8px; font-size: 10px; color: #8E8A83; font-weight: 400; letter-spacing: 0; cursor: pointer; margin: 0;">
+                            <input type="checkbox" id="agree-wa" checked style="width: 14px; height: 14px; flex-shrink: 0; accent-color: #D85A30; cursor: pointer;">
+                            I agree to receive workshop updates and automated reminders on WhatsApp.
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block" id="pay-submit-btn">
+                        Proceed to payment — <span id="btn-fee-display">₹499</span>
+                    </button>
+
+                    <div class="secured-footer" style="margin-top: 8px;">
+                        <i class="fa-solid fa-shield-halved"></i> SECURED BY RAZORPAY
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- TERMS & CONDITIONS MODAL -->
+    <div class="modal-overlay" id="terms-modal">
+        <div class="modal-content" style="max-width: 580px; max-height: 85vh; overflow-y: auto;">
+            <button class="modal-close" onclick="closeTermsModal()"><i class="fa-solid fa-xmark"></i></button>
+
+            <div class="terms-modal-body" style="padding: 10px 4px; text-align: left;">
+                <h3 style="font-size: 18px; font-weight: 800; color: #1F1E1C; margin-bottom: 4px;">Terms & Conditions</h3>
+                <p style="font-size: 11px; color: #6E6B65; margin-bottom: 16px;">Last Updated: August 2026 • Tech Tycoon Digital Solution LLP</p>
+
+                <div style="font-size: 12px; color: #524F4A; line-height: 1.6; space-y: 12px;">
+                    <h4 style="font-size: 13px; font-weight: 700; color: #1F1E1C; margin-top: 12px;">1. Workshop Schedule & Access</h4>
+                    <p style="margin-bottom: 8px;">The Claude MasterClass is a 2-Day Live Virtual Session taking place on September 12th & 13th, 2026 (6:00 PM – 9:00 PM IST). Access details and session meeting links are provided via the official WhatsApp group upon registration.</p>
+
+                    <h4 style="font-size: 13px; font-weight: 700; color: #1F1E1C; margin-top: 12px;">2. Registration & Pass Types</h4>
+                    <p style="margin-bottom: 8px;"><strong>Standard Live Pass (₹499)</strong> includes live interactive participation across both days. Video recording access is excluded from the standard pass.</p>
+                    <p style="margin-bottom: 8px;"><strong>Live + Recording Pass (₹999)</strong> includes live participation PLUS recorded video access of these 2 live classes.</p>
+                    <p style="margin-bottom: 8px;"><strong>Official E-Certificate Add-on (+ ₹1,000)</strong> is an optional verified certificate issued upon completion of the masterclass.</p>
+
+                    <h4 style="font-size: 13px; font-weight: 700; color: #1F1E1C; margin-top: 12px;">3. Refund & Cancellation Policy</h4>
+                    <p style="margin-bottom: 8px;">All registrations, pass purchases, and add-on payments are strictly non-refundable once processed. In the rare event of a session postponement by Tech Tycoon Digital Solution LLP, registered participants will be accommodated in the rescheduled live batch.</p>
+
+                    <h4 style="font-size: 13px; font-weight: 700; color: #1F1E1C; margin-top: 12px;">4. Intellectual Property</h4>
+                    <p style="margin-bottom: 8px;">All course materials, custom Model Context Protocol (MCP) code samples, presentation slides, and live recordings belong to Tech Tycoon Digital Solution LLP. Participants are granted a personal, non-exclusive license to use code templates for personal and business projects. Re-distribution or resale of course materials is strictly prohibited.</p>
+
+                    <h4 style="font-size: 13px; font-weight: 700; color: #1F1E1C; margin-top: 12px;">5. Contact & Customer Support</h4>
+                    <p style="margin-bottom: 8px;">For registration queries, billing assistance, or technical support, please contact our team at:<br>
+                    📧 Email: <a href="mailto:techtycoondigitalsolutions@gmail.com" style="color: #D85A30; text-decoration: underline;">techtycoondigitalsolutions@gmail.com</a><br>
+                    🌐 Website: <a href="https://aitycoon.in/claude_masterclass/" target="_blank" style="color: #D85A30; text-decoration: underline;">aitycoon.in/claude_masterclass</a></p>
+                </div>
+
+                <div style="margin-top: 20px; text-align: center;">
+                    <button class="btn btn-primary btn-sm" onclick="closeTermsModal()" style="padding: 8px 24px; font-size: 12px; font-weight: 800; border-radius: 10px;">
+                        Close Terms
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js?v=20260817_vPortalDisplayFix"></script>
+</body>
+</html>
