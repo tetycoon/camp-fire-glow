@@ -54,19 +54,26 @@ const AIMasterclass2Navbar: React.FC = () => {
             >
                 <div className="">
                     <div className="flex items-center justify-between h-16">
-                        <div className="flex items-center gap-2">
+                        <a href="/" className="flex items-center gap-2 hover:opacity-85 transition-opacity" title="Back to TechTycoon Hub">
                             <img src="/logo.png" alt="Tech Tycoon" className="w-8 h-8 rounded-full" />
                             <span className="font-display text-sm font-black tracking-tighter text-slate-900 italic">TECH TYCOON</span>
+                        </a>
+
+                        <div className="hidden md:flex items-center gap-4">
+                            <a
+                                href="/"
+                                className="text-xs font-bold text-slate-700 hover:text-blue-600 bg-white/70 px-3 py-1.5 rounded-full border border-sky-200 transition-colors"
+                            >
+                                ← Main Hub
+                            </a>
+                            <button
+                                onClick={openRegisterModal}
+                                className="flex items-center gap-2 bg-[#3b82f6] hover:bg-blue-600 text-white font-display text-[11px] font-bold px-7 py-3 rounded-full tracking-wider transition-all duration-500"
+                                style={{ boxShadow: showCTA ? "0 4px 15px rgba(59, 130, 246, 0.4)" : undefined }}
+                            >
+                                GET MY DISCOUNTED SEAT
+                            </button>
                         </div>
-
-
-                        <button
-                            onClick={openRegisterModal}
-                            className="hidden md:flex items-center gap-2 bg-[#3b82f6] hover:bg-blue-600 text-white font-display text-[11px] font-bold px-7 py-3 rounded-full tracking-wider transition-all duration-500"
-                            style={{ boxShadow: showCTA ? "0 4px 15px rgba(59, 130, 246, 0.4)" : undefined }}
-                        >
-                            GET MY DISCOUNTED SEAT
-                        </button>
 
                         <button
                             className="md:hidden text-slate-900 hover:text-blue-600 transition-colors"
@@ -83,6 +90,12 @@ const AIMasterclass2Navbar: React.FC = () => {
                         style={{ background: "white", borderTop: "1px solid rgba(0,0,0,0.05)" }}
                     >
                         <div className="flex flex-col gap-3 pt-3 font-body text-sm font-bold">
+                            <a
+                                href="/"
+                                className="text-left text-sm font-bold text-blue-600 py-1"
+                            >
+                                ← Main Hub (All Programs)
+                            </a>
 
                             <button
                                 onClick={() => { openRegisterModal(); setOpen(false); }}

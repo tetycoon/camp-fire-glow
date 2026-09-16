@@ -44,20 +44,28 @@ const AIMasterclassNavbar: React.FC = () => {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex items-center justify-between h-20">
                         {/* Logo */}
-                        <div className="flex items-center gap-2 cursor-pointer" onClick={() => window.scrollTo(0, 0)}>
+                        <a href="/" className="flex items-center gap-2 hover:opacity-85 transition-opacity" title="Back to TechTycoon Hub">
                             <img src="/logo.png" alt="Tech Tycoon" className="w-8 h-8 rounded-full" />
                             <span className="text-xl font-black tracking-tight text-slate-900">TECH TYCOON</span>
-                        </div>
+                        </a>
 
-                        {/* Desktop CTA */}
-                        {showCTA && (
-                            <button
-                                onClick={openRegisterModal}
-                                className="hidden md:flex items-center justify-center bg-brandGreen hover:bg-[#a3c77e] text-slate-900 text-sm font-bold px-8 py-3 rounded-md transition-all duration-200"
+                        {/* Desktop Actions */}
+                        <div className="hidden md:flex items-center gap-4">
+                            <a
+                                href="/"
+                                className="text-xs font-bold text-slate-700 hover:text-black bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-full transition-colors"
                             >
-                                GET MY DISCOUNTED SEAT
-                            </button>
-                        )}
+                                ← Main Hub
+                            </a>
+                            {showCTA && (
+                                <button
+                                    onClick={openRegisterModal}
+                                    className="flex items-center justify-center bg-brandGreen hover:bg-[#a3c77e] text-slate-900 text-sm font-bold px-8 py-3 rounded-md transition-all duration-200"
+                                >
+                                    GET MY DISCOUNTED SEAT
+                                </button>
+                            )}
+                        </div>
 
                         {/* Mobile Menu Button */}
                         <button
@@ -73,6 +81,12 @@ const AIMasterclassNavbar: React.FC = () => {
                 {open && (
                     <div className="md:hidden bg-white border-t border-gray-100 px-4 pb-6 shadow-xl">
                         <div className="flex flex-col gap-4 pt-4">
+                            <a
+                                href="/"
+                                className="text-left text-sm font-bold text-slate-800 hover:text-brandGreen py-2"
+                            >
+                                ← Main Hub (All Programs)
+                            </a>
                             <button
                                 onClick={() => { openRegisterModal(); setOpen(false); }}
                                 className="w-full bg-brandGreen hover:bg-[#a3c77e] text-slate-900 text-sm font-bold px-5 py-4 rounded-md mt-2"

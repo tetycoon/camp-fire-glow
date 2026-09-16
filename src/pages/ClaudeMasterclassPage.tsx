@@ -590,14 +590,17 @@ const ClaudeMasterclassPage: React.FC = () => {
     return (
       <div className="min-h-screen bg-[#FAF8F5] text-[#1F1E1C] font-sans">
         <header className="bg-[#F7F4EE] border-b border-[#E6E2D9] py-4 px-6">
-          <div className="max-w-6xl mx-auto flex justify-center items-center">
-            <div className="flex items-center gap-3">
+          <div className="max-w-6xl mx-auto flex justify-between items-center">
+            <a href="/" className="flex items-center gap-3 hover:opacity-85 transition-opacity" title="Back to TechTycoon Hub">
               <img src={techTycoonLogo} alt="Tech Tycoon" className="h-10 w-auto rounded-lg bg-white p-1 border border-[#E6E2D9]" />
               <div className="flex flex-col">
                 <span className="text-sm font-bold text-[#1F1E1C] tracking-tight">TECH TYCOON</span>
                 <span className="text-[10px] text-[#D85A30] font-semibold">Digital Solution LLP</span>
               </div>
-            </div>
+            </a>
+            <a href="/" className="text-xs font-bold text-[#524F4A] hover:text-[#D85A30] transition-colors bg-white px-3 py-1.5 rounded-lg border border-[#E6E2D9]">
+              ← Main Hub
+            </a>
           </div>
         </header>
 
@@ -705,15 +708,18 @@ const ClaudeMasterclassPage: React.FC = () => {
       {/* Sticky Header / Navigation */}
       <header className="sticky top-0 z-40 bg-[#F7F4EE]/90 backdrop-blur-md border-b border-[#E6E2D9] py-3.5 px-6">
         <div className="max-w-6xl mx-auto flex justify-between items-center">
-          <div className="flex items-center gap-3">
+          <a href="/" className="flex items-center gap-3 hover:opacity-85 transition-opacity" title="Back to TechTycoon Hub">
             <img src={techTycoonLogo} alt="Tech Tycoon Digital Solutions" className="h-10 w-auto rounded-lg bg-white p-1 border border-[#E6E2D9] shadow-sm object-contain" />
             <div className="flex flex-col" style={{gap: '1px'}}>
               <div className="text-sm font-bold text-[#1a56db] tracking-tight leading-none">TECH TYCOON</div>
               <div className="text-[10px] text-[#1a56db] font-semibold leading-none">Digital Solution LLP</div>
             </div>
-          </div>
+          </a>
           
           <div className="flex items-center gap-4">
+            <a href="/" className="text-xs font-bold text-[#524F4A] hover:text-[#D85A30] transition-colors bg-white px-3 py-1.5 rounded-lg border border-[#E6E2D9] hidden sm:block">
+              ← Main Hub
+            </a>
             <div className="hidden md:flex items-center gap-4 text-xs text-[#524F4A]">
               <span>{masterclassMode === 'offline' ? 'October 11, 2026' : 'September 12 & 13'}</span>
               <span className="w-1 h-1 rounded-full bg-[#C5C0B8]"></span>

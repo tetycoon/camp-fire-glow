@@ -57,6 +57,17 @@ const courses: Course[] = [
     isExternal: false,
   },
   {
+    title: "Claude 3.5 AI Masterclass",
+    tag: "Hot & Trending",
+    intro: "Master Anthropic Claude 3.5 Sonnet, prompt engineering architecture, custom MCP creation, and full web application development with direct guidance in Tamil.",
+    fees: "From ₹499",
+    date: "Online & Offline",
+    timing: "6:00 PM – 9:00 PM IST / Full Day",
+    image: "/images/antony_praveen.jpg",
+    link: "/claude_masterclass",
+    isExternal: false,
+  },
+  {
     title: "AI Summer Bootcamp",
     tag: "Certification",
     intro: "A rigorous 30-day architectural immersion. Master agentic workflows, LLM orchestration, and the foundations of professional AI autonomy.",
@@ -66,6 +77,17 @@ const courses: Course[] = [
     image: "/images/summer_camp.jpg",
     link: "/bootcamp",
     isExternal: false,
+  },
+  {
+    title: "AI Growth & Systems Consulting",
+    tag: "Subdomain Funnel",
+    intro: "Unlock enterprise AI-powered business growth with proven tools, automated marketing workflows, and custom digital marketing solutions crafted for your business.",
+    fees: "Consulting Solutions",
+    date: "Direct Consultation",
+    timing: "On-Demand Access",
+    image: imgEntrepreneur,
+    link: "https://antony.aitycoon.in",
+    isExternal: true,
   }
 ];
 

@@ -133,13 +133,19 @@ const Navbar: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <div className="flex items-center gap-2">
+            <a href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity" title="Back to TechTycoon Hub">
               <img src="/logo.png" alt="Tech Tycoon" className="w-8 h-8 rounded-full" />
               <span className="font-display text-sm font-bold tracking-wider text-gradient">TECH TYCOON</span>
-            </div>
+            </a>
 
             {/* Desktop Nav Links */}
             <div className="hidden md:flex items-center gap-6 font-body text-sm text-muted-foreground">
+              <a
+                href="/"
+                className="text-primary hover:text-white transition-colors font-medium text-xs bg-white/5 border border-white/10 px-3 py-1.5 rounded-lg flex items-center gap-1"
+              >
+                ← Main Hub
+              </a>
               {["why", "modules", "trainer", "pricing"].map((id) => (
                 <button
                   key={id}
@@ -208,12 +214,19 @@ const Navbar: React.FC = () => {
             </button>
 
             <div className="flex flex-col gap-8">
-              <div className="flex items-center gap-3">
+              <a href="/" className="flex items-center gap-3">
                 <img src="/logo.png" alt="Tech Tycoon" className="w-10 h-10 rounded-full" />
                 <span className="font-display text-xl font-bold tracking-wider text-gradient">TECH TYCOON</span>
-              </div>
+              </a>
 
               <div className="flex flex-col gap-6">
+                <a
+                  href="/"
+                  className="group flex items-center justify-between text-2xl font-display font-bold text-sky-400 hover:text-white transition-all duration-300"
+                >
+                  <span>← Main Hub (All Programs)</span>
+                  <span className="w-8 h-px bg-primary/30 group-hover:w-12 transition-all" />
+                </a>
                 {["why", "modules", "trainer", "pricing"].map((id, i) => (
                   <button
                     key={id}

@@ -260,7 +260,7 @@ export default function AcademyPreRegisterPage() {
         {/* 🧭 Clean Navbar */}
         <header className="sticky top-0 z-40 backdrop-blur-xl bg-white/90 border-b border-sky-100 shadow-sm">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-            <div className="flex items-center gap-2">
+            <a href="/" className="flex items-center gap-2 hover:opacity-85 transition-opacity" title="Back to TechTycoon Hub">
               <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-sky-500 to-blue-600 flex items-center justify-center shadow-md shadow-sky-500/20 shrink-0">
                 <Rocket className="w-4 h-4 text-white" />
               </div>
@@ -272,15 +272,23 @@ export default function AcademyPreRegisterPage() {
                   ACADEMY
                 </span>
               </div>
-            </div>
+            </a>
 
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition-all shadow-md shadow-sky-500/20 flex items-center gap-1 border border-sky-400/30"
-            >
-              <span>Pre-Register</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
+            <div className="flex items-center gap-3">
+              <a
+                href="/"
+                className="text-xs font-bold text-sky-700 hover:text-sky-900 bg-sky-50 px-3 py-1.5 rounded-lg border border-sky-200 transition-colors"
+              >
+                ← Main Hub
+              </a>
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition-all shadow-md shadow-sky-500/20 flex items-center gap-1 border border-sky-400/30"
+              >
+                <span>Pre-Register</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
           </div>
         </header>
 
@@ -319,10 +327,15 @@ export default function AcademyPreRegisterPage() {
               </button>
             </div>
 
-            <p className="text-xs text-slate-500 flex items-center justify-center gap-1 font-medium">
-              <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0" />
-              <span>256-Bit SSL Encrypted • Secret 50% coupon code applicable at checkout</span>
-            </p>
+            <div className="space-y-1">
+              <p className="text-xs text-slate-500 flex items-center justify-center gap-1 font-medium">
+                <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0" />
+                <span>256-Bit SSL Encrypted • Secret 50% coupon code applicable at checkout</span>
+              </p>
+              <p className="text-[11px] sm:text-xs text-slate-400 font-medium">
+                * Annual Maintenance & Support charges not included
+              </p>
+            </div>
 
             {/* Clean 4 Key Feature Pillars */}
             <div className="pt-6 grid grid-cols-2 md:grid-cols-4 gap-3 max-w-3xl mx-auto text-left">
@@ -565,8 +578,9 @@ export default function AcademyPreRegisterPage() {
                 )}
               </button>
 
-              <div className="text-center text-[10px] text-slate-500 font-medium">
-                🔒 256-Bit SSL Encrypted Razorpay Checkout
+              <div className="text-center text-[10px] text-slate-500 font-medium space-y-0.5">
+                <div>🔒 256-Bit SSL Encrypted Razorpay Checkout</div>
+                <div className="text-slate-400 font-normal">* Annual Maintenance & Support charges not included</div>
               </div>
 
             </form>

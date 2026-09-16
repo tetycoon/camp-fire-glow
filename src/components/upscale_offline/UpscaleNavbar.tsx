@@ -61,15 +61,21 @@ const UpscaleNavbar: React.FC = () => {
             </div>
 
             <div className={`max-w-7xl mx-auto px-6 flex items-center justify-between transition-all duration-500 ${scrolled ? "py-3" : "py-6"}`}>
-                <div className="flex items-center gap-3 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
+                <a href="/" className="flex items-center gap-3 hover:opacity-85 transition-opacity" title="Back to TechTycoon Hub">
                     <img src={logo} alt="Tech Tycoon Logo" className="w-12 h-12 object-contain" />
                     <div className="flex flex-col">
                         <span className={`text-xl font-black leading-tight tracking-tighter ${scrolled ? "text-slate-900" : "text-slate-900"}`}>TECH TYCOON</span>
                     </div>
-                </div>
+                </a>
 
                 {/* Desktop Links */}
                 <div className="hidden md:flex items-center gap-8">
+                    <a
+                        href="/"
+                        className="text-xs font-bold text-blue-600 hover:text-blue-700 bg-blue-50 px-3 py-1.5 rounded-full transition-colors"
+                    >
+                        ← Main Hub
+                    </a>
                     {navLinks.map(link => (
                         <button 
                             key={link.id} 
@@ -96,6 +102,12 @@ const UpscaleNavbar: React.FC = () => {
             {/* Mobile Menu */}
             <div className={`fixed inset-x-0 top-full bg-white border-t border-slate-100 shadow-xl transition-all duration-300 opacity-0 pointer-events-none translate-y-4 ${mobileOpen ? "opacity-100 pointer-events-auto translate-y-0" : ""}`}>
                 <div className="p-6 flex flex-col gap-6">
+                    <a
+                        href="/"
+                        className="text-left text-base font-black text-blue-600"
+                    >
+                        ← Main Hub (All Programs)
+                    </a>
                     {navLinks.map(link => (
                         <button 
                             key={link.id} 
