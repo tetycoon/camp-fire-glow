@@ -31,7 +31,17 @@ import AdminPanelPage from "./pages/AdminPanelPage";
 
 import AcademyPreRegisterPage from "./pages/AcademyPreRegisterPage";
 
-const queryClient = new QueryClient();
+const DynamicRootPage = () => {
+  const host = typeof window !== "undefined" ? window.location.hostname.toLowerCase() : "";
+  if (host.startsWith("bootcamp.")) return <BootcampPage />;
+  if (host.startsWith("claude.") || host.startsWith("claude-masterclass.")) return <ClaudeMasterclassPage />;
+  if (host.startsWith("upscale.")) return <UpscalePage />;
+  if (host.startsWith("secrets.") || host.startsWith("masterclass.") || host.startsWith("ai-masterclass.")) return <AIMasterclassPage />;
+  if (host.startsWith("advanced.") || host.startsWith("advanced-masterclass.")) return <AIMasterclass2Page />;
+  if (host.startsWith("academy.")) return <AcademyPreRegisterPage />;
+  if (host.startsWith("college.")) return <College />;
+  return <Index />;
+};
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -41,7 +51,7 @@ const App = () => (
       <BrowserRouter>
         <ScrollToTop />
         <Routes>
-          <Route path="/" element={<Index />} />
+          <Route path="/" element={<DynamicRootPage />} />
           <Route path="/academy" element={<AcademyPreRegisterPage />} />
           <Route path="/academy-preregister" element={<AcademyPreRegisterPage />} />
           <Route path="/academy_preregister" element={<AcademyPreRegisterPage />} />
