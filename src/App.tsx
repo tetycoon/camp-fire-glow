@@ -37,7 +37,10 @@ const DynamicRootPage = () => {
   if (host.startsWith("claude.") || host.startsWith("claude-masterclass.")) return <ClaudeMasterclassPage />;
   if (host.startsWith("upscale.")) return <UpscalePage />;
   if (host.startsWith("secrets.") || host.startsWith("masterclass.") || host.startsWith("ai-masterclass.")) return <AIMasterclassPage />;
-  if (host.startsWith("advanced.") || host.startsWith("advanced-masterclass.")) return <AIMasterclass2Page />;
+  if (host.startsWith("advanced.") || host.startsWith("advanced-masterclass.")) {
+    window.location.href = "/advanced_masterclass/";
+    return null;
+  }
   if (host.startsWith("academy.")) return <AcademyPreRegisterPage />;
   if (host.startsWith("college.")) return <College />;
   return <Index />;

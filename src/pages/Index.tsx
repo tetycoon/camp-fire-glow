@@ -43,7 +43,7 @@ const courses: Course[] = [
     timing: "6:00 PM – 9:00 PM IST",
     image: imgAnalytics,
     link: "/advanced_masterclass/",
-    isExternal: false,
+    isExternal: true,
   },
   {
     title: "AI Business Principles",
