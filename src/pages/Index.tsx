@@ -79,15 +79,15 @@ const courses: Course[] = [
     isExternal: false,
   },
   {
-    title: "AI Growth & Systems Consulting",
-    tag: "Subdomain Funnel",
-    intro: "Unlock enterprise AI-powered business growth with proven tools, automated marketing workflows, and custom digital marketing solutions crafted for your business.",
-    fees: "Consulting Solutions",
-    date: "Direct Consultation",
-    timing: "On-Demand Access",
-    image: imgEntrepreneur,
-    link: "https://antony.aitycoon.in",
-    isExternal: true,
+    title: "Tech Tycoon AI Academy",
+    tag: "Pre-Register (50% Off)",
+    intro: "Comprehensive curriculum covering advanced AI agent orchestration, business generative models, prompt engineering, and complete automation systems.",
+    fees: "From ₹2,499",
+    date: "Launch Cohort",
+    timing: "Lifetime Access & Mentorship",
+    image: "/images/summer_camp.jpg",
+    link: "/academy",
+    isExternal: false,
   }
 ];
 
