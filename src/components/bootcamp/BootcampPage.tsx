@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Navbar from "./Navbar";
 import HeroSection from "./HeroSection";
 import VideoSection from "./VideoSection";
@@ -17,6 +17,10 @@ import RegisterModal from "./RegisterModal";
 import { RegisterModalProvider } from "./RegisterModalContext";
 
 const BootcampPage: React.FC = () => {
+  useEffect(() => {
+    document.title = "AI Summer Bootcamp 2026 — Tech Tycoon";
+  }, []);
+
   return (
     <RegisterModalProvider>
       <div className="min-h-screen bg-background text-foreground overflow-x-hidden relative">

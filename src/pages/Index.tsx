@@ -127,6 +127,10 @@ const Index: React.FC = () => {
   ];
 
   useEffect(() => {
+    document.title = "Tech Tycoon | AI Masterclasses, Bootcamps & Business Automation";
+  }, []);
+
+  useEffect(() => {
     const timer = setInterval(() => {
       setImageOrder(prev => [prev[1], prev[2], prev[0]]);
     }, 4000);

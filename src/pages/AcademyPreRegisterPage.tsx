@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   ShieldCheck, ArrowRight, Rocket, X, ChevronDown, Search, Tag, Check, Infinity, Video, Code, Award, Heart, Gift
 } from 'lucide-react';
@@ -18,6 +18,10 @@ const RAZORPAY_INTL_KEY_ID = "rzp_live_gfoS1OjC8tvWjP";
 
 export default function AcademyPreRegisterPage() {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    document.title = "Tech Tycoon AI Academy — Pre-Registration & Mentorship";
+  }, []);
 
   // Secret Coupon Code State: "AMIABLE" (Not default entered, empty by default)
   const [couponInput, setCouponInput] = useState("");
