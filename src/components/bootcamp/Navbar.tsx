@@ -2,11 +2,16 @@ import React, { useEffect, useState } from "react";
 import { Menu, X, Clock, Download } from "lucide-react";
 import { useRegisterModal } from "./RegisterModalContext";
 
-// ── Countdown to Batch 2 start: May 4, 2026 ──
-const TARGET_DATE = new Date("2026-05-04T00:00:00");
+// ── Dynamic Countdown to Next Upcoming Cohort ──
+function getCohortTargetDate() {
+  const now = new Date();
+  // Auto-rolling deadline: 1st of upcoming month at 00:00:00
+  return new Date(now.getFullYear(), now.getMonth() + 1, 1, 0, 0, 0);
+}
 
 function getTimeLeft() {
-  const diff = TARGET_DATE.getTime() - Date.now();
+  const target = getCohortTargetDate();
+  const diff = target.getTime() - Date.now();
   if (diff <= 0) return { days: 0, hours: 0, mins: 0, secs: 0 };
   return {
     days: Math.floor(diff / 86400000),

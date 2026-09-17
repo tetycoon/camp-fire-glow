@@ -47,12 +47,12 @@ const courses: Course[] = [
   },
   {
     title: "AI Business Principles",
-    tag: "Offline Workshop",
+    tag: "Offline Workshop (Chennai)",
     intro: "Master the 9 pillars of Business Generative Models in this 8-hour deep dive. Build your complete AI system live with expert guidance.",
     fees: "₹4,999",
-    date: "May 31st",
-    timing: "9:30 AM – 5:30 PM IST",
-    image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=800&q=80",
+    date: "Sunday, Oct 11, 2026",
+    timing: "9:00 AM – 5:30 PM IST",
+    image: "/images/upscale_offline_banner.png",
     link: "/upscale",
     isExternal: false,
   },
@@ -68,11 +68,11 @@ const courses: Course[] = [
     isExternal: false,
   },
   {
-    title: "AI Summer Bootcamp",
-    tag: "Certification",
+    title: "AI Master Bootcamp",
+    tag: "Certification Program",
     intro: "A rigorous 30-day architectural immersion. Master agentic workflows, LLM orchestration, and the foundations of professional AI autonomy.",
     fees: "Enquire for Pricing",
-    date: "Starting May 1st",
+    date: "Admissions Open (Next Cohort)",
     timing: "3 Hrs Daily (Flexi Slots)",
     image: "/images/summer_camp.jpg",
     link: "/bootcamp",
@@ -83,9 +83,9 @@ const courses: Course[] = [
     tag: "Pre-Register (50% Off)",
     intro: "Comprehensive curriculum covering advanced AI agent orchestration, business generative models, prompt engineering, and complete automation systems.",
     fees: "From ₹2,499",
-    date: "Launch Cohort",
+    date: "Admissions Open (Lifetime Access)",
     timing: "Lifetime Access & Mentorship",
-    image: "/images/summer_camp.jpg",
+    image: "/images/AI_Secrets_Revealed_Banner.png",
     link: "/academy",
     isExternal: false,
   }
@@ -133,7 +133,7 @@ const Index: React.FC = () => {
   useEffect(() => {
     const timer = setInterval(() => {
       setImageOrder(prev => [prev[1], prev[2], prev[0]]);
-    }, 4000);
+    }, 6000);
     return () => clearInterval(timer);
   }, []);
 

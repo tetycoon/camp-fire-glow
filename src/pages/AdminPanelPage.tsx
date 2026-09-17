@@ -1309,7 +1309,7 @@ const AdminPanelPage: React.FC = () => {
                   </div>
 
                   <div className="text-xs space-y-2 text-white/70 bg-white/5 p-4 rounded-xl border border-white/5">
-                    <p>📅 <strong>Next Session:</strong> September 12th & 13th, 2026 (Sat & Sun)</p>
+                    <p>📅 <strong>Next Session:</strong> Every Saturday & Sunday (6:00 PM – 9:00 PM IST)</p>
                     <p>📍 <strong>Platform:</strong> Live Online Virtual Classroom</p>
                     <p>⚡ <strong>Capacity:</strong> 500 Attendees Room Limit</p>
                   </div>

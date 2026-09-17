@@ -31,7 +31,7 @@ const ThankYou = () => {
         coupon ? `• *Coupon Applied:* ${coupon}` : ``,
         paymentId ? `• *Payment ID:* ${paymentId}` : ``,
         ``,
-        `Please send me my exclusive course access details for the September 10th Launch! 🚀`
+        `Please send me my exclusive course access details and community link! 🚀`
     ].filter(Boolean).join("\n");
 
     const waChatLink = `https://wa.me/917010340494?text=${encodeURIComponent(prefilledMessage)}`;

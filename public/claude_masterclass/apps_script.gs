@@ -108,7 +108,7 @@ function getUpcomingMasterclassDates(isOffline = false) {
   }
 
   return {
-    dateText: "September 12 & 13, 2026 (Saturday & Sunday)",
+    dateText: "Every Saturday & Sunday",
     timeText: "6:00 PM – 9:00 PM IST",
     venueText: "🌐 Live Online Virtual Classroom"
   };
@@ -213,7 +213,7 @@ function doGet(e) {
         whatsappClicked: row[11] || "",
         pageUrl: "https://aitycoon.in/claude_masterclass",
         batch: "Claude Masterclass",
-        sessionDate: "September 12 & 13, 2026",
+        sessionDate: "Every Saturday & Sunday",
         sessionTime: "6:00 PM IST"
       });
     }
