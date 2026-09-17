@@ -1056,7 +1056,7 @@ const Index: React.FC = () => {
               <li><Link to="/claude_masterclass" className="hover:text-indigo-600 transition-colors">Claude 3.5 Masterclass</Link></li>
               <li><Link to="/ai_masterclass" className="hover:text-indigo-600 transition-colors">AI Secrets Revealed (₹99)</Link></li>
               <li><Link to="/upscale" className="hover:text-indigo-600 transition-colors">AI Business Workshop (Chennai)</Link></li>
-              <li><Link to="/advanced_masterclass/" className="hover:text-indigo-600 transition-colors">Executive Generative Models</Link></li>
+              <li><a href="/advanced_masterclass/" className="hover:text-indigo-600 transition-colors">Executive Generative Models</a></li>
               <li><Link to="/bootcamp" className="hover:text-indigo-600 transition-colors">30-Day Certification Bootcamp</Link></li>
               <li><Link to="/academy" className="hover:text-indigo-600 transition-colors">Tech Tycoon AI Academy</Link></li>
             </ul>

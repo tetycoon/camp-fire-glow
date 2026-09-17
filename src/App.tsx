@@ -2,8 +2,28 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+
+const MetaPixelRouteTracker = () => {
+  const location = useLocation();
+  const lastTrackedUrlRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    const currentUrl = location.pathname + location.search;
+    // Guard against React StrictMode / duplicate effect execution on the same route
+    if (lastTrackedUrlRef.current === currentUrl) {
+      return;
+    }
+    lastTrackedUrlRef.current = currentUrl;
+
+    if (typeof (window as any).fbq === "function") {
+      (window as any).fbq("track", "PageView");
+    }
+  }, [location.pathname, location.search]);
+
+  return null;
+};
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -54,6 +74,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <MetaPixelRouteTracker />
         <ScrollToTop />
         <Routes>
           <Route path="/" element={<DynamicRootPage />} />

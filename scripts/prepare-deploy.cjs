@@ -26,6 +26,8 @@ const spaRoutes = [
   'thank-you',
   'thankyou',
   'college',
+  'ai_masterclass',
+  'ai-masterclass',
   'webinar-access',
   'watch',
   'main'
