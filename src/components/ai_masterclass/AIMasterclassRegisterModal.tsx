@@ -197,6 +197,14 @@ const AIMasterclassRegisterModal: React.FC = () => {
                 modal: { ondismiss: () => setLoading(false) },
             };
 
+            if (typeof (window as any).fbq === 'function') {
+                (window as any).fbq('track', 'Lead', {
+                    content_name: 'AI Secrets Revealed Masterclass',
+                    currency: 'INR',
+                    value: 99 * seatsCount
+                });
+            }
+
             const rzp = new window.Razorpay(options);
             rzp.on('payment.failed', function (response: any) {
                 alert(`Payment failed. Please contact +91 7558133039`);
