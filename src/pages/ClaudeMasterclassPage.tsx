@@ -312,12 +312,52 @@ const ClaudeMasterclassPage: React.FC = () => {
 
 
 
-  // Target Date: September 12, 2026 @ 18:00 IST (Online) | Oct 11, 2026 @ 09:00 IST (Offline)
+  // Dynamically compute the upcoming Saturday & Sunday dates so the masterclass is always live every weekend
+  const weekendInfo = useMemo(() => {
+    const now = new Date();
+    const currentDay = now.getDay(); // 0 = Sun, 1 = Mon, ..., 6 = Sat
+    let daysUntilSat = (6 - currentDay + 7) % 7;
+    
+    if (currentDay === 6 && now.getHours() >= 18) {
+      daysUntilSat = 7;
+    } else if (currentDay === 0 && now.getHours() >= 21) {
+      daysUntilSat = 6;
+    }
+    
+    const nextSat = new Date(now.getFullYear(), now.getMonth(), now.getDate() + daysUntilSat, 18, 0, 0);
+    const nextSun = new Date(nextSat.getFullYear(), nextSat.getMonth(), nextSat.getDate() + 1, 18, 0, 0);
+    
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const fullMonthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    
+    const satM = fullMonthNames[nextSat.getMonth()];
+    const sunM = fullMonthNames[nextSun.getMonth()];
+    const satShort = monthNames[nextSat.getMonth()];
+    
+    const satDay = nextSat.getDate();
+    const sunDay = nextSun.getDate();
+    const year = nextSat.getFullYear();
+
+    const formattedRange = satM === sunM ? `${satM} ${satDay} & ${sunDay}` : `${satM} ${satDay} & ${sunM} ${sunDay}`;
+    const shortRange = satM === sunM ? `${satShort} ${satDay} & ${sunDay}` : `${satShort} ${satDay} & ${monthNames[nextSun.getMonth()]} ${sunDay}`;
+
+    return {
+      targetTimestamp: nextSat.getTime(),
+      satDateText: `Saturday, ${satM} ${satDay}`,
+      sunDateText: `Sunday, ${sunM} ${sunDay}`,
+      rangeText: formattedRange,
+      shortRangeText: shortRange,
+      year,
+      fullDisplay: `Every Saturday & Sunday (Upcoming: ${formattedRange}, ${year})`,
+      badgeDisplay: `Every Sat & Sun (${shortRange})`
+    };
+  }, []);
+
+  // Target Date: Every Weekend @ 18:00 IST (Online) | Oct 11, 2026 @ 09:00 IST (Offline)
   useEffect(() => {
-    const targetISO = masterclassMode === 'offline' 
-      ? '2026-10-11T09:00:00+05:30' 
-      : '2026-09-12T18:00:00+05:30';
-    const targetDate = new Date(targetISO).getTime();
+    const targetDate = masterclassMode === 'offline' 
+      ? new Date('2026-10-11T09:00:00+05:30').getTime() 
+      : weekendInfo.targetTimestamp;
 
     const updateTimer = () => {
       const now = new Date().getTime();
@@ -341,7 +381,7 @@ const ClaudeMasterclassPage: React.FC = () => {
     updateTimer();
     const interval = setInterval(updateTimer, 1000);
     return () => clearInterval(interval);
-  }, [masterclassMode]);
+  }, [masterclassMode, weekendInfo]);
 
   // Scroll Visibility State for Bottom Floating Widget
   const [showFloatingWidget, setShowFloatingWidget] = useState(false);
@@ -632,7 +672,7 @@ const ClaudeMasterclassPage: React.FC = () => {
                 <h2 className="text-[#1F1E1C] text-xl font-bold mb-2">2-Day Live Virtual MasterClass</h2>
                 <p className="text-[#524F4A] text-xs mb-4 leading-relaxed">Learn Claude AI prompt architecture, custom MCP creation, and full web application development live from anywhere.</p>
                 <ul className="space-y-2.5 text-xs text-[#2C2A29] mb-6">
-                  <li className="flex items-center gap-2.5"><Calendar className="w-4 h-4 text-[#D85A30]" /> <strong>September 12 & 13, 2026 (Sat & Sun)</strong></li>
+                  <li className="flex items-center gap-2.5"><Calendar className="w-4 h-4 text-[#D85A30]" /> <strong>Every Saturday & Sunday ({weekendInfo.shortRangeText})</strong></li>
                   <li className="flex items-center gap-2.5"><Clock className="w-4 h-4 text-[#D85A30]" /> 6:00 PM – 9:00 PM IST (3 Hours/day)</li>
                   <li className="flex items-center gap-2.5"><Globe className="w-4 h-4 text-[#D85A30]" /> 100% Tamil Instruction & Direct Q&A</li>
                 </ul>
@@ -648,26 +688,26 @@ const ClaudeMasterclassPage: React.FC = () => {
                 Explore Online MasterClass <ArrowRight className="w-4 h-4" />
               </button>
             </div>
-
-            {/* Card 2: Offline Chennai */}
+            
+            {/* OFFLINE IN-PERSON CARD */}
             <div 
               onClick={() => handleSelectBatch('offline')}
-              className="bg-white border-2 border-[#E6E2D9] hover:border-[#D85A30] rounded-2xl p-6 cursor-pointer shadow-[0_10px_30px_rgba(0,0,0,0.05)] hover:shadow-[0_15px_35px_rgba(216,90,48,0.15)] transition-all flex flex-col justify-between group"
+              className="bg-white border border-[#E6E2D9] rounded-2xl p-6 cursor-pointer hover:border-[#1F1E1C] hover:shadow-lg transition-all flex flex-col justify-between group"
             >
               <div>
                 <div className="w-full h-44 overflow-hidden rounded-xl mb-4 border border-[#E6E2D9]">
                   <img src={offlineWebp} alt="Claude AI In-Person Workshop Chennai" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                 </div>
                 <div className="flex justify-between items-center mb-3">
-                  <span className="bg-[#D85A30] text-white text-[11px] font-extrabold px-3 py-1 rounded-full uppercase">🏨 IN-PERSON CHENNAI</span>
-                  <span className="text-[#D85A30] text-lg font-black">₹4,999</span>
+                  <span className="bg-[#1F1E1C] text-white text-[11px] font-extrabold px-3 py-1 rounded-full uppercase">🏢 IN-PERSON WORKSHOP</span>
+                  <span className="text-[#1F1E1C] text-lg font-black">₹4,999</span>
                 </div>
-                <h2 className="text-[#1F1E1C] text-xl font-bold mb-2">1-Day Classroom Workshop @ Vestin Park Hotel</h2>
-                <p className="text-[#524F4A] text-xs mb-4 leading-relaxed">Full-day hands-on classroom workshop in Egmore, Chennai. Includes luxury hotel buffet lunch, morning & evening high tea.</p>
+                <h2 className="text-[#1F1E1C] text-xl font-bold mb-2">1-Day Classroom Workshop</h2>
+                <p className="text-[#524F4A] text-xs mb-4 leading-relaxed">Exclusive full-day in-person practical lab in Chennai. Direct 1-on-1 guidance, live terminal builds, lunch, and networking.</p>
                 <ul className="space-y-2.5 text-xs text-[#2C2A29] mb-6">
-                  <li className="flex items-center gap-2.5"><Calendar className="w-4 h-4 text-[#D85A30]" /> <strong>October 11, 2026 (Sunday • Full Day)</strong></li>
-                  <li className="flex items-center gap-2.5"><Clock className="w-4 h-4 text-[#D85A30]" /> 9:00 AM – 5:30 PM IST</li>
-                  <li className="flex items-center gap-2.5"><Utensils className="w-4 h-4 text-[#D85A30]" /> <strong>Hotel Buffet Lunch & High Tea Included</strong></li>
+                  <li className="flex items-center gap-2.5"><Calendar className="w-4 h-4 text-[#1F1E1C]" /> <strong>October 11, 2026 (Sunday)</strong></li>
+                  <li className="flex items-center gap-2.5"><Clock className="w-4 h-4 text-[#1F1E1C]" /> 9:00 AM – 5:30 PM IST (Full Day)</li>
+                  <li className="flex items-center gap-2.5"><UserCheck className="w-4 h-4 text-[#1F1E1C]" /> Vestin Park Hotel, Egmore, Chennai</li>
                 </ul>
               </div>
               <button 
@@ -676,9 +716,9 @@ const ClaudeMasterclassPage: React.FC = () => {
                   e.stopPropagation();
                   handleSelectBatch('offline');
                 }}
-                className="w-full bg-[#1F1E1C] hover:bg-[#D85A30] text-white font-extrabold py-3.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
+                className="w-full bg-[#1F1E1C] hover:bg-black text-white font-extrabold py-3.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
               >
-                Explore In-Person Workshop <ArrowRight className="w-4 h-4" />
+                Explore Classroom Workshop <ArrowRight className="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -687,31 +727,16 @@ const ClaudeMasterclassPage: React.FC = () => {
     );
   }
 
+  // BROWSER RENDERING FOR CHOSEN BATCH (ONLINE OR OFFLINE)
   return (
-    <div className="min-h-screen bg-[#F7F4EE] text-[#1F1E1C] font-sans selection:bg-[#D85A30] selection:text-white pb-20 md:pb-0">
-      
-      {/* Top Announcement Bar */}
-      <div className="bg-[#1F1E1C] text-[#F7F4EE] py-2.5 px-4 text-xs md:text-sm font-medium border-b border-[#33312E]">
-        <div className="max-w-6xl mx-auto flex flex-wrap justify-between items-center gap-3">
-          <div className="flex items-center gap-2">
-            <span className="bg-[#D85A30] text-white px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider">
-              MasterClass Tamil
-            </span>
-            <span>Master Claude AI, MCPs & Code Automation in Tamil</span>
-          </div>
-          <div className="flex items-center gap-4 text-xs text-[#C5C0B8]">
-            <span className="flex items-center gap-1.5"><Globe className="w-3.5 h-3.5 text-[#D85A30]" /> 100% Tamil (தமிழ்)</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Sticky Header / Navigation */}
-      <header className="sticky top-0 z-40 bg-[#F7F4EE]/90 backdrop-blur-md border-b border-[#E6E2D9] py-3.5 px-6">
-        <div className="max-w-6xl mx-auto flex justify-between items-center">
+    <div className="min-h-screen bg-[#FDFBF7] text-[#2C2A29] font-sans antialiased selection:bg-[#D85A30]/10 selection:text-[#D85A30]">
+      {/* Dynamic Header */}
+      <header className="sticky top-0 z-30 bg-[#FDFBF7]/90 backdrop-blur-md border-b border-[#E6E2D9]">
+        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <a href="/" className="flex items-center gap-3 hover:opacity-85 transition-opacity" title="Back to TechTycoon Hub">
-            <img src={techTycoonLogo} alt="Tech Tycoon Digital Solutions" className="h-10 w-auto rounded-lg bg-white p-1 border border-[#E6E2D9] shadow-sm object-contain" />
-            <div className="flex flex-col" style={{gap: '1px'}}>
-              <div className="text-sm font-bold text-[#1a56db] tracking-tight leading-none">TECH TYCOON</div>
+            <img src={techTycoonLogo} alt="Tech Tycoon" className="h-7 w-auto bg-white p-0.5 rounded shadow-sm" />
+            <div className="flex flex-col">
+              <span className="font-extrabold text-sm tracking-tight text-[#1F1E1C] uppercase leading-none">Tech Tycoon</span>
               <div className="text-[10px] text-[#1a56db] font-semibold leading-none">Digital Solution LLP</div>
             </div>
           </a>
@@ -721,7 +746,7 @@ const ClaudeMasterclassPage: React.FC = () => {
               ← Main Hub
             </a>
             <div className="hidden md:flex items-center gap-4 text-xs text-[#524F4A]">
-              <span>{masterclassMode === 'offline' ? 'October 11, 2026' : 'September 12 & 13'}</span>
+              <span>{masterclassMode === 'offline' ? 'October 11, 2026' : `Every Sat & Sun (${weekendInfo.shortRangeText})`}</span>
               <span className="w-1 h-1 rounded-full bg-[#C5C0B8]"></span>
               <span>{masterclassMode === 'offline' ? '9:00 AM – 5:30 PM IST' : '6:00 PM – 9:00 PM IST'}</span>
             </div>
@@ -824,7 +849,7 @@ const ClaudeMasterclassPage: React.FC = () => {
                     <span className="text-xs text-[#524F4A]">
                       {masterclassMode === 'offline' 
                         ? 'October 11, 2026 (Sunday • Full Day)' 
-                        : 'September 12 & 13, 2026 (Saturday & Sunday)'}
+                        : `Every Saturday & Sunday (Upcoming: ${weekendInfo.rangeText}, ${weekendInfo.year})`}
                     </span>
                   </div>
                 </div>
@@ -977,7 +1002,7 @@ const ClaudeMasterclassPage: React.FC = () => {
               <div className="flex items-center gap-3">
                 <span className="bg-[#D85A30] text-white font-bold text-xs px-3 py-1 rounded-md uppercase">Day 1</span>
                 <div>
-                  <h3 className="font-bold text-base text-[#1F1E1C]">Saturday, September 12th • 6:00 PM – 9:00 PM IST</h3>
+                  <h3 className="font-bold text-base text-[#1F1E1C]">Day 1: Saturday • 6:00 PM – 9:00 PM IST</h3>
                   <span className="text-xs text-[#6E6B65]">Foundations, Prompt Architecture & Building Custom MCPs</span>
                 </div>
               </div>
@@ -1010,7 +1035,7 @@ const ClaudeMasterclassPage: React.FC = () => {
               <div className="flex items-center gap-3">
                 <span className="bg-[#6B4FBB] text-white font-bold text-xs px-3 py-1 rounded-md uppercase">Day 2</span>
                 <div>
-                  <h3 className="font-bold text-base text-[#1F1E1C]">Sunday, September 13th • 6:00 PM – 9:00 PM IST</h3>
+                  <h3 className="font-bold text-base text-[#1F1E1C]">Day 2: Sunday • 6:00 PM – 9:00 PM IST</h3>
                   <span className="text-xs text-[#6E6B65]">Claude Code CLI, Web App Construction & Live Projects</span>
                 </div>
               </div>
@@ -1153,7 +1178,7 @@ const ClaudeMasterclassPage: React.FC = () => {
 
                 <ul className="space-y-3 mb-8 text-xs text-[#2C2A29]">
                   <li className="flex items-center gap-2.5">
-                    <Check className="w-4 h-4 text-[#D85A30]" /> 2-Day Live Online Session (September 12 & 13)
+                    <Check className="w-4 h-4 text-[#D85A30]" /> 2-Day Live Online Session (Every Saturday & Sunday)
                   </li>
                   <li className="flex items-center gap-2.5">
                     <Check className="w-4 h-4 text-[#D85A30]" /> Tamil & English Instruction
@@ -1175,58 +1200,101 @@ const ClaudeMasterclassPage: React.FC = () => {
               </button>
             </div>
 
-            {/* Card 2: VIP Pass ₹999 */}
-            <div className="bg-white border-2 border-[#D85A30] rounded-2xl p-7 flex flex-col justify-between relative shadow-sm">
-              <span className="absolute -top-3 left-6 bg-[#D85A30] text-white text-[10px] font-bold uppercase tracking-wider px-3 py-0.5 rounded-full">
-                Recommended
-              </span>
+            {/* Plan 2: ₹999 Recording Pass */}
+            <div className="bg-[#FAF8F5] border-2 border-[#D85A30] rounded-2xl p-6 sm:p-8 flex flex-col justify-between relative shadow-[0_10px_30px_rgba(216,90,48,0.08)]">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#D85A30] text-white text-[10px] font-extrabold uppercase px-3 py-1 rounded-full tracking-wider shadow-sm flex items-center gap-1">
+                <Crown className="w-3 h-3" /> Most Recommended
+              </div>
 
               <div>
-                <span className="text-xs font-bold text-[#D85A30] uppercase tracking-wider block mb-2 mt-1">Live + Recording Pass</span>
-                <div className="flex items-baseline gap-1.5 mb-3">
-                  <span className="text-4xl font-extrabold text-[#1F1E1C]">₹999</span>
+                <div className="flex justify-between items-start mb-4">
+                  <div>
+                    <h3 className="text-base font-bold text-[#1F1E1C]">Live + Recording Pass</h3>
+                    <p className="text-xs text-[#6E6B65]">Full live experience + permanent access</p>
+                  </div>
+                  <span className="bg-[#D85A30]/15 text-[#D85A30] text-[11px] font-bold px-2 py-0.5 rounded">
+                    Popular
+                  </span>
+                </div>
+
+                <div className="flex items-baseline gap-1 mb-2">
+                  <span className="text-3xl font-extrabold text-[#D85A30]">₹999</span>
                   <span className="text-xs text-[#6E6B65]">INR</span>
                 </div>
-                <p className="text-xs text-[#524F4A] mb-6">Full package with recorded video access of these 2 live classes.</p>
+                <p className="text-xs text-[#524F4A] mb-6">Complete flexibility. Re-watch and build along anytime.</p>
 
                 <ul className="space-y-3 mb-8 text-xs text-[#2C2A29]">
-                  <li className="flex items-center gap-2.5 font-semibold">
-                    <Check className="w-4 h-4 text-[#D85A30]" /> Everything in Standard Live Pass
+                  <li className="flex items-center gap-2.5">
+                    <Check className="w-4 h-4 text-[#D85A30]" /> 2-Day Live Online Session (Every Saturday & Sunday)
                   </li>
-                  <li className="flex items-center gap-2.5 font-semibold text-[#1F1E1C]">
-                    <Star className="w-4 h-4 text-[#D85A30] fill-[#D85A30]" /> Recorded Video Access of 2-Day Live Classes
+                  <li className="flex items-center gap-2.5">
+                    <Check className="w-4 h-4 text-[#D85A30]" /> Tamil & English Instruction
+                  </li>
+                  <li className="flex items-center gap-2.5">
+                    <Check className="w-4 h-4 text-[#D85A30]" /> Direct Q&A with Antony Praveen
+                  </li>
+                  <li className="flex items-center gap-2.5 font-bold text-[#D85A30]">
+                    <Check className="w-4 h-4 text-[#D85A30]" /> Recorded Video Access of Both Days Included
                   </li>
                 </ul>
               </div>
 
               <button 
                 onClick={() => handleOpenModal(999)}
-                className="w-full bg-[#D85A30] hover:bg-[#C04E27] text-white font-bold py-3 px-5 rounded-xl transition-all text-xs shadow-sm flex items-center justify-center gap-1.5"
+                className="w-full bg-[#D85A30] hover:bg-[#C04E27] text-white font-bold py-3 px-5 rounded-xl transition-all text-xs shadow-md shadow-[#D85A30]/20 cursor-pointer"
               >
-                Select Recording Pass @ ₹999 <ArrowRight className="w-3.5 h-3.5" />
+                Select Recording Pass @ ₹999
               </button>
             </div>
           </div>
         )}
       </section>
 
-      {/* FAQ SECTION — Accordion */}
-      <section className="py-16 px-6 bg-white border-t border-[#E6E2D9]">
-        <div className="max-w-3xl mx-auto">
-          <div className="text-center max-w-xl mx-auto mb-12">
-            <span className="text-[#D85A30] font-bold text-xs uppercase tracking-widest block mb-2">Frequently Asked Questions</span>
-            <h2 className="text-2xl font-extrabold text-[#1F1E1C]">Everything you need to know</h2>
-          </div>
+      {/* FAQ SECTION */}
+      <section className="py-12 md:py-20 px-6 max-w-4xl mx-auto border-t border-[#E6E2D9]">
+        <div className="text-center mb-10">
+          <span className="text-xs font-bold uppercase tracking-wider text-[#D85A30] bg-[#D85A30]/10 px-3 py-1 rounded-full">
+            Got Questions?
+          </span>
+          <h2 className="text-2xl sm:text-3xl font-bold text-[#1F1E1C] mt-3">Frequently Asked Questions</h2>
+        </div>
 
-          <div className="space-y-3">
-            {[
+        <div className="space-y-3">
+          {(masterclassMode === 'offline' 
+            ? [
               {
-                q: "What language will the Masterclass be conducted in?",
+                q: "What are the timings and venue for the Chennai Classroom Workshop?",
+                a: "The workshop is held on Sunday, October 11, 2026, from 9:00 AM to 5:30 PM IST at the prestigious Vestin Park Hotel, Montieth Road, Egmore, Chennai. Comprehensive buffet lunch and morning/evening high tea are included."
+              },
+              {
+                q: "What should I bring to the workshop?",
+                a: "Please bring your laptop and charger. We will be performing live interactive coding, prompt setups, and MCP connections directly on your personal machine."
+              },
+              {
+                q: "What language is the workshop conducted in?",
+                a: "The session is delivered in Tamil (தமிழ்) with technical terms explained clearly in English by Antony Praveen."
+              },
+              {
+                q: "Will I receive direct 1-on-1 guidance?",
+                a: "Yes! The classroom environment is intentionally capped to guarantee personal hands-on debugging and project guidance from Antony Praveen."
+              },
+              {
+                q: "Is food included in the ₹4,999 fee?",
+                a: "Yes! Your pass includes an expansive executive buffet lunch, morning refreshers, high-tea, and refreshments throughout the day."
+              }
+            ]
+            : [
+              {
+                q: "When does the Claude Masterclass take place?",
+                a: "The masterclass runs Every Saturday & Sunday from 6:00 PM to 9:00 PM IST (3 hours per day, 6 total hours of live interactive training)."
+              },
+              {
+                q: "What language will the training be conducted in?",
                 a: "The entire session will be taught 100% in Tamil (தமிழ்) by Mr. Antony Praveen for clear, practical understanding."
               },
               {
                 q: "What is the difference between the ₹499 Live Pass and ₹999 Recording Pass?",
-                a: "The ₹499 pass grants live interactive participation on September 12 & 13. The ₹999 Recording Pass includes everything in the ₹499 pass PLUS recorded video access of these 2 live classes."
+                a: "The ₹499 pass grants live interactive participation across both days (Saturday & Sunday). The ₹999 Recording Pass includes everything in the ₹499 pass PLUS recorded video access of these 2 live classes."
               },
               {
                 q: "How will I receive the session meeting link?",
@@ -1240,23 +1308,23 @@ const ClaudeMasterclassPage: React.FC = () => {
                 q: "Do I need prior coding experience?",
                 a: "No prior software development background is required. The session is structured step-by-step from foundational prompting to AI-assisted coding."
               }
-            ].map((faq, idx) => (
-              <div key={idx} className="bg-[#F7F4EE] border border-[#E6E2D9] rounded-xl overflow-hidden">
-                <button 
-                  onClick={() => toggleFaq(idx)}
-                  className="w-full p-4 text-left font-semibold text-[#1F1E1C] flex justify-between items-center text-xs sm:text-sm"
-                >
-                  <span>{faq.q}</span>
-                  <ChevronDown className={`w-4 h-4 text-[#D85A30] transition-transform duration-200 ${activeFaq === idx ? 'rotate-180' : ''}`} />
-                </button>
-                {activeFaq === idx && (
-                  <div className="px-4 pb-4 text-xs text-[#524F4A] leading-relaxed border-t border-[#E6E2D9]/60 pt-3">
-                    {faq.a}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
+            ]
+          ).map((faq, idx) => (
+            <div key={idx} className="bg-[#F7F4EE] border border-[#E6E2D9] rounded-xl overflow-hidden">
+              <button 
+                onClick={() => toggleFaq(idx)}
+                className="w-full p-4 text-left font-semibold text-[#1F1E1C] flex justify-between items-center text-xs sm:text-sm"
+              >
+                <span>{faq.q}</span>
+                <ChevronDown className={`w-4 h-4 text-[#D85A30] transition-transform duration-200 ${activeFaq === idx ? 'rotate-180' : ''}`} />
+              </button>
+              {activeFaq === idx && (
+                <div className="px-4 pb-4 text-xs text-[#524F4A] leading-relaxed border-t border-[#E6E2D9]/60 pt-3">
+                  {faq.a}
+                </div>
+              )}
+            </div>
+          ))}
         </div>
       </section>
 
@@ -1266,7 +1334,7 @@ const ClaudeMasterclassPage: React.FC = () => {
           <div className="mb-4">
             <img src={techTycoonLogo} alt="Tech Tycoon" className="h-7 w-auto bg-white p-0.5 rounded mx-auto" />
           </div>
-          <p className="text-[#8E8A83] max-w-md mx-auto">Conducted by TECH TYCOON Digital Solution LLP • September 12 & 13, 2026</p>
+          <p className="text-[#8E8A83] max-w-md mx-auto">Conducted by TECH TYCOON Digital Solution LLP • Every Saturday & Sunday</p>
           <div className="flex justify-center gap-3 text-[11px] text-[#A09C94] underline flex-wrap">
             <button onClick={() => setIsTermsOpen(true)} className="hover:text-white transition-colors">Terms & Conditions</button>
             <span>•</span>
@@ -1291,10 +1359,10 @@ const ClaudeMasterclassPage: React.FC = () => {
           <Calendar className="w-4 h-4 text-[#D85A30] shrink-0" />
           <div>
             <strong className="block text-xs font-bold text-[#1F1E1C] leading-tight">
-              {masterclassMode === 'offline' ? 'October 11, 2026' : 'September 12 & 13'}
+              {masterclassMode === 'offline' ? 'October 11, 2026' : `Every Sat & Sun (${weekendInfo.shortRangeText})`}
             </strong>
             <span className="text-[10px] text-[#6E6B65] hidden sm:block">
-              {masterclassMode === 'offline' ? 'Sunday (Full Day)' : 'Sat & Sun'}
+              {masterclassMode === 'offline' ? 'Sunday (Full Day)' : 'Live Virtual (6-9 PM)'}
             </span>
           </div>
         </div>
@@ -1457,7 +1525,7 @@ const ClaudeMasterclassPage: React.FC = () => {
                     <Calendar className="w-3 h-3 text-[#D85A30]" />
                     {masterclassMode === 'offline' 
                       ? 'October 11, 2026 (Sunday • Full Day) • 9:00 AM IST' 
-                      : 'September 12 & 13, 2026 (Sat & Sun) • 6:00 PM IST'}
+                      : `Every Saturday & Sunday • Upcoming: ${weekendInfo.rangeText} (6:00 PM IST)`}
                   </div>
 
                   {masterclassMode !== 'offline' && (
@@ -1683,7 +1751,7 @@ const ClaudeMasterclassPage: React.FC = () => {
             <div className="space-y-3 text-xs text-[#524F4A] leading-relaxed">
               <div>
                 <h4 className="font-bold text-[#1F1E1C] text-xs">1. Workshop Schedule & Access</h4>
-                <p className="mt-0.5">The Claude MasterClass is a 2-Day Live Virtual Session taking place on September 12th & 13th, 2026 (6:00 PM – 9:00 PM IST). Access details and session meeting links are provided via the official WhatsApp group upon registration.</p>
+                <p className="mt-0.5">The Claude MasterClass is a 2-Day Live Virtual Session taking place Every Saturday & Sunday (6:00 PM – 9:00 PM IST). Access details and session meeting links are provided via the official WhatsApp group upon registration.</p>
               </div>
 
               <div>
