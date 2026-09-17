@@ -25,7 +25,7 @@ const AIMasterclassPage: React.FC = () => {
             t.src=v;s=b.getElementsByTagName(e)[0];
             s.parentNode.insertBefore(t,s)}(window, document,'script',
             'https://connect.facebook.net/en_US/fbevents.js');
-            fbq('init', '945954808248207');
+            fbq('init', '2155724311994078');
             fbq('track', 'PageView');
             fbq('track', 'ViewContent');
         `;
@@ -41,7 +41,7 @@ const AIMasterclassPage: React.FC = () => {
     return (
         <AIMasterclassRegisterModalProvider>
             <noscript>
-                <img height="1" width="1" style={{display: "none"}} src="https://www.facebook.com/tr?id=945954808248207&ev=PageView&noscript=1" alt="" />
+                <img height="1" width="1" style={{display: "none"}} src="https://www.facebook.com/tr?id=2155724311994078&ev=PageView&noscript=1" alt="" />
             </noscript>
             <div className="min-h-screen bg-white text-slate-900 font-sans overflow-x-hidden relative">
                 <AIMasterclassNavbar />
