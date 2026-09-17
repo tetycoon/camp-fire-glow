@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { CheckCircle2, Loader2, ShieldCheck, X, Search } from "lucide-react";
 import { useAIMasterclassRegisterModal } from "./AIMasterclassRegisterModalContext";
 import { RazorpayOptions } from "@/types/razorpay";
@@ -27,6 +28,8 @@ function loadRazorpayScript(): Promise<boolean> {
 const defaultCountry = countryCodes.find(c => c.code === "+91") || countryCodes[0];
 
 const AIMasterclassRegisterModal: React.FC = () => {
+    const navigate = useNavigate();
+    const purchaseTrackedRef = useRef(false);
     const { isOpen, closeRegisterModal } = useAIMasterclassRegisterModal();
     const { regularDate } = getMasterclassDateStrings();
     const [form, setForm] = useState({ name: "", email: "", phone: "", profession: "", language: "Tamil", coupon: "WELCOME33", countryCode: "+91" });
@@ -158,7 +161,8 @@ const AIMasterclassRegisterModal: React.FC = () => {
                     color: "#10b981",
                 },
                 handler: async (response) => {
-                    setPaymentId(response.razorpay_payment_id || "TEST_ID");
+                    const paymentId = response.razorpay_payment_id || "TEST_ID";
+                    setPaymentId(paymentId);
                     setSubmitted(true);
                     setLoading(false);
 
@@ -169,7 +173,7 @@ const AIMasterclassRegisterModal: React.FC = () => {
                         body: JSON.stringify({
                             paymentSuccess: true,
                             razorpay_order_id: result.orderId,
-                            razorpay_payment_id: response.razorpay_payment_id,
+                            razorpay_payment_id: paymentId,
                             email: form.email,
                             name: form.name,
                             language: form.language,
@@ -177,12 +181,6 @@ const AIMasterclassRegisterModal: React.FC = () => {
                             sessionTime: "6:00 PM IST"
                         })
                     }).catch(() => {});
-
-                    // 2. INSTANT JUMP TO WHATSAPP
-                    const TRIGGER_MESSAGE = `Hi, I have completed the registration for the AI Secrets Revealed webinar on ${regularDate} at 6:00 PM IST`;
-                    const waChatLink = `https://wa.me/917010340494?text=${encodeURIComponent(TRIGGER_MESSAGE)}`;
-                    
-                    window.location.href = waChatLink;
 
                     // Handle private coupons if used
                     const privateCoupons = ["ATY7K2BX9QM4", "CP3ZN8DW6RL5", "EK4YT1FJ8HP3", "GN2VA6HM5XB9", "IQ7CW2JR1UD4", "KP8MZ3LT5YN1", "MX2QA9NV6BR4", "OW4EC7PF1GS6", "QH9DK5RJ3LV2", "ST7NB8UW4CM6"];
@@ -193,6 +191,41 @@ const AIMasterclassRegisterModal: React.FC = () => {
                             body: JSON.stringify({ action: "markCouponUsed", couponCode: form.coupon.trim(), email: form.email })
                         }).catch(() => { });
                     }
+
+                    // 2. Track Meta Pixel Purchase event (exactly once upon confirmed payment)
+                    const actualPaidAmount = isTestEmail ? 1 : (99 * seatsCount);
+                    if (!purchaseTrackedRef.current && typeof (window as any).fbq === 'function') {
+                        purchaseTrackedRef.current = true;
+                        if (response.razorpay_payment_id) {
+                            try {
+                                sessionStorage.setItem(`purchase_tracked_${response.razorpay_payment_id}`, "true");
+                            } catch (_) {}
+                        }
+                        (window as any).fbq('track', 'Purchase', {
+                            content_name: 'AI Secrets Revealed Masterclass',
+                            currency: 'INR',
+                            value: actualPaidAmount
+                        });
+                    }
+
+                    // 3. Close modal & navigate to Thank You page
+                    closeRegisterModal();
+
+                    const fullPhone = `${form.countryCode}${form.phone}`;
+                    const thankYouUrl = `/thank-you?name=${encodeURIComponent(form.name)}&email=${encodeURIComponent(form.email)}&phone=${encodeURIComponent(fullPhone)}&paymentId=${encodeURIComponent(paymentId)}&amount=${actualPaidAmount}&course=${encodeURIComponent("AI Secrets Revealed Masterclass")}&orderId=${encodeURIComponent(result.orderId)}`;
+
+                    navigate(thankYouUrl, {
+                        state: {
+                            name: form.name,
+                            email: form.email,
+                            phone: fullPhone,
+                            amount: actualPaidAmount,
+                            paymentId: paymentId,
+                            orderId: result.orderId,
+                            course: "AI Secrets Revealed Masterclass",
+                            alreadyTrackedPurchase: true
+                        }
+                    });
                 },
                 modal: { ondismiss: () => setLoading(false) },
             };

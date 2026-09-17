@@ -8,14 +8,15 @@ const ThankYou = () => {
 
     // Extract user details from location.state or URL params
     const searchParams = new URLSearchParams(window.location.search);
-    const stateData = location.state || {};
+    const stateData = (location.state as any) || {};
 
     const name = stateData.name || searchParams.get("name") || "Learner";
     const email = stateData.email || searchParams.get("email") || "";
     const phone = stateData.phone || searchParams.get("phone") || "";
     const paymentId = stateData.paymentId || searchParams.get("paymentId") || searchParams.get("pay_id") || "PAID";
-    const amount = stateData.amount || searchParams.get("amount") || "2499";
-    const course = stateData.course || searchParams.get("course") || "TECH TYCOON Academy";
+    const course = stateData.course || searchParams.get("course") || "AI Secrets Revealed Masterclass";
+    const defaultAmount = course.toLowerCase().includes("academy") ? "2499" : "99";
+    const amount = stateData.amount || searchParams.get("amount") || defaultAmount;
     const coupon = stateData.coupon || searchParams.get("coupon") || "";
     const orderId = stateData.orderId || searchParams.get("orderId") || "";
 
@@ -37,9 +38,19 @@ const ThankYou = () => {
     const waChatLink = `https://wa.me/917010340494?text=${encodeURIComponent(prefilledMessage)}`;
 
     useEffect(() => {
-        // Track Purchase event using global fbq
-        if (typeof window.fbq === 'function') {
-            window.fbq('track', 'Purchase', { currency: "INR", value: parseFloat(amount) || 2499 });
+        // Track Purchase event using global fbq ONLY if not already tracked
+        const isTrackedInSession = paymentId && paymentId !== "PAID" ? sessionStorage.getItem(`purchase_tracked_${paymentId}`) : null;
+        const alreadyTracked = stateData.alreadyTrackedPurchase || isTrackedInSession;
+
+        if (!alreadyTracked && paymentId && paymentId !== "PAID" && typeof window.fbq === 'function') {
+            try {
+                sessionStorage.setItem(`purchase_tracked_${paymentId}`, "true");
+            } catch (_) {}
+            window.fbq('track', 'Purchase', {
+                content_name: course,
+                currency: "INR",
+                value: parseFloat(amount) || (course.toLowerCase().includes("academy") ? 2499 : 99)
+            });
         }
 
         // Countdown timer for automatic redirect
@@ -55,7 +66,7 @@ const ThankYou = () => {
         }, 1000);
 
         return () => clearInterval(timer);
-    }, [waChatLink, amount]);
+    }, [waChatLink, amount, paymentId, course, stateData.alreadyTrackedPurchase]);
 
     const handleSendWhatsAppMessage = () => {
         // Ping Apps Script webhook if orderId exists
