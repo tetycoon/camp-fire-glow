@@ -212,6 +212,7 @@ const AIMasterclassRegisterModal: React.FC = () => {
             rzp.open();
 
         } catch (error) {
+            console.error("Masterclass registration error:", error);
             alert("Server error. If payment failed please contact +91 7558133039");
             setLoading(false);
         }
