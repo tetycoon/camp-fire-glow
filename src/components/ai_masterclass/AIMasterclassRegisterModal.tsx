@@ -30,6 +30,7 @@ const defaultCountry = countryCodes.find(c => c.code === "+91") || countryCodes[
 const AIMasterclassRegisterModal: React.FC = () => {
     const navigate = useNavigate();
     const purchaseTrackedRef = useRef(false);
+    const leadTrackedRef = useRef(false);
     const { isOpen, closeRegisterModal } = useAIMasterclassRegisterModal();
     const { regularDate } = getMasterclassDateStrings();
     const [form, setForm] = useState({ name: "", email: "", phone: "", profession: "", language: "Tamil", coupon: "WELCOME33", countryCode: "+91" });
@@ -97,6 +98,16 @@ const AIMasterclassRegisterModal: React.FC = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        // 1. Track Meta Pixel Lead event at earliest reliable point (once per submission attempt)
+        if (!leadTrackedRef.current && typeof (window as any).fbq === 'function') {
+            leadTrackedRef.current = true;
+            (window as any).fbq('track', 'Lead', {
+                content_name: 'AI Secrets Revealed Masterclass',
+                currency: 'INR',
+                value: 99 * seatsCount
+            });
+        }
 
         setLoading(true);
 
@@ -229,14 +240,6 @@ const AIMasterclassRegisterModal: React.FC = () => {
                 },
                 modal: { ondismiss: () => setLoading(false) },
             };
-
-            if (typeof (window as any).fbq === 'function') {
-                (window as any).fbq('track', 'Lead', {
-                    content_name: 'AI Secrets Revealed Masterclass',
-                    currency: 'INR',
-                    value: 99 * seatsCount
-                });
-            }
 
             const rzp = new window.Razorpay(options);
             rzp.on('payment.failed', function (response: any) {
