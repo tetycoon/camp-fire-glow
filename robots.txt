@@ -1,0 +1,40 @@
+User-agent: Googlebot
+Allow: /
+Disallow: /admin
+Disallow: /admin-panel
+Disallow: /thank-you
+Disallow: /thankyou
+Disallow: /watch
+Disallow: /webinar-watch
+Disallow: /webinar-access
+Disallow: /webinar
+
+User-agent: Bingbot
+Allow: /
+Disallow: /admin
+Disallow: /admin-panel
+Disallow: /thank-you
+Disallow: /thankyou
+Disallow: /watch
+Disallow: /webinar-watch
+Disallow: /webinar-access
+Disallow: /webinar
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin-panel
+Disallow: /thank-you
+Disallow: /thankyou
+Disallow: /watch
+Disallow: /webinar-watch
+Disallow: /webinar-access
+Disallow: /webinar
+
+Sitemap: https://course.techtycoon.in/sitemap.xml
