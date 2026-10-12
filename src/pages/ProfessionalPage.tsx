@@ -90,7 +90,7 @@ const ProfessionalPage: React.FC = () => {
                 Advance AI for Professionals
               </div>
               <div className="text-[11px] sm:text-xs font-bold text-slate-900 truncate">
-                VIP Rate: ₹2,999 • 20+ Hrs
+                VIP Rate: ₹4,999 • 20+ Hrs
               </div>
             </div>
 

@@ -127,7 +127,7 @@ function createOrderAndLogRow(sheet, data) {
   const email = (data.email || "").toString().trim();
   const phone = (data.phone || "").toString().trim();
   const profession = (data.profession || data.customProfession || "Working Professional").toString().trim();
-  const amount = Number(data.amount) || 2999;
+  const amount = Number(data.amount) || 4999;
   const isIntl = data.isInternational === true || data.isInternational === "true";
   
   let orderId = (data.orderId || "").toString().trim();
@@ -178,7 +178,7 @@ function handlePaymentSuccess(sheet, data) {
   const phone = (data.phone || "").toString().trim();
   const name = (data.name || "").toString().trim();
   const profession = (data.profession || "Working Professional").toString().trim();
-  const amount = Number(data.amount) || 2999;
+  const amount = Number(data.amount) || 4999;
 
   let rowNumber = -1;
   if (orderId) {

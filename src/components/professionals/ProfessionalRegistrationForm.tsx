@@ -66,7 +66,7 @@ const ProfessionalRegistrationForm: React.FC = () => {
   const [couponCode, setCouponCode] = useState("AMIABLE");
   const [appliedCoupon, setAppliedCoupon] = useState("AMIABLE");
   const [couponError, setCouponError] = useState("");
-  const [couponSuccess, setCouponSuccess] = useState("VIP Code AMIABLE Applied — 80% Corporate Subsidy Unlocked!");
+  const [couponSuccess, setCouponSuccess] = useState("VIP Code AMIABLE Applied — 50% Subsidy Unlocked!");
 
   // Submission State
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -80,11 +80,14 @@ const ProfessionalRegistrationForm: React.FC = () => {
     phone?: string;
   } | null>(null);
 
-  // Pricing Calculation
-  const originalPrice = 14999;
+  // Pricing Calculation matching /ai_bgm:
+  // Domestic (+91): Standard = 9999, with AMIABLE = 4999 (Save 5000)
+  // International: Standard = 13999, with AMIABLE = 6999 (Save 7000)
+  const isInternational = selectedCountry.code !== "IN" && selectedCountry.dialCode !== "+91";
+  const standardPrice = isInternational ? 13999 : 9999;
   const isVipApplied = appliedCoupon.toUpperCase() === "AMIABLE" || appliedCoupon.toUpperCase() === "TECHTYCOON";
-  const finalPrice = isVipApplied ? 2999 : 14999;
-  const discountAmount = originalPrice - finalPrice;
+  const finalPrice = isVipApplied ? (isInternational ? 6999 : 4999) : standardPrice;
+  const discountAmount = standardPrice - finalPrice;
 
   // Handle Input Changes
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -109,7 +112,8 @@ const ProfessionalRegistrationForm: React.FC = () => {
 
     if (code === "AMIABLE" || code === "TECHTYCOON" || code === "VIP" || code === "PRO2026") {
       setAppliedCoupon(code);
-      setCouponSuccess(`Coupon "${code}" applied! VIP rate of ₹2,999 unlocked.`);
+      const targetVipPrice = isInternational ? 6999 : 4999;
+      setCouponSuccess(`Coupon "${code}" applied! VIP rate of ₹${targetVipPrice.toLocaleString()} unlocked.`);
     } else {
       setCouponError("Invalid or expired coupon code. Use AMIABLE for the VIP rate.");
     }
@@ -549,7 +553,7 @@ const ProfessionalRegistrationForm: React.FC = () => {
         <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-left space-y-2">
           <div className="flex items-center justify-between text-xs text-slate-600">
             <span>Corporate Enrollment Fee:</span>
-            <span className="line-through font-mono">₹{originalPrice.toLocaleString()}</span>
+            <span className="line-through font-mono">₹{standardPrice.toLocaleString()}</span>
           </div>
 
           {isVipApplied && (

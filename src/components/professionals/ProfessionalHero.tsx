@@ -108,13 +108,13 @@ const ProfessionalHero: React.FC<ProfessionalHeroProps> = ({ onUnlockClick }) =>
 
             <div className="flex items-baseline justify-center gap-2 sm:gap-3 mb-2">
               <span className="text-xs sm:text-sm font-bold text-slate-400 line-through">
-                Regular: ₹14,999
+                Regular: ₹9,999
               </span>
               <span className="text-2xl sm:text-4xl font-black text-slate-900">
-                VIP Fee: ₹2,999
+                VIP Fee: ₹4,999
               </span>
               <span className="text-[10px] sm:text-xs font-extrabold px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 uppercase">
-                80% Corporate Subsidy
+                50% Off With AMIABLE
               </span>
             </div>
 
