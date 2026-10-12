@@ -2,7 +2,11 @@ import React from "react";
 import trainerImg from "../../assets/antony_praveen.jpg";
 import { CheckCircle2, Star, Award, ShieldCheck, Users, TrendingUp } from "lucide-react";
 
-const AIBGMTrainer: React.FC = () => {
+interface AIBGMTrainerProps {
+  onRegisterClick?: () => void;
+}
+
+const AIBGMTrainer: React.FC<AIBGMTrainerProps> = ({ onRegisterClick }) => {
   return (
     <section id="trainer" className="py-24 px-4 sm:px-6 lg:px-8 bg-slate-900 border-t border-slate-800 text-white relative">
       <div className="max-w-6xl mx-auto">
@@ -90,12 +94,13 @@ const AIBGMTrainer: React.FC = () => {
             </div>
 
             <div className="pt-4">
-              <a
-                href="#register"
+              <button
+                type="button"
+                onClick={onRegisterClick}
                 className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-indigo-400 hover:text-indigo-300 transition-colors"
               >
                 <span>Join Antony's Next Executive Cohort &rarr;</span>
-              </a>
+              </button>
             </div>
           </div>
         </div>

@@ -41,7 +41,7 @@ const AIBGMNavbar: React.FC<AIBGMNavbarProps> = ({ onRegisterClick }) => {
           Advance AI-BGM • Living LLM Software
         </span>
         <button
-          onClick={() => scrollTo("register")}
+          onClick={onRegisterClick}
           className="ml-2 font-bold text-amber-300 hover:text-amber-200 underline decoration-amber-400/50 hover:decoration-amber-300 text-[11px] transition-colors"
         >
           Check Eligibility &rarr;
@@ -125,7 +125,7 @@ const AIBGMNavbar: React.FC<AIBGMNavbarProps> = ({ onRegisterClick }) => {
           {/* Right Action CTA */}
           <div className="flex items-center gap-3">
             <button
-              onClick={() => scrollTo("register")}
+              onClick={onRegisterClick}
               className="group relative inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider text-white overflow-hidden shadow-lg shadow-indigo-600/30 bg-gradient-to-r from-indigo-600 via-blue-600 to-indigo-700 hover:scale-105 active:scale-95 transition-all duration-300 border border-indigo-400/30"
             >
               <Lock className="w-3.5 h-3.5 text-amber-300" />
@@ -185,7 +185,10 @@ const AIBGMNavbar: React.FC<AIBGMNavbarProps> = ({ onRegisterClick }) => {
             </button>
             <div className="pt-2">
               <button
-                onClick={() => scrollTo("register")}
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  if (onRegisterClick) onRegisterClick();
+                }}
                 className="w-full flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-indigo-600 to-blue-600 text-white font-bold rounded-xl text-sm uppercase tracking-wider"
               >
                 <Lock className="w-4 h-4 text-amber-300" />

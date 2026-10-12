@@ -13,7 +13,11 @@ import {
   ArrowRight
 } from "lucide-react";
 
-const AIBGMLivingLLM: React.FC = () => {
+interface AIBGMLivingLLMProps {
+  onRegisterClick?: () => void;
+}
+
+const AIBGMLivingLLM: React.FC<AIBGMLivingLLMProps> = ({ onRegisterClick }) => {
   return (
     <section id="living-llm" className="py-24 px-4 sm:px-6 lg:px-8 bg-slate-900 relative overflow-hidden">
       {/* Background Accent Gradients */}
@@ -79,13 +83,14 @@ const AIBGMLivingLLM: React.FC = () => {
               </div>
             </div>
 
-            <a
-              href="#register"
+            <button
+              type="button"
+              onClick={onRegisterClick}
               className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-black text-xs uppercase tracking-wider shadow-xl shadow-violet-600/30 transition-transform hover:scale-105"
             >
               <span>Unlock Secret Pricing For Lifetime Access</span>
               <ArrowRight className="w-4 h-4" />
-            </a>
+            </button>
           </div>
 
           {/* Right Column: Visual Dashboard Mockup */}

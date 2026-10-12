@@ -108,7 +108,11 @@ const bmcBlocks: BMCBlock[] = [
   }
 ];
 
-const AIBGMBMCSection: React.FC = () => {
+interface AIBGMBMCSectionProps {
+  onRegisterClick?: () => void;
+}
+
+const AIBGMBMCSection: React.FC<AIBGMBMCSectionProps> = ({ onRegisterClick }) => {
   return (
     <section id="bmc-9-principles" className="py-24 px-4 sm:px-6 lg:px-8 bg-slate-900 relative overflow-hidden">
       {/* Decorative Glow */}
@@ -192,12 +196,13 @@ const AIBGMBMCSection: React.FC = () => {
               Every single hour of the 20+ hours of course content is mapped directly into executing these 9 principles. You do not just watch; you build your custom Business Generative Model live.
             </p>
           </div>
-          <a
-            href="#register"
+          <button
+            type="button"
+            onClick={onRegisterClick}
             className="px-6 py-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs uppercase tracking-wider whitespace-nowrap shadow-lg shadow-indigo-600/30 transition-transform hover:scale-105"
           >
             Claim Your BMC Blueprint &rarr;
-          </a>
+          </button>
         </div>
       </div>
     </section>

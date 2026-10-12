@@ -135,7 +135,11 @@ const modules: ModuleData[] = [
   }
 ];
 
-const AIBGMCurriculum: React.FC = () => {
+interface AIBGMCurriculumProps {
+  onRegisterClick?: () => void;
+}
+
+const AIBGMCurriculum: React.FC<AIBGMCurriculumProps> = ({ onRegisterClick }) => {
   const [openModule, setOpenModule] = useState<string>("mod-1");
 
   const toggleModule = (id: string) => {
@@ -256,12 +260,13 @@ const AIBGMCurriculum: React.FC = () => {
             </p>
           </div>
 
-          <a
-            href="#register"
+          <button
+            type="button"
+            onClick={onRegisterClick}
             className="px-8 py-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-xs uppercase tracking-wider whitespace-nowrap shadow-xl shadow-indigo-600/30 hover:scale-105 transition-all"
           >
             Unlock VIP Pricing & Register &rarr;
-          </a>
+          </button>
         </div>
       </div>
     </section>
