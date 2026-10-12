@@ -359,51 +359,51 @@ const ProfessionalRegistrationForm: React.FC = () => {
   // Payment Success View
   if (paymentSuccess && successDetails) {
     return (
-      <div className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200 p-6 sm:p-10 shadow-2xl text-center max-w-xl mx-auto animate-in fade-in zoom-in-95 duration-300">
-        <div className="w-16 h-16 sm:w-20 sm:h-20 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-5 shadow-inner">
-          <CheckCircle2 className="w-10 h-10 sm:w-12 sm:h-12" />
+      <div className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-6 shadow-xl text-center max-w-xl mx-auto animate-in fade-in zoom-in-95 duration-200">
+        <div className="w-12 h-12 sm:w-14 sm:h-14 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-3 shadow-inner">
+          <CheckCircle2 className="w-7 h-7 sm:w-8 sm:h-8" />
         </div>
 
-        <span className="inline-block px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-black uppercase tracking-wider mb-2">
+        <span className="inline-block px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-black uppercase tracking-wider mb-1.5">
           Payment Confirmed • Enrollment Successful
         </span>
 
-        <h3 className="text-xl sm:text-2xl font-black text-slate-900 mb-2">
+        <h3 className="text-base sm:text-lg font-black text-slate-900 mb-2">
           Welcome to Advance AI for Professionals!
         </h3>
 
-        <div className="p-4 rounded-xl bg-indigo-50/80 border border-indigo-100 text-left space-y-2 mb-6">
-          <div className="flex items-center justify-between text-xs sm:text-sm">
+        <div className="p-3 rounded-lg bg-indigo-50/80 border border-indigo-100 text-left space-y-1.5 mb-3 text-xs">
+          <div className="flex items-center justify-between">
             <span className="text-slate-600">Participant:</span>
             <span className="font-bold text-slate-900">{successDetails.name}</span>
           </div>
-          <div className="flex items-center justify-between text-xs sm:text-sm">
+          <div className="flex items-center justify-between">
             <span className="text-slate-600">Registered Email:</span>
             <span className="font-bold text-slate-900">{successDetails.email}</span>
           </div>
-          <div className="flex items-center justify-between text-xs sm:text-sm">
+          <div className="flex items-center justify-between">
             <span className="text-slate-600">Order ID:</span>
-            <span className="font-mono text-slate-700 text-xs">{successDetails.orderId}</span>
+            <span className="font-mono text-slate-700 text-[11px]">{successDetails.orderId}</span>
           </div>
-          <div className="flex items-center justify-between text-xs sm:text-sm">
+          <div className="flex items-center justify-between">
             <span className="text-slate-600">Payment ID:</span>
-            <span className="font-mono text-slate-700 text-xs">{successDetails.paymentId}</span>
+            <span className="font-mono text-slate-700 text-[11px]">{successDetails.paymentId}</span>
           </div>
-          <div className="flex items-center justify-between text-xs sm:text-sm pt-2 border-t border-indigo-200">
-            <span className="text-slate-600">Amount Paid:</span>
-            <span className="font-black text-emerald-700 text-base">₹{successDetails.amount?.toLocaleString()}</span>
+          <div className="flex items-center justify-between pt-1.5 border-t border-indigo-200">
+            <span className="text-slate-600 font-medium">Amount Paid:</span>
+            <span className="font-black text-emerald-700 text-sm">₹{successDetails.amount?.toLocaleString()}</span>
           </div>
         </div>
 
         {/* Clear Email Course Access Delivery Notice */}
-        <div className="p-4 rounded-xl bg-amber-50 border border-amber-200 text-left mb-6 space-y-2">
-          <div className="flex items-center gap-2 text-amber-900 font-bold text-xs uppercase tracking-wide">
-            <Mail className="w-4 h-4 text-amber-600 flex-shrink-0" />
+        <div className="p-2.5 rounded-lg bg-amber-50 border border-amber-200 text-left mb-3.5 space-y-1">
+          <div className="flex items-center gap-1.5 text-amber-900 font-bold text-[11px] uppercase tracking-wide">
+            <Mail className="w-3.5 h-3.5 text-amber-600 flex-shrink-0" />
             <span>Course Access Dispatched via Email</span>
           </div>
-          <p className="text-xs text-amber-950 leading-relaxed">
-            Your login credentials, portal access link, and bonus resource toolkits have been dispatched to <strong>{successDetails.email}</strong>. 
-            Please check your inbox (and spam/promotions tab) in the next 2 minutes.
+          <p className="text-[11px] text-amber-950 leading-relaxed">
+            Your login credentials and portal access link have been dispatched to <strong>{successDetails.email}</strong>. 
+            Please check your inbox (and spam folder) in the next 2 minutes.
           </p>
         </div>
 
@@ -411,10 +411,10 @@ const ProfessionalRegistrationForm: React.FC = () => {
           href="https://academy.techtycoon.in"
           target="_blank"
           rel="noopener noreferrer"
-          className="w-full py-3.5 px-6 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/25 transition-all"
+          className="w-full py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-md shadow-indigo-600/25 transition-all"
         >
           <span>Open Academy Student Portal</span>
-          <ExternalLink className="w-4 h-4" />
+          <ExternalLink className="w-3.5 h-3.5" />
         </a>
       </div>
     );
@@ -422,142 +422,145 @@ const ProfessionalRegistrationForm: React.FC = () => {
 
   // Active Enrollment Form View
   return (
-    <div className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200 p-5 sm:p-8 shadow-xl relative overflow-hidden">
+    <div className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200 p-3.5 sm:p-5 shadow-xl relative overflow-hidden text-left">
       {/* Top Banner */}
-      <div className="flex items-center justify-between pb-4 mb-5 border-b border-slate-100">
+      <div className="flex items-center justify-between pb-2 mb-2.5 border-b border-slate-100 pr-7 sm:pr-8">
         <div>
-          <span className="text-[10px] sm:text-xs font-black uppercase tracking-wider text-indigo-600">
+          <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-indigo-600 block">
             EXECUTIVE REGISTRATION • 2026 COHORT
           </span>
-          <h3 className="text-base sm:text-xl font-black text-slate-900">
+          <h3 className="text-sm sm:text-base font-black text-slate-900 leading-tight">
             Advance AI for Non-Tech Professionals
           </h3>
         </div>
-        <span className="px-2 py-1 rounded-md bg-emerald-50 text-emerald-700 text-[10px] font-bold uppercase tracking-wider border border-emerald-200 flex-shrink-0">
+        <span className="hidden sm:inline-block px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold uppercase tracking-wider border border-emerald-200 flex-shrink-0">
           Fast-Track Pass
         </span>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
-        {/* Full Name */}
-        <div>
-          <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 text-left">
-            Full Name <span className="text-red-500">*</span>
-          </label>
-          <div className="relative">
-            <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-            <input
-              type="text"
-              name="name"
-              required
-              value={formData.name}
-              onChange={handleInputChange}
-              placeholder="e.g. Rahul Sharma"
-              className="w-full pl-10 pr-4 py-2.5 sm:py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 font-medium transition-all"
-            />
-          </div>
-        </div>
-
-        {/* Email Address */}
-        <div>
-          <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 text-left">
-            Email Address <span className="text-red-500">*</span>
-          </label>
-          <div className="relative">
-            <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-            <input
-              type="email"
-              name="email"
-              required
-              value={formData.email}
-              onChange={handleInputChange}
-              placeholder="e.g. rahul@company.com"
-              className="w-full pl-10 pr-4 py-2.5 sm:py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 font-medium transition-all"
-            />
-          </div>
-          <p className="text-[10px] sm:text-[11px] text-slate-500 mt-1 text-left">
-            Course login details and academy credentials will be sent to this email address.
-          </p>
-        </div>
-
-        {/* Mobile Number with Country Code */}
-        <div>
-          <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 text-left">
-            Mobile Number (WhatsApp) <span className="text-red-500">*</span>
-          </label>
-          <div className="flex gap-2">
-            <div className="w-28 sm:w-32 flex-shrink-0">
-              <select
-                value={selectedCountry.code}
-                onChange={(e) => {
-                  const country = countryCodes.find(c => c.code === e.target.value);
-                  if (country) setSelectedCountry(country);
-                }}
-                className="w-full px-2 py-2.5 sm:py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-xs sm:text-sm text-slate-900 font-medium bg-slate-50 transition-all truncate"
-              >
-                {countryCodes.map((c) => (
-                  <option key={c.code} value={c.code}>
-                    {c.flag} {c.dialCode}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="relative flex-grow">
-              <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+      <form onSubmit={handleSubmit} className="space-y-2 sm:space-y-2.5">
+        {/* Row 1: Name and Email in 2 columns on sm+ */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
+          {/* Full Name */}
+          <div>
+            <label className="block text-[10px] sm:text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-0.5">
+              Full Name <span className="text-red-500">*</span>
+            </label>
+            <div className="relative">
+              <User className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
               <input
-                type="tel"
-                name="phone"
+                type="text"
+                name="name"
                 required
-                value={formData.phone}
+                value={formData.name}
                 onChange={handleInputChange}
-                placeholder="98765 43210"
-                className="w-full pl-10 pr-4 py-2.5 sm:py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 font-medium transition-all"
+                placeholder="Rahul Sharma"
+                className="w-full pl-8 pr-3 py-1.5 sm:py-2 rounded-lg border border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-100 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 font-medium transition-all"
+              />
+            </div>
+          </div>
+
+          {/* Email Address */}
+          <div>
+            <label className="block text-[10px] sm:text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-0.5">
+              Email Address <span className="text-red-500">*</span>
+            </label>
+            <div className="relative">
+              <Mail className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
+              <input
+                type="email"
+                name="email"
+                required
+                value={formData.email}
+                onChange={handleInputChange}
+                placeholder="rahul@company.com"
+                className="w-full pl-8 pr-3 py-1.5 sm:py-2 rounded-lg border border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-100 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 font-medium transition-all"
               />
             </div>
           </div>
         </div>
 
-        {/* Profession / Role Dropdown */}
-        <div>
-          <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 text-left">
-            Current Role / Profession <span className="text-red-500">*</span>
-          </label>
-          <div className="relative">
-            <Briefcase className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
-            <select
-              name="profession"
-              value={formData.profession}
-              onChange={handleInputChange}
-              className="w-full pl-10 pr-4 py-2.5 sm:py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-xs sm:text-sm text-slate-900 font-medium bg-white transition-all appearance-none cursor-pointer"
-            >
-              {PROFESSION_OPTIONS.map((opt) => (
-                <option key={opt} value={opt}>
-                  {opt}
-                </option>
-              ))}
-            </select>
+        {/* Row 2: Mobile Number & Profession in 2 columns on sm+ */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
+          {/* Mobile Number with Country Code */}
+          <div>
+            <label className="block text-[10px] sm:text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-0.5">
+              Mobile (WhatsApp) <span className="text-red-500">*</span>
+            </label>
+            <div className="flex gap-1.5">
+              <div className="w-20 sm:w-24 flex-shrink-0">
+                <select
+                  value={selectedCountry.code}
+                  onChange={(e) => {
+                    const country = countryCodes.find(c => c.code === e.target.value);
+                    if (country) setSelectedCountry(country);
+                  }}
+                  className="w-full px-1.5 py-1.5 sm:py-2 rounded-lg border border-slate-200 focus:border-indigo-500 text-[11px] sm:text-xs text-slate-900 font-medium bg-slate-50 transition-all truncate"
+                >
+                  {countryCodes.map((c) => (
+                    <option key={c.code} value={c.code}>
+                      {c.flag} {c.dialCode}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="relative flex-grow">
+                <Phone className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
+                <input
+                  type="tel"
+                  name="phone"
+                  required
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                  placeholder="98765 43210"
+                  className="w-full pl-8 pr-2.5 py-1.5 sm:py-2 rounded-lg border border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-100 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 font-medium transition-all"
+                />
+              </div>
+            </div>
           </div>
 
-          {formData.profession === "Other Working Professional" && (
-            <input
-              type="text"
-              name="customProfession"
-              value={formData.customProfession}
-              onChange={handleInputChange}
-              placeholder="Specify your exact job role"
-              className="mt-2 w-full px-4 py-2 rounded-xl border border-slate-200 text-xs sm:text-sm text-slate-900"
-            />
-          )}
+          {/* Profession / Role Dropdown */}
+          <div>
+            <label className="block text-[10px] sm:text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-0.5">
+              Current Role <span className="text-red-500">*</span>
+            </label>
+            <div className="relative">
+              <Briefcase className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400 pointer-events-none" />
+              <select
+                name="profession"
+                value={formData.profession}
+                onChange={handleInputChange}
+                className="w-full pl-8 pr-3 py-1.5 sm:py-2 rounded-lg border border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-100 text-xs sm:text-sm text-slate-900 font-medium bg-white transition-all appearance-none cursor-pointer truncate"
+              >
+                {PROFESSION_OPTIONS.map((opt) => (
+                  <option key={opt} value={opt}>
+                    {opt}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {formData.profession === "Other Working Professional" && (
+              <input
+                type="text"
+                name="customProfession"
+                value={formData.customProfession}
+                onChange={handleInputChange}
+                placeholder="Specify your exact job role"
+                className="mt-1 w-full px-2.5 py-1 rounded-lg border border-slate-200 text-xs text-slate-900"
+              />
+            )}
+          </div>
         </div>
 
-        {/* Coupon Code Section */}
-        <div className="pt-2">
-          <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 text-left">
+        {/* Row 3: Coupon Code Section */}
+        <div>
+          <label className="block text-[10px] sm:text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-0.5">
             VIP Subsidy Coupon
           </label>
-          <div className="flex gap-2">
+          <div className="flex gap-1.5">
             <div className="relative flex-grow">
-              <Tag className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <Tag className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
               <input
                 type="text"
                 value={couponCode}
@@ -569,28 +572,28 @@ const ProfessionalRegistrationForm: React.FC = () => {
                   }
                 }}
                 placeholder="Enter coupon code (e.g. AMIABLE)"
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500 text-xs sm:text-sm uppercase font-mono tracking-wider"
+                className="w-full pl-8 pr-3 py-1.5 sm:py-2 rounded-lg border border-slate-200 focus:border-indigo-500 text-xs sm:text-sm uppercase font-mono tracking-wider"
               />
             </div>
             <button
               type="button"
               onClick={() => handleApplyCoupon()}
-              className="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs uppercase tracking-wider flex-shrink-0 shadow-sm"
+              className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-[11px] sm:text-xs uppercase tracking-wider flex-shrink-0 shadow-sm transition-all"
             >
-              Apply & Reveal Price
+              Apply & Reveal
             </button>
           </div>
 
           {couponSuccess && (
-            <div className="mt-2 text-left text-xs font-semibold text-emerald-700 flex items-center gap-1.5 p-2.5 rounded-xl bg-emerald-50 border border-emerald-200">
-              <Check className="w-4 h-4 flex-shrink-0" />
+            <div className="mt-1.5 text-left text-[11px] sm:text-xs font-semibold text-emerald-700 flex items-center gap-1.5 p-1.5 sm:p-2 rounded-lg bg-emerald-50 border border-emerald-200 leading-tight">
+              <Check className="w-3.5 h-3.5 flex-shrink-0" />
               <span>{couponSuccess}</span>
             </div>
           )}
 
           {couponError && (
-            <div className="mt-2 text-left text-xs font-semibold text-red-600 flex items-center gap-1.5 p-2.5 rounded-xl bg-red-50 border border-red-200">
-              <AlertCircle className="w-4 h-4 flex-shrink-0" />
+            <div className="mt-1.5 text-left text-[11px] sm:text-xs font-semibold text-red-600 flex items-center gap-1.5 p-1.5 sm:p-2 rounded-lg bg-red-50 border border-red-200 leading-tight">
+              <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
               <span>{couponError}</span>
             </div>
           )}
@@ -598,41 +601,34 @@ const ProfessionalRegistrationForm: React.FC = () => {
 
         {/* Dynamic Price Breakdown — ONLY shown once user enters mobile & coupon */}
         {isPriceRevealed ? (
-          <div className="p-4 rounded-xl bg-gradient-to-br from-indigo-50/80 via-blue-50/50 to-white border border-indigo-200 text-left space-y-2 animate-in fade-in duration-300">
-            <div className="flex items-center justify-between text-xs text-slate-600">
-              <span>Corporate Enrollment Fee:</span>
-              <span className="line-through font-mono">₹{standardPrice.toLocaleString()}</span>
+          <div className="p-2 sm:p-2.5 rounded-lg bg-gradient-to-r from-indigo-50/90 via-blue-50/60 to-white border border-indigo-200 text-left flex items-center justify-between animate-in fade-in duration-200">
+            <div>
+              <div className="flex items-center gap-1.5 text-[10px] sm:text-xs text-slate-600">
+                <span>Tuition: <span className="line-through font-mono">₹{standardPrice.toLocaleString()}</span></span>
+                {isVipApplied && (
+                  <span className="font-bold text-emerald-700 bg-emerald-100 px-1.5 py-0.5 rounded text-[9px] uppercase tracking-wide">
+                    Save ₹{discountAmount.toLocaleString()} ({appliedCoupon})
+                  </span>
+                )}
+              </div>
+              <div className="text-[10px] text-slate-500 font-medium">
+                {isInternational ? "International Participant" : "Domestic (+91) Participant"}
+              </div>
             </div>
-
-            {isVipApplied && (
-              <div className="flex items-center justify-between text-xs text-emerald-700 font-semibold">
-                <span className="flex items-center gap-1">
-                  <Tag className="w-3.5 h-3.5" /> VIP Subsidy (Coupon {appliedCoupon}):
-                </span>
-                <span className="font-mono">-₹{discountAmount.toLocaleString()}</span>
-              </div>
-            )}
-
-            <div className="flex items-center justify-between text-sm sm:text-base font-black text-slate-900 pt-2 border-t border-indigo-200">
-              <div>
-                <div>Unlocked Investment:</div>
-                <div className="text-[10px] text-slate-500 font-normal">
-                  {isInternational ? "International Participant" : "Domestic (+91) Participant"}
-                </div>
-              </div>
-              <span className="text-xl sm:text-2xl text-indigo-700 font-mono font-black">
+            <div className="text-right">
+              <span className="text-base sm:text-lg text-indigo-700 font-mono font-black">
                 ₹{finalPrice.toLocaleString()}
               </span>
             </div>
           </div>
         ) : (
-          <div className="p-3.5 rounded-xl bg-slate-50 border border-dashed border-indigo-200 text-center space-y-1">
-            <div className="flex items-center justify-center gap-1.5 font-bold text-slate-800 text-xs">
-              <Lock className="w-3.5 h-3.5 text-amber-500" />
-              <span>Tuition Pricing Protected</span>
+          <div className="p-2 sm:p-2.5 rounded-lg bg-slate-50 border border-dashed border-indigo-200 text-center flex items-center justify-between gap-2">
+            <div className="flex items-center gap-1 font-bold text-slate-700 text-[11px] sm:text-xs">
+              <Lock className="w-3 h-3 text-amber-500 flex-shrink-0" />
+              <span>Tuition Protected</span>
             </div>
-            <p className="text-[11px] text-slate-500">
-              Enter your mobile number and coupon code above to reveal your customized rate.
+            <p className="text-[10px] sm:text-[11px] text-slate-500">
+              Enter mobile & coupon above to reveal rate
             </p>
           </div>
         )}
@@ -641,40 +637,40 @@ const ProfessionalRegistrationForm: React.FC = () => {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full py-3.5 sm:py-4 px-6 rounded-xl sm:rounded-2xl bg-gradient-to-r from-indigo-600 via-blue-600 to-indigo-700 hover:from-indigo-700 hover:to-blue-700 text-white font-extrabold text-sm sm:text-base uppercase tracking-wider shadow-lg shadow-indigo-600/30 hover:shadow-indigo-600/40 hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-2 disabled:opacity-75 disabled:pointer-events-none"
+          className="w-full py-2.5 sm:py-3 px-4 rounded-xl bg-gradient-to-r from-indigo-600 via-blue-600 to-indigo-700 hover:from-indigo-700 hover:to-blue-700 text-white font-extrabold text-xs sm:text-sm uppercase tracking-wider shadow-md hover:shadow-lg hover:scale-[1.005] active:scale-[0.99] transition-all flex items-center justify-center gap-2 disabled:opacity-75 disabled:pointer-events-none"
         >
           {isSubmitting ? (
             <div className="flex items-center gap-2">
-              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-              <span>Securing Seat & Opening Gateway...</span>
+              <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              <span>Opening Gateway...</span>
             </div>
           ) : !isPriceRevealed ? (
-            <div className="flex items-center gap-2">
-              <Unlock className="w-4 h-4 text-amber-300" />
-              <span>Enter Mobile & Reveal Pricing</span>
-              <ArrowRight className="w-4 h-4" />
+            <div className="flex items-center gap-1.5">
+              <Unlock className="w-3.5 h-3.5 text-amber-300" />
+              <span>Enter Mobile & Reveal Tuition</span>
+              <ArrowRight className="w-3.5 h-3.5" />
             </div>
           ) : (
-            <div className="flex items-center gap-2">
-              <Lock className="w-4 h-4 text-amber-300" />
-              <span>Proceed to Payment — ₹{finalPrice.toLocaleString()}</span>
-              <ArrowRight className="w-4 h-4" />
+            <div className="flex items-center gap-1.5">
+              <Lock className="w-3.5 h-3.5 text-amber-300" />
+              <span>Complete Enrollment — ₹{finalPrice.toLocaleString()}</span>
+              <ArrowRight className="w-3.5 h-3.5" />
             </div>
           )}
         </button>
 
         {/* Security / Guarantee Trust Badges */}
-        <div className="flex items-center justify-center gap-3 sm:gap-4 text-[10px] sm:text-[11px] text-slate-500 pt-1">
+        <div className="flex items-center justify-center gap-2.5 sm:gap-3 text-[9px] sm:text-[10px] text-slate-500 pt-0.5">
           <span className="flex items-center gap-1 text-slate-600">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" /> 256-Bit SSL Secured
+            <ShieldCheck className="w-3 h-3 text-emerald-600" /> 256-Bit SSL
           </span>
           <span>•</span>
           <span className="flex items-center gap-1 text-slate-600">
-            <CheckCircle2 className="w-3.5 h-3.5 text-indigo-600" /> Razorpay Verified
+            <CheckCircle2 className="w-3 h-3 text-indigo-600" /> Razorpay Verified
           </span>
           <span>•</span>
           <span className="flex items-center gap-1 text-slate-600">
-            <Mail className="w-3.5 h-3.5 text-blue-600" /> Instant Access via Email
+            <Mail className="w-3 h-3 text-blue-600" /> Instant Email Access
           </span>
         </div>
       </form>
