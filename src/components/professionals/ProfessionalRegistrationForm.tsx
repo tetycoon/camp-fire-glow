@@ -31,7 +31,7 @@ declare global {
 // Spreadsheet ID: 1RpwPPMH6nf8CsIAfITF1gNc5gBNhq7CJ0zckotAgq4I
 // Sheet Title: AI For Working Professionals (Sheet1)
 // Columns: Date and Time | Name | Email | Phone | Profession | Amount | Status | Order ID | Payment ID
-const DEFAULT_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwGaOKJYsQiHuhueRVy_iosxeKKO1qPj748jnUqkfwnmYmvgxWdkHiXB4cON6wF4iXnaA/exec";
+const DEFAULT_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzuTE9PUoTneN4PF0TKhHwrDXZEfSo-92Ly10dHFd8pGsY1DzjmBa6A5A3aTCRSd6TpFQ/exec";
 const SPREADSHEET_ID = "1RpwPPMH6nf8CsIAfITF1gNc5gBNhq7CJ0zckotAgq4I";
 
 const RAZORPAY_KEY_ID = "rzp_live_T2CbVONQc6qrqj";
