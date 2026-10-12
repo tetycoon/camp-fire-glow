@@ -12,8 +12,8 @@ const faqs: FAQItem[] = [
     a: "Most courses teach isolated prompts to write emails or generate basic text. AI-BGM teaches AI with a 100% BUSINESS PERSPECTIVE: taking you systematically from business ideation, niche selection, the 9 Core BMC Principles, visual branding, AI websites, hyper-realistic AI video creation, to full-funnel digital marketing that converts strangers into paying customers."
   },
   {
-    q: "What is the 'Living LLM Software' and how do continuous updates work?",
-    a: "Traditional courses become outdated within months as AI tools evolve. With AI-BGM, you receive lifetime access to our proprietary software dashboard. Whenever major AI model upgrades or commercial strategies emerge, our team tests them and integrates the new capabilities directly into the LLM platform—so your software stays continuously updated at zero extra charge."
+    q: "How do continuous updates work as new AI models are released?",
+    a: "Traditional courses become outdated within months as AI tools evolve. With AI-BGM, you receive lifetime access to our specialized learning portal. Whenever major AI model upgrades or commercial strategies emerge, our team tests them and integrates the new capabilities directly into your learning dashboard—so your knowledge stays continuously updated at zero extra charge."
   },
   {
     q: "How many hours of content is included and for how long do I have access?",

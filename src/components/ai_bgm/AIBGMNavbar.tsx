@@ -36,10 +36,10 @@ const AIBGMNavbar: React.FC<AIBGMNavbarProps> = ({ onRegisterClick }) => {
           <Sparkles className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-amber-300" /> NEW
         </span>
         <span className="hidden sm:inline text-slate-700">
-          Advance AI-Business Generative Model (AI-BGM) • 20+ Hours • Lifetime LLM Software Access
+          Advance AI-Business Generative Model (AI-BGM) • 20+ Hours • Lifetime Access • Continuous AI Updates
         </span>
         <span className="sm:hidden text-slate-700 truncate max-w-[190px]">
-          Advance AI-BGM • Living LLM Software
+          Advance AI-BGM • Continuous AI Updates
         </span>
         <button
           onClick={onRegisterClick}
@@ -97,7 +97,7 @@ const AIBGMNavbar: React.FC<AIBGMNavbarProps> = ({ onRegisterClick }) => {
               onClick={() => scrollTo("living-llm")}
               className="text-xs font-bold text-slate-600 hover:text-blue-600 transition-colors"
             >
-              Living LLM Updates
+              Continuous AI Updates
             </button>
             <button
               onClick={() => scrollTo("trainer")}
@@ -161,7 +161,7 @@ const AIBGMNavbar: React.FC<AIBGMNavbarProps> = ({ onRegisterClick }) => {
               onClick={() => scrollTo("living-llm")}
               className="block w-full text-left py-2 text-sm font-bold text-slate-700 hover:text-blue-600 border-b border-slate-100"
             >
-              Living LLM Software & Updates
+              Continuous AI Updates
             </button>
             <button
               onClick={() => scrollTo("trainer")}

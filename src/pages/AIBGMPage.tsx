@@ -63,7 +63,7 @@ const AIBGMPage: React.FC = () => {
                 AI-BGM Executive Cohort
               </div>
               <div className="text-[11px] sm:text-xs font-bold text-slate-900 truncate">
-                20+ Hrs • Living LLM Access
+                20+ Hrs • Continuous Updates
               </div>
             </div>
 

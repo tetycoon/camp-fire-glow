@@ -121,17 +121,17 @@ const modules: ModuleData[] = [
   {
     id: "mod-7",
     hours: "2.0+ Hours",
-    title: "The Living LLM Software — Prompt Architecture & Perpetual Updates",
-    subtitle: "Harness our proprietary LLM software engine updated with every AI breakthrough",
+    title: "Proprietary AI Architecture — Prompt Systems & Perpetual Updates",
+    subtitle: "Harness our proprietary AI engine updated with every breakthrough",
     icon: <Cpu className="w-5 h-5 text-indigo-400" />,
     topics: [
-      "How to use our proprietary 'AI-BGM' software and enterprise prompt repository",
+      "How to deploy enterprise prompt repositories and business AI tools",
       "The Perpetual Learning Loop: How new AI models (OpenAI, Claude, Gemini) are continuously added",
       "Building your customized business knowledge base (RAG) for internal workflows",
       "Automating customer support and operations using multi-agent frameworks",
       "Your lifetime roadmap: Staying 2 steps ahead in the AI business revolution"
     ],
-    keyOutcome: "Full access to the Living LLM Software platform with lifetime continuous updates."
+    keyOutcome: "Full access to the AI-BGM platform with lifetime continuous updates."
   }
 ];
 

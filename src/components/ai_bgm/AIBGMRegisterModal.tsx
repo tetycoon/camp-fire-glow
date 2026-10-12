@@ -401,7 +401,7 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
               AI-BGM Executive Admission
             </span>
             <span className="text-[9px] sm:text-[10px] px-1.5 sm:px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 font-extrabold border border-blue-200">
-              Living LLM
+              Continuous Updates
             </span>
           </div>
 
@@ -733,7 +733,7 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
                     <div className="grid grid-cols-2 gap-1 text-[10px] sm:text-[11px] text-slate-600 pt-1 font-medium">
                       <div className="flex items-center gap-1">✓ 20+ Hours Content</div>
                       <div className="flex items-center gap-1">✓ Lifetime Access</div>
-                      <div className="flex items-center gap-1">✓ Living LLM Software</div>
+                      <div className="flex items-center gap-1">✓ Continuous AI Updates</div>
                       <div className="flex items-center gap-1">✓ 9-Core BMC Blueprint</div>
                     </div>
                   </div>

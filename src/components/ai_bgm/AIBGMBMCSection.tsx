@@ -73,10 +73,10 @@ const bmcBlocks: BMCBlock[] = [
   {
     number: "06",
     title: "Key Resources",
-    principle: "Living LLM Software & Proprietary Assets",
+    principle: "Proprietary AI Models & Core Assets",
     aiPower: "Custom Domain-Trained AI Agents & Repositories",
-    desc: "Leverage the ultimate asset: our Living LLM software. Build your private knowledge vaults, prompt banks, and algorithmic workflows that run as your proprietary business IP.",
-    deliverable: "Custom LLM Knowledge Base & Asset Library",
+    desc: "Leverage the ultimate asset: custom AI models. Build your private knowledge vaults, prompt banks, and algorithmic workflows that run as your proprietary business IP.",
+    deliverable: "Custom AI Knowledge Base & Asset Library",
     icon: <Cpu className="w-6 h-6 text-amber-400" />
   },
   {

@@ -341,7 +341,7 @@ function handlePaymentSuccess(sheet, data) {
                 <div class="deliverable-title">Your Unlocked Cohort Inclusions</div>
                 <div class="deliv-item">✓ <strong>20+ Hours of Course Content:</strong> High-definition video modules teaching AI with a 100% Business Perspective.</div>
                 <div class="deliv-item">✓ <strong>Lifetime Unrestricted Access:</strong> Permanent access to the course platform with zero subscription renewals.</div>
-                <div class="deliv-item">✓ <strong>The Living LLM Software:</strong> Continuous real-time model updates and prompt repositories as AI advances.</div>
+                <div class="deliv-item">✓ <strong>Continuous AI Updates:</strong> Real-time model updates and business prompt repositories as AI advances.</div>
                 <div class="deliv-item">✓ <strong>9 CORE Principles BMC Blueprint:</strong> Full execution framework from business ideas to automated lead systems.</div>
                 <div class="deliv-item">✓ <strong>AI Creatives, Websites & Video Engines:</strong> Production-grade assets for rapid market execution.</div>
               </div>

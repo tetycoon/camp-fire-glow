@@ -35,13 +35,13 @@ const AIBGMLivingLLM: React.FC<AIBGMLivingLLMProps> = ({ onRegisterClick }) => {
 
             <h2 className="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-tight mb-3 sm:mb-6">
               Why Static Courses Fail. <br />
-              Meet the <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 via-indigo-600 to-blue-600">Living LLM Software</span>.
+              Meet <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 via-indigo-600 to-blue-600">Continuous AI Updates</span>.
             </h2>
 
             <p className="text-slate-600 text-xs sm:text-base leading-relaxed mb-6 sm:mb-8 font-normal">
               Most online courses are obsolete 90 days after you purchase them. The AI frontier moves at warp speed. 
               <br /><br />
-              With <strong className="text-slate-900">AI-BGM</strong>, your enrollment grants you <strong className="text-emerald-700">Lifetime Access</strong> to our specialized LLM software portal. Every new AI model breakthrough, marketing feature, workflow automation, and commercial business tactic is <span className="text-indigo-700 font-bold underline decoration-indigo-300 underline-offset-4">continuously added directly inside the LLM</span>.
+              With <strong className="text-slate-900">AI-BGM</strong>, your enrollment grants you <strong className="text-emerald-700">Lifetime Access</strong> to our specialized training portal. Every new AI model breakthrough, marketing feature, workflow automation, and commercial business tactic is <span className="text-indigo-700 font-bold underline decoration-indigo-300 underline-offset-4">continuously added for your lifetime benefit</span>.
             </p>
 
             {/* Feature List */}

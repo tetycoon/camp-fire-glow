@@ -46,7 +46,7 @@ const AIBGMHero: React.FC<AIBGMHeroProps> = ({ onUnlockClick }) => {
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
             </span>
             <span className="text-[10px] sm:text-xs font-black tracking-widest uppercase">
-              EXECUTIVE LLM SOFTWARE COURSE • 2026 EDITION
+              EXECUTIVE AI BUSINESS COURSE • 2026 EDITION
             </span>
           </div>
 
@@ -91,7 +91,7 @@ const AIBGMHero: React.FC<AIBGMHeroProps> = ({ onUnlockClick }) => {
             </div>
             <div className="flex items-center gap-1.5 sm:gap-2 px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-lg sm:rounded-xl bg-slate-50 border border-slate-200 text-slate-700 text-[11px] sm:text-sm font-semibold shadow-sm">
               <RefreshCw className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-indigo-600" />
-              <span>Living LLM Software Updates</span>
+              <span>Continuous AI Updates</span>
             </div>
             <div className="flex items-center gap-1.5 sm:gap-2 px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-lg sm:rounded-xl bg-slate-50 border border-slate-200 text-slate-700 text-[11px] sm:text-sm font-semibold shadow-sm">
               <Layers className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-600" />
@@ -161,11 +161,11 @@ const AIBGMHero: React.FC<AIBGMHeroProps> = ({ onUnlockClick }) => {
               <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 mb-2 sm:mb-4 group-hover:scale-110 transition-transform">
                 <RefreshCw className="w-4 h-4 sm:w-6 sm:h-6" />
               </div>
-              <div className="text-lg sm:text-2xl font-black text-slate-900 mb-0.5 sm:mb-1">Living LLM</div>
-              <div className="text-[10px] sm:text-xs font-bold text-indigo-600 uppercase tracking-wider mb-1 sm:mb-2">Continuous Updates</div>
+              <div className="text-lg sm:text-2xl font-black text-slate-900 mb-0.5 sm:mb-1">Always Updated</div>
+              <div className="text-[10px] sm:text-xs font-bold text-indigo-600 uppercase tracking-wider mb-1 sm:mb-2">Continuous Content</div>
             </div>
             <p className="text-[11px] sm:text-xs text-slate-600 leading-snug sm:leading-relaxed font-normal">
-              Continuous updates directly integrated into proprietary software.
+              Continuous updates directly integrated as AI advances.
             </p>
           </div>
 

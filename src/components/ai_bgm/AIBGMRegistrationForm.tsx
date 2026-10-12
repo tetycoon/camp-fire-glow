@@ -447,7 +447,7 @@ const AIBGMRegistrationForm: React.FC = () => {
               </div>
               <div className="flex justify-between border-b border-slate-900 pb-2">
                 <span className="text-slate-400">Course Tier:</span>
-                <span className="font-bold text-white">20+ Hours • Lifetime Access • Living LLM</span>
+                <span className="font-bold text-white">20+ Hours • Lifetime Access • Continuous Updates</span>
               </div>
               <div className="flex justify-between pt-1">
                 <span className="text-slate-300 font-bold">Total Amount Received:</span>
@@ -797,7 +797,7 @@ const AIBGMRegistrationForm: React.FC = () => {
                       </div>
                       <div className="flex items-center gap-2">
                         <Check className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
-                        <span>Living LLM Software Continuous Updates</span>
+                        <span>Continuous AI Model & Strategy Updates</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <Check className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />

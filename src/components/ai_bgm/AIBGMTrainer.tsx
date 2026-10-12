@@ -87,8 +87,8 @@ const AIBGMTrainer: React.FC<AIBGMTrainerProps> = ({ onRegisterClick }) => {
               <div className="flex items-start gap-2.5 sm:gap-3">
                 <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
                 <div>
-                  <div className="font-bold text-slate-900 text-xs sm:text-sm">Lifetime Software Integration</div>
-                  <div className="text-[11px] sm:text-xs text-slate-500">Continuous curation into the living LLM engine</div>
+                  <div className="font-bold text-slate-900 text-xs sm:text-sm">Lifetime Platform Updates</div>
+                  <div className="text-[11px] sm:text-xs text-slate-500">Continuous curation of new AI models and strategies</div>
                 </div>
               </div>
             </div>
