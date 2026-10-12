@@ -70,7 +70,7 @@ const AIBGMNavbar: React.FC<AIBGMNavbarProps> = ({ onRegisterClick }) => {
                 <span className="text-xs sm:text-base font-black tracking-wider text-slate-900 uppercase leading-none whitespace-nowrap">
                   TECH TYCOON
                 </span>
-                <span className="text-[7.5px] sm:text-[9.5px] font-bold text-slate-500 uppercase tracking-wider leading-none mt-[1px] whitespace-nowrap">
+                <span className="text-[7.5px] sm:text-[9.5px] font-bold text-slate-500 uppercase tracking-wider leading-none -mt-[3px] sm:-mt-[4.5px] whitespace-nowrap">
                   Digital Solution LLP
                 </span>
               </div>
