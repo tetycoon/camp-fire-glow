@@ -47,6 +47,8 @@ const spaRoutes = [
   'ai_bgm',
   'aibgm',
   'ai-bgm',
+  'professionals',
+  'professional',
   'upscale',
   'admin-panel',
   'admin',

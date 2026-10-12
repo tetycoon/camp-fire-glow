@@ -51,9 +51,11 @@ import AdminPanelPage from "./pages/AdminPanelPage";
 
 import AcademyPreRegisterPage from "./pages/AcademyPreRegisterPage";
 import AIBGMPage from "./pages/AIBGMPage";
+import ProfessionalPage from "./pages/ProfessionalPage";
 
 const DynamicRootPage = () => {
   const host = typeof window !== "undefined" ? window.location.hostname.toLowerCase() : "";
+  if (host.startsWith("professionals.") || host.startsWith("professional.")) return <ProfessionalPage />;
   if (host.startsWith("bgm.") || host.startsWith("ai-bgm.") || host.startsWith("aibgm.")) return <AIBGMPage />;
   if (host.startsWith("bootcamp.")) return <BootcampPage />;
   if (host.startsWith("claude.") || host.startsWith("claude-masterclass.")) return <ClaudeMasterclassPage />;
@@ -121,6 +123,10 @@ const App = () => (
           <Route path="/aibgm/" element={<AIBGMPage />} />
           <Route path="/ai-bgm" element={<AIBGMPage />} />
           <Route path="/ai-bgm/" element={<AIBGMPage />} />
+          <Route path="/professionals" element={<ProfessionalPage />} />
+          <Route path="/professionals/" element={<ProfessionalPage />} />
+          <Route path="/professional" element={<ProfessionalPage />} />
+          <Route path="/professional/" element={<ProfessionalPage />} />
           <Route path="/upscale" element={<UpscalePage />} />
           <Route path="/upscale/" element={<UpscalePage />} />
           <Route path="/admin-panel" element={<AdminPanelPage />} />
