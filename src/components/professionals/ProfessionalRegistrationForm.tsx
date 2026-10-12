@@ -58,8 +58,8 @@ const ProfessionalRegistrationForm: React.FC = () => {
     customProfession: ""
   });
 
-  // Country Code State
-  const defaultCountry = countryCodes.find(c => c.code === "IN") || countryCodes[0];
+  // Country Code State - Default to India (IN / +91)
+  const defaultCountry = countryCodes.find(c => c.iso === "IN") || countryCodes.find(c => c.code === "+91") || countryCodes[0];
   const [selectedCountry, setSelectedCountry] = useState<CountryCode>(defaultCountry);
 
   // Price Reveal State
@@ -87,7 +87,7 @@ const ProfessionalRegistrationForm: React.FC = () => {
   // Pricing Calculation matching /ai_bgm:
   // Domestic (+91): Standard = 9999, with AMIABLE = 4999 (Save 5000)
   // International: Standard = 13999, with AMIABLE = 6999 (Save 7000)
-  const isInternational = selectedCountry.code !== "IN" && selectedCountry.dialCode !== "+91";
+  const isInternational = selectedCountry.iso !== "IN" && selectedCountry.code !== "+91";
   const standardPrice = isInternational ? 13999 : 9999;
   const isVipApplied = appliedCoupon.toUpperCase() === "AMIABLE" || appliedCoupon.toUpperCase() === "TECHTYCOON";
   const finalPrice = isVipApplied ? (isInternational ? 6999 : 4999) : standardPrice;
@@ -95,7 +95,7 @@ const ProfessionalRegistrationForm: React.FC = () => {
 
   // Phone validation
   const cleanPhone = formData.phone.replace(/\D/g, "");
-  const isPhoneValid = selectedCountry.code === "IN" || selectedCountry.dialCode === "+91"
+  const isPhoneValid = selectedCountry.iso === "IN" || selectedCountry.code === "+91"
     ? cleanPhone.length === 10
     : cleanPhone.length >= 7 && cleanPhone.length <= 15;
 
@@ -121,7 +121,7 @@ const ProfessionalRegistrationForm: React.FC = () => {
 
     if (!isPhoneValid) {
       setCouponError(
-        selectedCountry.code === "IN" || selectedCountry.dialCode === "+91"
+        selectedCountry.iso === "IN" || selectedCountry.code === "+91"
           ? "Please enter a valid 10-digit mobile number."
           : "Please enter a valid phone number (7-15 digits)."
       );
@@ -188,7 +188,7 @@ const ProfessionalRegistrationForm: React.FC = () => {
     }
     if (!cleanPhone || !isPhoneValid) {
       alert(
-        selectedCountry.code === "IN" || selectedCountry.dialCode === "+91"
+        selectedCountry.iso === "IN" || selectedCountry.code === "+91"
           ? "Please enter a valid 10-digit mobile number."
           : "Please enter a valid phone number (7-15 digits)."
       );
@@ -203,7 +203,7 @@ const ProfessionalRegistrationForm: React.FC = () => {
 
     setIsSubmitting(true);
 
-    const fullPhone = `${selectedCountry.dialCode} ${formData.phone.trim()}`;
+    const fullPhone = `${selectedCountry.code} ${formData.phone.trim()}`;
     const finalProfession = formData.profession === "Other Working Professional" 
       ? (formData.customProfession.trim() || "Working Professional")
       : formData.profession;
@@ -214,7 +214,7 @@ const ProfessionalRegistrationForm: React.FC = () => {
       timeStyle: "medium"
     });
 
-    const isInternational = selectedCountry.code !== "IN";
+    const isInternational = selectedCountry.iso !== "IN" && selectedCountry.code !== "+91";
     const amountInPaise = finalPrice * 100;
     let generatedOrderId = `ORD_PROF_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
 
@@ -422,32 +422,32 @@ const ProfessionalRegistrationForm: React.FC = () => {
 
   // Active Enrollment Form View
   return (
-    <div className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200 p-3.5 sm:p-5 shadow-xl relative overflow-hidden text-left">
+    <div className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200 p-4 sm:p-6 lg:p-7 shadow-xl relative overflow-hidden text-left">
       {/* Top Banner */}
-      <div className="flex items-center justify-between pb-2 mb-2.5 border-b border-slate-100 pr-7 sm:pr-8">
+      <div className="flex items-center justify-between pb-3 mb-3.5 border-b border-slate-100 pr-8">
         <div>
-          <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-indigo-600 block">
+          <span className="text-[10px] sm:text-xs font-black uppercase tracking-wider text-indigo-600 block mb-0.5">
             EXECUTIVE REGISTRATION • 2026 COHORT
           </span>
-          <h3 className="text-sm sm:text-base font-black text-slate-900 leading-tight">
+          <h3 className="text-base sm:text-lg font-black text-slate-900 leading-tight">
             Advance AI for Non-Tech Professionals
           </h3>
         </div>
-        <span className="hidden sm:inline-block px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold uppercase tracking-wider border border-emerald-200 flex-shrink-0">
+        <span className="hidden sm:inline-block px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider border border-emerald-200 flex-shrink-0">
           Fast-Track Pass
         </span>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-2 sm:space-y-2.5">
+      <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-3.5">
         {/* Row 1: Name and Email in 2 columns on sm+ */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5">
           {/* Full Name */}
           <div>
-            <label className="block text-[10px] sm:text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-0.5">
+            <label className="block text-[11px] sm:text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
               Full Name <span className="text-red-500">*</span>
             </label>
             <div className="relative">
-              <User className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
+              <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <input
                 type="text"
                 name="name"
@@ -455,18 +455,18 @@ const ProfessionalRegistrationForm: React.FC = () => {
                 value={formData.name}
                 onChange={handleInputChange}
                 placeholder="Rahul Sharma"
-                className="w-full pl-8 pr-3 py-1.5 sm:py-2 rounded-lg border border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-100 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 font-medium transition-all"
+                className="w-full pl-9 pr-3.5 py-2 sm:py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-100 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 font-medium transition-all"
               />
             </div>
           </div>
 
           {/* Email Address */}
           <div>
-            <label className="block text-[10px] sm:text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-0.5">
+            <label className="block text-[11px] sm:text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
               Email Address <span className="text-red-500">*</span>
             </label>
             <div className="relative">
-              <Mail className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <input
                 type="email"
                 name="email"
@@ -474,38 +474,38 @@ const ProfessionalRegistrationForm: React.FC = () => {
                 value={formData.email}
                 onChange={handleInputChange}
                 placeholder="rahul@company.com"
-                className="w-full pl-8 pr-3 py-1.5 sm:py-2 rounded-lg border border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-100 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 font-medium transition-all"
+                className="w-full pl-9 pr-3.5 py-2 sm:py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-100 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 font-medium transition-all"
               />
             </div>
           </div>
         </div>
 
         {/* Row 2: Mobile Number & Profession in 2 columns on sm+ */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5">
           {/* Mobile Number with Country Code */}
           <div>
-            <label className="block text-[10px] sm:text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-0.5">
+            <label className="block text-[11px] sm:text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
               Mobile (WhatsApp) <span className="text-red-500">*</span>
             </label>
-            <div className="flex gap-1.5">
-              <div className="w-20 sm:w-24 flex-shrink-0">
+            <div className="flex gap-2">
+              <div className="w-28 sm:w-32 flex-shrink-0">
                 <select
-                  value={selectedCountry.code}
+                  value={selectedCountry.iso}
                   onChange={(e) => {
-                    const country = countryCodes.find(c => c.code === e.target.value);
+                    const country = countryCodes.find(c => c.iso === e.target.value);
                     if (country) setSelectedCountry(country);
                   }}
-                  className="w-full px-1.5 py-1.5 sm:py-2 rounded-lg border border-slate-200 focus:border-indigo-500 text-[11px] sm:text-xs text-slate-900 font-medium bg-slate-50 transition-all truncate"
+                  className="w-full px-2 py-2 sm:py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500 text-xs sm:text-sm text-slate-900 font-medium bg-slate-50 transition-all truncate cursor-pointer"
                 >
-                  {countryCodes.map((c, idx) => (
-                    <option key={`${c.code}-${idx}`} value={c.code}>
-                      {c.flag} {c.dialCode}
+                  {countryCodes.map((c) => (
+                    <option key={c.iso} value={c.iso}>
+                      {c.flag} {c.code}
                     </option>
                   ))}
                 </select>
               </div>
               <div className="relative flex-grow">
-                <Phone className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
+                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <input
                   type="tel"
                   name="phone"
@@ -513,7 +513,7 @@ const ProfessionalRegistrationForm: React.FC = () => {
                   value={formData.phone}
                   onChange={handleInputChange}
                   placeholder="98765 43210"
-                  className="w-full pl-8 pr-2.5 py-1.5 sm:py-2 rounded-lg border border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-100 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 font-medium transition-all"
+                  className="w-full pl-9 pr-3 py-2 sm:py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-100 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 font-medium transition-all"
                 />
               </div>
             </div>
@@ -521,16 +521,16 @@ const ProfessionalRegistrationForm: React.FC = () => {
 
           {/* Profession / Role Dropdown */}
           <div>
-            <label className="block text-[10px] sm:text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-0.5">
+            <label className="block text-[11px] sm:text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
               Current Role <span className="text-red-500">*</span>
             </label>
             <div className="relative">
-              <Briefcase className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400 pointer-events-none" />
+              <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
               <select
                 name="profession"
                 value={formData.profession}
                 onChange={handleInputChange}
-                className="w-full pl-8 pr-3 py-1.5 sm:py-2 rounded-lg border border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-100 text-xs sm:text-sm text-slate-900 font-medium bg-white transition-all appearance-none cursor-pointer truncate"
+                className="w-full pl-9 pr-3.5 py-2 sm:py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-100 text-xs sm:text-sm text-slate-900 font-medium bg-white transition-all appearance-none cursor-pointer truncate"
               >
                 {PROFESSION_OPTIONS.map((opt) => (
                   <option key={opt} value={opt}>
@@ -547,7 +547,7 @@ const ProfessionalRegistrationForm: React.FC = () => {
                 value={formData.customProfession}
                 onChange={handleInputChange}
                 placeholder="Specify your exact job role"
-                className="mt-1 w-full px-2.5 py-1 rounded-lg border border-slate-200 text-xs text-slate-900"
+                className="mt-1.5 w-full px-3 py-1.5 rounded-xl border border-slate-200 text-xs text-slate-900"
               />
             )}
           </div>
@@ -555,12 +555,12 @@ const ProfessionalRegistrationForm: React.FC = () => {
 
         {/* Row 3: Coupon Code Section */}
         <div>
-          <label className="block text-[10px] sm:text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-0.5">
+          <label className="block text-[11px] sm:text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
             VIP Subsidy Coupon
           </label>
-          <div className="flex gap-1.5">
+          <div className="flex gap-2">
             <div className="relative flex-grow">
-              <Tag className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
+              <Tag className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <input
                 type="text"
                 value={couponCode}
@@ -572,28 +572,28 @@ const ProfessionalRegistrationForm: React.FC = () => {
                   }
                 }}
                 placeholder="Enter coupon code (e.g. AMIABLE)"
-                className="w-full pl-8 pr-3 py-1.5 sm:py-2 rounded-lg border border-slate-200 focus:border-indigo-500 text-xs sm:text-sm uppercase font-mono tracking-wider"
+                className="w-full pl-9 pr-3.5 py-2 sm:py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500 text-xs sm:text-sm uppercase font-mono tracking-wider"
               />
             </div>
             <button
               type="button"
               onClick={() => handleApplyCoupon()}
-              className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-[11px] sm:text-xs uppercase tracking-wider flex-shrink-0 shadow-sm transition-all"
+              className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs uppercase tracking-wider flex-shrink-0 shadow-sm transition-all"
             >
               Apply & Reveal
             </button>
           </div>
 
           {couponSuccess && (
-            <div className="mt-1.5 text-left text-[11px] sm:text-xs font-semibold text-emerald-700 flex items-center gap-1.5 p-1.5 sm:p-2 rounded-lg bg-emerald-50 border border-emerald-200 leading-tight">
-              <Check className="w-3.5 h-3.5 flex-shrink-0" />
+            <div className="mt-2 text-left text-xs font-semibold text-emerald-700 flex items-center gap-1.5 p-2 rounded-xl bg-emerald-50 border border-emerald-200 leading-tight">
+              <Check className="w-4 h-4 flex-shrink-0" />
               <span>{couponSuccess}</span>
             </div>
           )}
 
           {couponError && (
-            <div className="mt-1.5 text-left text-[11px] sm:text-xs font-semibold text-red-600 flex items-center gap-1.5 p-1.5 sm:p-2 rounded-lg bg-red-50 border border-red-200 leading-tight">
-              <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
+            <div className="mt-2 text-left text-xs font-semibold text-red-600 flex items-center gap-1.5 p-2 rounded-xl bg-red-50 border border-red-200 leading-tight">
+              <AlertCircle className="w-4 h-4 flex-shrink-0" />
               <span>{couponError}</span>
             </div>
           )}
@@ -601,33 +601,33 @@ const ProfessionalRegistrationForm: React.FC = () => {
 
         {/* Dynamic Price Breakdown — ONLY shown once user enters mobile & coupon */}
         {isPriceRevealed ? (
-          <div className="p-2 sm:p-2.5 rounded-lg bg-gradient-to-r from-indigo-50/90 via-blue-50/60 to-white border border-indigo-200 text-left flex items-center justify-between animate-in fade-in duration-200">
+          <div className="p-3 sm:p-3.5 rounded-xl bg-gradient-to-r from-indigo-50/90 via-blue-50/60 to-white border border-indigo-200 text-left flex items-center justify-between animate-in fade-in duration-200">
             <div>
-              <div className="flex items-center gap-1.5 text-[10px] sm:text-xs text-slate-600">
+              <div className="flex items-center gap-1.5 text-xs text-slate-600">
                 <span>Tuition: <span className="line-through font-mono">₹{standardPrice.toLocaleString()}</span></span>
                 {isVipApplied && (
-                  <span className="font-bold text-emerald-700 bg-emerald-100 px-1.5 py-0.5 rounded text-[9px] uppercase tracking-wide">
+                  <span className="font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded text-[10px] uppercase tracking-wide">
                     Save ₹{discountAmount.toLocaleString()} ({appliedCoupon})
                   </span>
                 )}
               </div>
-              <div className="text-[10px] text-slate-500 font-medium">
+              <div className="text-[11px] text-slate-500 font-medium mt-0.5">
                 {isInternational ? "International Participant" : "Domestic (+91) Participant"}
               </div>
             </div>
             <div className="text-right">
-              <span className="text-base sm:text-lg text-indigo-700 font-mono font-black">
+              <span className="text-lg sm:text-xl text-indigo-700 font-mono font-black">
                 ₹{finalPrice.toLocaleString()}
               </span>
             </div>
           </div>
         ) : (
-          <div className="p-2 sm:p-2.5 rounded-lg bg-slate-50 border border-dashed border-indigo-200 text-center flex items-center justify-between gap-2">
-            <div className="flex items-center gap-1 font-bold text-slate-700 text-[11px] sm:text-xs">
-              <Lock className="w-3 h-3 text-amber-500 flex-shrink-0" />
+          <div className="p-2.5 sm:p-3 rounded-xl bg-slate-50 border border-dashed border-indigo-200 text-center flex items-center justify-between gap-2">
+            <div className="flex items-center gap-1.5 font-bold text-slate-700 text-xs">
+              <Lock className="w-3.5 h-3.5 text-amber-500 flex-shrink-0" />
               <span>Tuition Protected</span>
             </div>
-            <p className="text-[10px] sm:text-[11px] text-slate-500">
+            <p className="text-[11px] text-slate-500">
               Enter mobile & coupon above to reveal rate
             </p>
           </div>
@@ -637,7 +637,7 @@ const ProfessionalRegistrationForm: React.FC = () => {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full py-2.5 sm:py-3 px-4 rounded-xl bg-gradient-to-r from-indigo-600 via-blue-600 to-indigo-700 hover:from-indigo-700 hover:to-blue-700 text-white font-extrabold text-xs sm:text-sm uppercase tracking-wider shadow-md hover:shadow-lg hover:scale-[1.005] active:scale-[0.99] transition-all flex items-center justify-center gap-2 disabled:opacity-75 disabled:pointer-events-none"
+          className="w-full py-3 sm:py-3.5 px-6 rounded-xl sm:rounded-2xl bg-gradient-to-r from-indigo-600 via-blue-600 to-indigo-700 hover:from-indigo-700 hover:to-blue-700 text-white font-extrabold text-xs sm:text-sm uppercase tracking-wider shadow-md hover:shadow-lg hover:scale-[1.005] active:scale-[0.99] transition-all flex items-center justify-center gap-2 disabled:opacity-75 disabled:pointer-events-none"
         >
           {isSubmitting ? (
             <div className="flex items-center gap-2">
@@ -646,31 +646,31 @@ const ProfessionalRegistrationForm: React.FC = () => {
             </div>
           ) : !isPriceRevealed ? (
             <div className="flex items-center gap-1.5">
-              <Unlock className="w-3.5 h-3.5 text-amber-300" />
+              <Unlock className="w-4 h-4 text-amber-300" />
               <span>Enter Mobile & Reveal Tuition</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <ArrowRight className="w-4 h-4" />
             </div>
           ) : (
             <div className="flex items-center gap-1.5">
-              <Lock className="w-3.5 h-3.5 text-amber-300" />
+              <Lock className="w-4 h-4 text-amber-300" />
               <span>Complete Enrollment — ₹{finalPrice.toLocaleString()}</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <ArrowRight className="w-4 h-4" />
             </div>
           )}
         </button>
 
         {/* Security / Guarantee Trust Badges */}
-        <div className="flex items-center justify-center gap-2.5 sm:gap-3 text-[9px] sm:text-[10px] text-slate-500 pt-0.5">
+        <div className="flex items-center justify-center gap-3 sm:gap-4 text-[10px] sm:text-[11px] text-slate-500 pt-0.5">
           <span className="flex items-center gap-1 text-slate-600">
-            <ShieldCheck className="w-3 h-3 text-emerald-600" /> 256-Bit SSL
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" /> 256-Bit SSL
           </span>
           <span>•</span>
           <span className="flex items-center gap-1 text-slate-600">
-            <CheckCircle2 className="w-3 h-3 text-indigo-600" /> Razorpay Verified
+            <CheckCircle2 className="w-3.5 h-3.5 text-indigo-600" /> Razorpay Verified
           </span>
           <span>•</span>
           <span className="flex items-center gap-1 text-slate-600">
-            <Mail className="w-3 h-3 text-blue-600" /> Instant Email Access
+            <Mail className="w-3.5 h-3.5 text-blue-600" /> Instant Email Access
           </span>
         </div>
       </form>

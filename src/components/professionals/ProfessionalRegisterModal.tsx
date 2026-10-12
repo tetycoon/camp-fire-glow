@@ -40,7 +40,7 @@ const ProfessionalRegisterModal: React.FC<ProfessionalRegisterModalProps> = ({ i
       />
 
       {/* Modal Dialog Card */}
-      <div className="relative z-10 w-full max-w-lg sm:max-w-xl my-auto bg-white rounded-2xl shadow-2xl overflow-hidden border border-slate-200 animate-in fade-in zoom-in-95 duration-200">
+      <div className="relative z-10 w-full max-w-xl sm:max-w-2xl my-auto bg-white rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden border border-slate-200 animate-in fade-in zoom-in-95 duration-200">
         {/* Floating Close Button */}
         <button
           onClick={onClose}
