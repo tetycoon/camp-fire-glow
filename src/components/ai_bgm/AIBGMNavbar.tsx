@@ -59,24 +59,21 @@ const AIBGMNavbar: React.FC<AIBGMNavbarProps> = ({ onRegisterClick }) => {
       >
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 flex items-center justify-between">
           {/* Logo & Brand Identity */}
-          <div className="flex items-center gap-2 sm:gap-3">
-            <a href="/" className="flex items-center gap-2 sm:gap-2.5 group">
+          <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+            <a href="/" className="flex items-center gap-2.5 sm:gap-3 group">
               <img 
                 src={logoImg} 
                 alt="Tech Tycoon Digital Solution LLP" 
-                className="h-8 sm:h-10 w-auto object-contain transition-transform group-hover:scale-105" 
+                className="h-8 sm:h-10 w-auto object-contain transition-transform group-hover:scale-105 flex-shrink-0" 
               />
               <div className="flex flex-col text-left">
-                <span className="text-xs sm:text-base font-black tracking-wider text-slate-900 uppercase leading-none">
+                <span className="text-xs sm:text-base font-black tracking-wider text-slate-900 uppercase leading-none whitespace-nowrap">
                   TECH TYCOON
                 </span>
-                <span className="text-[8px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-wider leading-tight mt-0.5">
+                <span className="text-[8px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-wider leading-tight mt-1 whitespace-nowrap">
                   Digital Solution LLP
                 </span>
               </div>
-              <span className="hidden md:inline-block text-[9px] uppercase tracking-widest px-1.5 py-0.5 bg-blue-50 text-blue-700 border border-blue-200 rounded-md font-extrabold ml-1 self-center">
-                AI-BGM
-              </span>
             </a>
           </div>
 
