@@ -66,11 +66,11 @@ const AIBGMNavbar: React.FC<AIBGMNavbarProps> = ({ onRegisterClick }) => {
                 alt="Tech Tycoon Digital Solution LLP" 
                 className="h-8 sm:h-10 w-auto object-contain transition-transform group-hover:scale-105 flex-shrink-0" 
               />
-              <div className="flex flex-col text-left">
+              <div className="flex flex-col text-left justify-center">
                 <span className="text-xs sm:text-base font-black tracking-wider text-slate-900 uppercase leading-none whitespace-nowrap">
                   TECH TYCOON
                 </span>
-                <span className="text-[8px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-wider leading-tight mt-1 whitespace-nowrap">
+                <span className="text-[7.5px] sm:text-[9.5px] font-bold text-slate-500 uppercase tracking-wider leading-none mt-[1px] whitespace-nowrap">
                   Digital Solution LLP
                 </span>
               </div>
