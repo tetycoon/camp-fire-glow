@@ -346,6 +346,16 @@ function handlePaymentSuccess(sheet, data) {
                 <div class="deliv-item">✓ <strong>AI Creatives, Websites & Video Engines:</strong> Production-grade assets for rapid market execution.</div>
               </div>
 
+              <!-- Academy Course Access Notification -->
+              <div style="background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 12px; padding: 18px; margin: 20px 0; text-align: center;">
+                <div style="font-size: 14px; font-weight: 800; color: #065f46; margin-bottom: 6px;">
+                  🎓 Academy Course Access Will Be Provided Through Email
+                </div>
+                <p style="font-size: 13px; color: #047857; margin: 0; line-height: 1.5;">
+                  Your enrollment for <strong>Advance AI Business Generative Model</strong> is being activated on the <strong>Tech Tycoon Academy Portal (<a href="https://academy.techtycoon.in" style="color: #065f46; font-weight: 700; text-decoration: underline;">academy.techtycoon.in</a>)</strong>. Your login credentials and portal access instructions will be delivered directly to this email address.
+                </p>
+              </div>
+
               <!-- Action Step -->
               <p style="font-size: 14px; line-height: 1.6; color: #334155;">
                 <strong>Next Step:</strong> Click the button below to join the Private Onboarding WhatsApp channel and connect directly with Antony Praveen and the Tech Tycoon team.

@@ -432,11 +432,21 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
                 Payment Confirmed, {successDetails.name}! 🎉
               </h3>
 
-              <div className="p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl bg-blue-50 border border-blue-200 max-w-md mx-auto text-blue-900 text-[11px] sm:text-xs mb-4 sm:mb-5 flex items-center justify-center gap-2">
+              <div className="p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl bg-blue-50 border border-blue-200 max-w-md mx-auto text-blue-900 text-[11px] sm:text-xs mb-3 flex items-center justify-center gap-2">
                 <Mail className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-600 flex-shrink-0" />
                 <span>
                   Official Payment Receipt dispatched to: <strong className="text-blue-950 underline">{successDetails.email}</strong>
                 </span>
+              </div>
+
+              {/* Course Access via Email Notice */}
+              <div className="p-3 sm:p-3.5 rounded-xl sm:rounded-2xl bg-emerald-50 border border-emerald-200 max-w-md mx-auto text-emerald-900 text-[11px] sm:text-xs mb-4 sm:mb-5 text-center">
+                <p className="font-bold text-emerald-800 mb-0.5">
+                  🎓 Course Access Will Be Provided Through Email!
+                </p>
+                <p className="text-slate-600 text-[10px] sm:text-[11px] leading-relaxed">
+                  Your enrollment on <strong>academy.techtycoon.in</strong> is activated. Check your inbox at <strong className="text-slate-900">{successDetails.email}</strong> for your course access and login credentials.
+                </p>
               </div>
 
               <div className="p-3.5 sm:p-5 rounded-xl sm:rounded-2xl bg-slate-50 border border-slate-200 text-left text-[11px] sm:text-xs space-y-2 sm:space-y-2.5 mb-4 sm:mb-6">
