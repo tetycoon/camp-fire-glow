@@ -217,6 +217,21 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
     }
 
     if (!isPriceRevealed) {
+      const code = couponInput.trim().toUpperCase();
+      if (code === "AMIABLE") {
+        setAppliedCoupon("AMIABLE");
+        const discountAmount = isInternational ? 7000 : 5000;
+        setCouponStatus({
+          type: "success",
+          message: `🎉 Secret VIP Voucher 'AMIABLE' Applied! You saved ₹${discountAmount.toLocaleString()} (50% Off)!`
+        });
+      } else if (code) {
+        setAppliedCoupon("");
+        setCouponStatus({
+          type: "error",
+          message: "Invalid coupon code. Enter 'AMIABLE' for 50% discount."
+        });
+      }
       setIsPriceRevealed(true);
       return;
     }
@@ -669,27 +684,9 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
                 )}
               </div>
 
-              {/* Price Reveal Box */}
-              <div className="pt-2 border-t border-slate-200">
-                {!isPriceRevealed ? (
-                  <div className="p-4 rounded-2xl bg-slate-50 border-2 border-dashed border-blue-200 text-center">
-                    <div className="flex items-center justify-center gap-2 text-amber-700 text-xs font-bold mb-1">
-                      <Lock className="w-4 h-4 text-amber-600" />
-                      <span>Cohort Pricing Hidden</span>
-                    </div>
-                    <p className="text-[11px] text-slate-500 mb-2">
-                      Enter your mobile number & click below to unlock VIP rate.
-                    </p>
-                    <button
-                      type="button"
-                      onClick={() => handleApplyCoupon()}
-                      className="px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-xs uppercase tracking-wider inline-flex items-center gap-1.5 shadow-sm"
-                    >
-                      <Unlock className="w-3.5 h-3.5 text-amber-300" />
-                      <span>Reveal Unlocked Pricing Now</span>
-                    </button>
-                  </div>
-                ) : (
+              {/* Price Reveal Box (Rendered upon coupon apply or details submission) */}
+              {isPriceRevealed && (
+                <div className="pt-2 border-t border-slate-200 animate-in fade-in duration-200">
                   <div className="p-4 rounded-2xl bg-gradient-to-br from-blue-50/80 via-indigo-50/50 to-white border border-blue-200 space-y-2">
                     <div className="flex items-center justify-between text-xs">
                       <span className="font-bold text-emerald-700 flex items-center gap-1">
@@ -730,8 +727,8 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
                       <div className="flex items-center gap-1">✓ 9-Core BMC Blueprint</div>
                     </div>
                   </div>
-                )}
-              </div>
+                </div>
+              )}
 
               {errorMessage && (
                 <div className="p-2.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2">
