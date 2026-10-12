@@ -52,9 +52,11 @@ import AdminPanelPage from "./pages/AdminPanelPage";
 import AcademyPreRegisterPage from "./pages/AcademyPreRegisterPage";
 import AIBGMPage from "./pages/AIBGMPage";
 import ProfessionalPage from "./pages/ProfessionalPage";
+import ConsultingPage from "./pages/ConsultingPage";
 
 const DynamicRootPage = () => {
   const host = typeof window !== "undefined" ? window.location.hostname.toLowerCase() : "";
+  if (host.startsWith("consulting.") || host.startsWith("consultation.")) return <ConsultingPage />;
   if (host.startsWith("professionals.") || host.startsWith("professional.")) return <ProfessionalPage />;
   if (host.startsWith("bgm.") || host.startsWith("ai-bgm.") || host.startsWith("aibgm.")) return <AIBGMPage />;
   if (host.startsWith("bootcamp.")) return <BootcampPage />;
@@ -127,6 +129,12 @@ const App = () => (
           <Route path="/professionals/" element={<ProfessionalPage />} />
           <Route path="/professional" element={<ProfessionalPage />} />
           <Route path="/professional/" element={<ProfessionalPage />} />
+          <Route path="/consulting" element={<ConsultingPage />} />
+          <Route path="/consulting/" element={<ConsultingPage />} />
+          <Route path="/consultation" element={<ConsultingPage />} />
+          <Route path="/consultation/" element={<ConsultingPage />} />
+          <Route path="/1on1" element={<ConsultingPage />} />
+          <Route path="/1on1/" element={<ConsultingPage />} />
           <Route path="/upscale" element={<UpscalePage />} />
           <Route path="/upscale/" element={<UpscalePage />} />
           <Route path="/admin-panel" element={<AdminPanelPage />} />
