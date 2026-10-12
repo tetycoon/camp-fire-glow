@@ -373,26 +373,26 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/85 backdrop-blur-md overflow-y-auto animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-md overflow-y-auto animate-in fade-in duration-200">
       <div 
-        className="relative w-full max-w-2xl my-auto bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl overflow-hidden max-h-[92vh] flex flex-col"
+        className="relative w-full max-w-2xl my-auto bg-white border border-slate-200 rounded-3xl shadow-2xl overflow-hidden max-h-[92vh] flex flex-col text-slate-900"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header Bar */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-950/70 sticky top-0 z-20">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 bg-slate-50/90 sticky top-0 z-20">
           <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span className="text-xs font-black uppercase tracking-wider text-white">
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span className="text-xs font-black uppercase tracking-wider text-slate-900">
               AI-BGM Executive Admission
             </span>
-            <span className="text-[10px] px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 font-bold border border-indigo-500/30">
+            <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 font-extrabold border border-blue-200">
               Living LLM
             </span>
           </div>
 
           <button
             onClick={onClose}
-            className="p-1.5 rounded-xl bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition-colors focus:outline-none"
+            className="p-1.5 rounded-xl bg-slate-100 text-slate-500 hover:text-slate-900 hover:bg-slate-200 transition-colors focus:outline-none"
             aria-label="Close modal"
           >
             <X className="w-5 h-5" />
@@ -404,46 +404,46 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
           {paymentSuccess && successDetails ? (
             /* Post-Payment Acknowledgement View */
             <div className="text-center py-4">
-              <div className="w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center mx-auto mb-4 text-emerald-400">
+              <div className="w-16 h-16 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center mx-auto mb-4 text-emerald-600">
                 <CheckCircle2 className="w-8 h-8" />
               </div>
 
-              <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-black uppercase tracking-wider mb-2">
-                <CheckCircle2 className="w-3.5 h-3.5" />
+              <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-black uppercase tracking-wider mb-2">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
                 <span>Official Acknowledgement: Payment Received</span>
               </div>
 
-              <h3 className="text-xl sm:text-3xl font-black text-white mb-2">
+              <h3 className="text-xl sm:text-3xl font-black text-slate-900 mb-2">
                 Payment Confirmed, {successDetails.name}! 🎉
               </h3>
 
-              <div className="p-3.5 rounded-2xl bg-indigo-950/60 border border-indigo-500/30 max-w-md mx-auto text-indigo-200 text-xs mb-5 flex items-center justify-center gap-2">
-                <Mail className="w-4 h-4 text-indigo-400 flex-shrink-0" />
+              <div className="p-3.5 rounded-2xl bg-blue-50 border border-blue-200 max-w-md mx-auto text-blue-900 text-xs mb-5 flex items-center justify-center gap-2">
+                <Mail className="w-4 h-4 text-blue-600 flex-shrink-0" />
                 <span>
-                  Official Payment Receipt dispatched to: <strong className="text-white underline">{successDetails.email}</strong>
+                  Official Payment Receipt dispatched to: <strong className="text-blue-950 underline">{successDetails.email}</strong>
                 </span>
               </div>
 
-              <div className="p-5 rounded-2xl bg-slate-950 border border-slate-800 text-left text-xs space-y-2.5 mb-6">
-                <div className="flex justify-between border-b border-slate-900 pb-1.5">
-                  <span className="text-slate-400">Status:</span>
-                  <span className="font-bold text-emerald-400">✓ PAID & VERIFIED</span>
+              <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 text-left text-xs space-y-2.5 mb-6">
+                <div className="flex justify-between border-b border-slate-200/80 pb-1.5">
+                  <span className="text-slate-500">Status:</span>
+                  <span className="font-bold text-emerald-700">✓ PAID & VERIFIED</span>
                 </div>
-                <div className="flex justify-between border-b border-slate-900 pb-1.5">
-                  <span className="text-slate-400">Payment ID:</span>
-                  <span className="font-mono text-indigo-300 font-bold">{successDetails.paymentId}</span>
+                <div className="flex justify-between border-b border-slate-200/80 pb-1.5">
+                  <span className="text-slate-500">Payment ID:</span>
+                  <span className="font-mono text-blue-700 font-bold">{successDetails.paymentId}</span>
                 </div>
-                <div className="flex justify-between border-b border-slate-900 pb-1.5">
-                  <span className="text-slate-400">Order ID:</span>
-                  <span className="font-mono text-slate-300">{successDetails.orderId}</span>
+                <div className="flex justify-between border-b border-slate-200/80 pb-1.5">
+                  <span className="text-slate-500">Order ID:</span>
+                  <span className="font-mono text-slate-700">{successDetails.orderId}</span>
                 </div>
-                <div className="flex justify-between border-b border-slate-900 pb-1.5">
-                  <span className="text-slate-400">Course Tier:</span>
-                  <span className="font-bold text-white">Advance AI-BGM (20+ Hrs • Lifetime Access)</span>
+                <div className="flex justify-between border-b border-slate-200/80 pb-1.5">
+                  <span className="text-slate-500">Course Tier:</span>
+                  <span className="font-bold text-slate-900">Advance AI-BGM (20+ Hrs • Lifetime Access)</span>
                 </div>
                 <div className="flex justify-between pt-1">
-                  <span className="text-slate-300 font-bold">Amount Paid:</span>
-                  <span className="font-black text-emerald-400 text-sm">₹{successDetails.amount.toLocaleString()}</span>
+                  <span className="text-slate-700 font-bold">Amount Paid:</span>
+                  <span className="font-black text-emerald-700 text-base">₹{successDetails.amount.toLocaleString()}</span>
                 </div>
               </div>
 
@@ -452,7 +452,7 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
                   href="https://wa.me/917558133039?text=Hi%20Antony%2C%20I%20have%20completed%20payment%20for%20AI-BGM%20Course!%20My%20Payment%20ID%20is%20"
                   target="_blank"
                   rel="noreferrer"
-                  className="w-full sm:w-auto px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-emerald-600/30 transition-transform hover:scale-105 flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-emerald-600/25 transition-transform hover:scale-105 flex items-center justify-center gap-2"
                 >
                   <span>Join VIP WhatsApp Community</span>
                   <ArrowRight className="w-4 h-4" />
@@ -461,7 +461,7 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
                 <button
                   type="button"
                   onClick={() => window.print()}
-                  className="w-full sm:w-auto px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs border border-slate-700"
+                  className="w-full sm:w-auto px-5 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs border border-slate-300"
                 >
                   🖨️ Print Receipt
                 </button>
@@ -471,10 +471,10 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
             /* Registration Form View */
             <form onSubmit={handleSubmitAndPay} className="space-y-5">
               <div className="text-center mb-6">
-                <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight mb-2">
+                <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight mb-2">
                   Advance AI-Business Generative Model
                 </h2>
-                <p className="text-xs sm:text-sm text-slate-400 max-w-md mx-auto">
+                <p className="text-xs sm:text-sm text-slate-500 max-w-md mx-auto">
                   Tuition rate is locked. Enter your mobile number & coupon code below to reveal your custom fee.
                 </p>
               </div>
@@ -482,35 +482,35 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
               {/* Step 1: Personal Info */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 <div>
-                  <label className="block text-xs font-bold text-slate-300 mb-1">
-                    Full Name <span className="text-rose-400">*</span>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    Full Name <span className="text-rose-500">*</span>
                   </label>
                   <div className="relative">
-                    <User className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                    <User className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                     <input
                       type="text"
                       required
                       placeholder="e.g. Rahul Sharma"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-600 text-xs sm:text-sm focus:outline-none focus:border-indigo-500 transition-colors"
+                      className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 text-xs sm:text-sm focus:outline-none focus:bg-white focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-colors"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-300 mb-1">
-                    Email Address <span className="text-rose-400">*</span>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    Email Address <span className="text-rose-500">*</span>
                   </label>
                   <div className="relative">
-                    <Mail className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                    <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                     <input
                       type="email"
                       required
                       placeholder="e.g. rahul@example.com"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-600 text-xs sm:text-sm focus:outline-none focus:border-indigo-500 transition-colors"
+                      className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 text-xs sm:text-sm focus:outline-none focus:bg-white focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-colors"
                     />
                   </div>
                 </div>
@@ -518,23 +518,23 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
 
               {/* Profession */}
               <div>
-                <label className="block text-xs font-bold text-slate-300 mb-1">
-                  Profession / Business Background <span className="text-rose-400">*</span>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  Profession / Business Background <span className="text-rose-500">*</span>
                 </label>
                 <div className="relative">
-                  <Briefcase className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <Briefcase className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                   <select
                     value={formData.profession}
                     onChange={(e) => setFormData({ ...formData, profession: e.target.value })}
-                    className="w-full pl-9 pr-8 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs sm:text-sm focus:outline-none focus:border-indigo-500 appearance-none cursor-pointer"
+                    className="w-full pl-9 pr-8 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-xs sm:text-sm focus:outline-none focus:bg-white focus:border-blue-600 focus:ring-1 focus:ring-blue-600 appearance-none cursor-pointer"
                   >
                     {PROFESSION_OPTIONS.map((p) => (
-                      <option key={p} value={p} className="bg-slate-950 text-white">
+                      <option key={p} value={p} className="bg-white text-slate-900">
                         {p}
                       </option>
                     ))}
                   </select>
-                  <ChevronDown className="w-4 h-4 text-slate-500 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                 </div>
                 {formData.profession === "Other" && (
                   <input
@@ -542,43 +542,43 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
                     placeholder="Specify profession"
                     value={formData.customProfession}
                     onChange={(e) => setFormData({ ...formData, customProfession: e.target.value })}
-                    className="mt-2 w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-indigo-500"
+                    className="mt-2 w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-xs focus:outline-none focus:bg-white focus:border-blue-600"
                   />
                 )}
               </div>
 
               {/* Step 2: Mobile & Country Picker */}
               <div>
-                <label className="block text-xs font-bold text-slate-300 mb-1">
-                  Mobile Number <span className="text-rose-400">*</span>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  Mobile Number <span className="text-rose-500">*</span>
                 </label>
                 <div className="flex gap-2 relative">
                   <div className="relative">
                     <button
                       type="button"
                       onClick={() => setIsCountryDropdownOpen(!isCountryDropdownOpen)}
-                      className="h-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs sm:text-sm flex items-center gap-1.5 hover:border-slate-700 focus:outline-none"
+                      className="h-full px-3 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-xs sm:text-sm flex items-center gap-1.5 hover:bg-slate-100 focus:outline-none"
                     >
                       <span>{selectedCountry.flag}</span>
                       <span className="font-bold">{selectedCountry.code}</span>
-                      <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+                      <ChevronDown className="w-3.5 h-3.5 text-slate-500" />
                     </button>
 
                     {isCountryDropdownOpen && (
-                      <div className="absolute top-full left-0 mt-1.5 w-64 max-h-56 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl z-50 overflow-hidden flex flex-col">
-                        <div className="p-2 border-b border-slate-800 sticky top-0 bg-slate-900">
+                      <div className="absolute top-full left-0 mt-1.5 w-64 max-h-56 bg-white border border-slate-200 rounded-2xl shadow-2xl z-50 overflow-hidden flex flex-col">
+                        <div className="p-2 border-b border-slate-100 sticky top-0 bg-white">
                           <div className="relative">
-                            <Search className="w-3 h-3 text-slate-500 absolute left-2.5 top-1/2 -translate-y-1/2" />
+                            <Search className="w-3 h-3 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
                             <input
                               type="text"
                               placeholder="Search country..."
                               value={countrySearch}
                               onChange={(e) => setCountrySearch(e.target.value)}
-                              className="w-full pl-7 pr-2 py-1 text-xs bg-slate-950 rounded-lg text-white border border-slate-800 focus:outline-none"
+                              className="w-full pl-7 pr-2 py-1 text-xs bg-slate-50 rounded-lg text-slate-900 border border-slate-200 focus:outline-none focus:bg-white"
                             />
                           </div>
                         </div>
-                        <div className="overflow-y-auto max-h-44 divide-y divide-slate-800/40">
+                        <div className="overflow-y-auto max-h-44 divide-y divide-slate-100">
                           {filteredCountries.map((c) => (
                             <button
                               key={`${c.iso}-${c.code}`}
@@ -588,13 +588,13 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
                                 setIsCountryDropdownOpen(false);
                                 setCountrySearch("");
                               }}
-                              className="w-full px-3 py-1.5 text-left hover:bg-slate-800 flex items-center justify-between text-xs text-slate-200"
+                              className="w-full px-3 py-1.5 text-left hover:bg-slate-50 flex items-center justify-between text-xs text-slate-800"
                             >
                               <span className="flex items-center gap-1.5 truncate max-w-[130px]">
                                 <span>{c.flag}</span>
                                 <span>{c.name}</span>
                               </span>
-                              <span className="font-mono text-slate-400 font-bold">{c.code}</span>
+                              <span className="font-mono text-slate-500 font-bold">{c.code}</span>
                             </button>
                           ))}
                         </div>
@@ -603,7 +603,7 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
                   </div>
 
                   <div className="relative flex-grow">
-                    <Phone className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                    <Phone className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                     <input
                       type="tel"
                       required
@@ -613,7 +613,7 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
                         setFormData({ ...formData, phone: e.target.value });
                         if (errorMessage) setErrorMessage("");
                       }}
-                      className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-600 text-xs sm:text-sm focus:outline-none focus:border-indigo-500"
+                      className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 text-xs sm:text-sm focus:outline-none focus:bg-white focus:border-blue-600 focus:ring-1 focus:ring-blue-600"
                     />
                   </div>
                 </div>
@@ -622,28 +622,28 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
               {/* Step 3: Coupon Code */}
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <label className="block text-xs font-bold text-slate-300">
+                  <label className="block text-xs font-bold text-slate-700">
                     Secret Voucher / Coupon Code
                   </label>
-                  <span className="text-[10px] text-amber-300 font-semibold">
+                  <span className="text-[10px] text-amber-700 font-bold">
                     💡 Tip: Enter <strong>AMIABLE</strong> for 50% off
                   </span>
                 </div>
                 <div className="flex gap-2">
                   <div className="relative flex-grow">
-                    <Tag className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                    <Tag className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                     <input
                       type="text"
                       placeholder="e.g. AMIABLE"
                       value={couponInput}
                       onChange={(e) => setCouponInput(e.target.value)}
-                      className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-600 text-xs sm:text-sm font-mono uppercase tracking-wider focus:outline-none focus:border-indigo-500"
+                      className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 text-xs sm:text-sm font-mono uppercase tracking-wider focus:outline-none focus:bg-white focus:border-blue-600 focus:ring-1 focus:ring-blue-600"
                     />
                   </div>
                   <button
                     type="button"
                     onClick={handleApplyCoupon}
-                    className="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs uppercase tracking-wider whitespace-nowrap transition-colors"
+                    className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider whitespace-nowrap transition-colors"
                   >
                     Apply & Reveal
                   </button>
@@ -653,16 +653,16 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
                   <div
                     className={`mt-2 p-2.5 rounded-xl text-xs flex items-center gap-2 ${
                       couponStatus.type === "success"
-                        ? "bg-emerald-950/60 border border-emerald-600/40 text-emerald-300"
+                        ? "bg-emerald-50 border border-emerald-200 text-emerald-800"
                         : couponStatus.type === "error"
-                        ? "bg-rose-950/60 border border-rose-600/40 text-rose-300"
-                        : "bg-slate-800/80 border border-slate-700 text-slate-300"
+                        ? "bg-rose-50 border border-rose-200 text-rose-800"
+                        : "bg-slate-100 border border-slate-200 text-slate-700"
                     }`}
                   >
                     {couponStatus.type === "success" ? (
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />
                     ) : (
-                      <AlertCircle className="w-3.5 h-3.5 text-rose-400 flex-shrink-0" />
+                      <AlertCircle className="w-3.5 h-3.5 text-rose-600 flex-shrink-0" />
                     )}
                     <span>{couponStatus.message}</span>
                   </div>
@@ -670,46 +670,46 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
               </div>
 
               {/* Price Reveal Box */}
-              <div className="pt-2 border-t border-slate-800">
+              <div className="pt-2 border-t border-slate-200">
                 {!isPriceRevealed ? (
-                  <div className="p-4 rounded-2xl bg-slate-950 border border-dashed border-indigo-500/40 text-center">
-                    <div className="flex items-center justify-center gap-2 text-amber-300 text-xs font-bold mb-1">
-                      <Lock className="w-4 h-4" />
+                  <div className="p-4 rounded-2xl bg-slate-50 border-2 border-dashed border-blue-200 text-center">
+                    <div className="flex items-center justify-center gap-2 text-amber-700 text-xs font-bold mb-1">
+                      <Lock className="w-4 h-4 text-amber-600" />
                       <span>Cohort Pricing Hidden</span>
                     </div>
-                    <p className="text-[11px] text-slate-400 mb-2">
+                    <p className="text-[11px] text-slate-500 mb-2">
                       Enter your mobile number & click below to unlock VIP rate.
                     </p>
                     <button
                       type="button"
                       onClick={() => handleApplyCoupon()}
-                      className="px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-xs uppercase tracking-wider inline-flex items-center gap-1.5"
+                      className="px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-xs uppercase tracking-wider inline-flex items-center gap-1.5 shadow-sm"
                     >
                       <Unlock className="w-3.5 h-3.5 text-amber-300" />
                       <span>Reveal Unlocked Pricing Now</span>
                     </button>
                   </div>
                 ) : (
-                  <div className="p-4 rounded-2xl bg-gradient-to-br from-indigo-950/60 to-slate-950 border border-indigo-500/40 space-y-2">
+                  <div className="p-4 rounded-2xl bg-gradient-to-br from-blue-50/80 via-indigo-50/50 to-white border border-blue-200 space-y-2">
                     <div className="flex items-center justify-between text-xs">
-                      <span className="font-bold text-emerald-400 flex items-center gap-1">
-                        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                      <span className="font-bold text-emerald-700 flex items-center gap-1">
+                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                         {isCouponValid ? "50% VIP Grant Unlocked" : "Standard Tier Active"}
                       </span>
-                      <span className="text-[11px] text-slate-400">
+                      <span className="text-[11px] text-slate-500 font-medium">
                         {isInternational ? "International Participant" : "Domestic (+91)"}
                       </span>
                     </div>
 
-                    <div className="flex items-baseline justify-between pt-1 border-t border-slate-800">
+                    <div className="flex items-baseline justify-between pt-1 border-t border-blue-100">
                       <div>
-                        <div className="text-[11px] text-slate-400">Total Course Fee</div>
+                        <div className="text-[11px] text-slate-500">Total Course Fee</div>
                         <div className="flex items-baseline gap-2">
-                          <span className="text-3xl font-black text-white">
+                          <span className="text-3xl font-black text-slate-900">
                             ₹{discountedPrice.toLocaleString()}
                           </span>
                           {isCouponValid && (
-                            <span className="text-sm font-bold text-slate-500 line-through">
+                            <span className="text-sm font-bold text-slate-400 line-through">
                               ₹{standardPrice.toLocaleString()}
                             </span>
                           )}
@@ -717,13 +717,13 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
                       </div>
 
                       {isCouponValid && (
-                        <div className="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 text-xs font-bold border border-emerald-500/30">
+                        <div className="px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-800 text-xs font-bold border border-emerald-200">
                           Save ₹{savings.toLocaleString()}
                         </div>
                       )}
                     </div>
 
-                    <div className="grid grid-cols-2 gap-1 text-[11px] text-slate-400 pt-1">
+                    <div className="grid grid-cols-2 gap-1 text-[11px] text-slate-600 pt-1 font-medium">
                       <div className="flex items-center gap-1">✓ 20+ Hours Content</div>
                       <div className="flex items-center gap-1">✓ Lifetime Access</div>
                       <div className="flex items-center gap-1">✓ Living LLM Software</div>
@@ -734,8 +734,8 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
               </div>
 
               {errorMessage && (
-                <div className="p-2.5 rounded-xl bg-rose-950/60 border border-rose-600/40 text-rose-300 text-xs flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4 text-rose-400 flex-shrink-0" />
+                <div className="p-2.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 text-rose-600 flex-shrink-0" />
                   <span>{errorMessage}</span>
                 </div>
               )}
@@ -745,7 +745,7 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 hover:from-blue-500 hover:to-violet-500 text-white font-black text-sm uppercase tracking-wider shadow-xl shadow-indigo-600/40 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-60"
+                  className="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-700 hover:to-indigo-700 text-white font-black text-sm uppercase tracking-wider shadow-xl shadow-blue-500/25 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-60"
                 >
                   {isSubmitting ? (
                     <>
@@ -767,7 +767,7 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
                 </button>
               </div>
 
-              <div className="flex items-center justify-center gap-3 text-slate-500 text-[10px] text-center pt-1">
+              <div className="flex items-center justify-center gap-3 text-slate-500 text-[10px] text-center pt-1 font-medium">
                 <span>🔒 256-Bit SSL Secured</span>
                 <span>•</span>
                 <span>⚡ Instant Sheet & Email Sync</span>

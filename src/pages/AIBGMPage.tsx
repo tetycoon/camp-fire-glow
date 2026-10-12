@@ -34,7 +34,7 @@ const AIBGMPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-indigo-500 selection:text-white flex flex-col relative">
+    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-blue-600 selection:text-white flex flex-col relative">
       <AIBGMNavbar onRegisterClick={openRegisterModal} />
       
       <main className="flex-grow">
@@ -57,19 +57,19 @@ const AIBGMPage: React.FC = () => {
       {/* Floating Sticky Mobile / Bottom CTA Bar */}
       {showStickyBar && (
         <div className="fixed bottom-4 left-4 right-4 z-40 max-w-md mx-auto animate-in slide-in-from-bottom duration-300">
-          <div className="p-2 rounded-2xl bg-slate-900/90 border border-indigo-500/40 backdrop-blur-xl shadow-2xl shadow-indigo-950/60 flex items-center justify-between gap-3">
+          <div className="p-2 rounded-2xl bg-white/95 border border-slate-200/90 backdrop-blur-xl shadow-2xl shadow-slate-900/10 flex items-center justify-between gap-3">
             <div className="pl-3">
-              <div className="text-[10px] font-black uppercase tracking-wider text-indigo-400">
+              <div className="text-[10px] font-black uppercase tracking-wider text-blue-600">
                 AI-BGM Executive Cohort
               </div>
-              <div className="text-xs font-bold text-white">
+              <div className="text-xs font-bold text-slate-900">
                 20+ Hrs • Living LLM Access
               </div>
             </div>
 
             <button
               onClick={openRegisterModal}
-              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-indigo-600/30 flex items-center gap-1.5 hover:scale-105 active:scale-95 transition-all whitespace-nowrap"
+              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-blue-600/25 flex items-center gap-1.5 hover:scale-105 active:scale-95 transition-all whitespace-nowrap"
             >
               <Lock className="w-3.5 h-3.5 text-amber-300" />
               <span>Unlock Pricing</span>

@@ -45,18 +45,18 @@ const AIBGMFAQ: React.FC = () => {
   };
 
   return (
-    <section id="faq" className="py-24 px-4 sm:px-6 lg:px-8 bg-slate-950 text-white relative">
+    <section id="faq" className="py-24 px-4 sm:px-6 lg:px-8 bg-slate-50 border-t border-slate-200 text-slate-900 relative">
       <div className="max-w-4xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs font-bold uppercase tracking-widest mb-4">
-            <HelpCircle className="w-3.5 h-3.5 text-indigo-400" />
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold uppercase tracking-widest mb-4">
+            <HelpCircle className="w-3.5 h-3.5 text-blue-600" />
             FREQUENTLY ASKED QUESTIONS
           </div>
-          <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight mb-4">
+          <h2 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight mb-4">
             Everything You Need to Know
           </h2>
-          <p className="text-slate-400 text-sm sm:text-base">
+          <p className="text-slate-600 text-sm sm:text-base">
             Have questions about the Advance AI-Business Generative Model? We have answers.
           </p>
         </div>
@@ -70,23 +70,23 @@ const AIBGMFAQ: React.FC = () => {
                 key={idx}
                 className={`rounded-2xl border transition-all duration-300 overflow-hidden ${
                   isOpen
-                    ? "bg-slate-900 border-indigo-500/50 shadow-xl"
-                    : "bg-slate-900/60 border-slate-800 hover:border-slate-700"
+                    ? "bg-white border-blue-400 shadow-md"
+                    : "bg-white border-slate-200 hover:border-slate-300 shadow-sm"
                 }`}
               >
                 <button
                   onClick={() => toggle(idx)}
                   className="w-full p-6 text-left flex items-center justify-between gap-4 focus:outline-none"
                 >
-                  <span className="font-bold text-base sm:text-lg text-white">
+                  <span className="font-bold text-base sm:text-lg text-slate-900">
                     {faq.q}
                   </span>
-                  <span className="p-1.5 rounded-lg bg-slate-800 text-slate-400 flex-shrink-0">
+                  <span className="p-1.5 rounded-lg bg-slate-100 text-slate-600 flex-shrink-0">
                     {isOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                   </span>
                 </button>
                 {isOpen && (
-                  <div className="px-6 pb-6 pt-1 text-slate-300 text-sm leading-relaxed border-t border-slate-800/80">
+                  <div className="px-6 pb-6 pt-2 text-slate-600 text-sm leading-relaxed border-t border-slate-100 bg-white">
                     {faq.a}
                   </div>
                 )}

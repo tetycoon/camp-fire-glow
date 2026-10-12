@@ -147,21 +147,21 @@ const AIBGMCurriculum: React.FC<AIBGMCurriculumProps> = ({ onRegisterClick }) =>
   };
 
   return (
-    <section id="curriculum" className="py-24 px-4 sm:px-6 lg:px-8 bg-slate-950 text-white relative">
+    <section id="curriculum" className="py-24 px-4 sm:px-6 lg:px-8 bg-white text-slate-900 relative">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-300 text-xs font-bold uppercase tracking-widest mb-4">
-            <BookOpen className="w-3.5 h-3.5 text-blue-400" />
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold uppercase tracking-widest mb-4">
+            <BookOpen className="w-3.5 h-3.5 text-blue-600" />
             COMPREHENSIVE SYLLABUS
           </div>
-          <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight mb-6">
+          <h2 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight mb-6">
             20+ Hours of Pure <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-300 to-violet-400">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600">
               Business Perspective Mastery
             </span>
           </h2>
-          <p className="text-base sm:text-lg text-slate-300 leading-relaxed font-normal">
+          <p className="text-base sm:text-lg text-slate-600 leading-relaxed font-normal">
             No fluff. No surface-level prompts. Every module is a masterclass in building tangible, cash-generating business assets using AI.
           </p>
         </div>
@@ -175,8 +175,8 @@ const AIBGMCurriculum: React.FC<AIBGMCurriculumProps> = ({ onRegisterClick }) =>
                 key={m.id}
                 className={`rounded-3xl border transition-all duration-300 overflow-hidden ${
                   isOpen
-                    ? "bg-slate-900 border-indigo-500/60 shadow-2xl shadow-indigo-950/40"
-                    : "bg-slate-900/60 border-slate-800 hover:border-slate-700"
+                    ? "bg-white border-blue-400 shadow-xl ring-1 ring-blue-500/20"
+                    : "bg-slate-50/60 border-slate-200 hover:border-slate-300 hover:bg-white"
                 }`}
               >
                 {/* Accordion Trigger Header */}
@@ -185,58 +185,58 @@ const AIBGMCurriculum: React.FC<AIBGMCurriculumProps> = ({ onRegisterClick }) =>
                   className="w-full p-6 sm:p-8 flex items-center justify-between text-left gap-4 focus:outline-none"
                 >
                   <div className="flex items-center gap-4 sm:gap-6">
-                    <div className="w-12 h-12 rounded-2xl bg-slate-950 border border-slate-800 flex items-center justify-center flex-shrink-0 shadow-inner">
+                    <div className="w-12 h-12 rounded-2xl bg-blue-50/80 border border-blue-100 flex items-center justify-center flex-shrink-0 shadow-sm">
                       {m.icon}
                     </div>
                     <div>
                       <div className="flex items-center gap-3 mb-1">
-                        <span className="text-xs font-black text-indigo-400 uppercase tracking-wider">
+                        <span className="text-xs font-black text-blue-600 uppercase tracking-wider">
                           Module 0{idx + 1}
                         </span>
-                        <span className="inline-flex items-center gap-1 text-[11px] font-bold text-slate-400 px-2 py-0.5 rounded-full bg-slate-800/80">
-                          <Clock className="w-3 h-3 text-slate-400" />
+                        <span className="inline-flex items-center gap-1 text-[11px] font-bold text-slate-600 px-2 py-0.5 rounded-full bg-slate-100">
+                          <Clock className="w-3 h-3 text-slate-500" />
                           {m.hours}
                         </span>
                       </div>
-                      <h3 className="text-lg sm:text-xl font-black text-white tracking-tight">
+                      <h3 className="text-lg sm:text-xl font-black text-slate-900 tracking-tight">
                         {m.title}
                       </h3>
-                      <p className="text-xs sm:text-sm text-slate-400 font-normal mt-0.5 hidden sm:block">
+                      <p className="text-xs sm:text-sm text-slate-500 font-normal mt-0.5 hidden sm:block">
                         {m.subtitle}
                       </p>
                     </div>
                   </div>
 
-                  <div className="p-2 rounded-xl bg-slate-800/80 text-slate-400 flex-shrink-0">
+                  <div className="p-2 rounded-xl bg-slate-100 text-slate-600 flex-shrink-0">
                     {isOpen ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
                   </div>
                 </button>
 
                 {/* Accordion Body */}
                 {isOpen && (
-                  <div className="px-6 sm:px-8 pb-8 pt-2 border-t border-slate-800/80 bg-slate-950/50">
-                    <p className="text-sm text-slate-300 mb-6 font-medium sm:hidden">
+                  <div className="px-6 sm:px-8 pb-8 pt-2 border-t border-slate-100 bg-slate-50/40">
+                    <p className="text-sm text-slate-600 mb-6 font-medium sm:hidden">
                       {m.subtitle}
                     </p>
 
-                    <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">
+                    <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">
                       Core Topics & Hands-On Exercises:
                     </div>
 
                     <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
                       {m.topics.map((t, i) => (
-                        <li key={i} className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-300">
-                          <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 flex-shrink-0 mt-2"></span>
+                        <li key={i} className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-700">
+                          <span className="w-1.5 h-1.5 rounded-full bg-blue-600 flex-shrink-0 mt-2"></span>
                           <span>{t}</span>
                         </li>
                       ))}
                     </ul>
 
                     {/* Module Outcome Box */}
-                    <div className="p-4 rounded-2xl bg-indigo-950/40 border border-indigo-900/50 flex items-center gap-3 text-indigo-200 text-xs sm:text-sm">
-                      <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0" />
+                    <div className="p-4 rounded-2xl bg-blue-50/80 border border-blue-100 flex items-center gap-3 text-blue-900 text-xs sm:text-sm">
+                      <CheckCircle2 className="w-5 h-5 text-emerald-600 flex-shrink-0" />
                       <span>
-                        <strong className="text-white font-bold">Key Deliverable:</strong> {m.keyOutcome}
+                        <strong className="text-slate-900 font-bold">Key Deliverable:</strong> {m.keyOutcome}
                       </span>
                     </div>
                   </div>
@@ -247,15 +247,15 @@ const AIBGMCurriculum: React.FC<AIBGMCurriculumProps> = ({ onRegisterClick }) =>
         </div>
 
         {/* Total Summary Footer Box */}
-        <div className="p-8 rounded-3xl bg-slate-900 border border-slate-800 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
+        <div className="p-8 sm:p-10 rounded-3xl bg-slate-50 border border-slate-200 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left shadow-sm">
           <div>
-            <div className="text-indigo-400 font-bold text-xs uppercase tracking-widest mb-1">
+            <div className="text-blue-600 font-bold text-xs uppercase tracking-widest mb-1">
               THE FULL ACCELERATOR
             </div>
-            <div className="text-2xl font-black text-white">
+            <div className="text-2xl font-black text-slate-900">
               20+ Hours of Actionable Instruction + Lifetime Software Access
             </div>
-            <p className="text-slate-400 text-xs mt-1">
+            <p className="text-slate-600 text-xs mt-1">
               Includes templates, prompt libraries, SOPs, and perpetual LLM updates with zero renewal fees.
             </p>
           </div>
@@ -263,7 +263,7 @@ const AIBGMCurriculum: React.FC<AIBGMCurriculumProps> = ({ onRegisterClick }) =>
           <button
             type="button"
             onClick={onRegisterClick}
-            className="px-8 py-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-xs uppercase tracking-wider whitespace-nowrap shadow-xl shadow-indigo-600/30 hover:scale-105 transition-all"
+            className="px-8 py-4 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-700 hover:to-indigo-700 text-white font-black text-xs uppercase tracking-wider whitespace-nowrap shadow-lg shadow-blue-500/25 hover:scale-105 active:scale-95 transition-all"
           >
             Unlock VIP Pricing & Register &rarr;
           </button>
