@@ -27,7 +27,7 @@ declare global {
 // Spreadsheet ID: 1LP37n3zb1d0UkXjddQBCKqmSU0j5-HvPSI-Rda36E3s
 // Sheet Name: Sheet1
 // Columns: Date and Time | Name | Email | Phone | Profession | Amount | Status | Order ID | Payment ID
-const DEFAULT_CONSULTING_APPS_SCRIPT_URL = "";
+const DEFAULT_CONSULTING_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzF4e05xth7Kdzx8gJKXI-vqPgKUSacLE8aGRT8hvg-7B75qvQw_gYwmRacsq3cNIsD/exec";
 const CONSULTING_SPREADSHEET_ID = "1LP37n3zb1d0UkXjddQBCKqmSU0j5-HvPSI-Rda36E3s";
 
 const RAZORPAY_KEY_ID = "rzp_live_T2CbVONQc6qrqj";
