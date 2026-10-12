@@ -65,11 +65,8 @@ spaRoutes.forEach(route => {
   const dir = path.join('dist', route);
   fs.mkdirSync(dir, { recursive: true });
   const targetFile = path.join(dir, 'index.html');
-  // Don't overwrite if dedicated static html already exists
-  if (!fs.existsSync(targetFile)) {
-    fs.copyFileSync('dist/index.html', targetFile);
-    console.log(`✓ Created SPA route entry: ${targetFile}`);
-  }
+  fs.copyFileSync('dist/index.html', targetFile);
+  console.log(`✓ Updated SPA route entry: ${targetFile}`);
 });
 
 console.log('✓ Static SPA route preparation complete.');

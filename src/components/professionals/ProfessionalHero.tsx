@@ -14,7 +14,8 @@ import {
   Award,
   BarChart3,
   Zap,
-  Users
+  Users,
+  ShieldCheck
 } from "lucide-react";
 
 interface ProfessionalHeroProps {

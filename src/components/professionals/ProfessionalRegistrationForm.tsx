@@ -497,8 +497,8 @@ const ProfessionalRegistrationForm: React.FC = () => {
                   }}
                   className="w-full px-1.5 py-1.5 sm:py-2 rounded-lg border border-slate-200 focus:border-indigo-500 text-[11px] sm:text-xs text-slate-900 font-medium bg-slate-50 transition-all truncate"
                 >
-                  {countryCodes.map((c) => (
-                    <option key={c.code} value={c.code}>
+                  {countryCodes.map((c, idx) => (
+                    <option key={`${c.code}-${idx}`} value={c.code}>
                       {c.flag} {c.dialCode}
                     </option>
                   ))}
