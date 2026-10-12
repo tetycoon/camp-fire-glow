@@ -1,7 +1,7 @@
 /**
  * ============================================================================
  * TECH TYCOON ACADEMY — DEDICATED GOOGLE APPS SCRIPT AUTOMATION
- * Target Google Sheet URL: https://docs.google.com/spreadsheets/d/1PC9ZYxd4O7ofuDwcN5AhPHTvW6RYO7V2LgQqrbPTQ5I/edit?gid=0#gid=0
+ * Target Google Sheet URL: https://docs.google.com/spreadsheets/d/1PC9ZYxd4O7ofuDwcN5AhPHTvW6RYO7V2LgQqrbPTQ5I/edit#gid=0
  * Spreadsheet ID: 1PC9ZYxd4O7ofuDwcN5AhPHTvW6RYO7V2LgQqrbPTQ5I
  * 
  * Target Columns in Sheet1:
@@ -36,7 +36,7 @@ const SHEET_NAME = "Sheet1";
 function getTargetSheet() {
   let ss = null;
   
-  // 1. Try active spreadsheet first (if script is bound to sheet via Extensions -> Apps Script)
+  // 1. Try active spreadsheet first (when script is attached via Extensions -> Apps Script)
   try {
     ss = SpreadsheetApp.getActiveSpreadsheet();
   } catch (e) {
@@ -49,7 +49,6 @@ function getTargetSheet() {
       ss = SpreadsheetApp.openById(SPREADSHEET_ID);
     } catch (e) {
       Logger.log("openById Notice: " + e.toString());
-      throw new Error("Cannot open Spreadsheet ID " + SPREADSHEET_ID + ". Please make sure the Apps Script is opened via Extensions -> Apps Script inside the Academy Google Sheet.");
     }
   }
 
@@ -61,48 +60,12 @@ function getTargetSheet() {
 }
 
 /**
- * Handles HTTP GET requests (Health check or Webhook)
+ * Handles HTTP GET requests (Health check or Direct Webhook)
  */
 function doGet(e) {
   try {
     const params = (e && e.parameter) ? e.parameter : {};
     
-    // Action 1: Stream registrations for Admin Panel (aitycoon.in/admin-panel)
-    if (params.action === "getRegistrations") {
-      const sheet = getTargetSheet();
-      const data = sheet.getDataRange().getValues();
-      const registrations = [];
-      
-      // Skip header row
-      for (let i = 1; i < data.length; i++) {
-        const row = data[i];
-        if (!row[0] && !row[1] && !row[2]) continue;
-        
-        registrations.push({
-          timestamp: row[0] ? new Date(row[0]).toISOString() : "",
-          name: row[1] || "",
-          email: row[2] || "",
-          phone: row[3] || "",
-          profession: "Student / Professional",
-          language: row[4] || "TECH TYCOON Academy",
-          amount: Number(row[6]) || 0,
-          status: row[5] || (row[9] ? "PAID" : "INITIATED"),
-          orderId: row[8] || "",
-          paymentId: row[9] || "",
-          emailStatus: row[10] || "",
-          batch: "Academy Pre-Registration",
-          sessionDate: "Sept 10th Launch",
-          pageUrl: "https://aitycoon.in/academy"
-        });
-      }
-      
-      return ContentService.createTextOutput(JSON.stringify({
-        success: true,
-        count: registrations.length,
-        registrations: registrations
-      })).setMimeType(ContentService.MimeType.JSON);
-    }
-
     // If GET request includes lead parameters directly
     if (params.name || params.email || params.phone) {
       const sheet = getTargetSheet();
@@ -161,15 +124,15 @@ function doPost(e) {
 }
 
 /**
- * Appends a lead row to Sheet1 and optionally creates a Razorpay Order ID
+ * Appends a lead row to Sheet1 and creates Razorpay Order ID
  */
 function createOrderAndLogRow(sheet, data) {
   const name = data.name || "Anonymous";
   const email = data.email || "";
   const phone = data.phone || "";
   const course = data.course || data.modeOfSession || "TECH TYCOON Academy";
-  const amountPaid = parseInt(data.amount) || 2499;
-  const balanceAmount = amountPaid === 2499 ? 2500 : (amountPaid === 4000 ? 4000 : 0); // 50% discount off ₹4,999 (Domestic) or ₹8,000 (International)
+  const amountPaid = parseInt(data.amount) || 4999;
+  const balanceAmount = amountPaid === 4999 ? 5000 : (amountPaid === 5999 ? 6000 : 0); // 50% discount off ₹9,999 (Domestic) or ₹11,999 (International)
   const isIntl = data.isInternational || false;
   const dateTimeStr = Utilities.formatDate(new Date(), "Asia/Kolkata", "yyyy-MM-dd HH:mm:ss");
 
@@ -244,7 +207,8 @@ function handlePaymentSuccess(sheet, data) {
   const userEmail = data.email || "";
   const userName = data.name || "Valued Learner";
   const userPhone = data.phone || "";
-  const amountPaid = parseInt(data.amount) || 2499;
+  const amountPaid = parseInt(data.amount) || 4999;
+  const balanceAmount = amountPaid === 4999 ? 5000 : (amountPaid === 5999 ? 6000 : 0);
 
   const rows = sheet.getDataRange().getValues();
   let targetRowIndex = -1;
@@ -278,7 +242,7 @@ function handlePaymentSuccess(sheet, data) {
       "TECH TYCOON Academy",
       "SUCCESS",
       amountPaid,
-      amountPaid === 2499 ? 2500 : 0,
+      balanceAmount,
       orderId,
       paymentId,
       "No"
@@ -290,7 +254,7 @@ function handlePaymentSuccess(sheet, data) {
   let emailSentStatus = "No";
   if (userEmail && userEmail.includes("@")) {
     try {
-      sendConfirmationEmail(userName, userEmail, paymentId);
+      sendConfirmationEmail(userName, userEmail, paymentId, amountPaid);
       emailSentStatus = "Yes";
       sheet.getRange(targetRowIndex, 11).setValue("Yes"); // Col K: Email Sent
     } catch (err) {
@@ -308,8 +272,11 @@ function handlePaymentSuccess(sheet, data) {
 /**
  * Sends a HTML confirmation email to the pre-registered student
  */
-function sendConfirmationEmail(name, email, paymentId) {
+function sendConfirmationEmail(name, email, paymentId, amountPaid) {
   const subject = "🎉 Pre-Registration Confirmed — TECH TYCOON Academy (Launch Sept 10th)";
+  const paidVal = parseInt(amountPaid) || 4999;
+  const actualStr = paidVal === 5999 ? "₹11,999" : "₹9,999";
+  const offerStr = `₹${paidVal.toLocaleString()} (Actual ${actualStr})`;
   
   const htmlBody = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #0B0F19; color: #ffffff; padding: 30px; border-radius: 16px; border: 1px solid #374151;">
@@ -339,7 +306,7 @@ function sendConfirmationEmail(name, email, paymentId) {
           </tr>
           <tr>
             <td style="padding: 8px 0; border-bottom: 1px solid #1F2937; color: #9CA3AF;">Offer Price Paid:</td>
-            <td style="padding: 8px 0; border-bottom: 1px solid #1F2937; font-weight: bold; color: #34D399;">₹2,499 (Actual ₹4,999)</td>
+            <td style="padding: 8px 0; border-bottom: 1px solid #1F2937; font-weight: bold; color: #34D399;">${offerStr}</td>
           </tr>
           <tr>
             <td style="padding: 8px 0; color: #9CA3AF;">Payment Transaction ID:</td>

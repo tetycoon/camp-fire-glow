@@ -27,7 +27,7 @@ const WHATSAPP_CONFIG = {
   PHONE_NUMBER: "917010340494", 
   WA_GROUP_LINK_CLAUDE_ONLINE: "https://chat.whatsapp.com/HfVfYc6ea7iEHAMFjOb4WS", // Claude Online Community
   WA_GROUP_LINK_CLAUDE_OFFLINE: "https://chat.whatsapp.com/DMp2tRRhjwN1fziYujeQhb", // Claude Offline Group
-  POSTER_URL: "https://aitycoon.in/claude_masterclass/images/poster_v2.jpg" 
+  POSTER_URL: "https://course.techtycoon.in/claude_masterclass/images/poster_v2.jpg" 
 };
 
 const TRIGGER_MESSAGE_ONLINE = "Hello Tech Tycoon Team I successfully complete the registration of claude masterclass online session";
@@ -108,7 +108,7 @@ function getUpcomingMasterclassDates(isOffline = false) {
   }
 
   return {
-    dateText: "Every Saturday & Sunday",
+    dateText: "October 3 & 4, 2026 (Saturday & Sunday)",
     timeText: "6:00 PM – 9:00 PM IST",
     venueText: "🌐 Live Online Virtual Classroom"
   };
@@ -211,9 +211,9 @@ function doGet(e) {
         paymentId: row[9] || "",
         emailStatus: row[10] || "",
         whatsappClicked: row[11] || "",
-        pageUrl: "https://aitycoon.in/claude_masterclass",
+        pageUrl: "https://course.techtycoon.in/claude_masterclass",
         batch: "Claude Masterclass",
-        sessionDate: "Every Saturday & Sunday",
+        sessionDate: "October 3 & 4, 2026",
         sessionTime: "6:00 PM IST"
       });
     }

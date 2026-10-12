@@ -353,11 +353,11 @@ const ClaudeMasterclassPage: React.FC = () => {
     };
   }, []);
 
-  // Target Date: Every Weekend @ 18:00 IST (Online) | Oct 11, 2026 @ 09:00 IST (Offline)
+  // Target Date: October 3, 2026 @ 18:00 IST (Online) | Oct 11, 2026 @ 09:00 IST (Offline)
   useEffect(() => {
     const targetDate = masterclassMode === 'offline' 
       ? new Date('2026-10-11T09:00:00+05:30').getTime() 
-      : weekendInfo.targetTimestamp;
+      : new Date('2026-10-03T18:00:00+05:30').getTime();
 
     const updateTimer = () => {
       const now = new Date().getTime();
@@ -562,7 +562,7 @@ const ClaudeMasterclassPage: React.FC = () => {
         description: selectedPlan === 999 
           ? "Live + Recording Pass (Recorded Video Access)" 
           : "Standard Live Session Pass",
-        image: "https://aitycoon.in/images/tech_tycoon_logo.png",
+        image: "https://course.techtycoon.in/images/tech_tycoon_logo.png",
         prefill: {
           name: formData.name,
           email: formData.email,
@@ -672,7 +672,7 @@ const ClaudeMasterclassPage: React.FC = () => {
                 <h2 className="text-[#1F1E1C] text-xl font-bold mb-2">2-Day Live Virtual MasterClass</h2>
                 <p className="text-[#524F4A] text-xs mb-4 leading-relaxed">Learn Claude AI prompt architecture, custom MCP creation, and full web application development live from anywhere.</p>
                 <ul className="space-y-2.5 text-xs text-[#2C2A29] mb-6">
-                  <li className="flex items-center gap-2.5"><Calendar className="w-4 h-4 text-[#D85A30]" /> <strong>Every Saturday & Sunday ({weekendInfo.shortRangeText})</strong></li>
+                  <li className="flex items-center gap-2.5"><Calendar className="w-4 h-4 text-[#D85A30]" /> <strong>October 3 & 4, 2026 (Sat & Sun)</strong></li>
                   <li className="flex items-center gap-2.5"><Clock className="w-4 h-4 text-[#D85A30]" /> 6:00 PM – 9:00 PM IST (3 Hours/day)</li>
                   <li className="flex items-center gap-2.5"><Globe className="w-4 h-4 text-[#D85A30]" /> 100% Tamil Instruction & Direct Q&A</li>
                 </ul>
@@ -746,7 +746,7 @@ const ClaudeMasterclassPage: React.FC = () => {
               ← Main Hub
             </a>
             <div className="hidden md:flex items-center gap-4 text-xs text-[#524F4A]">
-              <span>{masterclassMode === 'offline' ? 'October 11, 2026' : `Every Sat & Sun (${weekendInfo.shortRangeText})`}</span>
+              <span>{masterclassMode === 'offline' ? 'October 11, 2026' : 'October 3 & 4, 2026'}</span>
               <span className="w-1 h-1 rounded-full bg-[#C5C0B8]"></span>
               <span>{masterclassMode === 'offline' ? '9:00 AM – 5:30 PM IST' : '6:00 PM – 9:00 PM IST'}</span>
             </div>
@@ -849,7 +849,7 @@ const ClaudeMasterclassPage: React.FC = () => {
                     <span className="text-xs text-[#524F4A]">
                       {masterclassMode === 'offline' 
                         ? 'October 11, 2026 (Sunday • Full Day)' 
-                        : `Every Saturday & Sunday (Upcoming: ${weekendInfo.rangeText}, ${weekendInfo.year})`}
+                        : 'October 3 & 4, 2026 (Saturday & Sunday)'}
                     </span>
                   </div>
                 </div>
@@ -1002,7 +1002,7 @@ const ClaudeMasterclassPage: React.FC = () => {
               <div className="flex items-center gap-3">
                 <span className="bg-[#D85A30] text-white font-bold text-xs px-3 py-1 rounded-md uppercase">Day 1</span>
                 <div>
-                  <h3 className="font-bold text-base text-[#1F1E1C]">Day 1: Saturday • 6:00 PM – 9:00 PM IST</h3>
+                  <h3 className="font-bold text-base text-[#1F1E1C]">Saturday, October 3rd • 6:00 PM – 9:00 PM IST</h3>
                   <span className="text-xs text-[#6E6B65]">Foundations, Prompt Architecture & Building Custom MCPs</span>
                 </div>
               </div>
@@ -1035,7 +1035,7 @@ const ClaudeMasterclassPage: React.FC = () => {
               <div className="flex items-center gap-3">
                 <span className="bg-[#6B4FBB] text-white font-bold text-xs px-3 py-1 rounded-md uppercase">Day 2</span>
                 <div>
-                  <h3 className="font-bold text-base text-[#1F1E1C]">Day 2: Sunday • 6:00 PM – 9:00 PM IST</h3>
+                  <h3 className="font-bold text-base text-[#1F1E1C]">Sunday, October 4th • 6:00 PM – 9:00 PM IST</h3>
                   <span className="text-xs text-[#6E6B65]">Claude Code CLI, Web App Construction & Live Projects</span>
                 </div>
               </div>
@@ -1343,7 +1343,7 @@ const ClaudeMasterclassPage: React.FC = () => {
             <button onClick={() => setIsTermsOpen(true)} className="hover:text-white transition-colors">Refund & Cancellation Policy</button>
           </div>
           <div className="pt-4 border-t border-[#33312E] text-[11px] text-[#8E8A83]">
-            &copy; 2026 TECH TYCOON Digital Solution LLP. All rights reserved. | aitycoon.in/claude_masterclass
+            &copy; 2026 TECH TYCOON Digital Solution LLP. All rights reserved. | course.techtycoon.in/claude_masterclass
           </div>
         </div>
       </footer>
@@ -1359,7 +1359,7 @@ const ClaudeMasterclassPage: React.FC = () => {
           <Calendar className="w-4 h-4 text-[#D85A30] shrink-0" />
           <div>
             <strong className="block text-xs font-bold text-[#1F1E1C] leading-tight">
-              {masterclassMode === 'offline' ? 'October 11, 2026' : `Every Sat & Sun (${weekendInfo.shortRangeText})`}
+              {masterclassMode === 'offline' ? 'October 11, 2026' : 'October 3 & 4, 2026'}
             </strong>
             <span className="text-[10px] text-[#6E6B65] hidden sm:block">
               {masterclassMode === 'offline' ? 'Sunday (Full Day)' : 'Live Virtual (6-9 PM)'}
@@ -1525,7 +1525,7 @@ const ClaudeMasterclassPage: React.FC = () => {
                     <Calendar className="w-3 h-3 text-[#D85A30]" />
                     {masterclassMode === 'offline' 
                       ? 'October 11, 2026 (Sunday • Full Day) • 9:00 AM IST' 
-                      : `Every Saturday & Sunday • Upcoming: ${weekendInfo.rangeText} (6:00 PM IST)`}
+                      : 'October 3 & 4, 2026 • 6:00 PM IST'}
                   </div>
 
                   {masterclassMode !== 'offline' && (
@@ -1751,7 +1751,7 @@ const ClaudeMasterclassPage: React.FC = () => {
             <div className="space-y-3 text-xs text-[#524F4A] leading-relaxed">
               <div>
                 <h4 className="font-bold text-[#1F1E1C] text-xs">1. Workshop Schedule & Access</h4>
-                <p className="mt-0.5">The Claude MasterClass is a 2-Day Live Virtual Session taking place Every Saturday & Sunday (6:00 PM – 9:00 PM IST). Access details and session meeting links are provided via the official WhatsApp group upon registration.</p>
+                <p className="mt-0.5">The Claude MasterClass is a 2-Day Live Virtual Session taking place on October 3rd & 4th, 2026 (6:00 PM – 9:00 PM IST). Access details and session meeting links are provided via the official WhatsApp group upon registration.</p>
               </div>
 
               <div>

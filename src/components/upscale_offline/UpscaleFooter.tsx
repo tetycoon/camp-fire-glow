@@ -60,11 +60,11 @@ const UpscaleFooter: React.FC = () => {
                     <div>
                         <div className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] mb-6">CONTACT US</div>
                         <div className="space-y-4">
-                            <a href="tel:+917558133039" className="flex items-center gap-3 text-sm font-bold text-slate-400 hover:text-blue-500 transition-colors">
-                                <Phone className="w-4 h-4" /> +91 75581 33039
+                            <a href="tel:+916379209689" className="flex items-center gap-3 text-sm font-bold text-slate-400 hover:text-blue-500 transition-colors">
+                                <Phone className="w-4 h-4" /> +91 63792 09689
                             </a>
-                            <a href="mailto:techtycoondigitalsolutions@gmail.com" className="flex items-center gap-3 text-sm font-bold text-slate-400 hover:text-blue-500 transition-colors break-all">
-                                <Mail className="w-4 h-4 shrink-0" /> techtycoondigitalsolutions@gmail.com
+                            <a href="mailto:support@techtycoon.in" className="flex items-center gap-3 text-sm font-bold text-slate-400 hover:text-blue-500 transition-colors break-all">
+                                <Mail className="w-4 h-4 shrink-0" /> support@techtycoon.in
                             </a>
                         </div>
 

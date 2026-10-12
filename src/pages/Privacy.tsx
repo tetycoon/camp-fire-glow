@@ -75,7 +75,7 @@ const Privacy = () => {
                     <h2 className="text-2xl font-black mb-4 text-slate-900 tracking-tight text-center md:text-left">4. Contact Us</h2>
                     <p className="text-slate-600 leading-relaxed font-normal">
                         If you have any questions about this Privacy Policy, please contact us at: <br />
-                        <span className="text-brandGreen font-bold">techtycoondigitalsolutions@gmail.com</span>
+                        <span className="text-brandGreen font-bold">support@techtycoon.in</span>
                     </p>
                 </section>
             </div>
@@ -108,7 +108,7 @@ const Privacy = () => {
                         <div className="flex flex-col gap-4">
                             <div className="flex items-center gap-3 text-slate-400">
                                 <Mail className="w-4 h-4 text-brandGreen" />
-                                <a href="mailto:techtycoondigitalsolutions@gmail.com" className="hover:text-brandGreen text-sm font-bold transition-colors">techtycoondigitalsolutions@gmail.com</a>
+                                <a href="mailto:support@techtycoon.in" className="hover:text-brandGreen text-sm font-bold transition-colors">support@techtycoon.in</a>
                             </div>
                         </div>
                     </div>

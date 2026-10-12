@@ -5,12 +5,14 @@ import AIMasterclassWhySection from "./AIMasterclassWhySection";
 import AIMasterclassModulesSection from "./AIMasterclassModulesSection";
 import AIMasterclassTrainerSection from "./AIMasterclassTrainerSection";
 import AIMasterclassPricingSection from "./AIMasterclassPricingSection";
+import AIMasterclassFAQSection from "./AIMasterclassFAQSection";
 import AIMasterclassFooter from "./AIMasterclassFooter";
 import AIMasterclassRegisterModal from "./AIMasterclassRegisterModal";
 import { AIMasterclassRegisterModalProvider } from "./AIMasterclassRegisterModalContext";
 import TestimonialCarousel from "./TestimonialCarousel";
 import AIMasterclassWhatsApp from "./AIMasterclassWhatsApp";
 import SocialProofToast from "../common/SocialProofToast";
+import AIMasterclassStickyBar from "./AIMasterclassStickyBar";
 
 const AIMasterclassPage: React.FC = () => {
     useEffect(() => {
@@ -24,7 +26,7 @@ const AIMasterclassPage: React.FC = () => {
 
     return (
         <AIMasterclassRegisterModalProvider>
-            <div className="min-h-screen bg-white text-slate-900 font-sans overflow-x-hidden relative">
+            <div className="min-h-screen bg-white text-slate-900 font-sans overflow-x-hidden relative pb-16">
                 <AIMasterclassNavbar />
                 <AIMasterclassHeroSection />
                 <AIMasterclassWhySection />
@@ -32,10 +34,12 @@ const AIMasterclassPage: React.FC = () => {
                 <AIMasterclassTrainerSection />
                 <TestimonialCarousel />
                 <AIMasterclassPricingSection />
+                <AIMasterclassFAQSection />
                 <AIMasterclassFooter />
                 <AIMasterclassRegisterModal />
                 <AIMasterclassWhatsApp />
                 <SocialProofToast />
+                <AIMasterclassStickyBar />
             </div>
         </AIMasterclassRegisterModalProvider>
     );

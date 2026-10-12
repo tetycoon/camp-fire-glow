@@ -92,11 +92,11 @@ const AIMasterclassFooter: React.FC = () => {
                             <h4 className="text-sm font-black uppercase tracking-widest mb-6 text-white border-l-4 border-brandGreen pl-3">Contact</h4>
                             <div className="flex items-center gap-3 text-slate-400 mb-4">
                                 <Mail className="w-4 h-4 text-brandGreen" />
-                                <a href="mailto:techtycoondigitalsolutions@gmail.com" className="hover:text-brandGreen text-sm font-bold transition-colors">techtycoondigitalsolutions@gmail.com</a>
+                                <a href="mailto:support@techtycoon.in" className="hover:text-brandGreen text-sm font-bold transition-colors">support@techtycoon.in</a>
                             </div>
                             <div className="flex items-center gap-3 text-slate-400 mb-8">
                                 <Phone className="w-4 h-4 text-brandGreen" />
-                                <a href="tel:+917558133039" className="hover:text-brandGreen text-sm font-bold transition-colors">+91 7558133039</a>
+                                <a href="tel:+916379209689" className="hover:text-brandGreen text-sm font-bold transition-colors">+91 63792 09689</a>
                             </div>
                             <div className="flex items-center gap-2 text-slate-500 mb-6 bg-slate-800/50 p-3 rounded-lg border border-slate-800">
                                 <ShieldCheck className="w-5 h-5 text-brandGreen" />

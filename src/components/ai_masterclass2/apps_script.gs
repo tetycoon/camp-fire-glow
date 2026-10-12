@@ -18,7 +18,7 @@ const WHATSAPP_CONFIG = {
   // ⚠️ CRITICAL: ALWAYS UPDATE THIS TO YOUR UPCOMING WEBINAR DATE/TIME
   WEBINAR_TIME: "2026-06-27T18:00:00+05:30", 
   
-  POSTER_URL: "https://aitycoon.in/images/AI_Secrets_Revealed_Banner.jpg" 
+  POSTER_URL: "https://course.techtycoon.in/images/AI_Secrets_Revealed_Banner.jpg" 
 };
 
 const TRIGGER_MESSAGE = "HI I am completed registration of AI Secret Reveals";
@@ -68,7 +68,7 @@ function doGet(e) {
           paymentId: row[9] || "",
           emailStatus: row[10] || "",
           whatsappClicked: row[11] || "",
-          pageUrl: "https://aitycoon.in/ai_masterclass",
+          pageUrl: "https://course.techtycoon.in/ai_masterclass",
           batch: "AI Masterclass",
           sessionDate: "Upcoming Weekend",
           sessionTime: "6:00 PM IST"

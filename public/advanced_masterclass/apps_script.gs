@@ -68,7 +68,7 @@ function doGet(e) {
                     paymentId: row[13] || "",
                     emailStatus: row[14] === "Yes" ? "SENT ✅" : "PENDING",
                     whatsappClicked: "NO",
-                    pageUrl: "https://aitycoon.in/advanced_masterclass",
+                    pageUrl: "https://course.techtycoon.in/advanced_masterclass",
                     batch: "Advance AI Masterclass",
                     sessionDate: "Upcoming Session",
                     sessionTime: "Live"

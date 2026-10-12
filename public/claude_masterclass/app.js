@@ -198,7 +198,7 @@ function updatePricesUI() {
 function updateCountdownTimer() {
     const targetISO = currentMasterclassMode === 'offline' 
         ? '2026-10-11T09:00:00+05:30' 
-        : '2026-09-12T18:00:00+05:30';
+        : '2026-10-03T18:00:00+05:30';
     const targetDate = new Date(targetISO).getTime();
     const now = new Date().getTime();
     const diff = targetDate - now;
@@ -432,7 +432,7 @@ function switchMasterclassMode(mode) {
         if (gridOnline) gridOnline.style.display = 'grid';
         if (gridOffline) gridOffline.style.display = 'none';
         
-        if (document.getElementById('nav-date-text')) document.getElementById('nav-date-text').innerText = 'Every Sat & Sun';
+        if (document.getElementById('nav-date-text')) document.getElementById('nav-date-text').innerText = 'October 3 & 4';
         if (document.getElementById('nav-time-text')) document.getElementById('nav-time-text').innerText = '6:00 PM – 9:00 PM IST';
         if (document.getElementById('nav-reg-btn')) document.getElementById('nav-reg-btn').innerHTML = 'Register Now @ ₹499 <i class="fa-solid fa-arrow-right"></i>';
         if (document.getElementById('nav-reg-btn')) document.getElementById('nav-reg-btn').setAttribute('onclick', 'openPaymentModal(499)');
@@ -446,7 +446,7 @@ function switchMasterclassMode(mode) {
         
         if (document.getElementById('session-tag-el')) document.getElementById('session-tag-el').innerText = 'SESSION DETAILS';
         if (document.getElementById('venue-badge-el')) document.getElementById('venue-badge-el').innerHTML = '<i class="fa-solid fa-video"></i> Live Online';
-        if (document.getElementById('info-date-text')) document.getElementById('info-date-text').innerText = 'Every Saturday & Sunday';
+        if (document.getElementById('info-date-text')) document.getElementById('info-date-text').innerText = 'October 3 & 4, 2026 (Saturday & Sunday)';
         if (document.getElementById('info-time-text')) document.getElementById('info-time-text').innerText = '6:00 PM – 9:00 PM IST';
         if (document.getElementById('info-venue-text')) document.getElementById('info-venue-text').innerText = 'Live Interactive Virtual Classroom';
 
@@ -456,7 +456,7 @@ function switchMasterclassMode(mode) {
         if (document.getElementById('pricing-title-el')) document.getElementById('pricing-title-el').innerText = 'Select your pass for the live batch';
         if (document.getElementById('pricing-desc-el')) document.getElementById('pricing-desc-el').innerText = 'Choose between the standard live interactive pass or the pass with recorded video access.';
 
-        if (document.getElementById('float-date-title')) document.getElementById('float-date-title').innerText = 'Every Sat & Sun';
+        if (document.getElementById('float-date-title')) document.getElementById('float-date-title').innerText = 'October 3 & 4';
         if (document.getElementById('float-date-sub')) document.getElementById('float-date-sub').innerText = '6:00 PM IST';
         if (document.getElementById('float-time-title')) document.getElementById('float-time-title').innerText = '6:00 PM – 9:00 PM';
         if (document.getElementById('float-time-sub')) document.getElementById('float-time-sub').innerText = 'IST';
@@ -537,7 +537,7 @@ function selectPass(plan) {
         if (currentMasterclassMode === 'offline' || plan === 4999) {
             modalPill.innerHTML = '<i class="fa-regular fa-calendar"></i> October 11, 2026 (Sunday) • 9:00 AM – 5:30 PM IST';
         } else {
-            modalPill.innerHTML = '<i class="fa-regular fa-calendar"></i> Every Saturday & Sunday • 6:00 PM IST';
+            modalPill.innerHTML = '<i class="fa-regular fa-calendar"></i> October 3 & 4, 2026 • 6:00 PM IST';
         }
     }
 }
@@ -630,7 +630,7 @@ async function handleFormSubmit(e) {
             description: selectedPlan === 999 
                 ? "Live + Recording Pass (Recorded Video Access)" 
                 : "Standard Live Session Pass",
-            image: "https://aitycoon.in/images/tech_tycoon_logo.png",
+            image: "https://course.techtycoon.in/images/tech_tycoon_logo.png",
             prefill: {
                 name: name,
                 email: email,

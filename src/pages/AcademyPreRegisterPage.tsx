@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   ShieldCheck, ArrowRight, Rocket, X, ChevronDown, Search, Tag, Check, Infinity, Video, Code, Award, Heart, Gift
 } from 'lucide-react';
@@ -18,10 +18,6 @@ const RAZORPAY_INTL_KEY_ID = "rzp_live_gfoS1OjC8tvWjP";
 
 export default function AcademyPreRegisterPage() {
   const navigate = useNavigate();
-
-  useEffect(() => {
-    document.title = "Tech Tycoon AI Academy — Pre-Registration & Mentorship";
-  }, []);
 
   // Secret Coupon Code State: "AMIABLE" (Not default entered, empty by default)
   const [couponInput, setCouponInput] = useState("");
@@ -55,10 +51,10 @@ export default function AcademyPreRegisterPage() {
   const isInternational = selectedCountry.code !== '+91';
   const isCouponValid = appliedCoupon.trim().toUpperCase() === "AMIABLE";
 
-  // Domestic (+91): ₹4,999 standard, ₹2,499 with AMIABLE
-  // International (other): ₹8,000 standard, ₹4,000 with AMIABLE
-  const actualPrice = isInternational ? 8000 : 4999;
-  const offerPrice = isCouponValid ? (isInternational ? 4000 : 2499) : actualPrice;
+  // Domestic (+91 India): ₹9,999 standard, ₹4,999 with AMIABLE (50% OFF)
+  // International (Other countries): ₹11,999 standard, ₹5,999 with AMIABLE (50% OFF)
+  const actualPrice = isInternational ? 11999 : 9999;
+  const offerPrice = isCouponValid ? (isInternational ? 5999 : 4999) : actualPrice;
   const savings = actualPrice - offerPrice;
 
   const filteredCountries = countryCodes.filter(c =>
@@ -79,8 +75,7 @@ export default function AcademyPreRegisterPage() {
 
     if (cleaned === "AMIABLE") {
       setAppliedCoupon("AMIABLE");
-      const discountVal = selectedCountry.code !== '+91' ? 4000 : 2499;
-      setCouponSuccess(`✓ Secret Member Coupon 'AMIABLE' Applied! 50% Existing Learner Offer Unlocked (₹${discountVal.toLocaleString()}) 🎉`);
+      setCouponSuccess(`✓ Secret Member Coupon 'AMIABLE' Applied! 50% Existing Learner Offer Unlocked 🎉`);
     } else {
       setCouponError("Invalid coupon code.");
       setAppliedCoupon("");
@@ -264,7 +259,7 @@ export default function AcademyPreRegisterPage() {
         {/* 🧭 Clean Navbar */}
         <header className="sticky top-0 z-40 backdrop-blur-xl bg-white/90 border-b border-sky-100 shadow-sm">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-            <a href="/" className="flex items-center gap-2 hover:opacity-85 transition-opacity" title="Back to TechTycoon Hub">
+            <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-sky-500 to-blue-600 flex items-center justify-center shadow-md shadow-sky-500/20 shrink-0">
                 <Rocket className="w-4 h-4 text-white" />
               </div>
@@ -276,23 +271,15 @@ export default function AcademyPreRegisterPage() {
                   ACADEMY
                 </span>
               </div>
-            </a>
-
-            <div className="flex items-center gap-3">
-              <a
-                href="/"
-                className="text-xs font-bold text-sky-700 hover:text-sky-900 bg-sky-50 px-3 py-1.5 rounded-lg border border-sky-200 transition-colors"
-              >
-                ← Main Hub
-              </a>
-              <button
-                onClick={() => setIsModalOpen(true)}
-                className="bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition-all shadow-md shadow-sky-500/20 flex items-center gap-1 border border-sky-400/30"
-              >
-                <span>Pre-Register</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
             </div>
+
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition-all shadow-md shadow-sky-500/20 flex items-center gap-1 border border-sky-400/30"
+            >
+              <span>Pre-Register</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
           </div>
         </header>
 
@@ -536,8 +523,7 @@ export default function AcademyPreRegisterPage() {
                                 setSelectedCountry(c);
                                 setIsCountryDropdownOpen(false);
                                 if (appliedCoupon.trim().toUpperCase() === "AMIABLE") {
-                                  const discountVal = c.code !== '+91' ? 4000 : 2499;
-                                  setCouponSuccess(`✓ Secret Member Coupon 'AMIABLE' Applied! 50% Existing Learner Offer Unlocked (₹${discountVal.toLocaleString()}) 🎉`);
+                                  setCouponSuccess(`✓ Secret Member Coupon 'AMIABLE' Applied! 50% Existing Learner Offer Unlocked 🎉`);
                                 }
                               }}
                               className="w-full text-left px-2 py-1 hover:bg-sky-50 rounded text-xs flex items-center justify-between text-slate-700"

@@ -1070,20 +1070,20 @@ const Index: React.FC = () => {
             <div className="space-y-3 text-xs text-slate-600 font-normal">
               <div className="flex items-center gap-2">
                 <Mail className="w-3.5 h-3.5 text-indigo-600" />
-                <a href="mailto:techtycoondigitalsolutions@gmail.com" className="hover:underline">
-                  techtycoondigitalsolutions@gmail.com
+                <a href="mailto:support@techtycoon.in" className="hover:underline">
+                  support@techtycoon.in
                 </a>
               </div>
               <div className="flex items-center gap-2">
                 <Phone className="w-3.5 h-3.5 text-indigo-600" />
-                <a href="tel:+917558133039" className="hover:underline">
-                  +91 75581 33039
+                <a href="tel:+916379209689" className="hover:underline">
+                  +91 63792 09689
                 </a>
               </div>
               <div className="flex items-center gap-2">
                 <MessageSquare className="w-3.5 h-3.5 text-emerald-600" />
-                <a href="https://wa.me/917010340494" target="_blank" rel="noreferrer" className="hover:underline text-emerald-700 font-semibold">
-                  WhatsApp Support (+91 70103 40494)
+                <a href="https://wa.me/916379209689" target="_blank" rel="noreferrer" className="hover:underline text-emerald-700 font-semibold">
+                  WhatsApp Support (+91 63792 09689)
                 </a>
               </div>
               <div className="pt-2">

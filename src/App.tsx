@@ -50,9 +50,11 @@ import WatchRoom from "./pages/WatchRoom";
 import AdminPanelPage from "./pages/AdminPanelPage";
 
 import AcademyPreRegisterPage from "./pages/AcademyPreRegisterPage";
+import AIBGMPage from "./pages/AIBGMPage";
 
 const DynamicRootPage = () => {
   const host = typeof window !== "undefined" ? window.location.hostname.toLowerCase() : "";
+  if (host.startsWith("bgm.") || host.startsWith("ai-bgm.") || host.startsWith("aibgm.")) return <AIBGMPage />;
   if (host.startsWith("bootcamp.")) return <BootcampPage />;
   if (host.startsWith("claude.") || host.startsWith("claude-masterclass.")) return <ClaudeMasterclassPage />;
   if (host.startsWith("upscale.")) return <UpscalePage />;
@@ -113,6 +115,12 @@ const App = () => (
           <Route path="/ai-masterclass2" element={<AIMasterclass2Page />} />
           <Route path="/advanced_masterclass" element={<AIMasterclass2Page />} />
           <Route path="/advanced-masterclass" element={<AIMasterclass2Page />} />
+          <Route path="/ai_bgm" element={<AIBGMPage />} />
+          <Route path="/ai_bgm/" element={<AIBGMPage />} />
+          <Route path="/aibgm" element={<AIBGMPage />} />
+          <Route path="/aibgm/" element={<AIBGMPage />} />
+          <Route path="/ai-bgm" element={<AIBGMPage />} />
+          <Route path="/ai-bgm/" element={<AIBGMPage />} />
           <Route path="/upscale" element={<UpscalePage />} />
           <Route path="/upscale/" element={<UpscalePage />} />
           <Route path="/admin-panel" element={<AdminPanelPage />} />

@@ -56,7 +56,7 @@ const AIMasterclassWhatsApp: React.FC = () => {
 
             {/* WhatsApp Floating Button */}
             <a
-                href="https://wa.me/917010340494?text=Hi%2C%20I%20have%20a%20question%20about%20the%20AI%20Masterclass"
+                href="https://wa.me/916379209689?text=Hi%2C%20I%20have%20a%20question%20about%20the%20AI%20Masterclass"
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={handleWhatsAppClick}

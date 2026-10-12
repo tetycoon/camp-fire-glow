@@ -1,10 +1,10 @@
-import { isAfter, isFriday, nextFriday, set, format } from "date-fns";
+import { isAfter, isWednesday, nextWednesday, set, format } from "date-fns";
 
 export function getNextMasterclassDate() {
     const now = new Date();
     
-    // Special scheduling: Friday, September 11th, 2026 at 6:00 PM (month index 8 for September)
-    const specialSession = new Date(2026, 8, 11, 18, 0, 0);
+    // Special scheduling: Wednesday, October 7th, 2026 at 6:00 PM (month index 9 for October)
+    const specialSession = new Date(2026, 9, 7, 18, 0, 0);
     
     if (now < specialSession) {
         return specialSession;
@@ -13,15 +13,15 @@ export function getNextMasterclassDate() {
     // Set target to today at 18:00:00 (6:00 PM)
     let target = set(now, { hours: 18, minutes: 0, seconds: 0, milliseconds: 0 });
     
-    if (isFriday(now)) {
-        // If today is Friday and it is past 6:00 PM, target the next Friday
+    if (isWednesday(now)) {
+        // If today is Wednesday and it is past 6:00 PM, target the next Wednesday
         if (isAfter(now, target)) {
-            target = nextFriday(now);
+            target = nextWednesday(now);
             target = set(target, { hours: 18, minutes: 0, seconds: 0, milliseconds: 0 });
         }
     } else {
-        // If today is not Friday, target the next Friday
-        target = nextFriday(now);
+        // If today is not Wednesday, target the next Wednesday
+        target = nextWednesday(now);
         target = set(target, { hours: 18, minutes: 0, seconds: 0, milliseconds: 0 });
     }
     

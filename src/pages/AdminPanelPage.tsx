@@ -63,7 +63,7 @@ const SHEET_CONFIGS = [
   },
   {
     id: "academy",
-    name: "TECH TYCOON Academy (aitycoon.in/academy)",
+    name: "TECH TYCOON Academy (course.techtycoon.in/academy)",
     url: "https://script.google.com/macros/s/AKfycbwl1WKBrQxxMRbz7aj6GBUNbmR4ePHshhrBwcNjhxorIayQpMTmHaHHT_MvTroQ-ZrFbA/exec",
     verifyToken: "ai_tycoon_auto_662"
   }
@@ -88,7 +88,7 @@ const SYSTEM_UPDATES: SystemUpdate[] = [
     category: "Google Apps Script",
     title: "TECH TYCOON Academy (/academy) Integration",
     description: "Added dedicated campaign endpoint and real-time sheet synchronization for TECH TYCOON Academy Pre-Registrations.",
-    impact: "Full registration and payment tracking enabled for aitycoon.in/academy.",
+    impact: "Full registration and payment tracking enabled for course.techtycoon.in/academy.",
     status: "DEPLOYED ✅"
   },
   {
@@ -98,7 +98,7 @@ const SYSTEM_UPDATES: SystemUpdate[] = [
     category: "Google Apps Script",
     title: "Upscale Level-2 Offline Sheet Synchronization",
     description: "Deployed custom Apps Script for Upscale Level-2 Offline (Chennai) with getRegistrations endpoint, Meta WhatsApp API image posters, and Razorpay webhook listener.",
-    impact: "Full registration & payment tracking enabled for aitycoon.in/upscale.",
+    impact: "Full registration & payment tracking enabled for course.techtycoon.in/upscale.",
     status: "DEPLOYED ✅"
   },
   {
@@ -167,7 +167,7 @@ const generateMockData = (sheetId: string): Registration[] => {
       paymentId: item.payId,
       emailStatus: "SENT ✅",
       whatsappClicked: "YES",
-      pageUrl: "https://aitycoon.in/academy",
+      pageUrl: "https://course.techtycoon.in/academy",
       batch: "Academy Pre-Registration",
       sessionDate: "Sept 10th Launch",
       sessionTime: "On-Demand Access"
@@ -188,7 +188,7 @@ const generateMockData = (sheetId: string): Registration[] => {
       paymentId: item.payId,
       emailStatus: "SENT ✅",
       whatsappClicked: "NO",
-      pageUrl: "https://aitycoon.in/upscale",
+      pageUrl: "https://course.techtycoon.in/upscale",
       batch: "Chennai Offline",
       sessionDate: "9th August 2026",
       sessionTime: "9:00 AM — 5:30 PM"
@@ -208,7 +208,7 @@ const generateMockData = (sheetId: string): Registration[] => {
     paymentId: item.payId,
     emailStatus: "SENT ✅",
     whatsappClicked: "YES",
-    pageUrl: `https://aitycoon.in/${sheetId}`,
+    pageUrl: `https://course.techtycoon.in/${sheetId}`,
     batch: sheetId === "ai-masterclass" ? "Masterclass 2026" : "Claude Masterclass",
     sessionDate: item.date,
     sessionTime: "6:00 PM IST"
@@ -1309,7 +1309,7 @@ const AdminPanelPage: React.FC = () => {
                   </div>
 
                   <div className="text-xs space-y-2 text-white/70 bg-white/5 p-4 rounded-xl border border-white/5">
-                    <p>📅 <strong>Next Session:</strong> Every Saturday & Sunday (6:00 PM – 9:00 PM IST)</p>
+                    <p>📅 <strong>Next Session:</strong> October 3rd & 4th, 2026 (Sat & Sun • 6:00 PM – 9:00 PM IST)</p>
                     <p>📍 <strong>Platform:</strong> Live Online Virtual Classroom</p>
                     <p>⚡ <strong>Capacity:</strong> 500 Attendees Room Limit</p>
                   </div>

@@ -2,10 +2,9 @@ const fs = require('fs');
 const path = require('path');
 
 // 1. Ensure CNAME and .nojekyll for GitHub Pages
-if (!fs.existsSync('dist/CNAME')) {
-  fs.writeFileSync('dist/CNAME', 'aitycoon.in\n');
-  console.log('✓ Created dist/CNAME');
-}
+fs.writeFileSync('dist/CNAME', 'course.techtycoon.in\n');
+console.log('✓ Created dist/CNAME (course.techtycoon.in)');
+
 if (!fs.existsSync('dist/.nojekyll')) {
   fs.writeFileSync('dist/.nojekyll', '');
   console.log('✓ Created dist/.nojekyll');
@@ -17,20 +16,47 @@ console.log('✓ Created dist/404.html');
 
 // 3. Pre-generate physical route folders with index.html for direct HTTP 200 delivery
 const spaRoutes = [
-  'bootcamp',
-  'upscale',
   'academy',
+  'academy-preregister',
+  'academy_preregister',
+  'academy/preregister',
+  'preregister',
+  'main',
+  'bootcamp',
+  'college',
+  'ai-masterclass',
+  'ai_masterclass',
+  'ai_masterclass/webinar',
+  'ai_masterclass/watch',
+  'ai_masterclass/webinar-watch',
+  'ai_masterclass/thank-you',
+  'ai_masterclass/thankyou',
+  'ai_masterclass/webinar-access',
+  'ai_masterclass2',
+  'ai-masterclass2',
+  'claude_masterclass',
+  'claude-masterclass',
+  'claude_masterclass/online',
+  'claude_masterclass/offline',
+  'claude-masterclass/online',
+  'claude-masterclass/offline',
+  'claude_masterclass/thank-you',
+  'claude_masterclass/thankyou',
+  'advanced_masterclass',
+  'advanced-masterclass',
+  'ai_bgm',
+  'aibgm',
+  'ai-bgm',
+  'upscale',
   'admin-panel',
   'admin',
-  'privacy',
   'thank-you',
   'thankyou',
-  'college',
-  'ai_masterclass',
-  'ai-masterclass',
+  'privacy',
   'webinar-access',
+  'webinar',
   'watch',
-  'main'
+  'webinar-watch'
 ];
 
 spaRoutes.forEach(route => {
