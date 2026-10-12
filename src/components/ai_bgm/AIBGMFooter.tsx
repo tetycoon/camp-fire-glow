@@ -18,8 +18,16 @@ const AIBGMFooter: React.FC = () => {
               alt="Tech Tycoon Digital Solution LLP" 
               className="h-8 sm:h-10 w-auto object-contain" 
             />
-            <span className="text-[9px] sm:text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 border border-blue-200 font-extrabold">
-              AI-BGM Executive Suite
+            <div className="flex flex-col text-left">
+              <span className="text-xs sm:text-base font-black tracking-wider text-slate-900 uppercase leading-none">
+                TECH TYCOON
+              </span>
+              <span className="text-[8px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-wider leading-tight mt-0.5">
+                Digital Solution LLP
+              </span>
+            </div>
+            <span className="text-[9px] sm:text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 border border-blue-200 font-extrabold ml-1">
+              AI-BGM
             </span>
           </div>
           <p className="text-slate-500 text-[11px] sm:text-xs max-w-sm">
