@@ -31,21 +31,21 @@ const AIBGMNavbar: React.FC<AIBGMNavbarProps> = ({ onRegisterClick }) => {
   return (
     <>
       {/* Top Value Banner */}
-      <div className="bg-gradient-to-r from-blue-50 via-indigo-50 to-sky-50 text-blue-950 text-[11px] sm:text-xs font-semibold py-2 px-4 border-b border-blue-100 text-center flex items-center justify-center gap-2 relative z-50">
-        <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-600 text-white font-black uppercase tracking-wider text-[10px] shadow-sm">
-          <Sparkles className="w-3 h-3 text-amber-300" /> NEW COHORT
+      <div className="bg-gradient-to-r from-blue-50 via-indigo-50 to-sky-50 text-blue-950 text-[10px] sm:text-xs font-semibold py-1.5 sm:py-2 px-3 sm:px-4 border-b border-blue-100 text-center flex items-center justify-center gap-1.5 sm:gap-2 relative z-50">
+        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-600 text-white font-black uppercase tracking-wider text-[9px] sm:text-[10px] shadow-sm">
+          <Sparkles className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-amber-300" /> NEW
         </span>
         <span className="hidden sm:inline text-slate-700">
           Advance AI-Business Generative Model (AI-BGM) • 20+ Hours • Lifetime LLM Software Access
         </span>
-        <span className="sm:hidden text-slate-700">
+        <span className="sm:hidden text-slate-700 truncate max-w-[190px]">
           Advance AI-BGM • Living LLM Software
         </span>
         <button
           onClick={onRegisterClick}
-          className="ml-2 font-black text-blue-700 hover:text-blue-900 underline decoration-blue-400 hover:decoration-blue-700 text-[11px] transition-colors"
+          className="ml-1 sm:ml-2 font-black text-blue-700 hover:text-blue-900 underline decoration-blue-400 hover:decoration-blue-700 text-[10px] sm:text-[11px] transition-colors whitespace-nowrap"
         >
-          Check Eligibility &rarr;
+          Eligibility &rarr;
         </button>
       </div>
 
@@ -53,18 +53,18 @@ const AIBGMNavbar: React.FC<AIBGMNavbarProps> = ({ onRegisterClick }) => {
       <header
         className={`sticky top-0 left-0 right-0 z-40 transition-all duration-300 ${
           scrolled
-            ? "bg-white/95 backdrop-blur-xl border-b border-slate-200/90 shadow-sm py-2.5"
-            : "bg-white/90 backdrop-blur-md border-b border-slate-100 py-3.5"
+            ? "bg-white/95 backdrop-blur-xl border-b border-slate-200/90 shadow-sm py-2 sm:py-2.5"
+            : "bg-white/90 backdrop-blur-md border-b border-slate-100 py-2.5 sm:py-3.5"
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 flex items-center justify-between">
           {/* Logo & Brand Identity with Updated Logo Image */}
-          <div className="flex items-center gap-3">
-            <a href="/" className="flex items-center gap-2 group">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <a href="/" className="flex items-center gap-1.5 sm:gap-2 group">
               <img 
                 src={logoImg} 
                 alt="Tech Tycoon Digital Solution LLP" 
-                className="h-10 sm:h-12 w-auto object-contain transition-transform group-hover:scale-105" 
+                className="h-8 sm:h-11 w-auto object-contain transition-transform group-hover:scale-105" 
               />
               <span className="hidden sm:inline-block text-[10px] uppercase tracking-widest px-2 py-0.5 bg-blue-50 text-blue-700 border border-blue-200 rounded-md font-extrabold ml-1">
                 AI-BGM
@@ -114,23 +114,24 @@ const AIBGMNavbar: React.FC<AIBGMNavbarProps> = ({ onRegisterClick }) => {
           </nav>
 
           {/* Right Action CTA */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <button
               onClick={onRegisterClick}
-              className="group relative inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-black text-xs uppercase tracking-wider text-white overflow-hidden shadow-md shadow-blue-500/25 bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-700 hover:to-indigo-700 hover:scale-[1.03] active:scale-95 transition-all duration-300 border border-blue-400/30"
+              className="group relative inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl font-black text-[11px] sm:text-xs uppercase tracking-wider text-white overflow-hidden shadow-md shadow-blue-500/25 bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-700 hover:to-indigo-700 hover:scale-[1.03] active:scale-95 transition-all duration-300 border border-blue-400/30 whitespace-nowrap"
             >
-              <Lock className="w-3.5 h-3.5 text-amber-300" />
-              <span>Unlock Pricing & Register</span>
-              <ArrowRight className="w-3.5 h-3.5 text-blue-100 group-hover:translate-x-0.5 transition-transform" />
+              <Lock className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-300" />
+              <span className="sm:hidden">Unlock Pricing</span>
+              <span className="hidden sm:inline">Unlock Pricing & Register</span>
+              <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-blue-100 group-hover:translate-x-0.5 transition-transform" />
             </button>
 
             {/* Mobile Menu Hamburger */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-100 focus:outline-none"
+              className="lg:hidden p-1.5 text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-100 focus:outline-none"
               aria-label="Toggle menu"
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </div>

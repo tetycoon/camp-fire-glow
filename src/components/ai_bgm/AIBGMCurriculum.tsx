@@ -147,58 +147,58 @@ const AIBGMCurriculum: React.FC<AIBGMCurriculumProps> = ({ onRegisterClick }) =>
   };
 
   return (
-    <section id="curriculum" className="py-24 px-4 sm:px-6 lg:px-8 bg-white text-slate-900 relative">
+    <section id="curriculum" className="py-12 sm:py-20 lg:py-24 px-3.5 sm:px-6 lg:px-8 bg-white text-slate-900 relative">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold uppercase tracking-widest mb-4">
-            <BookOpen className="w-3.5 h-3.5 text-blue-600" />
+        <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-16">
+          <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1 sm:px-4 sm:py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-[10px] sm:text-xs font-bold uppercase tracking-widest mb-3 sm:mb-4">
+            <BookOpen className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-blue-600" />
             COMPREHENSIVE SYLLABUS
           </div>
-          <h2 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight mb-6">
+          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight mb-3 sm:mb-6 leading-tight">
             20+ Hours of Pure <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600">
               Business Perspective Mastery
             </span>
           </h2>
-          <p className="text-base sm:text-lg text-slate-600 leading-relaxed font-normal">
+          <p className="text-xs sm:text-base text-slate-600 leading-relaxed font-normal">
             No fluff. No surface-level prompts. Every module is a masterclass in building tangible, cash-generating business assets using AI.
           </p>
         </div>
 
         {/* Modules Accordion */}
-        <div className="space-y-4 mb-16">
+        <div className="space-y-3 sm:space-y-4 mb-8 sm:mb-16">
           {modules.map((m, idx) => {
             const isOpen = openModule === m.id;
             return (
               <div
                 key={m.id}
-                className={`rounded-3xl border transition-all duration-300 overflow-hidden ${
+                className={`rounded-2xl sm:rounded-3xl border transition-all duration-300 overflow-hidden ${
                   isOpen
-                    ? "bg-white border-blue-400 shadow-xl ring-1 ring-blue-500/20"
+                    ? "bg-white border-blue-400 shadow-lg ring-1 ring-blue-500/20"
                     : "bg-slate-50/60 border-slate-200 hover:border-slate-300 hover:bg-white"
                 }`}
               >
                 {/* Accordion Trigger Header */}
                 <button
                   onClick={() => toggleModule(m.id)}
-                  className="w-full p-6 sm:p-8 flex items-center justify-between text-left gap-4 focus:outline-none"
+                  className="w-full p-4 sm:p-6 sm:p-8 flex items-center justify-between text-left gap-3 sm:gap-4 focus:outline-none"
                 >
-                  <div className="flex items-center gap-4 sm:gap-6">
-                    <div className="w-12 h-12 rounded-2xl bg-blue-50/80 border border-blue-100 flex items-center justify-center flex-shrink-0 shadow-sm">
+                  <div className="flex items-center gap-3 sm:gap-6">
+                    <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-blue-50/80 border border-blue-100 flex items-center justify-center flex-shrink-0 shadow-sm">
                       {m.icon}
                     </div>
                     <div>
-                      <div className="flex items-center gap-3 mb-1">
-                        <span className="text-xs font-black text-blue-600 uppercase tracking-wider">
+                      <div className="flex items-center gap-2 sm:gap-3 mb-0.5 sm:mb-1">
+                        <span className="text-[10px] sm:text-xs font-black text-blue-600 uppercase tracking-wider">
                           Module 0{idx + 1}
                         </span>
-                        <span className="inline-flex items-center gap-1 text-[11px] font-bold text-slate-600 px-2 py-0.5 rounded-full bg-slate-100">
+                        <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-bold text-slate-600 px-2 py-0.5 rounded-full bg-slate-100">
                           <Clock className="w-3 h-3 text-slate-500" />
                           {m.hours}
                         </span>
                       </div>
-                      <h3 className="text-lg sm:text-xl font-black text-slate-900 tracking-tight">
+                      <h3 className="text-sm sm:text-xl font-black text-slate-900 tracking-tight leading-snug">
                         {m.title}
                       </h3>
                       <p className="text-xs sm:text-sm text-slate-500 font-normal mt-0.5 hidden sm:block">
@@ -207,34 +207,34 @@ const AIBGMCurriculum: React.FC<AIBGMCurriculumProps> = ({ onRegisterClick }) =>
                     </div>
                   </div>
 
-                  <div className="p-2 rounded-xl bg-slate-100 text-slate-600 flex-shrink-0">
-                    {isOpen ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                  <div className="p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-slate-100 text-slate-600 flex-shrink-0">
+                    {isOpen ? <ChevronUp className="w-4 h-4 sm:w-5 sm:h-5" /> : <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5" />}
                   </div>
                 </button>
 
                 {/* Accordion Body */}
                 {isOpen && (
-                  <div className="px-6 sm:px-8 pb-8 pt-2 border-t border-slate-100 bg-slate-50/40">
-                    <p className="text-sm text-slate-600 mb-6 font-medium sm:hidden">
+                  <div className="px-4 sm:px-8 pb-5 sm:pb-8 pt-2 border-t border-slate-100 bg-slate-50/40">
+                    <p className="text-xs sm:text-sm text-slate-600 mb-4 sm:mb-6 font-medium sm:hidden">
                       {m.subtitle}
                     </p>
 
-                    <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">
+                    <div className="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider mb-2.5 sm:mb-4">
                       Core Topics & Hands-On Exercises:
                     </div>
 
-                    <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
+                    <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-3 mb-4 sm:mb-6">
                       {m.topics.map((t, i) => (
-                        <li key={i} className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-700">
-                          <span className="w-1.5 h-1.5 rounded-full bg-blue-600 flex-shrink-0 mt-2"></span>
+                        <li key={i} className="flex items-start gap-2 text-xs sm:text-sm text-slate-700">
+                          <span className="w-1.5 h-1.5 rounded-full bg-blue-600 flex-shrink-0 mt-1.5 sm:mt-2"></span>
                           <span>{t}</span>
                         </li>
                       ))}
                     </ul>
 
                     {/* Module Outcome Box */}
-                    <div className="p-4 rounded-2xl bg-blue-50/80 border border-blue-100 flex items-center gap-3 text-blue-900 text-xs sm:text-sm">
-                      <CheckCircle2 className="w-5 h-5 text-emerald-600 flex-shrink-0" />
+                    <div className="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-blue-50/80 border border-blue-100 flex items-center gap-2.5 sm:gap-3 text-blue-900 text-xs sm:text-sm">
+                      <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600 flex-shrink-0" />
                       <span>
                         <strong className="text-slate-900 font-bold">Key Deliverable:</strong> {m.keyOutcome}
                       </span>
@@ -247,12 +247,12 @@ const AIBGMCurriculum: React.FC<AIBGMCurriculumProps> = ({ onRegisterClick }) =>
         </div>
 
         {/* Total Summary Footer Box */}
-        <div className="p-8 sm:p-10 rounded-3xl bg-slate-50 border border-slate-200 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left shadow-sm">
+        <div className="p-5 sm:p-10 rounded-2xl sm:rounded-3xl bg-slate-50 border border-slate-200 flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-6 text-center md:text-left shadow-sm">
           <div>
-            <div className="text-blue-600 font-bold text-xs uppercase tracking-widest mb-1">
+            <div className="text-blue-600 font-bold text-[10px] sm:text-xs uppercase tracking-widest mb-1">
               THE FULL ACCELERATOR
             </div>
-            <div className="text-2xl font-black text-slate-900">
+            <div className="text-lg sm:text-2xl font-black text-slate-900">
               20+ Hours of Actionable Instruction + Lifetime Software Access
             </div>
             <p className="text-slate-600 text-xs mt-1">
@@ -263,7 +263,7 @@ const AIBGMCurriculum: React.FC<AIBGMCurriculumProps> = ({ onRegisterClick }) =>
           <button
             type="button"
             onClick={onRegisterClick}
-            className="px-8 py-4 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-700 hover:to-indigo-700 text-white font-black text-xs uppercase tracking-wider whitespace-nowrap shadow-lg shadow-blue-500/25 hover:scale-105 active:scale-95 transition-all"
+            className="w-full sm:w-auto px-6 py-3.5 sm:px-8 sm:py-4 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-700 hover:to-indigo-700 text-white font-black text-xs uppercase tracking-wider whitespace-nowrap shadow-md sm:shadow-lg shadow-blue-500/25 hover:scale-105 active:scale-95 transition-all text-center"
           >
             Unlock VIP Pricing & Register &rarr;
           </button>

@@ -45,30 +45,30 @@ const AIBGMFAQ: React.FC = () => {
   };
 
   return (
-    <section id="faq" className="py-24 px-4 sm:px-6 lg:px-8 bg-slate-50 border-t border-slate-200 text-slate-900 relative">
+    <section id="faq" className="py-12 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 bg-slate-50 border-t border-slate-200 text-slate-900 relative">
       <div className="max-w-4xl mx-auto">
         {/* Section Header */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold uppercase tracking-widest mb-4">
-            <HelpCircle className="w-3.5 h-3.5 text-blue-600" />
+        <div className="text-center mb-8 sm:mb-14">
+          <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1 sm:px-4 sm:py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-[10px] sm:text-xs font-bold uppercase tracking-widest mb-3 sm:mb-4">
+            <HelpCircle className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-blue-600" />
             FREQUENTLY ASKED QUESTIONS
           </div>
-          <h2 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight mb-4">
+          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight mb-2 sm:mb-4">
             Everything You Need to Know
           </h2>
-          <p className="text-slate-600 text-sm sm:text-base">
+          <p className="text-slate-600 text-xs sm:text-base">
             Have questions about the Advance AI-Business Generative Model? We have answers.
           </p>
         </div>
 
         {/* Accordion */}
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           {faqs.map((faq, idx) => {
             const isOpen = openIndex === idx;
             return (
               <div
                 key={idx}
-                className={`rounded-2xl border transition-all duration-300 overflow-hidden ${
+                className={`rounded-xl sm:rounded-2xl border transition-all duration-300 overflow-hidden ${
                   isOpen
                     ? "bg-white border-blue-400 shadow-md"
                     : "bg-white border-slate-200 hover:border-slate-300 shadow-sm"
@@ -76,17 +76,17 @@ const AIBGMFAQ: React.FC = () => {
               >
                 <button
                   onClick={() => toggle(idx)}
-                  className="w-full p-6 text-left flex items-center justify-between gap-4 focus:outline-none"
+                  className="w-full p-3.5 sm:p-5 sm:p-6 text-left flex items-center justify-between gap-3 sm:gap-4 focus:outline-none"
                 >
-                  <span className="font-bold text-base sm:text-lg text-slate-900">
+                  <span className="font-bold text-xs sm:text-base text-slate-900">
                     {faq.q}
                   </span>
-                  <span className="p-1.5 rounded-lg bg-slate-100 text-slate-600 flex-shrink-0">
-                    {isOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                  <span className="p-1 sm:p-1.5 rounded-md sm:rounded-lg bg-slate-100 text-slate-600 flex-shrink-0">
+                    {isOpen ? <ChevronUp className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <ChevronDown className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
                   </span>
                 </button>
                 {isOpen && (
-                  <div className="px-6 pb-6 pt-2 text-slate-600 text-sm leading-relaxed border-t border-slate-100 bg-white">
+                  <div className="px-3.5 pb-3.5 pt-2 sm:px-6 sm:pb-6 text-slate-600 text-xs sm:text-sm leading-relaxed border-t border-slate-100 bg-white">
                     {faq.a}
                   </div>
                 )}

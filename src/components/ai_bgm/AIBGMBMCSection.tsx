@@ -114,70 +114,70 @@ interface AIBGMBMCSectionProps {
 
 const AIBGMBMCSection: React.FC<AIBGMBMCSectionProps> = ({ onRegisterClick }) => {
   return (
-    <section id="bmc-9-principles" className="py-24 px-4 sm:px-6 lg:px-8 bg-slate-50 border-t border-slate-200 relative overflow-hidden">
+    <section id="bmc-9-principles" className="py-12 sm:py-20 lg:py-24 px-3.5 sm:px-6 lg:px-8 bg-slate-50 border-t border-slate-200 relative overflow-hidden">
       {/* Decorative Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-100/50 rounded-full blur-[160px] pointer-events-none"></div>
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-100/70 border border-blue-200 text-blue-700 text-xs font-bold uppercase tracking-widest mb-4">
-            <Sparkles className="w-3.5 h-3.5 text-blue-600" />
+        <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-16">
+          <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1 sm:px-4 sm:py-1.5 rounded-full bg-blue-100/70 border border-blue-200 text-blue-700 text-[10px] sm:text-xs font-bold uppercase tracking-widest mb-3 sm:mb-4">
+            <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-blue-600" />
             THE STRATEGIC CORE
           </div>
-          <h2 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight mb-6">
+          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight mb-3 sm:mb-6 leading-tight">
             The 9 CORE Principles of <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600">
               Business Model Canvas (BMC)
             </span>
           </h2>
-          <p className="text-base sm:text-lg text-slate-600 leading-relaxed font-normal">
+          <p className="text-xs sm:text-base text-slate-600 leading-relaxed font-normal">
             Most people approach AI like a novelty toy. In the <strong className="text-slate-900">AI-BGM program</strong>, we rebuild each of the 9 foundational business pillars using autonomous AI workflows so you launch a resilient, highly profitable company.
           </p>
         </div>
 
         {/* 9 Blocks Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-6 mb-8 sm:mb-16">
           {bmcBlocks.map((b) => (
             <div
               key={b.number}
-              className="group p-8 rounded-3xl bg-white border border-slate-200 hover:border-blue-300 hover:shadow-xl transition-all duration-300 shadow-sm flex flex-col justify-between relative overflow-hidden"
+              className="group p-4 sm:p-7 rounded-2xl sm:rounded-3xl bg-white border border-slate-200 hover:border-blue-300 hover:shadow-xl transition-all duration-300 shadow-sm flex flex-col justify-between relative overflow-hidden"
             >
               <div className="absolute -top-12 -right-12 w-28 h-28 bg-blue-50 rounded-full blur-2xl group-hover:bg-blue-100/50 transition-all"></div>
 
               <div>
                 {/* Top Number & Icon */}
-                <div className="flex items-center justify-between mb-6">
-                  <div className="w-12 h-12 rounded-2xl bg-blue-50/80 border border-blue-100 flex items-center justify-center group-hover:scale-110 transition-all text-blue-600">
+                <div className="flex items-center justify-between mb-3 sm:mb-6">
+                  <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-blue-50/80 border border-blue-100 flex items-center justify-center group-hover:scale-110 transition-all text-blue-600">
                     {b.icon}
                   </div>
-                  <span className="text-3xl font-black text-slate-200 group-hover:text-blue-500/40 transition-colors">
+                  <span className="text-xl sm:text-3xl font-black text-slate-200 group-hover:text-blue-500/40 transition-colors">
                     {b.number}
                   </span>
                 </div>
 
                 {/* Subtitle & Title */}
-                <div className="text-[11px] font-bold uppercase tracking-wider text-blue-600 mb-1">
+                <div className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-blue-600 mb-0.5 sm:mb-1">
                   Principle {b.number}: {b.principle}
                 </div>
-                <h3 className="text-xl font-black text-slate-900 mb-3 group-hover:text-blue-700 transition-colors">
+                <h3 className="text-base sm:text-xl font-black text-slate-900 mb-2 sm:mb-3 group-hover:text-blue-700 transition-colors">
                   {b.title}
                 </h3>
 
                 {/* AI Power Tag */}
-                <div className="inline-block px-2.5 py-1 rounded-lg bg-blue-50 border border-blue-200/70 text-blue-700 text-[11px] font-semibold mb-4">
+                <div className="inline-block px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md sm:rounded-lg bg-blue-50 border border-blue-200/70 text-blue-700 text-[10px] sm:text-[11px] font-semibold mb-2.5 sm:mb-4">
                   ⚡ {b.aiPower}
                 </div>
 
                 {/* Description */}
-                <p className="text-slate-600 text-xs sm:text-sm leading-relaxed mb-6 font-normal">
+                <p className="text-slate-600 text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6 font-normal">
                   {b.desc}
                 </p>
               </div>
 
               {/* Deliverable Pill */}
-              <div className="pt-4 border-t border-slate-100 flex items-start gap-2 text-emerald-700 text-xs font-semibold">
-                <CheckCircle2 className="w-4 h-4 flex-shrink-0 mt-0.5 text-emerald-600" />
+              <div className="pt-3 sm:pt-4 border-t border-slate-100 flex items-start gap-2 text-emerald-700 text-[11px] sm:text-xs font-semibold">
+                <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0 mt-0.5 text-emerald-600" />
                 <span>
                   <strong className="text-slate-900 font-bold">Outcome:</strong> {b.deliverable}
                 </span>
@@ -187,19 +187,19 @@ const AIBGMBMCSection: React.FC<AIBGMBMCSectionProps> = ({ onRegisterClick }) =>
         </div>
 
         {/* Synthesis Banner */}
-        <div className="p-8 sm:p-10 rounded-3xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 text-white shadow-xl shadow-blue-500/20 border border-blue-400/30 flex flex-col lg:flex-row items-center justify-between gap-6">
+        <div className="p-5 sm:p-10 rounded-2xl sm:rounded-3xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 text-white shadow-xl shadow-blue-500/20 border border-blue-400/30 flex flex-col lg:flex-row items-center justify-between gap-4 sm:gap-6">
           <div className="max-w-2xl text-center lg:text-left">
-            <h4 className="text-xl sm:text-2xl font-black text-white mb-2">
+            <h4 className="text-lg sm:text-2xl font-black text-white mb-1.5 sm:mb-2">
               From Theoretical Strategy to Autonomous Revenue
             </h4>
-            <p className="text-blue-100 text-sm leading-relaxed">
+            <p className="text-blue-100 text-xs sm:text-sm leading-relaxed">
               Every single hour of the 20+ hours of course content is mapped directly into executing these 9 principles. You do not just watch; you build your custom Business Generative Model live.
             </p>
           </div>
           <button
             type="button"
             onClick={onRegisterClick}
-            className="px-6 py-3.5 rounded-xl bg-white hover:bg-slate-50 text-blue-700 font-black text-xs uppercase tracking-wider whitespace-nowrap shadow-md transition-transform hover:scale-105 active:scale-95"
+            className="w-full sm:w-auto px-5 py-3 sm:px-6 sm:py-3.5 rounded-xl bg-white hover:bg-slate-50 text-blue-700 font-black text-xs uppercase tracking-wider whitespace-nowrap shadow-md transition-transform hover:scale-105 active:scale-95 text-center"
           >
             Claim Your BMC Blueprint &rarr;
           </button>
