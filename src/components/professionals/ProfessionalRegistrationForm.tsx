@@ -62,11 +62,15 @@ const ProfessionalRegistrationForm: React.FC = () => {
   const defaultCountry = countryCodes.find(c => c.code === "IN") || countryCodes[0];
   const [selectedCountry, setSelectedCountry] = useState<CountryCode>(defaultCountry);
 
+  // Price Reveal State
+  // RULE: Price must NOT be revealed in the form or landing page until user enters mobile and coupon
+  const [isPriceRevealed, setIsPriceRevealed] = useState(false);
+
   // VIP Pricing & Coupon State
-  const [couponCode, setCouponCode] = useState("AMIABLE");
-  const [appliedCoupon, setAppliedCoupon] = useState("AMIABLE");
+  const [couponCode, setCouponCode] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState("");
   const [couponError, setCouponError] = useState("");
-  const [couponSuccess, setCouponSuccess] = useState("VIP Code AMIABLE Applied — 50% Subsidy Unlocked!");
+  const [couponSuccess, setCouponSuccess] = useState("");
 
   // Submission State
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -89,6 +93,12 @@ const ProfessionalRegistrationForm: React.FC = () => {
   const finalPrice = isVipApplied ? (isInternational ? 6999 : 4999) : standardPrice;
   const discountAmount = standardPrice - finalPrice;
 
+  // Phone validation
+  const cleanPhone = formData.phone.replace(/\D/g, "");
+  const isPhoneValid = selectedCountry.code === "IN" || selectedCountry.dialCode === "+91"
+    ? cleanPhone.length === 10
+    : cleanPhone.length >= 7 && cleanPhone.length <= 15;
+
   // Handle Input Changes
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -98,24 +108,45 @@ const ProfessionalRegistrationForm: React.FC = () => {
     }));
   };
 
-  // Apply Coupon Code
+  // Apply Coupon Code & Reveal Price
   const handleApplyCoupon = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     setCouponError("");
     setCouponSuccess("");
 
+    if (!cleanPhone) {
+      setCouponError("Please enter your mobile number first to unlock your pricing.");
+      return;
+    }
+
+    if (!isPhoneValid) {
+      setCouponError(
+        selectedCountry.code === "IN" || selectedCountry.dialCode === "+91"
+          ? "Please enter a valid 10-digit mobile number."
+          : "Please enter a valid phone number (7-15 digits)."
+      );
+      return;
+    }
+
     const code = couponCode.trim().toUpperCase();
+
     if (!code) {
-      setCouponError("Please enter a coupon code");
+      setAppliedCoupon("");
+      setIsPriceRevealed(true);
+      setCouponSuccess(`Standard corporate tuition unlocked (₹${standardPrice.toLocaleString()}). Enter coupon 'AMIABLE' for 50% VIP discount.`);
       return;
     }
 
     if (code === "AMIABLE" || code === "TECHTYCOON" || code === "VIP" || code === "PRO2026") {
-      setAppliedCoupon(code);
+      setAppliedCoupon("AMIABLE");
+      setIsPriceRevealed(true);
       const targetVipPrice = isInternational ? 6999 : 4999;
-      setCouponSuccess(`Coupon "${code}" applied! VIP rate of ₹${targetVipPrice.toLocaleString()} unlocked.`);
+      const saved = standardPrice - targetVipPrice;
+      setCouponSuccess(`🎉 Secret VIP Voucher 'AMIABLE' Applied! You saved ₹${saved.toLocaleString()} (50% Off)! Final Investment: ₹${targetVipPrice.toLocaleString()}`);
     } else {
-      setCouponError("Invalid or expired coupon code. Use AMIABLE for the VIP rate.");
+      setAppliedCoupon("");
+      setIsPriceRevealed(true);
+      setCouponError("Invalid coupon code. Valid code is 'AMIABLE' for 50% VIP discount.");
     }
   };
 
@@ -155,8 +186,18 @@ const ProfessionalRegistrationForm: React.FC = () => {
       alert("Please enter a valid business/personal email address.");
       return;
     }
-    if (!formData.phone.trim() || formData.phone.length < 7) {
-      alert("Please enter a valid mobile number.");
+    if (!cleanPhone || !isPhoneValid) {
+      alert(
+        selectedCountry.code === "IN" || selectedCountry.dialCode === "+91"
+          ? "Please enter a valid 10-digit mobile number."
+          : "Please enter a valid phone number (7-15 digits)."
+      );
+      return;
+    }
+
+    // If price is not yet revealed, clicking reveals the price
+    if (!isPriceRevealed) {
+      handleApplyCoupon();
       return;
     }
 
@@ -520,58 +561,81 @@ const ProfessionalRegistrationForm: React.FC = () => {
               <input
                 type="text"
                 value={couponCode}
-                onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                onChange={(e) => {
+                  setCouponCode(e.target.value.toUpperCase());
+                  if (couponError || couponSuccess) {
+                    setCouponError("");
+                    setCouponSuccess("");
+                  }
+                }}
                 placeholder="Enter coupon code (e.g. AMIABLE)"
-                className="w-full pl-10 pr-4 py-2 rounded-xl border border-slate-200 focus:border-indigo-500 text-xs sm:text-sm uppercase font-mono tracking-wider"
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500 text-xs sm:text-sm uppercase font-mono tracking-wider"
               />
             </div>
             <button
               type="button"
               onClick={() => handleApplyCoupon()}
-              className="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider flex-shrink-0"
+              className="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs uppercase tracking-wider flex-shrink-0 shadow-sm"
             >
-              Apply
+              Apply & Reveal Price
             </button>
           </div>
 
           {couponSuccess && (
-            <div className="mt-2 text-left text-xs font-semibold text-emerald-700 flex items-center gap-1.5">
-              <Check className="w-3.5 h-3.5 flex-shrink-0" />
+            <div className="mt-2 text-left text-xs font-semibold text-emerald-700 flex items-center gap-1.5 p-2.5 rounded-xl bg-emerald-50 border border-emerald-200">
+              <Check className="w-4 h-4 flex-shrink-0" />
               <span>{couponSuccess}</span>
             </div>
           )}
 
           {couponError && (
-            <div className="mt-2 text-left text-xs font-semibold text-red-600 flex items-center gap-1.5">
-              <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
+            <div className="mt-2 text-left text-xs font-semibold text-red-600 flex items-center gap-1.5 p-2.5 rounded-xl bg-red-50 border border-red-200">
+              <AlertCircle className="w-4 h-4 flex-shrink-0" />
               <span>{couponError}</span>
             </div>
           )}
         </div>
 
-        {/* Price Breakdown Summary */}
-        <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-left space-y-2">
-          <div className="flex items-center justify-between text-xs text-slate-600">
-            <span>Corporate Enrollment Fee:</span>
-            <span className="line-through font-mono">₹{standardPrice.toLocaleString()}</span>
-          </div>
-
-          {isVipApplied && (
-            <div className="flex items-center justify-between text-xs text-emerald-700 font-semibold">
-              <span className="flex items-center gap-1">
-                <Tag className="w-3 h-3" /> VIP Subsidy (Coupon {appliedCoupon}):
-              </span>
-              <span className="font-mono">-₹{discountAmount.toLocaleString()}</span>
+        {/* Dynamic Price Breakdown — ONLY shown once user enters mobile & coupon */}
+        {isPriceRevealed ? (
+          <div className="p-4 rounded-xl bg-gradient-to-br from-indigo-50/80 via-blue-50/50 to-white border border-indigo-200 text-left space-y-2 animate-in fade-in duration-300">
+            <div className="flex items-center justify-between text-xs text-slate-600">
+              <span>Corporate Enrollment Fee:</span>
+              <span className="line-through font-mono">₹{standardPrice.toLocaleString()}</span>
             </div>
-          )}
 
-          <div className="flex items-center justify-between text-sm sm:text-base font-black text-slate-900 pt-2 border-t border-slate-200">
-            <span>Final Investment:</span>
-            <span className="text-xl sm:text-2xl text-indigo-700 font-mono">
-              ₹{finalPrice.toLocaleString()}
-            </span>
+            {isVipApplied && (
+              <div className="flex items-center justify-between text-xs text-emerald-700 font-semibold">
+                <span className="flex items-center gap-1">
+                  <Tag className="w-3.5 h-3.5" /> VIP Subsidy (Coupon {appliedCoupon}):
+                </span>
+                <span className="font-mono">-₹{discountAmount.toLocaleString()}</span>
+              </div>
+            )}
+
+            <div className="flex items-center justify-between text-sm sm:text-base font-black text-slate-900 pt-2 border-t border-indigo-200">
+              <div>
+                <div>Unlocked Investment:</div>
+                <div className="text-[10px] text-slate-500 font-normal">
+                  {isInternational ? "International Participant" : "Domestic (+91) Participant"}
+                </div>
+              </div>
+              <span className="text-xl sm:text-2xl text-indigo-700 font-mono font-black">
+                ₹{finalPrice.toLocaleString()}
+              </span>
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="p-3.5 rounded-xl bg-slate-50 border border-dashed border-indigo-200 text-center space-y-1">
+            <div className="flex items-center justify-center gap-1.5 font-bold text-slate-800 text-xs">
+              <Lock className="w-3.5 h-3.5 text-amber-500" />
+              <span>Tuition Pricing Protected</span>
+            </div>
+            <p className="text-[11px] text-slate-500">
+              Enter your mobile number and coupon code above to reveal your customized rate.
+            </p>
+          </div>
+        )}
 
         {/* Submit & Pay Button */}
         <button
@@ -584,10 +648,16 @@ const ProfessionalRegistrationForm: React.FC = () => {
               <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
               <span>Securing Seat & Opening Gateway...</span>
             </div>
+          ) : !isPriceRevealed ? (
+            <div className="flex items-center gap-2">
+              <Unlock className="w-4 h-4 text-amber-300" />
+              <span>Enter Mobile & Reveal Pricing</span>
+              <ArrowRight className="w-4 h-4" />
+            </div>
           ) : (
             <div className="flex items-center gap-2">
               <Lock className="w-4 h-4 text-amber-300" />
-              <span>Complete Enrollment (₹{finalPrice.toLocaleString()})</span>
+              <span>Proceed to Payment — ₹{finalPrice.toLocaleString()}</span>
               <ArrowRight className="w-4 h-4" />
             </div>
           )}

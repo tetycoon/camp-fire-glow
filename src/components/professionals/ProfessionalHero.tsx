@@ -99,49 +99,32 @@ const ProfessionalHero: React.FC<ProfessionalHeroProps> = ({ onUnlockClick }) =>
             </div>
           </div>
 
-          {/* High-Converting CTA Box */}
-          <div className="max-w-xl mx-auto p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-slate-50 border border-slate-200/90 shadow-xl shadow-slate-900/5 mb-10 sm:mb-14 text-center">
-            <div className="flex items-center justify-center gap-2 mb-2 text-indigo-600 font-bold text-xs uppercase tracking-wider">
-              <Lock className="w-3.5 h-3.5 text-amber-500" />
-              <span>Corporate Subsidized VIP Rate • Batch Enrolling Now</span>
-            </div>
-
-            <div className="flex items-baseline justify-center gap-2 sm:gap-3 mb-2">
-              <span className="text-xs sm:text-sm font-bold text-slate-400 line-through">
-                Regular: ₹9,999
-              </span>
-              <span className="text-2xl sm:text-4xl font-black text-slate-900">
-                VIP Fee: ₹4,999
-              </span>
-              <span className="text-[10px] sm:text-xs font-extrabold px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 uppercase">
-                50% Off With AMIABLE
-              </span>
-            </div>
-
-            <p className="text-[11px] sm:text-xs text-slate-500 mb-4 sm:mb-5">
-              Instant login delivered to your registered email upon completing enrollment.
-            </p>
-
+          {/* Primary CTA Buttons */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 sm:gap-4 mb-6 sm:mb-8">
             <button
               onClick={onUnlockClick}
-              className="w-full py-3.5 sm:py-4 px-6 rounded-xl sm:rounded-2xl bg-gradient-to-r from-indigo-600 via-blue-600 to-indigo-700 hover:from-indigo-700 hover:to-blue-700 text-white font-extrabold text-sm sm:text-base uppercase tracking-wider shadow-lg shadow-indigo-600/30 hover:shadow-indigo-600/40 hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-6 py-3.5 sm:px-8 sm:py-4 rounded-xl sm:rounded-2xl bg-gradient-to-r from-indigo-600 via-blue-600 to-indigo-700 hover:from-indigo-700 hover:to-blue-700 text-white font-black text-xs sm:text-base uppercase tracking-wider shadow-lg sm:shadow-xl shadow-indigo-600/30 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 sm:gap-3 group"
             >
-              <Zap className="w-4 h-4 sm:w-5 sm:h-5 text-amber-300 fill-amber-300" />
-              <span>Enroll Now & Accelerate My Career</span>
-              <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
+              <Lock className="w-4 h-4 sm:w-5 sm:h-5 text-amber-300" />
+              <span>Unlock Secret Pricing & Register</span>
+              <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-100 group-hover:translate-x-1 transition-transform" />
             </button>
 
-            <div className="mt-3 flex items-center justify-center gap-4 text-[10px] sm:text-xs text-slate-500 font-medium">
-              <span className="flex items-center gap-1 text-slate-600">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Razorpay Verified
-              </span>
-              <span className="flex items-center gap-1 text-slate-600">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Instant Email Access
-              </span>
-              <span className="flex items-center gap-1 text-slate-600">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Certificate Included
-              </span>
-            </div>
+            <a
+              href="#curriculum"
+              className="w-full sm:w-auto px-5 py-3 sm:px-7 sm:py-4 rounded-xl sm:rounded-2xl bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 font-bold text-xs sm:text-sm transition-colors border border-slate-200 shadow-sm flex items-center justify-center gap-2"
+            >
+              <span>Explore 7 Core Modules</span>
+              <ArrowRight className="w-3.5 h-3.5 text-indigo-600" />
+            </a>
+          </div>
+
+          {/* Pricing Secrecy Notice */}
+          <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-slate-50 border border-slate-200 max-w-xl mx-auto flex items-center justify-center gap-2.5 sm:gap-3 text-slate-600 text-[11px] sm:text-xs text-center shadow-sm mb-8 sm:mb-12">
+            <ShieldCheck className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+            <span>
+              <strong className="text-slate-900 font-bold">Exclusive Cohort Access:</strong> Official pricing is hidden on the public page. Enter your mobile number & coupon code in the secure portal to reveal your discounted tier.
+            </span>
           </div>
 
           {/* Corporate Stats Grid */}

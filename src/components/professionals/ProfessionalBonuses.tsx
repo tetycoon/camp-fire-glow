@@ -128,8 +128,8 @@ const ProfessionalBonuses: React.FC<ProfessionalBonusesProps> = ({ onRegisterCli
             </div>
 
             <div>
-              <div className="text-xl sm:text-2xl font-black text-amber-400 mb-2">
-                VIP Enrollee Rate: ₹4,999
+              <div className="text-base sm:text-lg font-black text-amber-400 mb-2">
+                VIP Rate: Protected • Enter Coupon to Unlock
               </div>
               <button
                 onClick={onRegisterClick}

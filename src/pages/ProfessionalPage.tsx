@@ -90,7 +90,7 @@ const ProfessionalPage: React.FC = () => {
                 Advance AI for Professionals
               </div>
               <div className="text-[11px] sm:text-xs font-bold text-slate-900 truncate">
-                VIP Rate: ₹4,999 • 20+ Hrs
+                20+ Hrs • Continuous Updates
               </div>
             </div>
 
@@ -99,7 +99,7 @@ const ProfessionalPage: React.FC = () => {
               className="px-3.5 py-2 sm:px-5 sm:py-2.5 rounded-lg sm:rounded-xl bg-gradient-to-r from-indigo-600 via-blue-600 to-indigo-700 text-white font-bold text-[11px] sm:text-xs uppercase tracking-wider shadow-lg shadow-indigo-600/25 flex items-center gap-1 sm:gap-1.5 hover:scale-105 active:scale-95 transition-all whitespace-nowrap flex-shrink-0"
             >
               <Lock className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-300" />
-              <span>Enroll Now</span>
+              <span>Unlock Pricing</span>
               <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
             </button>
           </div>
