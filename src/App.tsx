@@ -72,6 +72,13 @@ const DynamicRootPage = () => {
   return <Index />;
 };
 
+const AdvancedMasterclassRedirect = () => {
+  useEffect(() => {
+    window.location.replace("/advanced_masterclass/");
+  }, []);
+  return null;
+};
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -115,10 +122,10 @@ const App = () => (
           <Route path="/ai_masterclass/thankyou" element={<ThankYou />} />
           <Route path="/ai_masterclass/webinar-access" element={<WebinarAccess />} />
           
-          <Route path="/ai_masterclass2" element={<AIMasterclass2Page />} />
-          <Route path="/ai-masterclass2" element={<AIMasterclass2Page />} />
-          <Route path="/advanced_masterclass" element={<AIMasterclass2Page />} />
-          <Route path="/advanced-masterclass" element={<AIMasterclass2Page />} />
+          <Route path="/advanced_masterclass" element={<AdvancedMasterclassRedirect />} />
+          <Route path="/advanced_masterclass/" element={<AdvancedMasterclassRedirect />} />
+          <Route path="/advanced-masterclass" element={<AdvancedMasterclassRedirect />} />
+          <Route path="/advanced-masterclass/" element={<AdvancedMasterclassRedirect />} />
           <Route path="/ai_bgm" element={<AIBGMPage />} />
           <Route path="/ai_bgm/" element={<AIBGMPage />} />
           <Route path="/aibgm" element={<AIBGMPage />} />

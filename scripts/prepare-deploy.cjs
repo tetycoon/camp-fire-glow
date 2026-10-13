@@ -42,8 +42,6 @@ const spaRoutes = [
   'claude-masterclass/offline',
   'claude_masterclass/thank-you',
   'claude_masterclass/thankyou',
-  'advanced_masterclass',
-  'advanced-masterclass',
   'ai_bgm',
   'aibgm',
   'ai-bgm',
@@ -65,11 +63,29 @@ const spaRoutes = [
 ];
 
 spaRoutes.forEach(route => {
+  // Never overwrite standalone static pages from public/
+  const publicStatic = path.join('public', route, 'index.html');
+  if (fs.existsSync(publicStatic)) {
+    console.log(`✓ Preserving standalone static page: ${route}`);
+    return;
+  }
   const dir = path.join('dist', route);
   fs.mkdirSync(dir, { recursive: true });
   const targetFile = path.join(dir, 'index.html');
   fs.copyFileSync('dist/index.html', targetFile);
   console.log(`✓ Updated SPA route entry: ${targetFile}`);
+});
+
+// Ensure dedicated static landing pages are present and untouched in dist
+['advanced_masterclass', 'claude_masterclass'].forEach(folder => {
+  const src = path.join('public', folder, 'index.html');
+  const destDir = path.join('dist', folder);
+  const dest = path.join(destDir, 'index.html');
+  if (fs.existsSync(src)) {
+    fs.mkdirSync(destDir, { recursive: true });
+    fs.copyFileSync(src, dest);
+    console.log(`✓ Verified dedicated static page: ${dest}`);
+  }
 });
 
 console.log('✓ Static SPA route preparation complete.');
