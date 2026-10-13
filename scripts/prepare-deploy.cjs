@@ -2,8 +2,8 @@ const fs = require('fs');
 const path = require('path');
 
 // 1. Ensure CNAME and .nojekyll for GitHub Pages
-fs.writeFileSync('dist/CNAME', 'course.techtycoon.in\n');
-console.log('✓ Created dist/CNAME (course.techtycoon.in)');
+fs.writeFileSync('dist/CNAME', 'aitycoon.in\n');
+console.log('✓ Created dist/CNAME (aitycoon.in)');
 
 if (!fs.existsSync('dist/.nojekyll')) {
   fs.writeFileSync('dist/.nojekyll', '');
