@@ -164,15 +164,37 @@ function getBasePrice(plan) {
 }
 
 let wantCertificate = false;
+const GST_RATE = 0.18;
+const GSTIN_REGEX = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
+
+function sanitizeText(str, maxLen = 100) {
+    if (!str) return "";
+    let cleaned = String(str).replace(/[\u0000-\u001F\u007F<>]/g, "").trim();
+    if (/^[=+\-@]/.test(cleaned)) {
+        cleaned = "'" + cleaned;
+    }
+    return cleaned.slice(0, maxLen);
+}
+
+function getBaseSessionPrice() {
+    const passPrice = selectedPlan; // 499, 999, or 4999
+    const certAddon = wantCertificate ? 1000 : 0;
+    return passPrice + certAddon;
+}
+
+function getGstBreakdown() {
+    const baseAmount = getBaseSessionPrice();
+    const gstAmount = Math.round(baseAmount * GST_RATE);
+    const totalAmount = baseAmount + gstAmount;
+    return { baseAmount, gstAmount, totalAmount };
+}
 
 function getFinalPrice() {
     const emailVal = document.getElementById('cust-email')?.value.trim().toLowerCase() || "";
-    if (emailVal === "ambroseselva001@gmail.com") {
+    if (emailVal === "ambroseselva001@gmail.com" || emailVal === "techtycoondigitalsolutions@gmail.com") {
         return 1;
     }
-    const passPrice = selectedPlan; // 499 or 999
-    const certAddon = wantCertificate ? 1000 : 0;
-    return passPrice + certAddon;
+    return getGstBreakdown().totalAmount;
 }
 
 function toggleCertificate() {
@@ -181,15 +203,31 @@ function toggleCertificate() {
     updatePricesUI();
 }
 
+function toggleGstClaim() {
+    const cb = document.getElementById('claim-gst-cb');
+    const fields = document.getElementById('gst-invoice-fields');
+    const errEl = document.getElementById('gst-error-msg');
+    if (fields) {
+        fields.style.display = cb && cb.checked ? 'block' : 'none';
+    }
+    if (errEl) {
+        errEl.style.display = 'none';
+    }
+}
+
 function updatePricesUI() {
+    const { baseAmount, gstAmount, totalAmount } = getGstBreakdown();
     const finalPrice = getFinalPrice();
     const selTotal = document.getElementById('selected-pass-total');
-    if (selTotal) selTotal.innerText = `₹${selectedPlan.toLocaleString()} INR`;
-    if (document.getElementById('form-fee-display')) document.getElementById('form-fee-display').innerText = `₹${finalPrice.toLocaleString()} INR`;
-    if (document.getElementById('btn-fee-display')) document.getElementById('btn-fee-display').innerText = `₹${finalPrice.toLocaleString()}`;
-    if (document.getElementById('back-pass-price')) document.getElementById('back-pass-price').innerText = `₹${finalPrice.toLocaleString()}`;
+    if (selTotal) selTotal.innerText = `₹${selectedPlan.toLocaleString('en-IN')} + 18% GST`;
+    if (document.getElementById('form-fee-display')) document.getElementById('form-fee-display').innerText = `₹${finalPrice.toLocaleString('en-IN')} INR (Incl. 18% GST)`;
+    if (document.getElementById('btn-fee-display')) document.getElementById('btn-fee-display').innerText = `₹${finalPrice.toLocaleString('en-IN')} (Incl. GST)`;
+    if (document.getElementById('back-pass-price')) document.getElementById('back-pass-price').innerText = `₹${baseAmount.toLocaleString('en-IN')} + GST`;
+    if (document.getElementById('gst-base-display')) document.getElementById('gst-base-display').innerText = `₹${baseAmount.toLocaleString('en-IN')}`;
+    if (document.getElementById('gst-tax-display')) document.getElementById('gst-tax-display').innerText = `+ ₹${gstAmount.toLocaleString('en-IN')}`;
+    if (document.getElementById('gst-total-display')) document.getElementById('gst-total-display').innerText = `₹${totalAmount.toLocaleString('en-IN')}`;
     const mobPrice = document.getElementById('mobile-pass-price');
-    if (mobPrice) mobPrice.innerText = `₹${finalPrice.toLocaleString()} INR`;
+    if (mobPrice) mobPrice.innerText = `₹${finalPrice.toLocaleString('en-IN')} INR`;
 }
 
 
@@ -568,12 +606,12 @@ function toggleFaq(buttonElement) {
 async function handleFormSubmit(e) {
     e.preventDefault();
 
-    const name = document.getElementById('cust-name').value.trim();
-    const email = document.getElementById('cust-email').value.trim();
+    const name = sanitizeText(document.getElementById('cust-name').value, 100);
+    const email = document.getElementById('cust-email').value.trim().toLowerCase();
     const countryCode = document.getElementById('cust-country-code')?.value || '+91';
     const phoneRaw = document.getElementById('cust-phone').value.trim().replace(/\D/g, '');
     const phone = countryCode + phoneRaw;
-    const profession = document.getElementById('cust-profession').value;
+    const profession = sanitizeText(document.getElementById('cust-profession').value, 80);
 
     if (phoneRaw.length < 6) {
         alert('Please enter a valid WhatsApp number.');
@@ -589,7 +627,9 @@ async function handleFormSubmit(e) {
     const razorpayKey = isInternational ? "rzp_live_gfoS1OjC8tvWjP" : "rzp_live_T2CbVONQc6qrqj";
 
     try {
+        const { baseAmount, gstAmount } = getGstBreakdown();
         const finalPrice = getFinalPrice();
+        const isTest = finalPrice === 1;
 
         // Step 1: Send lead data to Google Apps Script Web App to get Order ID
         let orderId = "";
@@ -605,6 +645,8 @@ async function handleFormSubmit(e) {
                     isInternational: isInternational,
                     profession: profession,
                     modeOfSession: currentMasterclassMode === 'offline' ? "Offline Session (In-Person Chennai)" : "Online Session (Zoom Live)",
+                    baseAmount: isTest ? 1 : baseAmount,
+                    gstAmount: isTest ? 0 : gstAmount,
                     amount: finalPrice,
                     wantCertificate: wantCertificate,
                     certificate: wantCertificate ? "YES (+₹1,000)" : "NO",
@@ -628,13 +670,17 @@ async function handleFormSubmit(e) {
             currency: "INR",
             name: "Claude Masterclass 2026",
             description: selectedPlan === 999 
-                ? "Live + Recording Pass (Recorded Video Access)" 
-                : "Standard Live Session Pass",
+                ? "Live + Recording Pass (Incl. 18% GST)" 
+                : "Standard Live Session Pass (Incl. 18% GST)",
             image: "https://course.techtycoon.in/images/tech_tycoon_logo.png",
             prefill: {
                 name: name,
                 email: email,
                 contact: phone
+            },
+            notes: {
+                base_amount: String(baseAmount),
+                gst_amount: String(gstAmount)
             },
             theme: {
                 color: "#D85A30"
@@ -648,9 +694,12 @@ async function handleFormSubmit(e) {
                             paymentSuccess: true,
                             razorpay_order_id: response.razorpay_order_id || orderId,
                             razorpay_payment_id: response.razorpay_payment_id,
+                            razorpay_signature: response.razorpay_signature || "",
                             name: name,
                             email: email,
                             phone: phone,
+                            baseAmount: isTest ? 1 : baseAmount,
+                            gstAmount: isTest ? 0 : gstAmount,
                             amount: finalPrice,
                             promoCode: appliedPromo,
                             mode: currentMasterclassMode

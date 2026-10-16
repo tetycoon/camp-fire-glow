@@ -15,6 +15,8 @@ import {
   MessageSquare
 } from "lucide-react";
 import { countryCodes, CountryCode } from "../../lib/countryCodes";
+import GstPriceBreakdown from "../common/GstPriceBreakdown";
+import { calculateGstBreakdown, isAuthorizedTestEmail, isValidEmail, isValidGstin, sanitizeTextInput } from "../../lib/gstUtils";
 
 declare global {
   interface Window {
@@ -33,7 +35,7 @@ const CONSULTING_SPREADSHEET_ID = "1LP37n3zb1d0UkXjddQBCKqmSU0j5-HvPSI-Rda36E3s"
 const RAZORPAY_KEY_ID = "rzp_live_T2CbVONQc6qrqj";
 const RAZORPAY_INTL_KEY_ID = "rzp_live_gfoS1OjC8tvWjP";
 
-const CONSULTING_FEE = 2500; // ₹2,500 per 1 Hour session
+const CONSULTING_FEE = 2500; // ₹2,500 per 1 Hour session (+ 18% GST = ₹2,950)
 
 const PROFESSION_OPTIONS = [
   "Business Owner / Founder / MSME",
@@ -66,6 +68,14 @@ const ConsultingBookingForm: React.FC<ConsultingBookingFormProps> = ({ onSuccess
     topic: "AI for Business Operations & Process Automation",
     goals: ""
   });
+
+  // GST Invoice fields
+  const [claimGst, setClaimGst] = useState(false);
+  const [gstin, setGstin] = useState("");
+  const [companyName, setCompanyName] = useState("");
+  const [gstError, setGstError] = useState("");
+
+  const gstBreakdown = calculateGstBreakdown(CONSULTING_FEE);
 
   // Country Code State - Default to India (IN / +91)
   const defaultCountry = countryCodes.find(c => c.iso === "IN") || countryCodes.find(c => c.code === "+91") || countryCodes[0];
@@ -112,12 +122,18 @@ const ConsultingBookingForm: React.FC<ConsultingBookingFormProps> = ({ onSuccess
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setGstError("");
 
-    if (!formData.name.trim()) {
+    const sanitizedName = sanitizeTextInput(formData.name, 100);
+    const sanitizedEmail = formData.email.trim().toLowerCase();
+    const sanitizedCompany = claimGst ? sanitizeTextInput(companyName, 120) : "";
+    const sanitizedGstin = claimGst ? gstin.trim().toUpperCase() : "";
+
+    if (!sanitizedName) {
       alert("Please enter your full name.");
       return;
     }
-    if (!formData.email.trim() || !formData.email.includes("@")) {
+    if (!isValidEmail(sanitizedEmail)) {
       alert("Please enter a valid email address.");
       return;
     }
@@ -130,12 +146,27 @@ const ConsultingBookingForm: React.FC<ConsultingBookingFormProps> = ({ onSuccess
       return;
     }
 
+    if (claimGst) {
+      if (!isValidGstin(sanitizedGstin)) {
+        setGstError("Please enter a valid 15-character GSTIN (e.g. 33AAAAA0000A1Z5)");
+        return;
+      }
+      if (!sanitizedCompany) {
+        setGstError("Please enter your registered Legal Company Name for the GST invoice");
+        return;
+      }
+    }
+
     setIsSubmitting(true);
 
-    const fullPhone = `${selectedCountry.code} ${formData.phone.trim()}`;
-    const finalProfession = formData.profession === "Other"
-      ? (formData.customProfession.trim() || "Consulting Client")
-      : formData.profession;
+    const fullPhone = `${selectedCountry.code} ${cleanPhone}`;
+    const finalProfession = sanitizeTextInput(
+      formData.profession === "Other"
+        ? (formData.customProfession.trim() || "Consulting Client")
+        : formData.profession,
+      80
+    );
+    const sanitizedGoals = sanitizeTextInput(formData.goals, 500);
 
     const currentDateTime = new Date().toLocaleString("en-IN", {
       timeZone: "Asia/Kolkata",
@@ -144,7 +175,9 @@ const ConsultingBookingForm: React.FC<ConsultingBookingFormProps> = ({ onSuccess
     });
 
     const isInternational = selectedCountry.iso !== "IN" && selectedCountry.code !== "+91";
-    const amountInPaise = CONSULTING_FEE * 100;
+    const isTestEmail = isAuthorizedTestEmail(sanitizedEmail);
+    const payableInr = isTestEmail ? 1 : gstBreakdown.totalAmount;
+    const amountInPaise = payableInr * 100;
     let generatedOrderId = `ORD_CONSULT_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
 
     const scriptUrl = window.CONSULTING_APPS_SCRIPT_URL || DEFAULT_CONSULTING_APPS_SCRIPT_URL;
@@ -152,15 +185,19 @@ const ConsultingBookingForm: React.FC<ConsultingBookingFormProps> = ({ onSuccess
     // Col A: Date and Time | Col B: Name | Col C: Email | Col D: Phone | Col E: Profession | Col F: Amount | Col G: Status | Col H: Order ID | Col I: Payment ID
     const leadPayload = {
       dateTime: currentDateTime,
-      name: formData.name.trim(),
-      email: formData.email.trim(),
+      name: sanitizedName,
+      email: sanitizedEmail,
       phone: fullPhone,
       profession: `${finalProfession} (${formData.topic})`,
-      amount: CONSULTING_FEE,
+      baseAmount: isTestEmail ? 1 : gstBreakdown.baseAmount,
+      gstAmount: isTestEmail ? 0 : gstBreakdown.gstAmount,
+      amount: payableInr,
+      companyName: sanitizedCompany,
+      gstin: sanitizedGstin,
       status: "INITIATED",
       orderId: generatedOrderId,
       paymentId: "",
-      notes: formData.goals.trim(),
+      notes: sanitizedGoals,
       spreadsheetId: CONSULTING_SPREADSHEET_ID
     };
 
@@ -202,17 +239,21 @@ const ConsultingBookingForm: React.FC<ConsultingBookingFormProps> = ({ onSuccess
         amount: amountInPaise,
         currency: "INR",
         name: "Tech Tycoon Digital Solutions",
-        description: `1-on-1 AI Strategy Session (1 Hour) - ${formData.topic}`,
+        description: `1-on-1 AI Strategy Session (1 Hour, Incl. 18% GST) - ${formData.topic}`,
         prefill: {
-          name: formData.name.trim(),
-          email: formData.email.trim(),
+          name: sanitizedName,
+          email: sanitizedEmail,
           contact: fullPhone
         },
         notes: {
           service: "1-on-1 AI Consultation (1 Hour)",
           profession: finalProfession,
           topic: formData.topic,
-          goals: formData.goals.trim(),
+          goals: sanitizedGoals,
+          base_amount: String(gstBreakdown.baseAmount),
+          gst_amount: String(gstBreakdown.gstAmount),
+          gstin: sanitizedGstin || "N/A",
+          company_name: sanitizedCompany || "N/A",
           spreadsheetId: CONSULTING_SPREADSHEET_ID
         },
         theme: {
@@ -229,11 +270,16 @@ const ConsultingBookingForm: React.FC<ConsultingBookingFormProps> = ({ onSuccess
               paymentSuccess: true,
               razorpay_payment_id: payId,
               razorpay_order_id: ordId,
-              email: formData.email.trim(),
-              name: formData.name.trim(),
+              razorpay_signature: response.razorpay_signature || "",
+              email: sanitizedEmail,
+              name: sanitizedName,
               phone: fullPhone,
               profession: `${finalProfession} (${formData.topic})`,
-              amount: CONSULTING_FEE,
+              baseAmount: isTestEmail ? 1 : gstBreakdown.baseAmount,
+              gstAmount: isTestEmail ? 0 : gstBreakdown.gstAmount,
+              amount: payableInr,
+              companyName: sanitizedCompany,
+              gstin: sanitizedGstin,
               spreadsheetId: CONSULTING_SPREADSHEET_ID
             };
 
@@ -254,9 +300,9 @@ const ConsultingBookingForm: React.FC<ConsultingBookingFormProps> = ({ onSuccess
           setSuccessDetails({
             orderId: ordId,
             paymentId: payId,
-            amount: CONSULTING_FEE,
-            name: formData.name.trim(),
-            email: formData.email.trim(),
+            amount: payableInr,
+            name: sanitizedName,
+            email: sanitizedEmail,
             phone: fullPhone,
             topic: formData.topic
           });
@@ -370,7 +416,7 @@ const ConsultingBookingForm: React.FC<ConsultingBookingFormProps> = ({ onSuccess
         </div>
         <div className="text-right flex-shrink-0">
           <span className="px-2.5 py-1 rounded-full bg-slate-100 text-slate-800 text-[11px] font-bold uppercase tracking-wider border border-slate-200 block">
-            ₹2,500 / 60 Mins
+            ₹2,500 + 18% GST / 60 Mins
           </span>
         </div>
       </div>
@@ -540,12 +586,33 @@ const ConsultingBookingForm: React.FC<ConsultingBookingFormProps> = ({ onSuccess
             </div>
           </div>
           <div className="text-right">
-            <div className="text-xs text-slate-300">Session Fee:</div>
+            <div className="text-xs text-slate-300">Base Fee (+ 18% GST):</div>
             <div className="text-lg sm:text-xl font-mono font-black text-amber-300">
-              ₹{CONSULTING_FEE.toLocaleString()}
+              ₹{CONSULTING_FEE.toLocaleString("en-IN")} + GST
             </div>
           </div>
         </div>
+
+        <GstPriceBreakdown
+          baseAmount={CONSULTING_FEE}
+          claimGst={claimGst}
+          onClaimGstChange={(checked) => {
+            setClaimGst(checked);
+            if (!checked) setGstError("");
+          }}
+          gstin={gstin}
+          onGstinChange={(val) => {
+            setGstin(val);
+            if (gstError) setGstError("");
+          }}
+          companyName={companyName}
+          onCompanyNameChange={(val) => {
+            setCompanyName(val);
+            if (gstError) setGstError("");
+          }}
+          gstError={gstError}
+          theme="light"
+        />
 
         {/* Submit & Pay Button */}
         <button
@@ -560,7 +627,7 @@ const ConsultingBookingForm: React.FC<ConsultingBookingFormProps> = ({ onSuccess
             </div>
           ) : (
             <div className="flex items-center gap-2">
-              <span>Book 1-on-1 Session — ₹{CONSULTING_FEE.toLocaleString()}</span>
+              <span>Book 1-on-1 Session — ₹{gstBreakdown.totalAmount.toLocaleString("en-IN")} (Incl. GST)</span>
               <ArrowRight className="w-4 h-4" />
             </div>
           )}

@@ -69,6 +69,25 @@ function doGet(e) {
   })).setMimeType(ContentService.MimeType.JSON);
 }
 
+function sanitizeCell(val) {
+  if (val === null || val === undefined) return "";
+  const str = String(val).replace(/[\u0000-\u001F\u007F]/g, "").trim();
+  if (/^[=+\-@\t\r]/.test(str)) return "'" + str;
+  return str;
+}
+
+function verifyPaymentSignature(orderId, paymentId, signature, isIntl) {
+  if (!orderId || !paymentId || !signature) return true;
+  const secret = isIntl ? RAZORPAY_KEY_SECRET_INTL : RAZORPAY_KEY_SECRET;
+  const payload = orderId + "|" + paymentId;
+  const sigBytes = Utilities.computeHmacSha256Signature(payload, secret);
+  const expectedSig = sigBytes.map(function (b) {
+    const v = (b < 0) ? 256 + b : b;
+    return ("0" + v.toString(16)).slice(-2);
+  }).join("");
+  return expectedSig === signature;
+}
+
 /**
  * Handle POST Requests from Landing Page & Razorpay
  */
@@ -94,8 +113,14 @@ function doPost(e) {
 
     // SCENARIO 1: Payment Success Update
     if (data.paymentSuccess === true || (data.razorpay_payment_id && !data.orderId && !data.status)) {
-      const orderIdToFind = data.razorpay_order_id || data.orderId || "";
-      const paymentId = data.razorpay_payment_id || data.paymentId || "PAID";
+      const orderIdToFind = sanitizeCell(data.razorpay_order_id || data.orderId || "");
+      const paymentId = sanitizeCell(data.razorpay_payment_id || data.paymentId || "PAID");
+      const isInternational = data.isInternational === true;
+      if (data.razorpay_signature && orderIdToFind && paymentId) {
+        if (!verifyPaymentSignature(orderIdToFind, paymentId, data.razorpay_signature, isInternational)) {
+          throw new Error("Payment signature verification failed");
+        }
+      }
       const userEmail = (data.email || "").toLowerCase().trim();
       const userPhone = (data.phone || "").trim();
 
@@ -119,7 +144,7 @@ function doPost(e) {
             sheet.getRange(sheetRowIndex, 7).setValue("PAID"); // Col G: Status
             sheet.getRange(sheetRowIndex, 9).setValue(paymentId); // Col I: Payment ID
             if (data.amount) {
-              sheet.getRange(sheetRowIndex, 6).setValue(data.amount); // Col F: Amount
+              sheet.getRange(sheetRowIndex, 6).setValue(Number(data.amount) || 2950); // Col F: Amount
             }
             matched = true;
             break;
@@ -132,11 +157,11 @@ function doPost(e) {
         const now = new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
         sheet.appendRow([
           now,
-          data.name || "Consulting Client",
-          data.email || "",
-          data.phone || "",
-          data.profession || "1-on-1 Consultation",
-          data.amount || 2500,
+          sanitizeCell(data.name || "Consulting Client"),
+          sanitizeCell(data.email || ""),
+          "'" + String(data.phone || "").replace(/[^\d+\-\s]/g, ""),
+          sanitizeCell(data.profession || "1-on-1 Consultation"),
+          Number(data.amount) || 2950,
           "PAID",
           orderIdToFind || ("ORD_DIRECT_" + Date.now()),
           paymentId
@@ -153,14 +178,15 @@ function doPost(e) {
 
     // SCENARIO 2: Create Razorpay Order & Log INITIATED Row
     const now = data.dateTime || new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
-    const name = data.name || "";
-    const email = data.email || "";
-    const phone = data.phone || "";
-    const profession = data.profession || "1-on-1 AI Consultation";
-    const amount = Number(data.amount) || 2500;
+    const name = sanitizeCell(data.name || "");
+    const email = sanitizeCell(data.email || "");
+    const phone = "'" + String(data.phone || "").replace(/[^\d+\-\s]/g, "");
+    const gstSuffix = data.gstin ? ` | GSTIN: ${sanitizeCell(data.gstin)} (${sanitizeCell(data.companyName || "")})` : "";
+    const profession = sanitizeCell((data.profession || "1-on-1 AI Consultation") + gstSuffix);
+    const amount = Number(data.amount) || 2950;
     const isInternational = data.isInternational === true;
 
-    let orderId = data.orderId || ("ORD_CONSULT_" + Date.now());
+    let orderId = sanitizeCell(data.orderId || ("ORD_CONSULT_" + Date.now()));
 
     // Call Razorpay API to generate live official Order ID
     try {
@@ -175,7 +201,7 @@ function doPost(e) {
           "Content-Type": "application/json"
         },
         payload: JSON.stringify({
-          amount: amount * 100, // paise
+          amount: Math.round(amount * 100), // paise
           currency: "INR",
           receipt: orderId.slice(0, 40),
           notes: {
@@ -183,7 +209,11 @@ function doPost(e) {
             name: name,
             email: email,
             phone: phone,
-            profession: profession
+            profession: profession,
+            base_amount: data.baseAmount || 2500,
+            gst_amount: data.gstAmount || 450,
+            gstin: sanitizeCell(data.gstin || ""),
+            company_name: sanitizeCell(data.companyName || "")
           }
         }),
         muteHttpExceptions: true

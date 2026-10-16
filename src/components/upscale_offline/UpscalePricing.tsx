@@ -55,12 +55,12 @@ const UpscalePricing: React.FC = () => {
                                 <div className="flex items-baseline gap-4 mb-2">
                                     <span className="text-2xl text-slate-500 line-through font-bold">₹9,999</span>
                                     <span className="text-6xl lg:text-7xl font-black tracking-tighter bg-gradient-to-br from-white to-slate-400 bg-clip-text text-transparent">₹4,999</span>
-                                    <span className="text-slate-400 font-bold text-sm tracking-widest uppercase">/ PERSON</span>
+                                    <span className="text-slate-400 font-bold text-sm tracking-widest uppercase">+ 18% GST / PERSON</span>
                                 </div>
-                                <div className="inline-block bg-emerald-500/20 text-emerald-300 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest mb-2">50% OFF — Early Bird</div>
+                                <div className="inline-block bg-emerald-500/20 text-emerald-300 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest mb-2">50% OFF — Early Bird (Total Payable: ₹5,899 Incl. ₹900 GST)</div>
                                 <div className="text-emerald-400 font-black text-[11px] uppercase tracking-[0.2em] flex items-center gap-2">
                                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                                    Inclusive of GST & F&B Expenses
+                                    GST Invoice Available • Inclusive of F&B Expenses
                                 </div>
                             </div>
 

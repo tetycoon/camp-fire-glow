@@ -123,16 +123,36 @@ function doPost(e) {
   }
 }
 
+function sanitizeCell(val) {
+  if (val === null || val === undefined) return "";
+  const str = String(val).replace(/[\u0000-\u001F\u007F]/g, "").trim();
+  if (/^[=+\-@\t\r]/.test(str)) return "'" + str;
+  return str;
+}
+
+function verifyPaymentSignature(orderId, paymentId, signature, isIntl) {
+  if (!orderId || !paymentId || !signature) return true;
+  const secret = isIntl ? RAZORPAY_KEY_SECRET_INTL : RAZORPAY_KEY_SECRET;
+  const payload = orderId + "|" + paymentId;
+  const sigBytes = Utilities.computeHmacSha256Signature(payload, secret);
+  const expectedSig = sigBytes.map(function (b) {
+    const v = (b < 0) ? 256 + b : b;
+    return ("0" + v.toString(16)).slice(-2);
+  }).join("");
+  return expectedSig === signature;
+}
+
 /**
  * Appends a lead row to Sheet1 and creates Razorpay Order ID
  */
 function createOrderAndLogRow(sheet, data) {
-  const name = data.name || "Anonymous";
-  const email = data.email || "";
-  const phone = data.phone || "";
-  const course = data.course || data.modeOfSession || "TECH TYCOON Academy";
-  const amountPaid = parseInt(data.amount) || 4999;
-  const balanceAmount = amountPaid === 4999 ? 5000 : (amountPaid === 5999 ? 6000 : 0); // 50% discount off ₹9,999 (Domestic) or ₹11,999 (International)
+  const name = sanitizeCell(data.name || "Anonymous");
+  const email = sanitizeCell(data.email || "");
+  const phone = "'" + String(data.phone || "").replace(/[^\d+\-\s]/g, "");
+  const gstSuffix = data.gstin ? ` | GSTIN: ${sanitizeCell(data.gstin)} (${sanitizeCell(data.companyName || "")})` : "";
+  const course = sanitizeCell((data.course || data.modeOfSession || "TECH TYCOON Academy") + gstSuffix);
+  const amountPaid = parseInt(data.amount) || 5899;
+  const balanceAmount = (amountPaid === 4999 || amountPaid === 5899) ? 5900 : ((amountPaid === 5999 || amountPaid === 7079) ? 7080 : 0);
   const isIntl = data.isInternational || false;
   const dateTimeStr = Utilities.formatDate(new Date(), "Asia/Kolkata", "yyyy-MM-dd HH:mm:ss");
 
@@ -154,7 +174,11 @@ function createOrderAndLogRow(sheet, data) {
         name: name,
         email: email,
         phone: phone,
-        course: course
+        course: course,
+        base_amount: data.baseAmount || 4999,
+        gst_amount: data.gstAmount || 900,
+        gstin: sanitizeCell(data.gstin || ""),
+        company_name: sanitizeCell(data.companyName || "")
       }
     };
 
@@ -202,13 +226,19 @@ function createOrderAndLogRow(sheet, data) {
  * Updates row status to SUCCESS when Razorpay payment completes and triggers confirmation email
  */
 function handlePaymentSuccess(sheet, data) {
-  const orderId = data.razorpay_order_id || data.orderId || "";
-  const paymentId = data.razorpay_payment_id || data.paymentId || "PAID";
-  const userEmail = data.email || "";
-  const userName = data.name || "Valued Learner";
-  const userPhone = data.phone || "";
-  const amountPaid = parseInt(data.amount) || 4999;
-  const balanceAmount = amountPaid === 4999 ? 5000 : (amountPaid === 5999 ? 6000 : 0);
+  const orderId = sanitizeCell(data.razorpay_order_id || data.orderId || "");
+  const paymentId = sanitizeCell(data.razorpay_payment_id || data.paymentId || "PAID");
+  const isIntl = data.isInternational || false;
+  if (data.razorpay_signature && orderId && paymentId) {
+    if (!verifyPaymentSignature(orderId, paymentId, data.razorpay_signature, isIntl)) {
+      throw new Error("Payment signature verification failed");
+    }
+  }
+  const userEmail = sanitizeCell(data.email || "");
+  const userName = sanitizeCell(data.name || "Valued Learner");
+  const userPhone = "'" + String(data.phone || "").replace(/[^\d+\-\s]/g, "");
+  const amountPaid = parseInt(data.amount) || 5899;
+  const balanceAmount = (amountPaid === 4999 || amountPaid === 5899) ? 5900 : ((amountPaid === 5999 || amountPaid === 7079) ? 7080 : 0);
 
   const rows = sheet.getDataRange().getValues();
   let targetRowIndex = -1;

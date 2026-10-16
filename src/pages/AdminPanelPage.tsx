@@ -347,6 +347,14 @@ const AdminPanelPage: React.FC = () => {
   const [endDate, setEndDate] = useState("");
   const [selectedLead, setSelectedLead] = useState<Registration | null>(null);
 
+  // Brute-force lockout state (max 5 failed attempts -> 5-minute cooldown)
+  const [failedAttempts, setFailedAttempts] = useState<number>(() => {
+    return Number(sessionStorage.getItem("agy_admin_failed_attempts") || "0");
+  });
+  const [lockoutUntil, setLockoutUntil] = useState<number>(() => {
+    return Number(sessionStorage.getItem("agy_admin_lockout_until") || "0");
+  });
+
   // Handle password-authenticated single or bulk lead deletion
   const handleConfirmDeleteLead = (e: React.FormEvent) => {
     e.preventDefault();
@@ -357,7 +365,21 @@ const AdminPanelPage: React.FC = () => {
       return;
     }
 
+    if (Date.now() < lockoutUntil) {
+      const remainingSec = Math.ceil((lockoutUntil - Date.now()) / 1000);
+      setDeleteError(`Too many failed attempts. Locked for ${remainingSec}s.`);
+      return;
+    }
+
     if (deleteConfirmPassword.trim() !== "Admin@aitycoon2026") {
+      const nextFailures = failedAttempts + 1;
+      setFailedAttempts(nextFailures);
+      sessionStorage.setItem("agy_admin_failed_attempts", String(nextFailures));
+      if (nextFailures >= 5) {
+        const until = Date.now() + 5 * 60 * 1000;
+        setLockoutUntil(until);
+        sessionStorage.setItem("agy_admin_lockout_until", String(until));
+      }
       setDeleteError("Incorrect security password. Deletion authorization failed.");
       return;
     }
@@ -405,23 +427,45 @@ const AdminPanelPage: React.FC = () => {
     }
   }, []);
 
-  // Handle Authentication submit
+  // Handle Authentication submit with brute-force rate limiting
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     setAuthError("");
 
+    if (Date.now() < lockoutUntil) {
+      const remainingSec = Math.ceil((lockoutUntil - Date.now()) / 1000);
+      setAuthError(`Security lockout active. Please wait ${remainingSec} seconds before retrying.`);
+      return;
+    }
+
     const cleanPass = password.trim();
 
     if (cleanPass === "Admin@aitycoon2026") {
+      setFailedAttempts(0);
+      sessionStorage.removeItem("agy_admin_failed_attempts");
+      sessionStorage.removeItem("agy_admin_lockout_until");
       setPersona("admin");
       setIsAuthenticated(true);
       sessionStorage.setItem("agy_admin_persona", "admin");
     } else if (cleanPass === "Audit@aitycoon2026") {
+      setFailedAttempts(0);
+      sessionStorage.removeItem("agy_admin_failed_attempts");
+      sessionStorage.removeItem("agy_admin_lockout_until");
       setPersona("auditor");
       setIsAuthenticated(true);
       sessionStorage.setItem("agy_admin_persona", "auditor");
     } else {
-      setAuthError("Incorrect security password. Please try again.");
+      const nextFailures = failedAttempts + 1;
+      setFailedAttempts(nextFailures);
+      sessionStorage.setItem("agy_admin_failed_attempts", String(nextFailures));
+      if (nextFailures >= 5) {
+        const until = Date.now() + 5 * 60 * 1000;
+        setLockoutUntil(until);
+        sessionStorage.setItem("agy_admin_lockout_until", String(until));
+        setAuthError("Maximum failed login attempts exceeded. Portal locked for 5 minutes.");
+      } else {
+        setAuthError(`Incorrect security password (${5 - nextFailures} attempts remaining).`);
+      }
     }
   };
 

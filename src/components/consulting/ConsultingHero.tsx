@@ -55,7 +55,7 @@ const ConsultingHero: React.FC<ConsultingHeroProps> = ({ onSuccess }) => {
                 </span>
                 <div className="flex items-baseline gap-2">
                   <span className="text-2xl sm:text-3xl font-black text-slate-900 font-mono">₹2,500</span>
-                  <span className="text-xs sm:text-sm text-slate-500 font-medium">/ 1 Hour Session</span>
+                  <span className="text-xs sm:text-sm text-slate-500 font-medium">+ 18% GST / 1 Hour Session</span>
                 </div>
               </div>
               <div className="text-right">

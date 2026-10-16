@@ -5,6 +5,8 @@ import { useAIMasterclassRegisterModal } from "./AIMasterclassRegisterModalConte
 import { RazorpayOptions } from "@/types/razorpay";
 import { getMasterclassDateStrings } from "../../lib/masterclassDateUtils";
 import { countryCodes } from "../../lib/countryCodes";
+import { calculateGstBreakdown, isValidGstin, sanitizeTextInput, isAuthorizedTestEmail } from "../../lib/gstUtils";
+import GstPriceBreakdown from "../common/GstPriceBreakdown";
 
 const RAZORPAY_KEY_ID = "rzp_live_T2CbVONQc6qrqj";
 const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycby0fX7tjbOciJbg0Mw1SRMhlazBe4FG1Ko-f5mIFCW6Y7zGKHGZjdUZQKXclfye1FzegA/exec";
@@ -34,6 +36,9 @@ const AIMasterclassRegisterModal: React.FC = () => {
     const { isOpen, closeRegisterModal } = useAIMasterclassRegisterModal();
     const { regularDate } = getMasterclassDateStrings();
     const [form, setForm] = useState({ name: "", email: "", phone: "", profession: "", language: "Tamil", coupon: "WELCOME33", countryCode: "+91" });
+    const [claimGst, setClaimGst] = useState(false);
+    const [gstin, setGstin] = useState("");
+    const [companyName, setCompanyName] = useState("");
     const [seatsCount, setSeatsCount] = useState(1);
     const [submitted, setSubmitted] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -41,6 +46,9 @@ const AIMasterclassRegisterModal: React.FC = () => {
     const [paymentId, setPaymentId] = useState<string>("");
     const [visible, setVisible] = useState(false);
     const [discountApplied, setDiscountApplied] = useState(false);
+
+    const baseSessionAmount = 99 * seatsCount;
+    const { gstAmount, totalAmount, totalInPaise } = calculateGstBreakdown(baseSessionAmount);
 
     // Country code search state
     const [countrySearch, setCountrySearch] = useState("");
@@ -87,6 +95,9 @@ const AIMasterclassRegisterModal: React.FC = () => {
             closeRegisterModal();
             if (!submitted) {
                 setForm({ name: "", email: "", phone: "", profession: "", language: "Tamil", coupon: "WELCOME33", countryCode: "+91" });
+                setClaimGst(false);
+                setGstin("");
+                setCompanyName("");
                 setDiscountApplied(false);
             }
         }, 300);
@@ -99,13 +110,29 @@ const AIMasterclassRegisterModal: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
+        if (claimGst) {
+            if (!isValidGstin(gstin)) {
+                alert("Please enter a valid 15-character Indian GSTIN (e.g., 33AAAAA0000A1Z5).");
+                return;
+            }
+            if (!companyName.trim()) {
+                alert("Please enter your registered Legal Company Name for the GST Invoice.");
+                return;
+            }
+        }
+
+        const safeName = sanitizeTextInput(form.name, 100);
+        const safeEmail = form.email.trim().toLowerCase();
+        const safeCompany = claimGst ? sanitizeTextInput(companyName, 120) : "";
+        const safeGstin = claimGst ? gstin.trim().toUpperCase() : "";
+
         // 1. Track Meta Pixel Lead event at earliest reliable point (once per submission attempt)
         if (!leadTrackedRef.current && typeof (window as any).fbq === 'function') {
             leadTrackedRef.current = true;
             (window as any).fbq('track', 'Lead', {
                 content_name: 'AI Secrets Revealed Masterclass',
                 currency: 'INR',
-                value: 99 * seatsCount
+                value: totalAmount
             });
         }
 
@@ -119,28 +146,29 @@ const AIMasterclassRegisterModal: React.FC = () => {
         }
 
         const pageUrl = window.location.href;
-        const testEmails = ["ambroseselva001@gmail.com", "techtycoondigitalsolutions@gmail.com"];
-        const isTestEmail = testEmails.includes(form.email.toLowerCase().trim());
-        const finalAmount = isTestEmail ? 100 : (9900 * seatsCount); // 100 paise (₹1) for test, else ₹99
+        const isTestEmail = isAuthorizedTestEmail(safeEmail);
+        const finalAmount = isTestEmail ? 100 : totalInPaise; // 100 paise (₹1) for test, else ₹117 * seatsCount
 
         try {
             const response = await fetch(GOOGLE_SHEET_URL, {
                 method: "POST",
                 headers: { "Content-Type": "text/plain;charset=utf-8" },
                 body: JSON.stringify({
-                    userType: form.profession || "Professional",
+                    userType: sanitizeTextInput(form.profession || "Professional", 60),
                     pageUrl,
-                    name: form.name + (seatsCount > 1 ? ` (+ ${seatsCount - 1} Seats)` : ""),
-                    email: form.email,
-                    phone: `${form.countryCode}${form.phone}`,
+                    name: safeName + (seatsCount > 1 ? ` (+ ${seatsCount - 1} Seats)` : ""),
+                    email: safeEmail,
+                    phone: `${form.countryCode}${form.phone.replace(/\D/g, "")}`,
                     countryCode: form.countryCode,
                     language: form.language,
                     batch: "Masterclass 2026",
-                    amount: isTestEmail ? 1 : (99 * seatsCount),
+                    baseAmount: isTestEmail ? 1 : baseSessionAmount,
+                    gstAmount: isTestEmail ? 0 : gstAmount,
+                    amount: isTestEmail ? 1 : totalAmount,
                     sessionDate: regularDate,
                     sessionTime: "6:00 PM IST",
-                    companyName: "",
-                    gstin: "",
+                    companyName: safeCompany,
+                    gstin: safeGstin,
                     seats: seatsCount
                 }),
             });
@@ -159,14 +187,16 @@ const AIMasterclassRegisterModal: React.FC = () => {
                 amount: finalAmount,
                 currency: "INR",
                 name: "Tech Tycoon",
-                description: `AI Marketing Masterclass — ${regularDate} (${seatsCount} Seats)`,
+                description: `AI Marketing Masterclass — ${regularDate} (${seatsCount} Seats, Incl. 18% GST)`,
                 prefill: {
-                    name: form.name,
-                    email: form.email,
-                    contact: `${form.countryCode}${form.phone}`,
+                    name: safeName,
+                    email: safeEmail,
+                    contact: `${form.countryCode}${form.phone.replace(/\D/g, "")}`,
                 },
                 notes: {
                     batch: `Masterclass: ${form.profession} (${form.language})`,
+                    gstin: safeGstin || "N/A",
+                    company: safeCompany || "N/A",
                 },
                 theme: {
                     color: "#10b981",
@@ -177,19 +207,25 @@ const AIMasterclassRegisterModal: React.FC = () => {
                     setSubmitted(true);
                     setLoading(false);
 
-                    // 1. Fire and forget tracking (Background)
+                    // 1. Fire and forget tracking (Background) with signature verification payload
                     fetch(GOOGLE_SHEET_URL, {
                         method: "POST",
                         headers: { "Content-Type": "text/plain;charset=utf-8" },
                         body: JSON.stringify({
                             paymentSuccess: true,
-                            razorpay_order_id: result.orderId,
+                            razorpay_order_id: response.razorpay_order_id || result.orderId,
                             razorpay_payment_id: paymentId,
-                            email: form.email,
-                            name: form.name,
+                            razorpay_signature: response.razorpay_signature || "",
+                            email: safeEmail,
+                            name: safeName,
                             language: form.language,
                             sessionDate: regularDate,
-                            sessionTime: "6:00 PM IST"
+                            sessionTime: "6:00 PM IST",
+                            baseAmount: isTestEmail ? 1 : baseSessionAmount,
+                            gstAmount: isTestEmail ? 0 : gstAmount,
+                            amount: isTestEmail ? 1 : totalAmount,
+                            companyName: safeCompany,
+                            gstin: safeGstin
                         })
                     }).catch(() => {});
 
@@ -199,12 +235,12 @@ const AIMasterclassRegisterModal: React.FC = () => {
                         fetch(GOOGLE_SHEET_URL, {
                             method: "POST",
                             headers: { "Content-Type": "text/plain;charset=utf-8" },
-                            body: JSON.stringify({ action: "markCouponUsed", couponCode: form.coupon.trim(), email: form.email })
+                            body: JSON.stringify({ action: "markCouponUsed", couponCode: form.coupon.trim(), email: safeEmail })
                         }).catch(() => { });
                     }
 
                     // 2. Track Meta Pixel Purchase event (exactly once upon confirmed payment)
-                    const actualPaidAmount = isTestEmail ? 1 : (99 * seatsCount);
+                    const actualPaidAmount = isTestEmail ? 1 : totalAmount;
                     if (!purchaseTrackedRef.current && typeof (window as any).fbq === 'function') {
                         purchaseTrackedRef.current = true;
                         if (response.razorpay_payment_id) {
@@ -222,13 +258,13 @@ const AIMasterclassRegisterModal: React.FC = () => {
                     // 3. Close modal & navigate to Thank You page
                     closeRegisterModal();
 
-                    const fullPhone = `${form.countryCode}${form.phone}`;
-                    const thankYouUrl = `/thank-you?name=${encodeURIComponent(form.name)}&email=${encodeURIComponent(form.email)}&phone=${encodeURIComponent(fullPhone)}&paymentId=${encodeURIComponent(paymentId)}&amount=${actualPaidAmount}&course=${encodeURIComponent("AI Secrets Revealed Masterclass")}&orderId=${encodeURIComponent(result.orderId)}`;
+                    const fullPhone = `${form.countryCode}${form.phone.replace(/\D/g, "")}`;
+                    const thankYouUrl = `/thank-you?name=${encodeURIComponent(safeName)}&email=${encodeURIComponent(safeEmail)}&phone=${encodeURIComponent(fullPhone)}&paymentId=${encodeURIComponent(paymentId)}&amount=${actualPaidAmount}&course=${encodeURIComponent("AI Secrets Revealed Masterclass")}&orderId=${encodeURIComponent(result.orderId)}`;
 
                     navigate(thankYouUrl, {
                         state: {
-                            name: form.name,
-                            email: form.email,
+                            name: safeName,
+                            email: safeEmail,
                             phone: fullPhone,
                             amount: actualPaidAmount,
                             paymentId: paymentId,
@@ -284,13 +320,13 @@ const AIMasterclassRegisterModal: React.FC = () => {
                     <>
                         <div className="text-center mb-6">
                             <h2 className="font-display text-2xl font-bold mb-1 italic !text-white" style={{ color: "white" }}>Register <span className="text-gradient-green">Now</span></h2>
-                            <p className="text-sm text-muted-foreground">Join the AI revolution for just ₹99</p>
+                            <p className="text-sm text-muted-foreground">Join the AI revolution for just ₹99 + 18% GST</p>
                             <div className="mt-3 inline-block bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 px-4 py-2 rounded-2xl text-xs font-bold tracking-wide shadow-sm">
                                 📅 Session: {regularDate} at 6:00 PM IST
                             </div>
                         </div>
 
-                        <form onSubmit={handleSubmit} className="space-y-5">
+                        <form onSubmit={handleSubmit} className="space-y-4">
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div className="space-y-1.5">
                                     <label className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest ml-1">Full Name</label>
@@ -384,11 +420,11 @@ const AIMasterclassRegisterModal: React.FC = () => {
                                         required
                                         type="tel"
                                         value={form.phone}
-                                        onChange={e => setForm({ ...form, phone: e.target.value })}
+                                        onChange={e => setForm({ ...form, phone: e.target.value.replace(/\D/g, "") })}
                                         placeholder="Mobile Number"
                                         autoComplete="tel"
-                                        pattern="[0-9]{10}"
-                                        title="Please enter a valid 10-digit phone number"
+                                        pattern="[0-9]{6,15}"
+                                        title="Please enter a valid phone number"
                                         className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-emerald-500/50 focus:bg-white/10 outline-none transition-all"
                                     />
                                 </div>
@@ -413,6 +449,18 @@ const AIMasterclassRegisterModal: React.FC = () => {
                                 </select>
                             </div>
 
+                            <GstPriceBreakdown
+                                baseAmount={baseSessionAmount}
+                                claimGst={claimGst}
+                                onClaimGstChange={setClaimGst}
+                                gstin={gstin}
+                                onGstinChange={setGstin}
+                                companyName={companyName}
+                                onCompanyNameChange={setCompanyName}
+                                theme="dark"
+                                label="Masterclass Seat Fee"
+                            />
+
                             <p className="text-xs text-red-500 font-bold text-center mt-1">⚠️ We do not provide recorded sessions.</p>
 
                             <div className="flex items-start gap-2 ml-1">
@@ -433,11 +481,11 @@ const AIMasterclassRegisterModal: React.FC = () => {
                                 disabled={loading}
                                 className="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-sm py-4 rounded-xl tracking-widest mt-2 flex items-center justify-center gap-2 transform active:scale-95 transition-all shadow-[0_0_20px_rgba(16,185,129,0.2)]"
                             >
-                                {loading ? <Loader2 className="animate-spin" /> : `PROCEED TO PAYMENT — ₹${99 * seatsCount}`}
+                                {loading ? <Loader2 className="animate-spin" /> : `PROCEED TO PAYMENT — ₹${totalAmount} (Incl. 18% GST)`}
                             </button>
 
                             <div className="flex items-center justify-center gap-2 text-[10px] text-emerald-400/40 font-bold uppercase tracking-tighter">
-                                <ShieldCheck className="w-3 h-3" /> Secured by Razorpay
+                                <ShieldCheck className="w-3 h-3" /> Secured by Razorpay • 256-Bit SSL
                             </div>
                         </form>
                     </>

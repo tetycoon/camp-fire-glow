@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { 
   Sparkles, Calendar, Clock, UserCheck, ShieldCheck, 
   Crown, Check, X, ChevronDown, Globe, Lock,
@@ -9,6 +9,8 @@ import techTycoonLogo from '../assets/tech_tycoon_logo.png';
 import antonyPraveenPhoto from '../assets/antony_praveen.jpg';
 import onlineWebp from '../assets/online.webp';
 import offlineWebp from '../assets/offline.webp';
+import GstPriceBreakdown from '../components/common/GstPriceBreakdown';
+import { calculateGstBreakdown, isAuthorizedTestEmail, isValidEmail, isValidGstin, sanitizeTextInput } from '../lib/gstUtils';
 
 declare global {
   interface Window {
@@ -258,11 +260,23 @@ const ClaudeMasterclassPage: React.FC = () => {
   const [promoMessage, setPromoMessage] = useState({ text: 'CLAUDE code applied! 10% discount matches. 🎉', type: 'success' as 'info' | 'success' | 'error' });
   const [wantCertificate, setWantCertificate] = useState(false);
 
-  const getCalculatedPrice = () => {
-    if (formData.email.trim().toLowerCase() === "ambroseselva001@gmail.com") return 1;
+  // GST Invoice fields
+  const [claimGst, setClaimGst] = useState(false);
+  const [gstin, setGstin] = useState('');
+  const [companyName, setCompanyName] = useState('');
+  const [gstError, setGstError] = useState('');
+
+  const getCalculatedBasePrice = () => {
     const passPrice = selectedPlan;
     const certAddon = wantCertificate ? 1000 : 0;
     return passPrice + certAddon;
+  };
+
+  const gstBreakdown = calculateGstBreakdown(getCalculatedBasePrice());
+
+  const getCalculatedPrice = () => {
+    if (isAuthorizedTestEmail(formData.email)) return 1;
+    return gstBreakdown.totalAmount;
   };
 
   // Check URL pathname, hash, or query parameter for direct batch slugs (online / offline)
@@ -495,6 +509,7 @@ const ClaudeMasterclassPage: React.FC = () => {
 
   const handleProceedPayment = async (e: React.FormEvent) => {
     e.preventDefault();
+    setGstError('');
     const cleanPhone = formData.phone.replace(/\D/g, '');
     
     if (cleanPhone.length < 6 || cleanPhone.length > 15) {
@@ -503,15 +518,33 @@ const ClaudeMasterclassPage: React.FC = () => {
     }
     setPhoneError('');
 
-    if (!formData.name || !formData.email || !formData.profession) {
+    const sanitizedName = sanitizeTextInput(formData.name, 100);
+    const sanitizedEmail = formData.email.trim().toLowerCase();
+    const sanitizedProfession = sanitizeTextInput(formData.profession, 80);
+    const sanitizedCompany = claimGst ? sanitizeTextInput(companyName, 120) : '';
+    const sanitizedGstin = claimGst ? gstin.trim().toUpperCase() : '';
+
+    if (!sanitizedName || !isValidEmail(sanitizedEmail) || !sanitizedProfession) {
       alert('Please fill in all required fields.');
       return;
+    }
+
+    if (claimGst) {
+      if (!isValidGstin(sanitizedGstin)) {
+        setGstError('Please enter a valid 15-character GSTIN (e.g. 33AAAAA0000A1Z5)');
+        return;
+      }
+      if (!sanitizedCompany) {
+        setGstError('Please enter your registered Legal Company Name for the GST invoice');
+        return;
+      }
     }
 
     setIsSubmitting(true);
 
     const fullPhone = formData.countryCode + cleanPhone;
-    const finalPrice = getCalculatedPrice();
+    const isTestEmail = isAuthorizedTestEmail(sanitizedEmail);
+    const finalPrice = isTestEmail ? 1 : gstBreakdown.totalAmount;
 
     try {
       const sdkLoaded = await loadRazorpayScript();
@@ -521,7 +554,7 @@ const ClaudeMasterclassPage: React.FC = () => {
         return;
       }
 
-      const isInternational = selectedCountry.code !== '+91';
+      const isInternational = formData.countryCode !== '+91';
       const razorpayKey = isInternational ? "rzp_live_gfoS1OjC8tvWjP" : "rzp_live_T2CbVONQc6qrqj";
 
       // Step 1: Call Google Apps Script Web App
@@ -531,14 +564,18 @@ const ClaudeMasterclassPage: React.FC = () => {
           method: "POST",
           headers: { "Content-Type": "text/plain;charset=utf-8" },
           body: JSON.stringify({
-            name: formData.name,
-            email: formData.email,
+            name: sanitizedName,
+            email: sanitizedEmail,
             phone: fullPhone,
-            countryCode: selectedCountry.code,
+            countryCode: formData.countryCode,
             isInternational: isInternational,
-            profession: formData.profession,
+            profession: sanitizedProfession,
             modeOfSession: masterclassMode === 'offline' ? "Offline Session (In-Person Chennai)" : "Online Session (Zoom Live)",
+            baseAmount: isTestEmail ? 1 : gstBreakdown.baseAmount,
+            gstAmount: isTestEmail ? 0 : gstBreakdown.gstAmount,
             amount: finalPrice,
+            companyName: sanitizedCompany,
+            gstin: sanitizedGstin,
             promoCode: appliedPromo,
             mode: masterclassMode,
             venue: masterclassMode === 'offline' ? "Vestin Park Hotel, Egmore, Chennai" : "Zoom Live Virtual"
@@ -560,13 +597,19 @@ const ClaudeMasterclassPage: React.FC = () => {
         currency: "INR",
         name: "Claude Masterclass 2026",
         description: selectedPlan === 999 
-          ? "Live + Recording Pass (Recorded Video Access)" 
-          : "Standard Live Session Pass",
+          ? "Live + Recording Pass (Incl. 18% GST)" 
+          : "Standard Live Session Pass (Incl. 18% GST)",
         image: "https://course.techtycoon.in/images/tech_tycoon_logo.png",
         prefill: {
-          name: formData.name,
-          email: formData.email,
+          name: sanitizedName,
+          email: sanitizedEmail,
           contact: fullPhone
+        },
+        notes: {
+          base_amount: String(gstBreakdown.baseAmount),
+          gst_amount: String(gstBreakdown.gstAmount),
+          gstin: sanitizedGstin || "N/A",
+          company_name: sanitizedCompany || "N/A",
         },
         theme: {
           color: "#D85A30"
@@ -580,10 +623,15 @@ const ClaudeMasterclassPage: React.FC = () => {
                 paymentSuccess: true,
                 razorpay_order_id: response.razorpay_order_id || orderId,
                 razorpay_payment_id: response.razorpay_payment_id,
-                name: formData.name,
-                email: formData.email,
+                razorpay_signature: response.razorpay_signature || "",
+                name: sanitizedName,
+                email: sanitizedEmail,
                 phone: fullPhone,
+                baseAmount: isTestEmail ? 1 : gstBreakdown.baseAmount,
+                gstAmount: isTestEmail ? 0 : gstBreakdown.gstAmount,
                 amount: finalPrice,
+                companyName: sanitizedCompany,
+                gstin: sanitizedGstin,
                 promoCode: appliedPromo,
                 mode: masterclassMode
               })
@@ -1489,8 +1537,8 @@ const ClaudeMasterclassPage: React.FC = () => {
 
                 <div className="border-t border-[#E6E2D9] pt-4">
                   <div className="flex justify-between items-center mb-4 text-xs">
-                    <span className="text-[#6E6B65]">Selected Pass Total:</span>
-                    <strong className="text-xl font-extrabold text-[#D85A30]">₹{selectedPlan} INR</strong>
+                    <span className="text-[#6E6B65]">Selected Pass Base (+ 18% GST at Checkout):</span>
+                    <strong className="text-xl font-extrabold text-[#D85A30]">₹{selectedPlan} + GST</strong>
                   </div>
                   <button 
                     onClick={handleStep1Proceed}
@@ -1510,7 +1558,7 @@ const ClaudeMasterclassPage: React.FC = () => {
                   onClick={() => setModalStep(1)}
                   className="flex items-center gap-1 text-[11px] text-[#6E6B65] hover:text-[#D85A30] mb-2 font-medium transition-colors"
                 >
-                  <ArrowLeft className="w-3 h-3" /> Change pass selection (₹{getCalculatedPrice()})
+                  <ArrowLeft className="w-3 h-3" /> Change pass selection (₹{getCalculatedBasePrice()} + 18% GST)
                 </button>
 
                 <div className="text-center mb-3">
@@ -1518,7 +1566,7 @@ const ClaudeMasterclassPage: React.FC = () => {
                     Complete Your Registration
                   </h3>
                   <p className="text-[11px] text-[#6E6B65] mt-0.5">
-                    Registration fee: <strong className="text-[#D85A30]">₹{getCalculatedPrice()} INR</strong>
+                    Total Payable (Incl. 18% GST): <strong className="text-[#D85A30]">₹{getCalculatedPrice().toLocaleString("en-IN")} INR</strong>
                   </p>
 
                   <div className="inline-flex items-center gap-1.5 bg-[#F7F4EE] border border-[#E6E2D9] text-[#524F4A] px-2.5 py-0.5 rounded-md text-[10px] font-medium mt-1">
@@ -1705,6 +1753,27 @@ const ClaudeMasterclassPage: React.FC = () => {
                     </label>
                   </div>
 
+                  <GstPriceBreakdown
+                    baseAmount={getCalculatedBasePrice()}
+                    claimGst={claimGst}
+                    onClaimGstChange={(checked) => {
+                      setClaimGst(checked);
+                      if (!checked) setGstError('');
+                    }}
+                    gstin={gstin}
+                    onGstinChange={(val) => {
+                      setGstin(val);
+                      if (gstError) setGstError('');
+                    }}
+                    companyName={companyName}
+                    onCompanyNameChange={(val) => {
+                      setCompanyName(val);
+                      if (gstError) setGstError('');
+                    }}
+                    gstError={gstError}
+                    theme="light"
+                  />
+
                   <label className="flex items-center gap-2 cursor-pointer text-[10px] text-[#8E8A83]">
                     <input 
                       type="checkbox" 
@@ -1720,7 +1789,7 @@ const ClaudeMasterclassPage: React.FC = () => {
                     type="submit" 
                     className="w-full bg-[#D85A30] hover:bg-[#C04E27] text-white font-bold py-3.5 px-5 rounded-xl shadow-md transition-all text-sm mt-2"
                   >
-                    Proceed to payment — ₹{getCalculatedPrice()}
+                    Proceed to payment — ₹{getCalculatedPrice().toLocaleString("en-IN")} (Incl. 18% GST)
                   </button>
 
                   <div className="text-center text-[10px] text-[#8E8A83] font-semibold flex items-center justify-center gap-1 pt-1">

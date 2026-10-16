@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { CheckCircle2, Loader2, ShieldCheck, X } from "lucide-react";
 import { useCollegeRegisterModal } from "./CollegeRegisterModalContext";
 import { RazorpayOptions } from "@/types/razorpay";
+import GstPriceBreakdown from "../common/GstPriceBreakdown";
+import { calculateGstBreakdown, isAuthorizedTestEmail, isValidEmail, isValidGstin, sanitizeTextInput } from "@/lib/gstUtils";
 
 const RAZORPAY_KEY_ID = "rzp_live_T2CbVONQc6qrqj";
 const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbzUwK8DNYomJfz_NmcXoRyQ3dMZgqL_ZLNQBnHw8PY27kSE_SjS80q801WJ5uDkPTl1/exec";
@@ -38,6 +40,15 @@ const CollegeRegisterModal: React.FC = () => {
     const [discountApplied, setDiscountApplied] = useState(true);  // WELCOME33 → ₹9,999
     const [friendCouponApplied, setFriendCouponApplied] = useState(false); // 12-digit → ₹6,999
 
+    // GST Invoice fields
+    const [claimGst, setClaimGst] = useState(false);
+    const [gstin, setGstin] = useState("");
+    const [companyName, setCompanyName] = useState("");
+    const [gstError, setGstError] = useState("");
+
+    const basePrice = friendCouponApplied ? 6999 : discountApplied ? 9999 : 14999;
+    const gstBreakdown = calculateGstBreakdown(basePrice);
+
     useEffect(() => {
         if (isOpen) {
             requestAnimationFrame(() => setVisible(true));
@@ -71,6 +82,29 @@ const CollegeRegisterModal: React.FC = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setGstError("");
+
+        const sanitizedName = sanitizeTextInput(form.name, 100);
+        const sanitizedEmail = form.email.trim().toLowerCase();
+        const sanitizedCompany = claimGst ? sanitizeTextInput(companyName, 120) : "";
+        const sanitizedGstin = claimGst ? gstin.trim().toUpperCase() : "";
+
+        if (!sanitizedName || !isValidEmail(sanitizedEmail)) {
+            alert("Please enter a valid name and email address.");
+            return;
+        }
+
+        if (claimGst) {
+            if (!isValidGstin(sanitizedGstin)) {
+                setGstError("Please enter a valid 15-character GSTIN (e.g. 33AAAAA0000A1Z5)");
+                return;
+            }
+            if (!sanitizedCompany) {
+                setGstError("Please enter your registered Legal Company Name for the GST invoice");
+                return;
+            }
+        }
+
         setLoading(true);
 
         const loaded = await loadRazorpayScript();
@@ -94,7 +128,9 @@ const CollegeRegisterModal: React.FC = () => {
 
         // Capture lead and generate Razorpay Order ID
         let result: any;
-        const finalAmount = friendCouponApplied ? 699900 : discountApplied ? 999900 : 1499900;
+        const isTestEmail = isAuthorizedTestEmail(sanitizedEmail);
+        const payableInr = isTestEmail ? 1 : gstBreakdown.totalAmount;
+        const finalAmount = payableInr * 100;
 
         try {
             const response = await fetch(GOOGLE_SHEET_URL, {
@@ -103,11 +139,15 @@ const CollegeRegisterModal: React.FC = () => {
                 body: JSON.stringify({
                     userType: "college students",
                     pageUrl,   // 👈 category decided from this in GAS
-                    name: form.name,
-                    email: form.email,
+                    name: sanitizedName,
+                    email: sanitizedEmail,
                     phone: form.phone,
                     batch: form.batch,
-                    amount: finalAmount / 100
+                    baseAmount: isTestEmail ? 1 : gstBreakdown.baseAmount,
+                    gstAmount: isTestEmail ? 0 : gstBreakdown.gstAmount,
+                    amount: payableInr,
+                    companyName: sanitizedCompany,
+                    gstin: sanitizedGstin,
                 }),
             });
 
@@ -132,23 +172,43 @@ const CollegeRegisterModal: React.FC = () => {
             amount: finalAmount,
             currency: "INR",
             name: "Tech Tycoon Digital Solutions",
-            description: `AI Mastery Bootcamp 2026 — ${batchLabel}`,
+            description: `AI Mastery Bootcamp 2026 (Incl. 18% GST) — ${batchLabel}`,
             prefill: {
-                name: form.name,
-                email: form.email,
+                name: sanitizedName,
+                email: sanitizedEmail,
                 contact: form.phone,
             },
             notes: {
                 batch: batchLabel,
+                base_amount: String(gstBreakdown.baseAmount),
+                gst_amount: String(gstBreakdown.gstAmount),
+                gstin: sanitizedGstin || "N/A",
+                company_name: sanitizedCompany || "N/A",
             },
             theme: {
                 color: "#6C63FF", // Updated to requested color
             },
             handler: async (response) => {
                 setPaymentId(response.razorpay_payment_id || "TEST_PAYMENT_ID");
+                fetch(GOOGLE_SHEET_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "text/plain;charset=utf-8" },
+                    body: JSON.stringify({
+                        paymentSuccess: true,
+                        razorpay_order_id: response.razorpay_order_id || result.orderId,
+                        razorpay_payment_id: response.razorpay_payment_id,
+                        razorpay_signature: response.razorpay_signature || "",
+                        email: sanitizedEmail,
+                        name: sanitizedName,
+                        baseAmount: isTestEmail ? 1 : gstBreakdown.baseAmount,
+                        gstAmount: isTestEmail ? 0 : gstBreakdown.gstAmount,
+                        amount: payableInr,
+                        companyName: sanitizedCompany,
+                        gstin: sanitizedGstin,
+                    }),
+                }).catch(() => {});
                 setSubmitted(true);
                 setLoading(false);
-                // Removed single-use private coupon tracking
             },
             modal: {
                 ondismiss: () => {
@@ -313,6 +373,27 @@ const CollegeRegisterModal: React.FC = () => {
                                 </div>
                             </div>
 
+                            <GstPriceBreakdown
+                                baseAmount={basePrice}
+                                claimGst={claimGst}
+                                onClaimGstChange={(checked) => {
+                                    setClaimGst(checked);
+                                    if (!checked) setGstError("");
+                                }}
+                                gstin={gstin}
+                                onGstinChange={(val) => {
+                                    setGstin(val);
+                                    if (gstError) setGstError("");
+                                }}
+                                companyName={companyName}
+                                onCompanyNameChange={(val) => {
+                                    setCompanyName(val);
+                                    if (gstError) setGstError("");
+                                }}
+                                gstError={gstError}
+                                theme="dark"
+                            />
+
                             <button
                                 type="submit"
                                 disabled={loading}
@@ -324,7 +405,7 @@ const CollegeRegisterModal: React.FC = () => {
                                         <span>OPENING PAYMENT...</span>
                                     </>
                                 ) : (
-                                    <span>PAY {friendCouponApplied ? "₹6,999" : discountApplied ? "₹9,999" : "₹14,999"}</span>
+                                    <span>PAY ₹{gstBreakdown.totalAmount.toLocaleString("en-IN")} (Incl. GST)</span>
                                 )}
                             </button>
 

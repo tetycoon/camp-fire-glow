@@ -19,6 +19,8 @@ import {
   ExternalLink 
 } from "lucide-react";
 import { countryCodes, CountryCode } from "../../lib/countryCodes";
+import GstPriceBreakdown from "../common/GstPriceBreakdown";
+import { calculateGstBreakdown, isAuthorizedTestEmail, isValidEmail, isValidGstin, sanitizeTextInput } from "../../lib/gstUtils";
 
 declare global {
   interface Window {
@@ -58,6 +60,12 @@ const ProfessionalRegistrationForm: React.FC = () => {
     customProfession: ""
   });
 
+  // GST Invoice fields
+  const [claimGst, setClaimGst] = useState(false);
+  const [gstin, setGstin] = useState("");
+  const [companyName, setCompanyName] = useState("");
+  const [gstError, setGstError] = useState("");
+
   // Country Code State - Default to India (IN / +91)
   const defaultCountry = countryCodes.find(c => c.iso === "IN") || countryCodes.find(c => c.code === "+91") || countryCodes[0];
   const [selectedCountry, setSelectedCountry] = useState<CountryCode>(defaultCountry);
@@ -92,6 +100,7 @@ const ProfessionalRegistrationForm: React.FC = () => {
   const isVipApplied = appliedCoupon.toUpperCase() === "AMIABLE" || appliedCoupon.toUpperCase() === "TECHTYCOON";
   const finalPrice = isVipApplied ? (isInternational ? 6999 : 4999) : standardPrice;
   const discountAmount = standardPrice - finalPrice;
+  const gstBreakdown = calculateGstBreakdown(finalPrice);
 
   // Phone validation
   const cleanPhone = formData.phone.replace(/\D/g, "");
@@ -133,7 +142,7 @@ const ProfessionalRegistrationForm: React.FC = () => {
     if (!code) {
       setAppliedCoupon("");
       setIsPriceRevealed(true);
-      setCouponSuccess(`Standard corporate tuition unlocked (₹${standardPrice.toLocaleString()}). Enter coupon 'AMIABLE' for 50% VIP discount.`);
+      setCouponSuccess(`Standard corporate tuition unlocked (₹${standardPrice.toLocaleString("en-IN")} + 18% GST). Enter coupon 'AMIABLE' for 50% VIP discount.`);
       return;
     }
 
@@ -142,7 +151,7 @@ const ProfessionalRegistrationForm: React.FC = () => {
       setIsPriceRevealed(true);
       const targetVipPrice = isInternational ? 6999 : 4999;
       const saved = standardPrice - targetVipPrice;
-      setCouponSuccess(`🎉 Secret VIP Voucher 'AMIABLE' Applied! You saved ₹${saved.toLocaleString()} (50% Off)! Final Investment: ₹${targetVipPrice.toLocaleString()}`);
+      setCouponSuccess(`🎉 Secret VIP Voucher 'AMIABLE' Applied! You saved ₹${saved.toLocaleString("en-IN")} (50% Off)! Base Fee: ₹${targetVipPrice.toLocaleString("en-IN")} (+ 18% GST)`);
     } else {
       setAppliedCoupon("");
       setIsPriceRevealed(true);
@@ -176,13 +185,19 @@ const ProfessionalRegistrationForm: React.FC = () => {
   // Handle Form Submission & Payment
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setGstError("");
+
+    const sanitizedName = sanitizeTextInput(formData.name, 100);
+    const sanitizedEmail = formData.email.trim().toLowerCase();
+    const sanitizedCompany = claimGst ? sanitizeTextInput(companyName, 120) : "";
+    const sanitizedGstin = claimGst ? gstin.trim().toUpperCase() : "";
 
     // Validations
-    if (!formData.name.trim()) {
+    if (!sanitizedName) {
       alert("Please enter your full name.");
       return;
     }
-    if (!formData.email.trim() || !formData.email.includes("@")) {
+    if (!isValidEmail(sanitizedEmail)) {
       alert("Please enter a valid business/personal email address.");
       return;
     }
@@ -201,12 +216,26 @@ const ProfessionalRegistrationForm: React.FC = () => {
       return;
     }
 
+    if (claimGst) {
+      if (!isValidGstin(sanitizedGstin)) {
+        setGstError("Please enter a valid 15-character GSTIN (e.g. 33AAAAA0000A1Z5)");
+        return;
+      }
+      if (!sanitizedCompany) {
+        setGstError("Please enter your registered Legal Company Name for the GST invoice");
+        return;
+      }
+    }
+
     setIsSubmitting(true);
 
-    const fullPhone = `${selectedCountry.code} ${formData.phone.trim()}`;
-    const finalProfession = formData.profession === "Other Working Professional" 
-      ? (formData.customProfession.trim() || "Working Professional")
-      : formData.profession;
+    const fullPhone = `${selectedCountry.code} ${cleanPhone}`;
+    const finalProfession = sanitizeTextInput(
+      formData.profession === "Other Working Professional" 
+        ? (formData.customProfession.trim() || "Working Professional")
+        : formData.profession,
+      80
+    );
 
     const currentDateTime = new Date().toLocaleString("en-IN", {
       timeZone: "Asia/Kolkata",
@@ -214,8 +243,9 @@ const ProfessionalRegistrationForm: React.FC = () => {
       timeStyle: "medium"
     });
 
-    const isInternational = selectedCountry.iso !== "IN" && selectedCountry.code !== "+91";
-    const amountInPaise = finalPrice * 100;
+    const isTestEmail = isAuthorizedTestEmail(sanitizedEmail);
+    const payableInr = isTestEmail ? 1 : gstBreakdown.totalAmount;
+    const amountInPaise = payableInr * 100;
     let generatedOrderId = `ORD_PROF_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
 
     const scriptUrl = window.PROFESSIONALS_APPS_SCRIPT_URL || DEFAULT_APPS_SCRIPT_URL;
@@ -223,11 +253,15 @@ const ProfessionalRegistrationForm: React.FC = () => {
     // Col A: Date and Time | Col B: Name | Col C: Email | Col D: Phone | Col E: Profession | Col F: Amount | Col G: Status | Col H: Order ID | Col I: Payment ID
     const leadPayload = {
       dateTime: currentDateTime,
-      name: formData.name.trim(),
-      email: formData.email.trim(),
+      name: sanitizedName,
+      email: sanitizedEmail,
       phone: fullPhone,
       profession: finalProfession,
-      amount: finalPrice,
+      baseAmount: isTestEmail ? 1 : gstBreakdown.baseAmount,
+      gstAmount: isTestEmail ? 0 : gstBreakdown.gstAmount,
+      amount: payableInr,
+      companyName: sanitizedCompany,
+      gstin: sanitizedGstin,
       status: "INITIATED",
       orderId: generatedOrderId,
       paymentId: "",
@@ -275,10 +309,10 @@ const ProfessionalRegistrationForm: React.FC = () => {
         amount: amountInPaise,
         currency: "INR",
         name: "Tech Tycoon Digital Solutions",
-        description: `Advance AI for Professionals ${appliedCoupon ? `(Coupon: ${appliedCoupon})` : ""}`,
+        description: `Advance AI for Professionals (Incl. 18% GST) ${appliedCoupon ? `(Coupon: ${appliedCoupon})` : ""}`,
         prefill: {
-          name: formData.name.trim(),
-          email: formData.email.trim(),
+          name: sanitizedName,
+          email: sanitizedEmail,
           contact: fullPhone
         },
         notes: {
@@ -286,6 +320,10 @@ const ProfessionalRegistrationForm: React.FC = () => {
           profession: finalProfession,
           coupon: appliedCoupon,
           phone: fullPhone,
+          base_amount: String(gstBreakdown.baseAmount),
+          gst_amount: String(gstBreakdown.gstAmount),
+          gstin: sanitizedGstin || "N/A",
+          company_name: sanitizedCompany || "N/A",
           spreadsheetId: SPREADSHEET_ID
         },
         theme: {
@@ -301,11 +339,16 @@ const ProfessionalRegistrationForm: React.FC = () => {
             paymentSuccess: true,
             razorpay_payment_id: payId,
             razorpay_order_id: ordId,
-            email: formData.email.trim(),
-            name: formData.name.trim(),
+            razorpay_signature: response.razorpay_signature || "",
+            email: sanitizedEmail,
+            name: sanitizedName,
             phone: fullPhone,
             profession: finalProfession,
-            amount: finalPrice,
+            baseAmount: isTestEmail ? 1 : gstBreakdown.baseAmount,
+            gstAmount: isTestEmail ? 0 : gstBreakdown.gstAmount,
+            amount: payableInr,
+            companyName: sanitizedCompany,
+            gstin: sanitizedGstin,
             coupon: appliedCoupon,
             course: "Advance AI for Non-Tech Working Professionals",
             spreadsheetId: SPREADSHEET_ID
@@ -328,9 +371,9 @@ const ProfessionalRegistrationForm: React.FC = () => {
           setSuccessDetails({
             orderId: ordId,
             paymentId: payId,
-            amount: finalPrice,
-            name: formData.name.trim(),
-            email: formData.email.trim(),
+            amount: payableInr,
+            name: sanitizedName,
+            email: sanitizedEmail,
             phone: fullPhone
           });
           setPaymentSuccess(true);
@@ -601,25 +644,48 @@ const ProfessionalRegistrationForm: React.FC = () => {
 
         {/* Dynamic Price Breakdown — ONLY shown once user enters mobile & coupon */}
         {isPriceRevealed ? (
-          <div className="p-3 sm:p-3.5 rounded-xl bg-gradient-to-r from-indigo-50/90 via-blue-50/60 to-white border border-indigo-200 text-left flex items-center justify-between animate-in fade-in duration-200">
-            <div>
-              <div className="flex items-center gap-1.5 text-xs text-slate-600">
-                <span>Tuition: <span className="line-through font-mono">₹{standardPrice.toLocaleString()}</span></span>
-                {isVipApplied && (
-                  <span className="font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded text-[10px] uppercase tracking-wide">
-                    Save ₹{discountAmount.toLocaleString()} ({appliedCoupon})
-                  </span>
-                )}
+          <div className="space-y-3 animate-in fade-in duration-200">
+            <div className="p-3 sm:p-3.5 rounded-xl bg-gradient-to-r from-indigo-50/90 via-blue-50/60 to-white border border-indigo-200 text-left flex items-center justify-between">
+              <div>
+                <div className="flex items-center gap-1.5 text-xs text-slate-600">
+                  <span>Base Tuition: <span className="line-through font-mono">₹{standardPrice.toLocaleString("en-IN")}</span></span>
+                  {isVipApplied && (
+                    <span className="font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded text-[10px] uppercase tracking-wide">
+                      Save ₹{discountAmount.toLocaleString("en-IN")} ({appliedCoupon})
+                    </span>
+                  )}
+                </div>
+                <div className="text-[11px] text-slate-500 font-medium mt-0.5">
+                  {isInternational ? "International Participant (+ 18% GST)" : "Domestic (+91) Participant (+ 18% GST)"}
+                </div>
               </div>
-              <div className="text-[11px] text-slate-500 font-medium mt-0.5">
-                {isInternational ? "International Participant" : "Domestic (+91) Participant"}
+              <div className="text-right">
+                <span className="text-lg sm:text-xl text-indigo-700 font-mono font-black">
+                  ₹{finalPrice.toLocaleString("en-IN")} + GST
+                </span>
               </div>
             </div>
-            <div className="text-right">
-              <span className="text-lg sm:text-xl text-indigo-700 font-mono font-black">
-                ₹{finalPrice.toLocaleString()}
-              </span>
-            </div>
+
+            <GstPriceBreakdown
+              baseAmount={finalPrice}
+              claimGst={claimGst}
+              onClaimGstChange={(checked) => {
+                setClaimGst(checked);
+                if (!checked) setGstError("");
+              }}
+              gstin={gstin}
+              onGstinChange={(val) => {
+                setGstin(val);
+                if (gstError) setGstError("");
+              }}
+              companyName={companyName}
+              onCompanyNameChange={(val) => {
+                setCompanyName(val);
+                if (gstError) setGstError("");
+              }}
+              gstError={gstError}
+              theme="light"
+            />
           </div>
         ) : (
           <div className="p-2.5 sm:p-3 rounded-xl bg-slate-50 border border-dashed border-indigo-200 text-center flex items-center justify-between gap-2">
@@ -653,7 +719,7 @@ const ProfessionalRegistrationForm: React.FC = () => {
           ) : (
             <div className="flex items-center gap-1.5">
               <Lock className="w-4 h-4 text-amber-300" />
-              <span>Complete Enrollment — ₹{finalPrice.toLocaleString()}</span>
+              <span>Complete Enrollment — ₹{gstBreakdown.totalAmount.toLocaleString("en-IN")} (Incl. GST)</span>
               <ArrowRight className="w-4 h-4" />
             </div>
           )}

@@ -4,6 +4,8 @@ import { useUpscaleRegisterModal } from "./UpscaleRegisterModalContext";
 import { RazorpayOptions } from "@/types/razorpay";
 import { countryCodes } from "../../lib/countryCodes";
 import logo from "@/assets/tech_tycoon_logo.png";
+import GstPriceBreakdown from "../common/GstPriceBreakdown";
+import { calculateGstBreakdown, isAuthorizedTestEmail, isValidEmail, isValidGstin, sanitizeTextInput } from "@/lib/gstUtils";
 
 const RAZORPAY_KEY_ID = "rzp_live_T2CbVONQc6qrqj"; 
 const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbzPxPpp0ksCcE6IY8mUlzcu0jqY1RSfhCl2Locq1iOYbbe5beBeeQ6uefCV93Nxy8rbsg/exec";
@@ -35,6 +37,15 @@ const UpscaleRegisterModal: React.FC = () => {
     const [paymentId, setPaymentId] = useState<string>("");
     const [visible, setVisible] = useState(false);
     const paymentHandled = useRef(false);
+
+    // GST Invoice fields
+    const [claimGst, setClaimGst] = useState(false);
+    const [gstin, setGstin] = useState("");
+    const [companyName, setCompanyName] = useState("");
+    const [gstError, setGstError] = useState("");
+
+    const baseTotal = 4999 * seatsCount;
+    const gstBreakdown = calculateGstBreakdown(baseTotal);
 
     // Country code search state
     const [countrySearch, setCountrySearch] = useState("");
@@ -87,6 +98,29 @@ const UpscaleRegisterModal: React.FC = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setGstError("");
+
+        const sanitizedName = sanitizeTextInput(form.name, 100);
+        const sanitizedEmail = form.email.trim().toLowerCase();
+        const sanitizedCompany = claimGst ? sanitizeTextInput(companyName, 120) : "";
+        const sanitizedGstin = claimGst ? gstin.trim().toUpperCase() : "";
+
+        if (!sanitizedName || !isValidEmail(sanitizedEmail)) {
+            alert("Please enter a valid name and email address.");
+            return;
+        }
+
+        if (claimGst) {
+            if (!isValidGstin(sanitizedGstin)) {
+                setGstError("Please enter a valid 15-character GSTIN (e.g. 33AAAAA0000A1Z5)");
+                return;
+            }
+            if (!sanitizedCompany) {
+                setGstError("Please enter your registered Legal Company Name for the GST invoice");
+                return;
+            }
+        }
+
         setLoading(true);
 
         const loaded = await loadRazorpayScript();
@@ -96,21 +130,23 @@ const UpscaleRegisterModal: React.FC = () => {
             return;
         }
 
-        const testEmails = ["ambroseselva001@gmail.com", "techtycoondigitalsolutions@gmail.com"];
-        const isTestEmail = testEmails.includes(form.email.toLowerCase().trim());
-        const finalAmount = isTestEmail ? 100 : (499900 * seatsCount);
+        const isTestEmail = isAuthorizedTestEmail(sanitizedEmail);
+        const finalPayableInr = isTestEmail ? 1 : gstBreakdown.totalAmount;
+        const finalAmount = finalPayableInr * 100;
 
         const payloadObj = {
-            name: form.name + (seatsCount > 1 ? ` (+ ${seatsCount - 1} Seats)` : ""),
-            email: form.email,
+            name: sanitizedName + (seatsCount > 1 ? ` (+ ${seatsCount - 1} Seats)` : ""),
+            email: sanitizedEmail,
             phone: `${form.countryCode}${form.phone}`,
             countryCode: form.countryCode,
-            userType: form.profession || "Professional",
+            userType: sanitizeTextInput(form.profession || "Professional", 80),
             language: "Chennai Offline",
-            amount: isTestEmail ? 1 : (4999 * seatsCount),
+            baseAmount: isTestEmail ? 1 : gstBreakdown.baseAmount,
+            gstAmount: isTestEmail ? 0 : gstBreakdown.gstAmount,
+            amount: finalPayableInr,
             paymentSuccess: false,
-            companyName: "",
-            gstin: "",
+            companyName: sanitizedCompany,
+            gstin: sanitizedGstin,
             seats: seatsCount
         };
 
@@ -134,13 +170,19 @@ const UpscaleRegisterModal: React.FC = () => {
                 amount: finalAmount,
                 currency: "INR",
                 name: "Tech Tycoon",
-                description: `UPSCALE: 1-Day AI Mastery Chennai (${seatsCount} Seats)`,
+                description: `UPSCALE: 1-Day AI Mastery Chennai (${seatsCount} Seats, Incl. 18% GST)`,
                 prefill: {
-                    name: form.name,
-                    email: form.email,
+                    name: sanitizedName,
+                    email: sanitizedEmail,
                     contact: `${form.countryCode}${form.phone}`,
                 },
-                notes: { batch: "OFFLINE_CHENNAI_AUG09" },
+                notes: {
+                    batch: "OFFLINE_CHENNAI_AUG09",
+                    base_amount: String(gstBreakdown.baseAmount),
+                    gst_amount: String(gstBreakdown.gstAmount),
+                    gstin: sanitizedGstin || "N/A",
+                    company_name: sanitizedCompany || "N/A",
+                },
                 theme: { color: "#2563eb" },
                 handler: async (resp) => {
                     if (paymentHandled.current) return;
@@ -154,10 +196,16 @@ const UpscaleRegisterModal: React.FC = () => {
                         headers: { "Content-Type": "text/plain;charset=utf-8" },
                         body: JSON.stringify({
                             paymentSuccess: true,
-                            razorpay_order_id: result.orderId,
+                            razorpay_order_id: resp.razorpay_order_id || result.orderId,
                             razorpay_payment_id: resp.razorpay_payment_id,
-                            email: form.email,
-                            name: form.name
+                            razorpay_signature: resp.razorpay_signature || "",
+                            email: sanitizedEmail,
+                            name: sanitizedName,
+                            baseAmount: isTestEmail ? 1 : gstBreakdown.baseAmount,
+                            gstAmount: isTestEmail ? 0 : gstBreakdown.gstAmount,
+                            amount: finalPayableInr,
+                            companyName: sanitizedCompany,
+                            gstin: sanitizedGstin,
                         })
                     }).catch(console.error);
 
@@ -254,12 +302,12 @@ const UpscaleRegisterModal: React.FC = () => {
                             </div>
                         ) : (
                             <>
-                                <div className="mb-8">
-                                    <h2 className="text-3xl font-black text-slate-900 mb-1 tracking-tight">Register <span className="text-blue-600">Now.</span></h2>
-                                    <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">
-                                        <span className="line-through text-slate-300 mr-2">₹9,999</span>₹4,999 One-Day Premium Access
-                                    </p>
-                                </div>
+                                    <div className="mb-8">
+                                        <h2 className="text-3xl font-black text-slate-900 mb-1 tracking-tight">Register <span className="text-blue-600">Now.</span></h2>
+                                        <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">
+                                            <span className="line-through text-slate-300 mr-2">₹9,999</span>₹4,999 + 18% GST (₹5,899 Total)
+                                        </p>
+                                    </div>
 
                                 <form onSubmit={handleSubmit} className="space-y-4">
                                     <div className="space-y-1">
@@ -399,10 +447,31 @@ const UpscaleRegisterModal: React.FC = () => {
                                             </select>
                                         </div>
                                         <div className="space-y-1 flex flex-col justify-end items-end pr-2">
-                                            <div className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Fee</div>
-                                            <div className="text-lg font-black text-blue-600">₹{(4999 * seatsCount).toLocaleString()}</div>
+                                            <div className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Base Fee (+18% GST)</div>
+                                            <div className="text-lg font-black text-blue-600">₹{gstBreakdown.totalAmount.toLocaleString("en-IN")}</div>
                                         </div>
                                     </div>
+
+                                    <GstPriceBreakdown
+                                        baseAmount={baseTotal}
+                                        claimGst={claimGst}
+                                        onClaimGstChange={(checked) => {
+                                            setClaimGst(checked);
+                                            if (!checked) setGstError("");
+                                        }}
+                                        gstin={gstin}
+                                        onGstinChange={(val) => {
+                                            setGstin(val);
+                                            if (gstError) setGstError("");
+                                        }}
+                                        companyName={companyName}
+                                        onCompanyNameChange={(val) => {
+                                            setCompanyName(val);
+                                            if (gstError) setGstError("");
+                                        }}
+                                        gstError={gstError}
+                                        theme="light"
+                                    />
 
                                     <div className="flex items-start gap-2 px-1 mb-2">
                                         <input 
@@ -422,7 +491,7 @@ const UpscaleRegisterModal: React.FC = () => {
                                         disabled={loading || verifying}
                                         className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-black text-base shadow-lg shadow-blue-200 mt-2 transition-all active:scale-95 disabled:opacity-50"
                                     >
-                                        {verifying ? "VERIFYING..." : loading ? "CONNECTING..." : `PAY & ENROLL — ₹${(4999 * seatsCount).toLocaleString()}`}
+                                        {verifying ? "VERIFYING..." : loading ? "CONNECTING..." : `PAY & ENROLL — ₹${gstBreakdown.totalAmount.toLocaleString("en-IN")} (Incl. GST)`}
                                     </button>
 
                                     <div className="flex items-center justify-center gap-4 pt-4 text-[10px] font-black text-slate-400 uppercase tracking-widest opacity-60">

@@ -24,6 +24,8 @@ import {
   HelpCircle
 } from "lucide-react";
 import { countryCodes, CountryCode } from "../../lib/countryCodes";
+import GstPriceBreakdown from "../common/GstPriceBreakdown";
+import { calculateGstBreakdown, isAuthorizedTestEmail, isValidEmail, isValidGstin, sanitizeTextInput } from "../../lib/gstUtils";
 
 declare global {
   interface Window {
@@ -61,6 +63,12 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
     profession: "Business Owner / Founder",
     customProfession: ""
   });
+
+  // GST Invoice fields
+  const [claimGst, setClaimGst] = useState(false);
+  const [gstin, setGstin] = useState("");
+  const [companyName, setCompanyName] = useState("");
+  const [gstError, setGstError] = useState("");
 
   // Country Selection State
   const [selectedCountry, setSelectedCountry] = useState<CountryCode>(
@@ -129,6 +137,7 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
     ? (isInternational ? 6999 : 4999) 
     : standardPrice;
   const savings = standardPrice - discountedPrice;
+  const gstBreakdown = calculateGstBreakdown(discountedPrice);
 
   const filteredCountries = countryCodes.filter(
     (c) =>
@@ -202,12 +211,18 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
   const handleSubmitAndPay = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage("");
+    setGstError("");
 
-    if (!formData.name.trim()) {
+    const sanitizedName = sanitizeTextInput(formData.name, 100);
+    const sanitizedEmail = formData.email.trim().toLowerCase();
+    const sanitizedCompany = claimGst ? sanitizeTextInput(companyName, 120) : "";
+    const sanitizedGstin = claimGst ? gstin.trim().toUpperCase() : "";
+
+    if (!sanitizedName) {
       setErrorMessage("Please enter your full name.");
       return;
     }
-    if (!formData.email.trim() || !formData.email.includes("@")) {
+    if (!isValidEmail(sanitizedEmail)) {
       setErrorMessage("Please enter a valid email address.");
       return;
     }
@@ -236,15 +251,28 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
       return;
     }
 
+    if (claimGst) {
+      if (!isValidGstin(sanitizedGstin)) {
+        setGstError("Please enter a valid 15-character GSTIN (e.g. 33AAAAA0000A1Z5)");
+        return;
+      }
+      if (!sanitizedCompany) {
+        setGstError("Please enter your registered Legal Company Name for the GST invoice");
+        return;
+      }
+    }
+
     setIsSubmitting(true);
     const fullPhone = `${selectedCountry.code} ${cleanPhone}`;
-    const finalProfession = formData.profession === "Other" 
-      ? (formData.customProfession.trim() || "Professional") 
-      : formData.profession;
+    const finalProfession = sanitizeTextInput(
+      formData.profession === "Other" 
+        ? (formData.customProfession.trim() || "Professional") 
+        : formData.profession,
+      80
+    );
 
-    const testEmails = ["ambroseselva001@gmail.com", "techtycoondigitors@gmail.com", "techtycoondigitalsolutions@gmail.com"];
-    const isTestEmail = testEmails.includes(formData.email.toLowerCase().trim());
-    const finalChargeAmount = isTestEmail ? 1 : discountedPrice;
+    const isTestEmail = isAuthorizedTestEmail(sanitizedEmail);
+    const finalChargeAmount = isTestEmail ? 1 : gstBreakdown.totalAmount;
     const amountInPaise = finalChargeAmount * 100;
 
     const currentDateTime = new Date().toLocaleString("en-IN", {
@@ -262,11 +290,15 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
 
     const leadPayload = {
       dateTime: currentDateTime,
-      name: formData.name.trim(),
-      email: formData.email.trim(),
+      name: sanitizedName,
+      email: sanitizedEmail,
       phone: fullPhone,
       profession: finalProfession,
+      baseAmount: isTestEmail ? 1 : gstBreakdown.baseAmount,
+      gstAmount: isTestEmail ? 0 : gstBreakdown.gstAmount,
       amount: finalChargeAmount,
+      companyName: sanitizedCompany,
+      gstin: sanitizedGstin,
       status: "INITIATED",
       orderId: generatedOrderId,
       paymentId: "",
@@ -314,17 +346,21 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
         amount: amountInPaise,
         currency: "INR",
         name: "Tech Tycoon Digital Solutions",
-        description: `AI-BGM Course Enrollment ${appliedCoupon ? `(Coupon: ${appliedCoupon})` : ""}`,
+        description: `AI-BGM Course Enrollment (Incl. 18% GST) ${appliedCoupon ? `(Coupon: ${appliedCoupon})` : ""}`,
         prefill: {
-          name: formData.name.trim(),
-          email: formData.email.trim(),
+          name: sanitizedName,
+          email: sanitizedEmail,
           contact: fullPhone
         },
         notes: {
           course: "Advance AI-Business Generative Model",
           profession: finalProfession,
           coupon: appliedCoupon,
-          phone: fullPhone
+          phone: fullPhone,
+          base_amount: String(gstBreakdown.baseAmount),
+          gst_amount: String(gstBreakdown.gstAmount),
+          gstin: sanitizedGstin || "N/A",
+          company_name: sanitizedCompany || "N/A",
         },
         theme: {
           color: "#4f46e5"
@@ -339,11 +375,16 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
             paymentSuccess: true,
             razorpay_payment_id: payId,
             razorpay_order_id: ordId,
-            email: formData.email.trim(),
-            name: formData.name.trim(),
+            razorpay_signature: response.razorpay_signature || "",
+            email: sanitizedEmail,
+            name: sanitizedName,
             phone: fullPhone,
             profession: finalProfession,
+            baseAmount: isTestEmail ? 1 : gstBreakdown.baseAmount,
+            gstAmount: isTestEmail ? 0 : gstBreakdown.gstAmount,
             amount: finalChargeAmount,
+            companyName: sanitizedCompany,
+            gstin: sanitizedGstin,
             coupon: appliedCoupon,
             spreadsheetId: "1XyFhw6cTJAOE2XT7Ra8lmL0rcvq2meCT9LlGuzOF0nk"
           };
@@ -365,8 +406,8 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
             orderId: ordId,
             paymentId: payId,
             amount: finalChargeAmount,
-            name: formData.name.trim(),
-            email: formData.email.trim(),
+            name: sanitizedName,
+            email: sanitizedEmail,
             phone: fullPhone
           });
           setPaymentSuccess(true);
@@ -710,14 +751,15 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
 
                     <div className="flex items-baseline justify-between pt-1 border-t border-blue-100">
                       <div>
-                        <div className="text-[10px] sm:text-[11px] text-slate-500">Total Course Fee</div>
+                        <div className="text-[10px] sm:text-[11px] text-slate-500">Base Course Fee (+ 18% GST)</div>
                         <div className="flex items-baseline gap-1.5 sm:gap-2">
                           <span className="text-2xl sm:text-3xl font-black text-slate-900">
-                            ₹{discountedPrice.toLocaleString()}
+                            ₹{discountedPrice.toLocaleString("en-IN")}
                           </span>
+                          <span className="text-xs font-bold text-slate-500">+ 18% GST</span>
                           {isCouponValid && (
                             <span className="text-xs sm:text-sm font-bold text-slate-400 line-through">
-                              ₹{standardPrice.toLocaleString()}
+                              ₹{standardPrice.toLocaleString("en-IN")}
                             </span>
                           )}
                         </div>
@@ -725,7 +767,7 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
 
                       {isCouponValid && (
                         <div className="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg bg-emerald-100 text-emerald-800 text-[11px] sm:text-xs font-bold border border-emerald-200">
-                          Save ₹{savings.toLocaleString()}
+                          Save ₹{savings.toLocaleString("en-IN")}
                         </div>
                       )}
                     </div>
@@ -736,6 +778,29 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
                       <div className="flex items-center gap-1">✓ Continuous AI Updates</div>
                       <div className="flex items-center gap-1">✓ 9-Core BMC Blueprint</div>
                     </div>
+                  </div>
+
+                  <div className="mt-3">
+                    <GstPriceBreakdown
+                      baseAmount={discountedPrice}
+                      claimGst={claimGst}
+                      onClaimGstChange={(checked) => {
+                        setClaimGst(checked);
+                        if (!checked) setGstError("");
+                      }}
+                      gstin={gstin}
+                      onGstinChange={(val) => {
+                        setGstin(val);
+                        if (gstError) setGstError("");
+                      }}
+                      companyName={companyName}
+                      onCompanyNameChange={(val) => {
+                        setCompanyName(val);
+                        if (gstError) setGstError("");
+                      }}
+                      gstError={gstError}
+                      theme="light"
+                    />
                   </div>
                 </div>
               )}
@@ -767,7 +832,7 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
                   ) : (
                     <>
                       <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-300" />
-                      <span>Proceed to Payment — ₹{discountedPrice.toLocaleString()}</span>
+                      <span>Proceed to Payment — ₹{gstBreakdown.totalAmount.toLocaleString("en-IN")} (Incl. GST)</span>
                       <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     </>
                   )}

@@ -683,6 +683,23 @@ src="https://www.facebook.com/tr?id=2155724311994078&ev=PageView&noscript=1"
         <option>Working Professional</option>
       </select>
     </div>
+
+    <!-- +18% GST Price Breakdown -->
+    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:10px 12px;margin-bottom:14px;font-size:12px;text-align:left">
+      <div style="display:flex;justify-content:space-between;color:#475569;margin-bottom:4px">
+        <span>Base Session Fee:</span>
+        <span id="advBaseDisplay" style="font-weight:700;font-family:monospace">&#8377;4,999</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;color:#475569;margin-bottom:6px">
+        <span>GST (18%):</span>
+        <span id="advGstDisplay" style="font-weight:700;font-family:monospace">+ &#8377;900</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;color:#0f172a;font-weight:800;padding-top:6px;border-top:1px solid #e2e8f0;font-size:13px">
+        <span>Total Payable (Incl. 18% GST):</span>
+        <span id="advTotalDisplay" style="color:#1d4ed8;font-family:monospace">&#8377;5,899</span>
+      </div>
+    </div>
+
     <button class="modal-btn" onclick="processPayment()" id="payBtn">&#9889; Proceed to Payment</button>
     <p class="modal-note">&#128274; 100% Secure &middot; Powered by Razorpay</p>
   </div>
@@ -697,11 +714,27 @@ src="https://www.facebook.com/tr?id=2155724311994078&ev=PageView&noscript=1"
 
 <script>
 let currentAmount = 0;
+const ADV_GST_RATE = 0.18;
+
+function sanitizeAdvText(str, maxLen = 100) {
+  if (!str) return "";
+  let cleaned = String(str).replace(/[\u0000-\u001F\u007F<>]/g, "").trim();
+  if (/^[=+\-@]/.test(cleaned)) cleaned = "'" + cleaned;
+  return cleaned.slice(0, maxLen);
+}
 
 function openRegisterModal(amount) {
   currentAmount = amount;
+  const gstAmt = Math.round(amount * ADV_GST_RATE);
+  const totalAmt = amount + gstAmt;
   document.getElementById('modalTitle').innerText = amount === 500 ? 'Reserve Your Seat' : 'Full Enrollment';
-  document.getElementById('modalDesc').innerText = amount === 500 ? 'Lock your seat for just \u20b9500 today.' : 'Complete your enrollment for \u20b94,999.';
+  document.getElementById('modalDesc').innerText = amount === 500
+    ? `Lock your seat for \u20b9500 + 18% GST (\u20b9${totalAmt.toLocaleString('en-IN')} Total).`
+    : `Complete your enrollment for \u20b94,999 + 18% GST (\u20b9${totalAmt.toLocaleString('en-IN')} Total).`;
+  if (document.getElementById('advBaseDisplay')) document.getElementById('advBaseDisplay').innerText = `\u20b9${amount.toLocaleString('en-IN')}`;
+  if (document.getElementById('advGstDisplay')) document.getElementById('advGstDisplay').innerText = `+ \u20b9${gstAmt.toLocaleString('en-IN')}`;
+  if (document.getElementById('advTotalDisplay')) document.getElementById('advTotalDisplay').innerText = `\u20b9${totalAmt.toLocaleString('en-IN')}`;
+  if (document.getElementById('payBtn')) document.getElementById('payBtn').innerHTML = `&#9889; Proceed to Payment — \u20b9${totalAmt.toLocaleString('en-IN')} (Incl. GST)`;
   const modal = document.getElementById('registerModal');
   modal.style.display = 'flex';
   setTimeout(() => modal.classList.add('active'), 10);
@@ -718,20 +751,21 @@ document.getElementById('registerModal').addEventListener('click', function(e) {
 });
 
 async function processPayment() {
-  const name = document.getElementById('regName').value.trim();
-  const email = document.getElementById('regEmail').value.trim();
-  const phone = document.getElementById('regCode').value + document.getElementById('regPhone').value.trim();
-  const profession = document.getElementById('regProfession').value;
+  const name = sanitizeAdvText(document.getElementById('regName').value, 100);
+  const email = document.getElementById('regEmail').value.trim().toLowerCase();
+  const phoneRaw = document.getElementById('regPhone').value.trim().replace(/\D/g, '');
+  const phone = document.getElementById('regCode').value + phoneRaw;
+  const profession = sanitizeAdvText(document.getElementById('regProfession').value, 80);
 
-  if (!name || !email || !document.getElementById('regPhone').value.trim()) {
+  if (!name || !email || !phoneRaw) {
     alert('Please fill in all required fields.');
     return;
   }
 
-  let amountToPay = currentAmount;
-  if (email.toLowerCase() === "ambroseselva001@gmail.com") {
-    amountToPay = 1;
-  }
+  const gstAmt = Math.round(currentAmount * ADV_GST_RATE);
+  const totalWithGst = currentAmount + gstAmt;
+  const isTest = email === "ambroseselva001@gmail.com" || email === "techtycoondigitalsolutions@gmail.com";
+  const amountToPay = isTest ? 1 : totalWithGst;
 
   const btn = document.getElementById('payBtn');
   btn.innerText = 'Initializing...';
@@ -742,14 +776,24 @@ async function processPayment() {
     const response = await fetch("https://script.google.com/macros/s/AKfycbw59X8thSpB9xrJSI0GhACEm617vAbc7BDH6hJFOOBsOeq-B4az0p3B_O6koMjYfsppgA/exec", {
       method: "POST",
       headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify({ userType: "advanced_masterclass", name, email, phone, profession, amount: amountToPay, isInternational: isInternational })
+      body: JSON.stringify({
+        userType: "advanced_masterclass",
+        name,
+        email,
+        phone,
+        profession,
+        baseAmount: isTest ? 1 : currentAmount,
+        gstAmount: isTest ? 0 : gstAmt,
+        amount: amountToPay,
+        isInternational: isInternational
+      })
     });
 
     const result = await response.json();
 
     if (!result.success || !result.orderId) {
       alert("Failed to create order. Please try again.");
-      btn.innerHTML = '&#9889; Proceed to Payment';
+      btn.innerHTML = `&#9889; Proceed to Payment — \u20b9${totalWithGst.toLocaleString('en-IN')} (Incl. GST)`;
       btn.disabled = false;
       return;
     }
@@ -759,15 +803,25 @@ async function processPayment() {
       amount: amountToPay * 100,
       currency: "INR",
       name: "Tech Tycoon MasterClass",
-      description: amountToPay === 1 ? "Test Payment" : (currentAmount === 500 ? "Seat Reservation" : "Full Enrollment"),
+      description: amountToPay === 1 ? "Test Payment" : (currentAmount === 500 ? "Seat Reservation (Incl. 18% GST)" : "Full Enrollment (Incl. 18% GST)"),
       order_id: result.orderId,
+      notes: {
+        base_amount: String(currentAmount),
+        gst_amount: String(gstAmt)
+      },
       handler: async function(paymentRes) {
         // Sync payment to backend
         try {
           await fetch("https://script.google.com/macros/s/AKfycbw59X8thSpB9xrJSI0GhACEm617vAbc7BDH6hJFOOBsOeq-B4az0p3B_O6koMjYfsppgA/exec", {
             method: "POST",
             headers: { "Content-Type": "text/plain;charset=utf-8" },
-            body: JSON.stringify({ action: "payment_success", orderId: result.orderId, transactionId: paymentRes.razorpay_payment_id, method: paymentRes.razorpay_payment_method || "Razorpay" })
+            body: JSON.stringify({
+              action: "payment_success",
+              orderId: paymentRes.razorpay_order_id || result.orderId,
+              transactionId: paymentRes.razorpay_payment_id,
+              razorpay_signature: paymentRes.razorpay_signature || "",
+              method: paymentRes.razorpay_payment_method || "Razorpay"
+            })
           });
         } catch(e) { console.error("Sync error:", e); }
 
@@ -782,9 +836,9 @@ async function processPayment() {
           `• Name: ${name}\n` +
           `• Email: ${email}\n` +
           `• Phone: ${phone}\n` +
-          `• Amount Paid: ₹${currentAmount.toLocaleString()}\n` +
+          `• Amount Paid: ₹${amountToPay.toLocaleString('en-IN')} (Incl. 18% GST)\n` +
           `• Transaction ID: ${txId}\n` +
-          `• Plan: ${currentAmount === 500 ? 'Partial Enrollment (₹500)' : 'Full Enrollment (₹4,999)'}\n` +
+          `• Plan: ${currentAmount === 500 ? 'Partial Enrollment (₹500 + GST)' : 'Full Enrollment (₹4,999 + GST)'}\n` +
           `• Session Language: Tamil mix with English\n\n` +
           `Please confirm my seat and share the session link. Thank you! 🙏`
         );
@@ -797,8 +851,8 @@ async function processPayment() {
             <p style="font-size:14px;color:var(--muted);margin-bottom:20px">Welcome to the Tech Tycoon MasterClass</p>
             <div style="background:var(--bg2);border-radius:10px;padding:16px;margin-bottom:20px;text-align:left">
               <div style="display:flex;justify-content:space-between;margin-bottom:8px">
-                <span style="font-size:12px;color:var(--muted)">Amount Paid</span>
-                <span style="font-size:13px;font-weight:700;color:var(--navy)">&#8377;${currentAmount.toLocaleString()}</span>
+                <span style="font-size:12px;color:var(--muted)">Amount Paid (Incl. GST)</span>
+                <span style="font-size:13px;font-weight:700;color:var(--navy)">&#8377;${amountToPay.toLocaleString('en-IN')}</span>
               </div>
               <div style="display:flex;justify-content:space-between;margin-bottom:8px">
                 <span style="font-size:12px;color:var(--muted)">Transaction ID</span>
@@ -840,12 +894,12 @@ async function processPayment() {
       theme: { color: "#1d4ed8" }
     });
     rzp.open();
-    btn.innerHTML = '&#9889; Proceed to Payment';
+    btn.innerHTML = `&#9889; Proceed to Payment — \u20b9${totalWithGst.toLocaleString('en-IN')} (Incl. GST)`;
     btn.disabled = false;
   } catch(err) {
     console.error(err);
     alert("Server error. Please try again.");
-    btn.innerHTML = '&#9889; Proceed to Payment';
+    btn.innerHTML = `&#9889; Proceed to Payment — \u20b9${totalWithGst.toLocaleString('en-IN')} (Incl. GST)`;
     btn.disabled = false;
   }
 }

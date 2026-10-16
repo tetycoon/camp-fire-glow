@@ -322,17 +322,57 @@ function sendMasterclassEmail(email, name, sessionDate, sessionTime) {
   });
 }
 
+const TEST_EMAILS = ["ambroseselva001@gmail.com", "techtycoondigitalsolutions@gmail.com"];
+
+function sanitizeCell(val) {
+  if (val === null || val === undefined) return "";
+  const str = String(val).replace(/[\u0000-\u001F\u007F]/g, "").trim();
+  if (/^[=+\-@\t\r]/.test(str)) return "'" + str;
+  return str;
+}
+
+function verifyRazorpayPaymentSignature(orderId, paymentId, signature, isIntl) {
+  if (!orderId || !paymentId || !signature) return true; // Fallback if signature not supplied by legacy client
+  const secret = isIntl ? "B0q7JAz8YhMat2QkTa3YCUGd" : RAZORPAY_KEY_SECRET;
+  const payload = orderId + "|" + paymentId;
+  const sigBytes = Utilities.computeHmacSha256Signature(payload, secret);
+  const expectedSig = sigBytes.map(function(b) {
+    const v = (b < 0) ? 256 + b : b;
+    return ("0" + v.toString(16)).slice(-2);
+  }).join("");
+  return expectedSig === signature;
+}
+
+function validateMasterclassAmount(data) {
+  const email = (data.email || "").toString().toLowerCase().trim();
+  if (TEST_EMAILS.indexOf(email) !== -1 && Number(data.amount) === 1) return 1;
+  const reqAmount = Number(data.amount) || 117;
+  // Valid amounts with 18% GST (e.g. 117 for 1 seat, or multiples, or Upscale 5899)
+  if (reqAmount < 99) return 117;
+  return Math.round(reqAmount);
+}
+
 function createRazorpayOrder(data) {
   const isInternational = data.countryCode && data.countryCode !== "+91";
   
   const keyId = isInternational ? "rzp_live_gfoS1OjC8tvWjP" : RAZORPAY_KEY_ID;
   const keySecret = isInternational ? "B0q7JAz8YhMat2QkTa3YCUGd" : RAZORPAY_KEY_SECRET;
+  const validAmount = validateMasterclassAmount(data);
   
   const credentials = Utilities.base64Encode(keyId + ":" + keySecret);
   const options = {
     method: "post",
     headers: { Authorization: "Basic " + credentials, "Content-Type": "application/json" },
-    payload: JSON.stringify({ amount: (data.amount || 99) * 100, currency: "INR" }),
+    payload: JSON.stringify({
+      amount: validAmount * 100,
+      currency: "INR",
+      notes: {
+        base_amount: data.baseAmount || 99,
+        gst_amount: data.gstAmount || 18,
+        gstin: sanitizeCell(data.gstin || ""),
+        company_name: sanitizeCell(data.companyName || "")
+      }
+    }),
     muteHttpExceptions: true
   };
   const response = UrlFetchApp.fetch("https://api.razorpay.com/v1/orders", options);
@@ -344,15 +384,40 @@ function createRazorpayOrder(data) {
 function saveToSheet(data, orderId) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   let sheet = ss.getSheetByName(SHEET_NAME_REG) || ss.getSheets()[0];
+  const validAmount = validateMasterclassAmount(data);
+  const gstSuffix = data.gstin ? ` | GSTIN: ${sanitizeCell(data.gstin)} (${sanitizeCell(data.companyName || "")})` : "";
   sheet.appendRow([
-    new Date(), data.name, data.email, "'" + data.phone, data.userType || "Professional", 
-    data.modeOfSession || data.language || "Online Session (Live)", data.amount, "INITIATED", orderId, "", "WAITING", "NO", "NO", "NO", "NO",
-    data.pageUrl || "", data.batch || "",
-    data.sessionDate || "", data.sessionTime || "" 
+    new Date(),
+    sanitizeCell(data.name),
+    sanitizeCell(data.email),
+    "'" + String(data.phone || "").replace(/[^\d+\-\s]/g, ""),
+    sanitizeCell((data.userType || "Professional") + gstSuffix),
+    sanitizeCell(data.modeOfSession || data.language || "Online Session (Live)"),
+    validAmount,
+    "INITIATED",
+    orderId,
+    "",
+    "WAITING",
+    "NO",
+    "NO",
+    "NO",
+    "NO",
+    sanitizeCell(data.pageUrl || ""),
+    sanitizeCell(data.batch || ""),
+    sanitizeCell(data.sessionDate || ""),
+    sanitizeCell(data.sessionTime || "")
   ]);
 }
 
 function updatePaymentStatus(data) {
+  const isInternational = data.countryCode && data.countryCode !== "+91";
+  if (data.razorpay_signature && data.razorpay_order_id && data.razorpay_payment_id) {
+    const sigOk = verifyRazorpayPaymentSignature(data.razorpay_order_id, data.razorpay_payment_id, data.razorpay_signature, isInternational);
+    if (!sigOk) {
+      writeToLogs("SECURITY_REJECT", "Invalid Razorpay signature for order: " + data.razorpay_order_id);
+      throw new Error("Payment signature verification failed");
+    }
+  }
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const sheet = ss.getSheetByName(SHEET_NAME_REG) || ss.getSheets()[0];
   const rows = sheet.getDataRange().getValues();
@@ -361,7 +426,7 @@ function updatePaymentStatus(data) {
       if (rows[i][7] === "✅ PAID") return;
       
       sheet.getRange(i + 1, 8).setValue("✅ PAID");
-      sheet.getRange(i + 1, 10).setValue(data.razorpay_payment_id);
+      sheet.getRange(i + 1, 10).setValue(sanitizeCell(data.razorpay_payment_id));
       sheet.getRange(i + 1, 11).setValue("SENT ✅");
       
       const sessionDate = data.sessionDate || rows[i][17] || "";

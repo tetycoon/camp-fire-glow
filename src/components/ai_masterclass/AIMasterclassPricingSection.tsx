@@ -7,7 +7,7 @@ const features = [
     "Basic English And Tamil",
     "10+ AI Tools Mastery",
     "WhatsApp Private Community",
-    "Inclusive of GST"
+    "GST Invoice Available (+18% GST)"
 ];
 
 import { getMasterclassDateStrings } from "../../lib/masterclassDateUtils";
@@ -38,10 +38,12 @@ const AIMasterclassPricingSection: React.FC = () => {
                                 <span className="text-red-600 text-[11px] font-bold tracking-widest uppercase">Early Bird Offer — 90% OFF!</span>
                             </div>
 
-                            <div className="flex items-baseline gap-4 mb-4">
+                            <div className="flex items-baseline gap-3 mb-2">
                                 <span className="text-2xl text-slate-400 line-through font-bold">₹999</span>
                                 <span className="text-6xl font-black text-slate-900">₹99</span>
+                                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">+ 18% GST</span>
                             </div>
+                            <p className="text-xs font-bold text-slate-500 mb-4">Total Payable at Checkout: ₹117 (Incl. ₹18 GST)</p>
 
                             <div className="flex items-center gap-3 mb-8">
                                 <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-green-100 border border-green-200 text-green-700 text-xs font-bold">

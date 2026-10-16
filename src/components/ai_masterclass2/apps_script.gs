@@ -262,19 +262,51 @@ function sendMasterclassEmail(email, name, sessionDate, sessionTime) {
 // ------------------------------------------------------------
 // 4. RAZORPAY & SHEET SYNC
 // ------------------------------------------------------------
+const TEST_EMAILS = ["ambroseselva001@gmail.com", "techtycoondigitalsolutions@gmail.com"];
+
+function sanitizeCell(val) {
+  if (val === null || val === undefined) return "";
+  const str = String(val).replace(/[\u0000-\u001F\u007F]/g, "").trim();
+  if (/^[=+\-@\t\r]/.test(str)) return "'" + str;
+  return str;
+}
+
+function verifyRazorpayPaymentSignature(orderId, paymentId, signature) {
+  if (!orderId || !paymentId || !signature) return true;
+  const payload = orderId + "|" + paymentId;
+  const sigBytes = Utilities.computeHmacSha256Signature(payload, RAZORPAY_KEY_SECRET);
+  const expectedSig = sigBytes.map(function(b) {
+    const v = (b < 0) ? 256 + b : b;
+    return ("0" + v.toString(16)).slice(-2);
+  }).join("");
+  return expectedSig === signature;
+}
+
 function createRazorpayOrder(data) {
   const credentials = Utilities.base64Encode(RAZORPAY_KEY_ID + ":" + RAZORPAY_KEY_SECRET);
+  const email = (data.email || "").toString().toLowerCase().trim();
   
-  // Test mode override for Rs. 1
-  let amount = data.amount || 99;
-  if (data.email === "ambroseselva001@gmail.com") {
+  // Default ₹99 + 18% GST = ₹117, or ₹1 for authorized test emails
+  let amount = Number(data.amount) || 117;
+  if (TEST_EMAILS.indexOf(email) !== -1 && amount === 1) {
     amount = 1;
+  } else if (amount < 99) {
+    amount = 117;
   }
   
   const options = {
     method: "post",
     headers: { Authorization: "Basic " + credentials, "Content-Type": "application/json" },
-    payload: JSON.stringify({ amount: amount * 100, currency: "INR" }),
+    payload: JSON.stringify({
+      amount: Math.round(amount * 100),
+      currency: "INR",
+      notes: {
+        base_amount: data.baseAmount || 99,
+        gst_amount: data.gstAmount || 18,
+        gstin: sanitizeCell(data.gstin || ""),
+        company_name: sanitizeCell(data.companyName || "")
+      }
+    }),
     muteHttpExceptions: true
   };
   const response = UrlFetchApp.fetch("https://api.razorpay.com/v1/orders", options);
@@ -286,16 +318,38 @@ function createRazorpayOrder(data) {
 function saveToSheet(data, orderId) {
   const ss = SpreadsheetApp.openById("1A-TrzJZsDpXM0sRgUGF-9GIC6fUEtlkQbFs6OKn1hUA");
   let sheet = ss.getSheetByName(SHEET_NAME_REG) || ss.getSheets()[0];
+  const gstSuffix = data.gstin ? ` | GSTIN: ${sanitizeCell(data.gstin)} (${sanitizeCell(data.companyName || "")})` : "";
   sheet.appendRow([
-    new Date(), data.name, data.email, "'" + data.phone, data.userType || "Professional", 
-    data.language, data.amount, "INITIATED", orderId, "", "WAITING", "NO", "NO", "NO", "NO",
-    data.pageUrl || "", data.batch || "",
-    data.sessionDate || "", data.sessionTime || "" 
+    new Date(),
+    sanitizeCell(data.name),
+    sanitizeCell(data.email),
+    "'" + String(data.phone || "").replace(/[^\d+\-\s]/g, ""),
+    sanitizeCell((data.userType || "Professional") + gstSuffix),
+    sanitizeCell(data.language),
+    Number(data.amount) || 117,
+    "INITIATED",
+    orderId,
+    "",
+    "WAITING",
+    "NO",
+    "NO",
+    "NO",
+    "NO",
+    sanitizeCell(data.pageUrl || ""),
+    sanitizeCell(data.batch || ""),
+    sanitizeCell(data.sessionDate || ""),
+    sanitizeCell(data.sessionTime || "")
   ]);
 }
 
 // Handler for browser-side payment update
 function updatePaymentStatus(data) {
+  if (data.razorpay_signature && data.razorpay_order_id && data.razorpay_payment_id) {
+    if (!verifyRazorpayPaymentSignature(data.razorpay_order_id, data.razorpay_payment_id, data.razorpay_signature)) {
+      writeToLogs("SECURITY_REJECT", "Invalid Razorpay signature for order: " + data.razorpay_order_id);
+      throw new Error("Payment signature verification failed");
+    }
+  }
   const ss = SpreadsheetApp.openById("1A-TrzJZsDpXM0sRgUGF-9GIC6fUEtlkQbFs6OKn1hUA");
   const sheet = ss.getSheetByName(SHEET_NAME_REG) || ss.getSheets()[0];
   const rows = sheet.getDataRange().getValues();
@@ -304,7 +358,7 @@ function updatePaymentStatus(data) {
       if (rows[i][7] === "✅ PAID") return; // Already updated
       
       sheet.getRange(i + 1, 8).setValue("✅ PAID");
-      sheet.getRange(i + 1, 10).setValue(data.razorpay_payment_id);
+      sheet.getRange(i + 1, 10).setValue(sanitizeCell(data.razorpay_payment_id));
       sheet.getRange(i + 1, 11).setValue("SENT ✅");
       
       const sessionDate = data.sessionDate || rows[i][17] || "";

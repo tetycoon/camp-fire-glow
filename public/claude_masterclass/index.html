@@ -1122,6 +1122,22 @@
                         </label>
                     </div>
 
+                    <!-- +18% GST PRICE BREAKDOWN -->
+                    <div style="background: #F7F4EE; border: 1px solid #E6E2D9; border-radius: 12px; padding: 10px 12px; margin-bottom: 12px; font-size: 11px;">
+                        <div style="display: flex; justify-content: space-between; color: #524F4A; margin-bottom: 4px;">
+                            <span>Base Session Fee:</span>
+                            <span id="gst-base-display" style="font-weight: 600; font-family: monospace;">₹499</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; color: #524F4A; margin-bottom: 6px;">
+                            <span>GST (18%):</span>
+                            <span id="gst-tax-display" style="font-weight: 600; font-family: monospace;">+ ₹90</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; color: #1F1E1C; font-weight: 800; padding-top: 6px; border-top: 1px solid #E6E2D9; font-size: 12px;">
+                            <span>Total Payable (Incl. 18% GST):</span>
+                            <span id="gst-total-display" style="color: #D85A30; font-family: monospace;">₹589</span>
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <label class="form-checkbox" for="agree-wa" style="display: flex; align-items: center; gap: 8px; font-size: 10px; color: #8E8A83; font-weight: 400; letter-spacing: 0; cursor: pointer; margin: 0;">
                             <input type="checkbox" id="agree-wa" checked style="width: 14px; height: 14px; flex-shrink: 0; accent-color: #D85A30; cursor: pointer;">
@@ -1130,7 +1146,7 @@
                     </div>
 
                     <button type="submit" class="btn btn-primary btn-block" id="pay-submit-btn">
-                        Proceed to payment — <span id="btn-fee-display">₹499</span>
+                        Proceed to payment — <span id="btn-fee-display">₹589 (Incl. GST)</span>
                     </button>
 
                     <div class="secured-footer" style="margin-top: 8px;">

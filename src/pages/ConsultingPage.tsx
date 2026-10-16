@@ -52,7 +52,7 @@ const ConsultingPage: React.FC = () => {
                 1-on-1 AI Advisory
               </div>
               <div className="text-xs font-black text-amber-300 truncate">
-                ₹2,500 / 1 Hour Deep Dive
+                ₹2,500 + 18% GST / 1 Hour Deep Dive
               </div>
             </div>
 

@@ -117,20 +117,40 @@ function doPost(e) {
   }
 }
 
+function sanitizeCell(val) {
+  if (val === null || val === undefined) return "";
+  const str = String(val).replace(/[\u0000-\u001F\u007F]/g, "").trim();
+  if (/^[=+\-@\t\r]/.test(str)) return "'" + str;
+  return str;
+}
+
+function verifyPaymentSignature(orderId, paymentId, signature, isIntl) {
+  if (!orderId || !paymentId || !signature) return true;
+  const secret = isIntl ? RAZORPAY_KEY_SECRET_INTL : RAZORPAY_KEY_SECRET;
+  const payload = orderId + "|" + paymentId;
+  const sigBytes = Utilities.computeHmacSha256Signature(payload, secret);
+  const expectedSig = sigBytes.map(function (b) {
+    const v = (b < 0) ? 256 + b : b;
+    return ("0" + v.toString(16)).slice(-2);
+  }).join("");
+  return expectedSig === signature;
+}
+
 /**
  * Appends row into Sheet1 matching columns:
  * [Date and Time, Name, Email, Phone, Profession, Amount, Status, Order ID, Payment ID]
  */
 function createOrderAndLogRow(sheet, data) {
   const currentDateTime = formatISTTimestamp(new Date());
-  const name = (data.name || "").toString().trim();
-  const email = (data.email || "").toString().trim();
-  const phone = (data.phone || "").toString().trim();
-  const profession = (data.profession || data.customProfession || "Working Professional").toString().trim();
-  const amount = Number(data.amount) || 4999;
+  const name = sanitizeCell(data.name || "");
+  const email = sanitizeCell(data.email || "");
+  const phone = "'" + String(data.phone || "").replace(/[^\d+\-\s]/g, "");
+  const gstSuffix = data.gstin ? ` | GSTIN: ${sanitizeCell(data.gstin)} (${sanitizeCell(data.companyName || "")})` : "";
+  const profession = sanitizeCell((data.profession || data.customProfession || "Working Professional") + gstSuffix);
+  const amount = Number(data.amount) || 5899;
   const isIntl = data.isInternational === true || data.isInternational === "true";
   
-  let orderId = (data.orderId || "").toString().trim();
+  let orderId = sanitizeCell(data.orderId || "");
 
   // Generate Razorpay Order ID if not provided
   if (!orderId || !orderId.startsWith("order_")) {
@@ -139,7 +159,11 @@ function createOrderAndLogRow(sheet, data) {
       email: email,
       phone: phone,
       profession: profession,
-      course: "Advance AI for Non-Tech Working Professionals"
+      course: "Advance AI for Non-Tech Working Professionals",
+      base_amount: data.baseAmount || 4999,
+      gst_amount: data.gstAmount || 900,
+      gstin: sanitizeCell(data.gstin || ""),
+      company_name: sanitizeCell(data.companyName || "")
     });
   }
 
@@ -172,13 +196,19 @@ function createOrderAndLogRow(sheet, data) {
  * Updates row when Razorpay payment succeeds
  */
 function handlePaymentSuccess(sheet, data) {
-  const orderId = (data.razorpay_order_id || data.orderId || "").toString().trim();
-  const paymentId = (data.razorpay_payment_id || data.paymentId || "").toString().trim();
-  const email = (data.email || "").toString().trim();
-  const phone = (data.phone || "").toString().trim();
-  const name = (data.name || "").toString().trim();
-  const profession = (data.profession || "Working Professional").toString().trim();
-  const amount = Number(data.amount) || 4999;
+  const orderId = sanitizeCell(data.razorpay_order_id || data.orderId || "");
+  const paymentId = sanitizeCell(data.razorpay_payment_id || data.paymentId || "");
+  const isIntl = data.isInternational === true || data.isInternational === "true";
+  if (data.razorpay_signature && orderId && paymentId) {
+    if (!verifyPaymentSignature(orderId, paymentId, data.razorpay_signature, isIntl)) {
+      throw new Error("Payment signature verification failed");
+    }
+  }
+  const email = sanitizeCell(data.email || "");
+  const phone = "'" + String(data.phone || "").replace(/[^\d+\-\s]/g, "");
+  const name = sanitizeCell(data.name || "");
+  const profession = sanitizeCell(data.profession || "Working Professional");
+  const amount = Number(data.amount) || 5899;
 
   let rowNumber = -1;
   if (orderId) {

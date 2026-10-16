@@ -3,6 +3,8 @@ import { CheckCircle2, Loader2, ShieldCheck, X } from "lucide-react";
 import { useAIMasterclass2RegisterModal } from "./AIMasterclass2RegisterModalContext";
 import { RazorpayOptions } from "@/types/razorpay";
 import { getMasterclassDateStrings } from "../../lib/masterclassDateUtils";
+import { calculateGstBreakdown, isValidGstin, sanitizeTextInput, isAuthorizedTestEmail } from "../../lib/gstUtils";
+import GstPriceBreakdown from "../common/GstPriceBreakdown";
 
 const RAZORPAY_KEY_ID = "rzp_live_gfoS1OjC8tvWjP";
 const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbylIyBX6wgBhb5BUJoc6x_eqe_ArHdDcCmwS6zi49FjbAAhZnkmiTAkHMYfcLubxCTHmQ/exec";
@@ -27,6 +29,9 @@ const AIMasterclass2RegisterModal: React.FC = () => {
     const { isOpen, closeRegisterModal } = useAIMasterclass2RegisterModal();
     const { regularDate } = getMasterclassDateStrings();
     const [form, setForm] = useState({ name: "", email: "", phone: "", countryCode: "+91", profession: "", language: "Tamil", timing: "6 PM to 9 PM", coupon: "WELCOME33" });
+    const [claimGst, setClaimGst] = useState(false);
+    const [gstin, setGstin] = useState("");
+    const [companyName, setCompanyName] = useState("");
     const [submitted, setSubmitted] = useState(false);
     const [loading, setLoading] = useState(false);
     const [verifying, setVerifying] = useState(false);
@@ -34,6 +39,9 @@ const AIMasterclass2RegisterModal: React.FC = () => {
     const [paymentId, setPaymentId] = useState<string>("");
     const [visible, setVisible] = useState(false);
     const [discountApplied, setDiscountApplied] = useState(false);
+
+    const baseSessionAmount = 99;
+    const { gstAmount, totalAmount, totalInPaise } = calculateGstBreakdown(baseSessionAmount);
 
     useEffect(() => {
         if (isOpen) {
@@ -52,6 +60,9 @@ const AIMasterclass2RegisterModal: React.FC = () => {
             closeRegisterModal();
             if (!submitted) {
                 setForm({ name: "", email: "", phone: "", countryCode: "+91", profession: "", language: "Tamil", timing: "6 PM to 9 PM", coupon: "WELCOME33" });
+                setClaimGst(false);
+                setGstin("");
+                setCompanyName("");
                 setDiscountApplied(false);
             }
         }, 300);
@@ -64,6 +75,22 @@ const AIMasterclass2RegisterModal: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
+        if (claimGst) {
+            if (!isValidGstin(gstin)) {
+                alert("Please enter a valid 15-character Indian GSTIN.");
+                return;
+            }
+            if (!companyName.trim()) {
+                alert("Please enter your Legal Company Name for the GST Invoice.");
+                return;
+            }
+        }
+
+        const safeName = sanitizeTextInput(form.name, 100);
+        const safeEmail = form.email.trim().toLowerCase();
+        const safeCompany = claimGst ? sanitizeTextInput(companyName, 120) : "";
+        const safeGstin = claimGst ? gstin.trim().toUpperCase() : "";
+
         setLoading(true);
 
         const loaded = await loadRazorpayScript();
@@ -74,23 +101,27 @@ const AIMasterclass2RegisterModal: React.FC = () => {
         }
 
         const pageUrl = window.location.href;
-        const isTestEmail = form.email.toLowerCase().trim() === "ambroseselva001@gmail.com";
-        const finalAmount = isTestEmail ? 100 : 9900; 
+        const isTestEmail = isAuthorizedTestEmail(safeEmail);
+        const finalAmount = isTestEmail ? 100 : totalInPaise; 
 
         try {
             const response = await fetch(GOOGLE_SHEET_URL, {
                 method: "POST",
                 headers: { "Content-Type": "text/plain;charset=utf-8" },
                 body: JSON.stringify({
-                    userType: form.profession || "Professional",
+                    userType: sanitizeTextInput(form.profession || "Professional", 60),
                     pageUrl,
-                    name: form.name,
-                    email: form.email,
+                    name: safeName,
+                    email: safeEmail,
                     phone: `${form.countryCode}${form.phone}`,
                     countryCode: form.countryCode,
                     language: form.language,
                     batch: `Masterclass 2026 (${form.timing})`,
-                    amount: 99,
+                    baseAmount: isTestEmail ? 1 : baseSessionAmount,
+                    gstAmount: isTestEmail ? 0 : gstAmount,
+                    amount: isTestEmail ? 1 : totalAmount,
+                    companyName: safeCompany,
+                    gstin: safeGstin,
                     sessionDate: regularDate,
                     sessionTime: form.timing
                 }),
@@ -110,14 +141,16 @@ const AIMasterclass2RegisterModal: React.FC = () => {
                 amount: finalAmount,
                 currency: "INR",
                 name: "Tech Tycoon",
-                description: "AI Marketing Masterclass — April 2026",
+                description: "AI Marketing Masterclass — 2026 (Incl. 18% GST)",
                 prefill: {
-                    name: form.name,
-                    email: form.email,
+                    name: safeName,
+                    email: safeEmail,
                     contact: `${form.countryCode}${form.phone}`,
                 },
                 notes: {
                     batch: `Masterclass 2: ${form.profession} (${form.language})`,
+                    gstin: safeGstin || "N/A",
+                    company: safeCompany || "N/A",
                 },
                 theme: {
                     color: "#10b981",
@@ -135,14 +168,20 @@ const AIMasterclass2RegisterModal: React.FC = () => {
                             headers: { "Content-Type": "text/plain;charset=utf-8" },
                             body: JSON.stringify({
                                 paymentSuccess: true,
-                                razorpay_order_id: result.orderId,
+                                razorpay_order_id: response.razorpay_order_id || result.orderId,
                                 razorpay_payment_id: response.razorpay_payment_id,
-                                email: form.email,
-                                name: form.name,
+                                razorpay_signature: response.razorpay_signature || "",
+                                email: safeEmail,
+                                name: safeName,
                                 language: form.language,
                                 timing: form.timing,
                                 sessionDate: regularDate,
-                                sessionTime: form.timing
+                                sessionTime: form.timing,
+                                baseAmount: isTestEmail ? 1 : baseSessionAmount,
+                                gstAmount: isTestEmail ? 0 : gstAmount,
+                                amount: isTestEmail ? 1 : totalAmount,
+                                companyName: safeCompany,
+                                gstin: safeGstin
                             })
                         }).catch(() => {});
 
@@ -169,7 +208,7 @@ const AIMasterclass2RegisterModal: React.FC = () => {
                         fetch(GOOGLE_SHEET_URL, {
                             method: "POST",
                             headers: { "Content-Type": "text/plain;charset=utf-8" },
-                            body: JSON.stringify({ action: "markCouponUsed", couponCode: form.coupon.trim(), email: form.email })
+                            body: JSON.stringify({ action: "markCouponUsed", couponCode: form.coupon.trim(), email: safeEmail })
                         }).catch(() => { });
                     }
                 },
@@ -218,7 +257,7 @@ const AIMasterclass2RegisterModal: React.FC = () => {
                     <>
                         <div className="text-center mb-6">
                             <h2 className="font-display text-2xl font-bold mb-1 italic !text-white" style={{ color: "white" }}>Register <span className="text-blue-500">Now</span></h2>
-                            <p className="text-sm text-muted-foreground">Join the AI revolution for just ₹99</p>
+                            <p className="text-sm text-muted-foreground">Join the AI revolution for just ₹99 + 18% GST</p>
                             <div className="mt-3 inline-block bg-blue-500/10 border border-blue-500/20 text-blue-400 px-4 py-2 rounded-2xl text-xs font-bold tracking-wide shadow-sm">
                                 📅 Session: {regularDate} at {form.timing}
                             </div>
@@ -314,24 +353,38 @@ const AIMasterclass2RegisterModal: React.FC = () => {
                                 <option>Other</option>
                             </select>
 
-                                <div className="sm:col-span-2 flex items-start gap-2 ml-1 mb-2">
-                                    <input 
-                                        type="checkbox" 
-                                        required 
-                                        id="m2-wa-opt-in"
-                                        defaultChecked
-                                        className="mt-1 w-4 h-4 rounded border-white/10 bg-white/5 text-emerald-500 focus:ring-emerald-500"
-                                    />
-                                    <label htmlFor="m2-wa-opt-in" className="text-[10px] text-emerald-400/60 leading-tight">
-                                        I agree to receive workshop updates and automated reminders on WhatsApp.
-                                    </label>
-                                </div>
+                            <div className="sm:col-span-2">
+                                <GstPriceBreakdown
+                                    baseAmount={baseSessionAmount}
+                                    claimGst={claimGst}
+                                    onClaimGstChange={setClaimGst}
+                                    gstin={gstin}
+                                    onGstinChange={setGstin}
+                                    companyName={companyName}
+                                    onCompanyNameChange={setCompanyName}
+                                    theme="dark"
+                                    label="Masterclass Seat Fee"
+                                />
+                            </div>
 
-                                <button
-                                    type="submit"
-                                    disabled={loading || verifying}
-                                    className="col-span-1 sm:col-span-2 bg-emerald-500 hover:bg-emerald-600 text-white font-display text-sm font-bold py-4 rounded-full tracking-widest mt-2 flex items-center justify-center gap-2 transition-all"
-                                >
+                            <div className="sm:col-span-2 flex items-start gap-2 ml-1 mb-2">
+                                <input 
+                                    type="checkbox" 
+                                    required 
+                                    id="m2-wa-opt-in"
+                                    defaultChecked
+                                    className="mt-1 w-4 h-4 rounded border-white/10 bg-white/5 text-emerald-500 focus:ring-emerald-500"
+                                />
+                                <label htmlFor="m2-wa-opt-in" className="text-[10px] text-emerald-400/60 leading-tight">
+                                    I agree to receive workshop updates and automated reminders on WhatsApp.
+                                </label>
+                            </div>
+
+                            <button
+                                type="submit"
+                                disabled={loading || verifying}
+                                className="col-span-1 sm:col-span-2 bg-emerald-500 hover:bg-emerald-600 text-white font-display text-sm font-bold py-4 rounded-full tracking-widest mt-2 flex items-center justify-center gap-2 transition-all"
+                            >
                                 {verifying ? (
                                     <>
                                         <Loader2 className="animate-spin w-4 h-4" />
@@ -340,12 +393,12 @@ const AIMasterclass2RegisterModal: React.FC = () => {
                                 ) : loading ? (
                                     <Loader2 className="animate-spin w-4 h-4" />
                                 ) : (
-                                    "PROCEED TO PAYMENT — ₹99"
+                                    `PROCEED TO PAYMENT — ₹${totalAmount} (Incl. 18% GST)`
                                 )}
                             </button>
 
                             <div className="col-span-1 sm:col-span-2 flex items-center justify-center gap-2 text-[10px] text-muted-foreground opacity-60">
-                                <ShieldCheck className="w-3 h-3" /> Secured by Razorpay
+                                <ShieldCheck className="w-3 h-3" /> Secured by Razorpay • 256-Bit SSL
                             </div>
                         </form>
                     </>

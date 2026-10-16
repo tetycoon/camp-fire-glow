@@ -413,13 +413,32 @@ function getRazorpayAccountTag(data) {
   return isIntl ? "RZP: International (rzp_live_gfoS1OjC8tvWjP)" : "RZP: Domestic India (rzp_live_T2CbVONQc6qrqj)";
 }
 
+function sanitizeCell(val) {
+  if (val === null || val === undefined) return "";
+  const str = String(val).replace(/[\u0000-\u001F\u007F]/g, "").trim();
+  if (/^[=+\-@\t\r]/.test(str)) return "'" + str;
+  return str;
+}
+
+function verifyRazorpayPaymentSignature(orderId, paymentId, signature, isIntl) {
+  if (!orderId || !paymentId || !signature) return true;
+  const secret = isIntl ? RAZORPAY_KEY_SECRET_INTL : RAZORPAY_KEY_SECRET;
+  const payload = orderId + "|" + paymentId;
+  const sigBytes = Utilities.computeHmacSha256Signature(payload, secret);
+  const expectedSig = sigBytes.map(function(b) {
+    const v = (b < 0) ? 256 + b : b;
+    return ("0" + v.toString(16)).slice(-2);
+  }).join("");
+  return expectedSig === signature;
+}
+
 function createRazorpayOrder(data) {
   const isIntl = data.isInternational || (data.countryCode && data.countryCode !== '+91');
   const keyId = isIntl ? RAZORPAY_KEY_ID_INTL : RAZORPAY_KEY_ID;
   const keySecret = isIntl ? RAZORPAY_KEY_SECRET_INTL : RAZORPAY_KEY_SECRET;
 
   const credentials = Utilities.base64Encode(keyId + ":" + keySecret);
-  const amount = parseInt(data.amount) || 499;
+  const amount = parseInt(data.amount) || 589;
   const mode = data.mode || (amount >= 4000 ? "OFFLINE" : "ONLINE");
 
   const options = {
@@ -431,9 +450,13 @@ function createRazorpayOrder(data) {
       notes: {
         product: "claude_masterclass",
         mode: mode,
-        customer_email: data.email || "",
-        customer_name: data.name || "",
-        certificate: data.wantCertificate ? "YES" : "NO"
+        customer_email: sanitizeCell(data.email || ""),
+        customer_name: sanitizeCell(data.name || ""),
+        certificate: data.wantCertificate ? "YES" : "NO",
+        base_amount: data.baseAmount || 499,
+        gst_amount: data.gstAmount || 90,
+        gstin: sanitizeCell(data.gstin || ""),
+        company_name: sanitizeCell(data.companyName || "")
       }
     }),
     muteHttpExceptions: true
@@ -444,7 +467,7 @@ function createRazorpayOrder(data) {
 }
 
 function getModeOfSessionDisplay(mode, amount) {
-  const numAmount = parseInt(amount) || 499;
+  const numAmount = parseInt(amount) || 589;
   const isOffline = (mode && mode.toString().toLowerCase() === 'offline') || numAmount >= 4000;
   return isOffline ? "Offline Session (In-Person Chennai)" : "Online Session (Live Online)";
 }
@@ -457,11 +480,22 @@ function saveToSheet(data, orderId) {
   const modeTag = (data.mode || (parseInt(data.amount) >= 4000 ? "OFFLINE" : "ONLINE")).toUpperCase();
   const sessionModeDisplay = getModeOfSessionDisplay(data.mode, data.amount);
   const rzpTag = getRazorpayAccountTag(data);
+  const gstTag = data.gstin ? ` | GSTIN: ${sanitizeCell(data.gstin)} (${sanitizeCell(data.companyName || "")})` : "";
 
   sheet.appendRow([
-    new Date(), data.name, data.email, "'" + data.phone, data.profession || "General",
-    sessionModeDisplay, data.amount || 499, "INITIATED", orderId, "", "PENDING",
-    "NO", "NO", "NO", "NO", "NO", "NO", "NO", "NO", (data.promoCode || "CLAUDE") + " | MODE: " + modeTag + " | CERT: " + certTag + " | " + rzpTag
+    new Date(),
+    sanitizeCell(data.name),
+    sanitizeCell(data.email),
+    "'" + String(data.phone || "").replace(/[^\d+\-\s]/g, ""),
+    sanitizeCell(data.profession || "General"),
+    sessionModeDisplay,
+    parseInt(data.amount) || 589,
+    "INITIATED",
+    orderId,
+    "",
+    "PENDING",
+    "NO", "NO", "NO", "NO", "NO", "NO", "NO", "NO",
+    sanitizeCell((data.promoCode || "CLAUDE") + " | MODE: " + modeTag + " | CERT: " + certTag + " | " + rzpTag + gstTag)
   ]);
 }
 
@@ -487,6 +521,13 @@ function getLast10Digits(phoneStr) {
 
 function updatePaymentStatus(data) {
   if (!isClaudeRegistration(data)) return;
+  const isIntl = data.isInternational || (data.countryCode && data.countryCode !== '+91');
+  if (data.razorpay_signature && data.razorpay_order_id && data.razorpay_payment_id) {
+    if (!verifyRazorpayPaymentSignature(data.razorpay_order_id, data.razorpay_payment_id, data.razorpay_signature, isIntl)) {
+      writeToLogs("SECURITY_REJECT", "Invalid Razorpay signature for order: " + data.razorpay_order_id);
+      throw new Error("Payment signature verification failed");
+    }
+  }
   const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
   const sheet = ss.getSheetByName(SHEET_NAME_REG) || ss.getSheets()[0];
   const rows = sheet.getDataRange().getValues();
@@ -513,9 +554,9 @@ function updatePaymentStatus(data) {
   if (foundIndex !== -1) {
     if (rows[foundIndex][7] === "✅ PAID") return;
     sheet.getRange(foundIndex + 1, 8).setValue("✅ PAID");
-    sheet.getRange(foundIndex + 1, 10).setValue(data.razorpay_payment_id || "");
+    sheet.getRange(foundIndex + 1, 10).setValue(sanitizeCell(data.razorpay_payment_id || ""));
     sheet.getRange(foundIndex + 1, 11).setValue("SENT ✅");
-    if (targetOrderId) sheet.getRange(foundIndex + 1, 9).setValue(targetOrderId);
+    if (targetOrderId) sheet.getRange(foundIndex + 1, 9).setValue(sanitizeCell(targetOrderId));
     
     const existingPromoCol = (rows[foundIndex][19] || "").toString();
     if (!existingPromoCol.includes("RZP:")) {
@@ -537,14 +578,23 @@ function updatePaymentStatus(data) {
     const sessionModeDisplay = getModeOfSessionDisplay(mode, data.amount);
 
     sheet.appendRow([
-      new Date(), data.name || "Customer", data.email || "", "'" + (data.phone || ""),
-      "General", sessionModeDisplay, data.amount || 499, "✅ PAID", data.razorpay_order_id || "",
-      data.razorpay_payment_id || "", "SENT ✅", "NO", "NO", "NO", "NO", "NO", "NO", "NO", "NO",
-      (data.promoCode || "CLAUDE") + " | MODE: " + mode.toUpperCase() + (data.wantCertificate ? " | CERT: YES" : "") + " | " + rzpTag
+      new Date(),
+      sanitizeCell(data.name || "Customer"),
+      sanitizeCell(data.email || ""),
+      "'" + String(data.phone || "").replace(/[^\d+\-\s]/g, ""),
+      "General",
+      sessionModeDisplay,
+      parseInt(data.amount) || 589,
+      "✅ PAID",
+      sanitizeCell(data.razorpay_order_id || ""),
+      sanitizeCell(data.razorpay_payment_id || ""),
+      "SENT ✅",
+      "NO", "NO", "NO", "NO", "NO", "NO", "NO", "NO",
+      sanitizeCell((data.promoCode || "CLAUDE") + " | MODE: " + mode.toUpperCase() + (data.wantCertificate ? " | CERT: YES" : "") + " | " + rzpTag)
     ]);
 
     try {
-      sendMasterclassEmail(data.email, data.name || "Customer", data.amount || 499, mode);
+      sendMasterclassEmail(data.email, data.name || "Customer", data.amount || 589, mode);
       triggerWhatsAppCampaign(data.name || "Customer", data.email, targetPhone10);
     } catch (err) { writeToLogs("EMAIL_ERROR", err.message); }
   }

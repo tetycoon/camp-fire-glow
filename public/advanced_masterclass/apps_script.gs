@@ -85,6 +85,25 @@ function doGet(e) {
     return ContentService.createTextOutput("Advance AI Masterclass Automation is running.");
 }
 
+function sanitizeCell(val) {
+    if (val === null || val === undefined) return "";
+    const str = String(val).replace(/[\u0000-\u001F\u007F]/g, "").trim();
+    if (/^[=+\-@\t\r]/.test(str)) return "'" + str;
+    return str;
+}
+
+function verifyPaymentSignature(orderId, paymentId, signature, isIntl) {
+    if (!orderId || !paymentId || !signature) return true;
+    const secret = isIntl ? RZP_KEY_SECRET_INTL : RZP_KEY_SECRET_DOMESTIC;
+    const payload = orderId + "|" + paymentId;
+    const sigBytes = Utilities.computeHmacSha256Signature(payload, secret);
+    const expectedSig = sigBytes.map(function (b) {
+        const v = (b < 0) ? 256 + b : b;
+        return ("0" + v.toString(16)).slice(-2);
+    }).join("");
+    return expectedSig === signature;
+}
+
 function doPost(e) {
     try {
         const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
@@ -110,6 +129,11 @@ function doPost(e) {
         }
 
         if (data.action === "payment_success") {
+            if (data.razorpay_signature && data.orderId && data.transactionId) {
+                if (!verifyPaymentSignature(data.orderId, data.transactionId, data.razorpay_signature, !!data.isInternational)) {
+                    throw new Error("Razorpay payment signature verification failed");
+                }
+            }
             return handlePaymentSuccess(sheet, {
                 orderId: data.orderId,
                 transactionId: data.transactionId,
@@ -126,33 +150,50 @@ function doPost(e) {
 }
 
 function handleLeadAndOrder(sheet, data) {
-    const amountInPaise = data.amount * 100;
+    const amount = Number(data.amount) || 590;
+    const baseAmount = Number(data.baseAmount) || (amount === 590 ? 500 : (amount === 5899 ? 4999 : amount));
+    const amountInPaise = Math.round(amount * 100);
     const timestamp = new Date();
 
     const isIntl = !!data.isInternational;
-    const rzpOrder = createRazorpayOrder(amountInPaise, isIntl, data.name, data.email);
+    const rzpOrder = createRazorpayOrder(amountInPaise, isIntl, data.name, data.email, data.gstin, data.companyName);
     if (!rzpOrder || !rzpOrder.id) {
         throw new Error("Failed to generate Razorpay Order ID. Response: " + JSON.stringify(rzpOrder));
     }
     const orderId = rzpOrder.id;
     
-    let payableTotal = data.amount; 
-    if (data.amount === 500) payableTotal = 6999;
-    else if (data.amount === 4999) payableTotal = 4999;
-    const balance = payableTotal - data.amount;
+    let payableTotal = amount; 
+    if (baseAmount === 500 || amount === 590) payableTotal = 8259; // ₹6,999 + 18% GST
+    else if (baseAmount === 4999 || amount === 5899) payableTotal = 5899;
+    const balance = Math.max(0, payableTotal - amount);
 
-    const feeName = data.amount === 500 ? "Partial Enrollment (₹500)" : (data.amount === 4999 ? "Full Enrollment (₹4,999)" : `Custom/Test Enrollment (₹${data.amount})`);
+    const gstSuffix = data.gstin ? ` | GSTIN: ${sanitizeCell(data.gstin)} (${sanitizeCell(data.companyName || "")})` : "";
+    const feeName = (baseAmount === 500 || amount === 590)
+        ? "Partial Enrollment (₹500 + 18% GST = ₹590)"
+        : ((baseAmount === 4999 || amount === 5899) ? "Full Enrollment (₹4,999 + 18% GST = ₹5,899)" : `Custom/Test Enrollment (₹${amount})`);
 
     sheet.appendRow([
-        timestamp, data.name, data.email, data.phone, data.profession || "N/A", 
-        feeName, orderId, payableTotal, data.amount, balance, "checkout-started", 
-        timestamp, "N/A", "N/A", "No"
+        timestamp,
+        sanitizeCell(data.name),
+        sanitizeCell(data.email),
+        "'" + String(data.phone || "").replace(/[^\d+\-\s]/g, ""),
+        sanitizeCell((data.profession || "N/A") + gstSuffix),
+        feeName,
+        orderId,
+        payableTotal,
+        amount,
+        balance,
+        "checkout-started",
+        timestamp,
+        "N/A",
+        "N/A",
+        "No"
     ]);
 
     return ContentService.createTextOutput(JSON.stringify({ success: true, orderId: orderId })).setMimeType(ContentService.MimeType.JSON);
 }
 
-function createRazorpayOrder(amount, isIntl, customerName, customerEmail) {
+function createRazorpayOrder(amount, isIntl, customerName, customerEmail, gstin, companyName) {
     const keyId = isIntl ? RZP_KEY_ID_INTL : RZP_KEY_ID_DOMESTIC;
     const keySecret = isIntl ? RZP_KEY_SECRET_INTL : RZP_KEY_SECRET_DOMESTIC;
 
@@ -164,8 +205,10 @@ function createRazorpayOrder(amount, isIntl, customerName, customerEmail) {
         receipt: "rcpt_" + Math.random().toString(36).substr(2, 9),
         notes: {
             product: "advanced_masterclass",
-            customer_name: customerName || "",
-            customer_email: customerEmail || ""
+            customer_name: sanitizeCell(customerName || ""),
+            customer_email: sanitizeCell(customerEmail || ""),
+            gstin: sanitizeCell(gstin || ""),
+            company_name: sanitizeCell(companyName || "")
         }
     };
     const options = { method: "POST", headers: { "Authorization": auth, "Content-Type": "application/json" }, payload: JSON.stringify(payload), muteHttpExceptions: true };

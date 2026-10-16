@@ -7,7 +7,7 @@ const features = [
     "Exclusive Tamil Session",
     "10+ AI Tools Mastery",
     "WhatsApp Private Community",
-    "Inclusive of GST"
+    "GST Invoice Available (+18% GST)"
 ];
 
 const AIMasterclass2PricingSection: React.FC = () => {
@@ -31,10 +31,12 @@ const AIMasterclass2PricingSection: React.FC = () => {
                                 <span className="text-emerald-400 text-xs font-bold tracking-widest uppercase">Early Bird Offer — 90% OFF!</span>
                             </div>
 
-                            <div className="flex items-baseline gap-4 mb-4">
+                            <div className="flex items-baseline gap-3 mb-2">
                                 <span className="font-display text-2xl text-muted-foreground/50 line-through">₹999</span>
                                 <span className="font-display text-6xl font-black text-gradient-green">₹99</span>
+                                <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider">+ 18% GST</span>
                             </div>
+                            <p className="text-xs text-muted-foreground font-bold mb-4">Total Payable: ₹117 (Incl. ₹18 GST)</p>
 
                             <div className="flex items-center gap-3 mb-8">
                                 <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-emerald-500/12 border border-emerald-500/30 text-emerald-400 text-xs font-bold">
