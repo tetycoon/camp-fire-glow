@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { CheckCircle, MessageSquare, ArrowRight, ShieldCheck, Tag } from "lucide-react";
+import { CheckCircle, MessageSquare, ShieldCheck, Tag, FileText } from "lucide-react";
 import { useLocation } from "react-router-dom";
+import { openPrintableGstInvoice } from "../lib/gstUtils";
 
 const ThankYou = () => {
     const location = useLocation();
-    const [countdown, setCountdown] = useState(5);
+    const [countdown, setCountdown] = useState(8);
+    const [pauseRedirect, setPauseRedirect] = useState(false);
 
     // Extract user details from location.state or URL params
     const searchParams = new URLSearchParams(window.location.search);
@@ -15,7 +17,7 @@ const ThankYou = () => {
     const phone = stateData.phone || searchParams.get("phone") || "";
     const paymentId = stateData.paymentId || searchParams.get("paymentId") || searchParams.get("pay_id") || "PAID";
     const course = stateData.course || searchParams.get("course") || "AI Secrets Revealed Masterclass";
-    const defaultAmount = course.toLowerCase().includes("academy") ? "2499" : "99";
+    const defaultAmount = course.toLowerCase().includes("academy") ? "5899" : "117";
     const amount = stateData.amount || searchParams.get("amount") || defaultAmount;
     const coupon = stateData.coupon || searchParams.get("coupon") || "";
     const orderId = stateData.orderId || searchParams.get("orderId") || "";
@@ -28,7 +30,7 @@ const ThankYou = () => {
         `• *Name:* ${name}`,
         email ? `• *Email:* ${email}` : ``,
         phone ? `• *Phone:* ${phone}` : ``,
-        `• *Amount Paid:* ₹${amount}`,
+        `• *Amount Paid (Incl. 18% GST):* ₹${amount}`,
         coupon ? `• *Coupon Applied:* ${coupon}` : ``,
         paymentId ? `• *Payment ID:* ${paymentId}` : ``,
         ``,
@@ -49,9 +51,11 @@ const ThankYou = () => {
             window.fbq('track', 'Purchase', {
                 content_name: course,
                 currency: "INR",
-                value: parseFloat(amount) || (course.toLowerCase().includes("academy") ? 2499 : 99)
+                value: parseFloat(amount) || (course.toLowerCase().includes("academy") ? 5899 : 117)
             });
         }
+
+        if (pauseRedirect) return;
 
         // Countdown timer for automatic redirect
         const timer = setInterval(() => {
@@ -66,7 +70,7 @@ const ThankYou = () => {
         }, 1000);
 
         return () => clearInterval(timer);
-    }, [waChatLink, amount, paymentId, course, stateData.alreadyTrackedPurchase]);
+    }, [waChatLink, amount, paymentId, course, stateData.alreadyTrackedPurchase, pauseRedirect]);
 
     const handleSendWhatsAppMessage = () => {
         // Ping Apps Script webhook if orderId exists
@@ -75,6 +79,19 @@ const ThankYou = () => {
             fetch(`${GOOGLE_SHEET_URL}?action=whatsapp&orderId=${orderId}`).catch(() => {});
         }
         window.location.href = waChatLink;
+    };
+
+    const handleDownloadInvoice = () => {
+        setPauseRedirect(true);
+        openPrintableGstInvoice({
+            customerName: name,
+            customerEmail: email,
+            customerPhone: phone,
+            courseName: course,
+            totalAmountPaid: parseFloat(amount) || 117,
+            paymentId,
+            orderId
+        });
     };
 
     return (
@@ -97,7 +114,7 @@ const ThankYou = () => {
                 {/* Registration Details Card */}
                 <div className="bg-sky-50/70 border border-sky-200 p-4 sm:p-5 rounded-2xl text-left text-xs sm:text-sm space-y-2">
                     <div className="text-xs uppercase tracking-wider text-sky-700 font-bold mb-1 flex items-center justify-between">
-                        <span>Pre-Registration Details:</span>
+                        <span>Registration & GST Receipt:</span>
                         {coupon && (
                             <span className="bg-sky-100 text-sky-800 px-2 py-0.5 rounded border border-sky-200 flex items-center gap-1 text-[10px] font-bold">
                                 <Tag className="w-3 h-3" /> Coupon: {coupon}
@@ -121,7 +138,7 @@ const ThankYou = () => {
                         </div>
                     )}
                     <div className="flex justify-between py-1 border-b border-sky-200/60">
-                        <span className="text-slate-500">Amount Paid:</span>
+                        <span className="text-slate-500">Amount Paid (Incl. 18% GST):</span>
                         <span className="font-bold text-emerald-600">₹{amount}</span>
                     </div>
                     <div className="flex justify-between py-1">
@@ -132,11 +149,20 @@ const ThankYou = () => {
 
                 <div className="bg-emerald-50 text-emerald-800 p-4 rounded-2xl border border-emerald-200 text-xs sm:text-sm leading-relaxed font-medium">
                     <p>
-                        Your pre-registration confirmation email is on its way! Click below to send your details directly to our WhatsApp team. 🎉
+                        Your official GST Tax Invoice has been sent to your email and synced to FunnelsDone! You can also download your GST Tax Invoice below. 🎉
                     </p>
                 </div>
 
-                <div className="space-y-3 pt-2">
+                <div className="space-y-3 pt-1">
+                    <button
+                        type="button"
+                        onClick={handleDownloadInvoice}
+                        className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3.5 px-6 rounded-2xl shadow-md transition-all flex items-center justify-center gap-2.5 text-xs sm:text-sm"
+                    >
+                        <FileText className="w-4 h-4 text-sky-400" />
+                        <span>Download GST Tax Invoice (PDF)</span>
+                    </button>
+
                     <button 
                         onClick={handleSendWhatsAppMessage}
                         className="w-full bg-gradient-to-r from-emerald-500 via-teal-600 to-emerald-600 hover:from-emerald-600 hover:to-teal-700 text-white font-extrabold py-4 px-6 rounded-2xl shadow-lg shadow-emerald-500/25 transition-all flex items-center justify-center gap-3 transform hover:-translate-y-0.5 border border-emerald-400/30 text-sm sm:text-base"
@@ -145,10 +171,16 @@ const ThankYou = () => {
                         <span>Click Here To Send WhatsApp Message 🚀</span>
                     </button>
                     
-                    <p className="text-xs text-slate-500 flex items-center justify-center gap-1.5 font-medium">
-                        <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                        <span>Auto-redirecting to WhatsApp in <strong className="text-sky-700">{countdown}</strong> seconds...</span>
-                    </p>
+                    {!pauseRedirect ? (
+                        <p className="text-xs text-slate-500 flex items-center justify-center gap-1.5 font-medium">
+                            <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                            <span>Auto-redirecting to WhatsApp in <strong className="text-sky-700">{countdown}</strong> seconds...</span>
+                        </p>
+                    ) : (
+                        <p className="text-xs text-emerald-700 font-semibold">
+                            ✓ Invoice opened in new tab. Click the green button above whenever you're ready to join WhatsApp!
+                        </p>
+                    )}
                 </div>
 
             </div>

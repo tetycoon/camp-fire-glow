@@ -352,10 +352,240 @@ function handleWhatsAppIncoming(body) {
   }
 }
 
-function sendMasterclassEmail(email, name, amount, mode) {
-  const numAmount = parseInt(amount) || 499;
+const FUNNELSDONE_CONFIG = {
+  PIT_TOKEN: "pit-us-51307c8c-0d88-43f7-b619-3599040515db",
+  LOCATION_ID: "uUUUKRH7EP2A0oJBv4Zb",
+  API_BASE: "https://services.leadconnectorhq.com",
+  API_VERSION: "2021-07-28",
+  COMPANY_NAME: "TECH TYCOON DIGITAL SOLUTION LLP",
+  COMPANY_GSTIN: "33AAZFT9667P1ZP",
+  COMPANY_SAC: "999293",
+  COMPANY_LOGO: "https://assets.cdn.filesafe.space/uUUUKRH7EP2A0oJBv4Zb/media/6accab95bbad531ac8a6b1af.png",
+  COMPANY_PHONE: "7558133039",
+  COMPANY_WEBSITE: "https://www.techtycoon.in/",
+  ADDRESS_LINE1: "No. 3/59B, 1st Floor, 3rd Street, Ragava Nagar",
+  CITY: "Moovarasampet, Chennai",
+  STATE: "TAMILNADU",
+  POSTAL_CODE: "600091"
+};
+
+function generateOurGstInvoicePdfBlob(customerName, customerEmail, customerPhone, courseName, totalAmount, paymentId, orderId, invoiceNo) {
+  const total = Math.max(1, Number(totalAmount) || 589);
+  const isTest = total === 1;
+  const baseAmt = isTest ? 1 : Math.round((total / 1.18) * 100) / 100;
+  const totalGst = isTest ? 0 : Math.round((total - baseAmt) * 100) / 100;
+  const cgst = Math.round((totalGst / 2) * 100) / 100;
+  const sgst = Math.round((totalGst - cgst) * 100) / 100;
+  const invNumber = invoiceNo || ("TT/26-27/" + String(paymentId || orderId || Date.now()).replace(/[^A-Za-z0-9]/g, "").slice(-6).toUpperCase());
+  const dateStr = Utilities.formatDate(new Date(), "Asia/Kolkata", "dd MMM yyyy");
+
+  const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+    body { font-family: Arial, Helvetica, sans-serif; color: #0f172a; margin: 20px; font-size: 12px; }
+    .box { border: 1px solid #cbd5e1; border-radius: 10px; padding: 24px; }
+    .header { border-bottom: 2px solid #0f172a; padding-bottom: 14px; margin-bottom: 18px; width: 100%; }
+    .badge { background: #eff6ff; border: 1px solid #bfdbfe; color: #1d4ed8; font-weight: bold; padding: 3px 8px; border-radius: 4px; font-family: monospace; font-size: 11px; }
+    .paid { background: #dcfce7; color: #15803d; font-weight: bold; padding: 4px 10px; border-radius: 12px; font-size: 11px; }
+    table.items { width: 100%; border-collapse: collapse; margin: 18px 0; }
+    table.items th { background: #0f172a; color: #ffffff; padding: 8px 10px; text-align: left; font-size: 11px; text-transform: uppercase; }
+    table.items td { padding: 10px; border-bottom: 1px solid #e2e8f0; }
+    .right { text-align: right; font-family: monospace; }
+  </style></head><body><div class="box">
+    <table class="header"><tr>
+      <td>
+        <h2 style="margin:0 0 4px 0;font-size:16px;">${FUNNELSDONE_CONFIG.COMPANY_NAME}</h2>
+        <div style="color:#475569;line-height:1.4;">${FUNNELSDONE_CONFIG.ADDRESS_LINE1}, ${FUNNELSDONE_CONFIG.CITY}, ${FUNNELSDONE_CONFIG.STATE} - ${FUNNELSDONE_CONFIG.POSTAL_CODE}<br/>Phone: +91 ${FUNNELSDONE_CONFIG.COMPANY_PHONE} | Website: ${FUNNELSDONE_CONFIG.COMPANY_WEBSITE}</div>
+        <div style="margin-top:6px;"><span class="badge">GSTIN: ${FUNNELSDONE_CONFIG.COMPANY_GSTIN}</span></div>
+      </td>
+      <td style="text-align:right;vertical-align:top;">
+        <h1 style="margin:0;font-size:20px;">TAX INVOICE</h1>
+        <div style="color:#64748b;font-size:10px;margin-bottom:6px;">ORIGINAL FOR RECIPIENT</div>
+        <span class="paid">PAID</span>
+      </td>
+    </tr></table>
+    <table style="width:100%;margin-bottom:16px;"><tr>
+      <td style="width:50%;vertical-align:top;background:#f8fafc;padding:10px;border-radius:6px;border:1px solid #e2e8f0;">
+        <strong style="color:#64748b;font-size:10px;text-transform:uppercase;">Billed To (Customer)</strong><br/>
+        <strong>${sanitizeCell(customerName || "Learner")}</strong><br/>
+        Email: ${sanitizeCell(customerEmail || "")}<br/>
+        Phone: ${sanitizeCell(customerPhone || "")}<br/>
+        Place of Supply: Tamil Nadu (33), India
+      </td>
+      <td style="width:50%;vertical-align:top;background:#f8fafc;padding:10px;border-radius:6px;border:1px solid #e2e8f0;">
+        <strong style="color:#64748b;font-size:10px;text-transform:uppercase;">Invoice & Payment Details</strong><br/>
+        <strong>Invoice No:</strong> ${invNumber}<br/>
+        <strong>Invoice Date:</strong> ${dateStr}<br/>
+        <strong>Payment ID:</strong> ${sanitizeCell(paymentId || "PAID")}<br/>
+        <strong>Order ID:</strong> ${sanitizeCell(orderId || "")}
+      </td>
+    </tr></table>
+    <table class="items">
+      <thead><tr><th>#</th><th>Description of Service</th><th>SAC Code</th><th class="right">Qty</th><th class="right">Taxable Value (INR)</th></tr></thead>
+      <tbody><tr>
+        <td>1</td>
+        <td><strong>${sanitizeCell(courseName || "Claude MasterClass 2026")}</strong><br/><span style="color:#64748b;font-size:10px;">Live Educational & Training Program</span></td>
+        <td>${FUNNELSDONE_CONFIG.COMPANY_SAC}</td>
+        <td class="right">1</td>
+        <td class="right">Rs. ${baseAmt.toFixed(2)}</td>
+      </tr></tbody>
+    </table>
+    <table style="width:280px;margin-left:auto;border-collapse:collapse;">
+      <tr><td style="padding:5px 0;border-bottom:1px solid #e2e8f0;">Taxable Base Amount:</td><td class="right" style="padding:5px 0;border-bottom:1px solid #e2e8f0;">Rs. ${baseAmt.toFixed(2)}</td></tr>
+      <tr><td style="padding:5px 0;border-bottom:1px solid #e2e8f0;">CGST (9%):</td><td class="right" style="padding:5px 0;border-bottom:1px solid #e2e8f0;">+ Rs. ${cgst.toFixed(2)}</td></tr>
+      <tr><td style="padding:5px 0;border-bottom:1px solid #e2e8f0;">SGST (9%):</td><td class="right" style="padding:5px 0;border-bottom:1px solid #e2e8f0;">+ Rs. ${sgst.toFixed(2)}</td></tr>
+      <tr><td style="padding:8px 0;font-weight:bold;font-size:13px;">Total Paid (Incl. GST):</td><td class="right" style="padding:8px 0;font-weight:bold;font-size:13px;">Rs. ${total.toFixed(2)}</td></tr>
+    </table>
+    <p style="margin-top:20px;padding-top:10px;border-top:1px dashed #cbd5e1;font-size:10px;color:#64748b;">This is a computer-generated GST Tax Invoice from ${FUNNELSDONE_CONFIG.COMPANY_NAME} and requires no physical signature.</p>
+  </div></body></html>`;
+
+  const cleanFileNo = invNumber.replace(/[^A-Za-z0-9_-]/g, "_");
+  return Utilities.newBlob(html, "text/html", "Invoice.html").getAs("application/pdf").setName("GST_Tax_Invoice_" + cleanFileNo + ".pdf");
+}
+
+function syncInvoiceWithFunnelsDone(customerName, customerEmail, customerPhone, courseName, totalAmount, paymentId, orderId) {
+  try {
+    const headers = {
+      "Authorization": "Bearer " + FUNNELSDONE_CONFIG.PIT_TOKEN,
+      "Version": FUNNELSDONE_CONFIG.API_VERSION,
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    };
+
+    let cleanPhone = String(customerPhone || "").replace(/\D/g, "");
+    if (cleanPhone.length === 10) cleanPhone = "+91" + cleanPhone;
+    else if (cleanPhone.length > 10 && !cleanPhone.startsWith("+")) cleanPhone = "+" + cleanPhone;
+
+    const contactPayload = {
+      locationId: FUNNELSDONE_CONFIG.LOCATION_ID,
+      name: customerName || "Learner",
+      email: customerEmail || "",
+      phone: cleanPhone,
+      tags: ["claude_masterclass_paid", "gst_invoice_issued"]
+    };
+    const contactRes = UrlFetchApp.fetch(FUNNELSDONE_CONFIG.API_BASE + "/contacts/upsert", {
+      method: "post",
+      headers: headers,
+      payload: JSON.stringify(contactPayload),
+      muteHttpExceptions: true
+    });
+    const contactJson = JSON.parse(contactRes.getContentText() || "{}");
+    const contactId = contactJson.contact && contactJson.contact.id ? contactJson.contact.id : null;
+    if (!contactId) {
+      writeToLogs("FUNNELSDONE_CONTACT_ERR", contactRes.getContentText());
+      return null;
+    }
+
+    const numRes = UrlFetchApp.fetch(
+      FUNNELSDONE_CONFIG.API_BASE + "/invoices/generate-invoice-number?altId=" + FUNNELSDONE_CONFIG.LOCATION_ID + "&altType=location",
+      { method: "get", headers: headers, muteHttpExceptions: true }
+    );
+    const numJson = JSON.parse(numRes.getContentText() || "{}");
+    const nextInvoiceNumber = numJson.invoiceNumber || String(Math.floor(100000 + Math.random() * 900000));
+
+    const total = Math.max(1, Number(totalAmount) || 589);
+    const isTest = total === 1;
+    const baseAmt = isTest ? 1 : Math.round((total / 1.18) * 100) / 100;
+    const todayStr = Utilities.formatDate(new Date(), "Asia/Kolkata", "yyyy-MM-dd");
+
+    const createPayload = {
+      altId: FUNNELSDONE_CONFIG.LOCATION_ID,
+      altType: "location",
+      name: courseName || "Claude MasterClass",
+      title: "TAX INVOICE",
+      currency: "INR",
+      invoiceNumber: nextInvoiceNumber,
+      invoiceNumberPrefix: "TT/26-27/",
+      issueDate: todayStr,
+      dueDate: todayStr,
+      liveMode: true,
+      businessDetails: {
+        name: FUNNELSDONE_CONFIG.COMPANY_NAME,
+        logoUrl: FUNNELSDONE_CONFIG.COMPANY_LOGO,
+        phoneNo: FUNNELSDONE_CONFIG.COMPANY_PHONE,
+        website: FUNNELSDONE_CONFIG.COMPANY_WEBSITE,
+        address: {
+          addressLine1: FUNNELSDONE_CONFIG.ADDRESS_LINE1,
+          city: FUNNELSDONE_CONFIG.CITY,
+          state: FUNNELSDONE_CONFIG.STATE,
+          countryCode: "IN",
+          postalCode: FUNNELSDONE_CONFIG.POSTAL_CODE
+        },
+        customValues: ["GSTIN: " + FUNNELSDONE_CONFIG.COMPANY_GSTIN]
+      },
+      contactDetails: {
+        id: contactId,
+        name: customerName || "Learner",
+        email: customerEmail || "",
+        phoneNo: cleanPhone,
+        address: { countryCode: "IN", state: "TAMILNADU" }
+      },
+      items: [
+        {
+          name: courseName || "Claude MasterClass",
+          description: "SAC: " + FUNNELSDONE_CONFIG.COMPANY_SAC + " | Razorpay Payment ID: " + (paymentId || ""),
+          currency: "INR",
+          amount: baseAmt,
+          qty: 1,
+          taxes: isTest ? [] : [
+            { _id: "6ace04c180d27cc259dfb0bf", name: "CGST", rate: 9, calculation: "exclusive", description: "Central GST (9%)" },
+            { _id: "6ace04e8460064d4e48c5d10", name: "SGST", rate: 9, calculation: "exclusive", description: "State GST - Tamil Nadu (9%)" }
+          ]
+        }
+      ],
+      discount: { type: "percentage", value: 0 },
+      sentTo: {
+        email: customerEmail ? [customerEmail] : [],
+        phoneNo: cleanPhone ? [cleanPhone] : []
+      }
+    };
+
+    const invRes = UrlFetchApp.fetch(FUNNELSDONE_CONFIG.API_BASE + "/invoices/", {
+      method: "post",
+      headers: headers,
+      payload: JSON.stringify(createPayload),
+      muteHttpExceptions: true
+    });
+    const invJson = JSON.parse(invRes.getContentText() || "{}");
+    const invoiceId = invJson._id || (invJson.invoice && invJson.invoice._id);
+    if (!invoiceId) {
+      writeToLogs("FUNNELSDONE_INV_ERR", invRes.getContentText());
+      return "TT/26-27/" + nextInvoiceNumber;
+    }
+
+    const recordPayload = {
+      altId: FUNNELSDONE_CONFIG.LOCATION_ID,
+      altType: "location",
+      mode: "other",
+      amount: invJson.total || total,
+      notes: "Paid via Razorpay | Payment ID: " + (paymentId || "") + " | Order ID: " + (orderId || ""),
+      fulfilledAt: new Date().toISOString()
+    };
+    const payRes = UrlFetchApp.fetch(FUNNELSDONE_CONFIG.API_BASE + "/invoices/" + invoiceId + "/record-payment", {
+      method: "post",
+      headers: headers,
+      payload: JSON.stringify(recordPayload),
+      muteHttpExceptions: true
+    });
+    writeToLogs("FUNNELSDONE_INVOICE_PAID", "Invoice TT/26-27/" + nextInvoiceNumber + " (" + invoiceId + ") recorded: " + payRes.getResponseCode());
+    return "TT/26-27/" + nextInvoiceNumber;
+  } catch (err) {
+    writeToLogs("FUNNELSDONE_SYNC_ERROR", err.message);
+    return null;
+  }
+}
+
+function sendMasterclassEmail(email, name, amount, mode, paymentId, orderId, phone) {
+  const numAmount = parseInt(amount) || 589;
   const isOffline = (mode && mode.toString().toLowerCase() === 'offline') || numAmount >= 4000;
   const dates = getUpcomingMasterclassDates(isOffline);
+  const courseTitle = isOffline ? "Claude MasterClass (In-Person Workshop Chennai)" : "Claude MasterClass (Online Live Session)";
+  
+  const fdInvoiceNo = syncInvoiceWithFunnelsDone(name, email, phone, courseTitle, numAmount, paymentId, orderId);
+  let pdfAttachment = null;
+  try {
+    pdfAttachment = generateOurGstInvoicePdfBlob(name, email, phone, courseTitle, numAmount, paymentId, orderId, fdInvoiceNo);
+  } catch (pdfErr) {
+    writeToLogs("PDF_GEN_ERROR", pdfErr.message);
+  }
   
   if (isOffline) {
     const dateVal = dates.dateText;
@@ -364,20 +594,22 @@ function sendMasterclassEmail(email, name, amount, mode) {
     const passType = "In-Person MasterClass Pass (Vestin Park Hotel, Chennai)";
     const waGroupLink = WHATSAPP_CONFIG.WA_GROUP_LINK_CLAUDE_OFFLINE;
     const perksText = "<p style='color:#da7756;font-weight:bold;margin:8px 0;'>🍱 Luxury Hotel Buffet Lunch & High Tea Included ✅</p><p style='color:#6B4FBB;font-weight:bold;margin:8px 0;'>💻 Bring your laptop with internet connectivity ✅</p>";
-    const subject = `🎉 Registration Confirmed: In-Person MasterClass Chennai (${dateVal})`;
+    const subject = `🎉 Registration Confirmed & GST Invoice: In-Person MasterClass Chennai (${dateVal})`;
 
     const htmlBody = `<!DOCTYPE html><html><body style="margin:0;padding:0;background-color:#0d0d12;font-family:sans-serif;color:#f0f0f5;">
     <div style="max-width:600px;margin:20px auto;background:#16161e;border:1px solid #da7756;border-radius:24px;padding:32px;text-align:center;">
       <h1 style="color:#ffffff;">🏨 Claude MasterClass — In-Person Chennai</h1>
       <p>Welcome, <strong>${name}</strong>!</p>
-      <p>Your payment for <strong>${passType}</strong> @ ₹${numAmount} was successful.</p>
+      <p>Your payment for <strong>${passType}</strong> @ ₹${numAmount} (incl. 18% GST) was successful. Your official GST Tax Invoice PDF is attached!</p>
       ${perksText}
       <p>📍 <strong>${venueVal}</strong></p>
       <p>📅 <strong>${dateVal}</strong> | 🕒 <strong>${timeVal}</strong></p>
       <a href="${waGroupLink}" style="display:inline-block;background:#da7756;color:#fff;padding:14px 28px;border-radius:50px;text-decoration:none;font-weight:bold;margin-top:16px;">📱 Join In-Person WhatsApp Community</a>
     </div></body></html>`;
 
-    MailApp.sendEmail({ to: email, subject: subject, htmlBody: htmlBody, name: "Tech Tycoon", replyTo: "techtycoondigitalsolutions@gmail.com" });
+    const mailOpts = { to: email, subject: subject, htmlBody: htmlBody, name: "Tech Tycoon", replyTo: "techtycoondigitalsolutions@gmail.com" };
+    if (pdfAttachment) mailOpts.attachments = [pdfAttachment];
+    MailApp.sendEmail(mailOpts);
 
   } else {
     const dateVal = dates.dateText;
@@ -387,20 +619,22 @@ function sendMasterclassEmail(email, name, amount, mode) {
     const passType = isRecordingPass ? "Live + Recording Pass (Recorded Video Access)" : "Standard Live Session Pass";
     const waGroupLink = WHATSAPP_CONFIG.WA_GROUP_LINK_CLAUDE_ONLINE;
     const recText = isRecordingPass ? "<p style='color:#10b981;font-weight:bold;margin:8px 0;'>⭐ Recorded Video Access Included ✅</p>" : "";
-    const subject = `🎉 Registration Confirmed: Claude MasterClass Online (${dateVal})`;
+    const subject = `🎉 Registration Confirmed & GST Invoice: Claude MasterClass Online (${dateVal})`;
 
     const htmlBody = `<!DOCTYPE html><html><body style="margin:0;padding:0;background-color:#0d0d12;font-family:sans-serif;color:#f0f0f5;">
     <div style="max-width:600px;margin:20px auto;background:#16161e;border:1px solid #da7756;border-radius:24px;padding:32px;text-align:center;">
       <h1 style="color:#ffffff;">🤖 Claude MasterClass — Online Live</h1>
       <p>Welcome, <strong>${name}</strong>!</p>
-      <p>Your payment for <strong>${passType}</strong> @ ₹${numAmount} was successful.</p>
+      <p>Your payment for <strong>${passType}</strong> @ ₹${numAmount} (incl. 18% GST) was successful. Your official GST Tax Invoice PDF is attached!</p>
       ${recText}
       <p>📍 <strong>${venueVal}</strong></p>
       <p>📅 <strong>${dateVal}</strong> | 🕒 <strong>${timeVal}</strong></p>
       <a href="${waGroupLink}" style="display:inline-block;background:#da7756;color:#fff;padding:14px 28px;border-radius:50px;text-decoration:none;font-weight:bold;margin-top:16px;">📱 Join Online WhatsApp Community</a>
     </div></body></html>`;
 
-    MailApp.sendEmail({ to: email, subject: subject, htmlBody: htmlBody, name: "Tech Tycoon", replyTo: "techtycoondigitalsolutions@gmail.com" });
+    const mailOpts = { to: email, subject: subject, htmlBody: htmlBody, name: "Tech Tycoon", replyTo: "techtycoondigitalsolutions@gmail.com" };
+    if (pdfAttachment) mailOpts.attachments = [pdfAttachment];
+    MailApp.sendEmail(mailOpts);
   }
 }
 
@@ -454,9 +688,7 @@ function createRazorpayOrder(data) {
         customer_name: sanitizeCell(data.name || ""),
         certificate: data.wantCertificate ? "YES" : "NO",
         base_amount: data.baseAmount || 499,
-        gst_amount: data.gstAmount || 90,
-        gstin: sanitizeCell(data.gstin || ""),
-        company_name: sanitizeCell(data.companyName || "")
+        gst_amount: data.gstAmount || 90
       }
     }),
     muteHttpExceptions: true
@@ -480,7 +712,6 @@ function saveToSheet(data, orderId) {
   const modeTag = (data.mode || (parseInt(data.amount) >= 4000 ? "OFFLINE" : "ONLINE")).toUpperCase();
   const sessionModeDisplay = getModeOfSessionDisplay(data.mode, data.amount);
   const rzpTag = getRazorpayAccountTag(data);
-  const gstTag = data.gstin ? ` | GSTIN: ${sanitizeCell(data.gstin)} (${sanitizeCell(data.companyName || "")})` : "";
 
   sheet.appendRow([
     new Date(),
@@ -495,7 +726,7 @@ function saveToSheet(data, orderId) {
     "",
     "PENDING",
     "NO", "NO", "NO", "NO", "NO", "NO", "NO", "NO",
-    sanitizeCell((data.promoCode || "CLAUDE") + " | MODE: " + modeTag + " | CERT: " + certTag + " | " + rzpTag + gstTag)
+    sanitizeCell((data.promoCode || "CLAUDE") + " | MODE: " + modeTag + " | CERT: " + certTag + " | " + rzpTag)
   ]);
 }
 
@@ -570,7 +801,7 @@ function updatePaymentStatus(data) {
     const phoneClean = targetPhone10 || (rows[foundIndex][3] ? rows[foundIndex][3].toString().replace(/\D/g, '') : "");
 
     try {
-      sendMasterclassEmail(email, name, amount, mode);
+      sendMasterclassEmail(email, name, amount, mode, data.razorpay_payment_id, targetOrderId, phoneClean);
       triggerWhatsAppCampaign(name, email, phoneClean);
     } catch (err) { writeToLogs("EMAIL_ERROR", err.message); }
   } else {
@@ -594,7 +825,7 @@ function updatePaymentStatus(data) {
     ]);
 
     try {
-      sendMasterclassEmail(data.email, data.name || "Customer", data.amount || 589, mode);
+      sendMasterclassEmail(data.email, data.name || "Customer", data.amount || 589, mode, data.razorpay_payment_id, data.razorpay_order_id, targetPhone10);
       triggerWhatsAppCampaign(data.name || "Customer", data.email, targetPhone10);
     } catch (err) { writeToLogs("EMAIL_ERROR", err.message); }
   }
@@ -604,14 +835,12 @@ function updatePaymentStatusFromWebhook(orderId, paymentId, email, notes, rawAmo
   const isClaudePayment = notes && (notes.product === "claude_masterclass" || notes.masterclass === "claude");
   const amount = rawAmount ? rawAmount / 100 : 0;
   
-  // 1. Immediately ignore if notes indicate a different product
   if (notes && notes.product && notes.product !== "claude_masterclass") {
     writeToLogs("NON_CLAUDE_WEBHOOK_SKIPPED", `Ignored ${notes.product} payment for ${email} (Order: ${orderId}).`);
     return;
   }
 
-  // 2. Ignore typical ₹99 lead payments from non-Claude pages
-  if (amount === 99 && (!notes.product || !notes.product.toLowerCase().includes("claude"))) {
+  if ((amount === 99 || amount === 117) && (!notes.product || !notes.product.toLowerCase().includes("claude"))) {
     writeToLogs("NON_CLAUDE_WEBHOOK_SKIPPED", `Ignored ₹${amount} payment for ${email} (Order: ${orderId}) from non-Claude page.`);
     return;
   }
@@ -646,11 +875,10 @@ function updatePaymentStatusFromWebhook(orderId, paymentId, email, notes, rawAmo
     const phoneClean = rows[foundIndex][3] ? rows[foundIndex][3].toString().replace(/\D/g, '') : "";
 
     try {
-      sendMasterclassEmail(email, name, rowAmount, mode);
+      sendMasterclassEmail(email, name, rowAmount, mode, paymentId, orderId, phoneClean);
       triggerWhatsAppCampaign(name, email, phoneClean);
     } catch (err) { writeToLogs("EMAIL_ERROR", err.message); }
   } else {
-    // Only append a fallback row if it is explicitly verified as a Claude payment
     if (isClaudePayment) {
       const mode = notes?.mode || (amount >= 4000 ? "OFFLINE" : "ONLINE");
       const sessionModeDisplay = getModeOfSessionDisplay(mode, amount);
@@ -661,7 +889,7 @@ function updatePaymentStatusFromWebhook(orderId, paymentId, email, notes, rawAmo
       ]);
 
       try {
-        sendMasterclassEmail(email, notes.customer_name || "Customer", amount, mode);
+        sendMasterclassEmail(email, notes.customer_name || "Customer", amount, mode, paymentId, orderId, "");
       } catch (err) { writeToLogs("EMAIL_ERROR", err.message); }
     } else {
       writeToLogs("OTHER_PAGE_WEBHOOK_SKIPPED", `Ignored payment for ${email} (Order: ${orderId}) as it is not identified as Claude.`);
