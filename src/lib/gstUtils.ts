@@ -85,9 +85,10 @@ export const COMPANY_GST_DETAILS = {
   legalName: "TECH TYCOON DIGITAL SOLUTION LLP",
   gstin: "33AAZFT9667P1ZP",
   sacCode: "999293",
+  fullAddress: "No. 3/59B, 1st Floor, 3rd Street, Ragava Nagar, Moovarasampet, Chennai-600091",
   addressLine1: "No. 3/59B, 1st Floor, 3rd Street, Ragava Nagar",
-  cityStateZip: "Moovarasampet, Chennai, TAMILNADU - 600091",
-  phone: "+91 75581 33039",
+  cityStateZip: "Moovarasampet, Chennai-600091",
+  phone: "+91 7558133039",
   email: "support@techtycoon.in",
   website: "https://course.techtycoon.in",
   logoUrl: "https://assets.cdn.filesafe.space/uUUUKRH7EP2A0oJBv4Zb/media/6accab95bbad531ac8a6b1af.png",
@@ -175,9 +176,8 @@ export function openPrintableGstInvoice(params: InvoicePrintParams): void {
       <div>
         <h2 class="company-name">${COMPANY_GST_DETAILS.legalName}</h2>
         <p class="company-meta">
-          ${COMPANY_GST_DETAILS.addressLine1}<br/>
-          ${COMPANY_GST_DETAILS.cityStateZip}<br/>
-          Phone: ${COMPANY_GST_DETAILS.phone} • Email: ${COMPANY_GST_DETAILS.email}
+          ${COMPANY_GST_DETAILS.fullAddress}<br/>
+          Mobile: ${COMPANY_GST_DETAILS.phone} • Email: ${COMPANY_GST_DETAILS.email}
         </p>
         <div class="gstin-badge">GSTIN: ${COMPANY_GST_DETAILS.gstin}</div>
       </div>

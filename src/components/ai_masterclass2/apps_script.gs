@@ -217,7 +217,7 @@ function generateOurGstInvoicePdfBlob(customerName, customerEmail, customerPhone
     <table class="header"><tr>
       <td>
         <h2 style="margin:0 0 4px 0;font-size:16px;">${FUNNELSDONE_CONFIG.COMPANY_NAME}</h2>
-        <div style="color:#475569;line-height:1.4;">${FUNNELSDONE_CONFIG.ADDRESS_LINE1}, ${FUNNELSDONE_CONFIG.CITY}, ${FUNNELSDONE_CONFIG.STATE} - ${FUNNELSDONE_CONFIG.POSTAL_CODE}<br/>Phone: +91 ${FUNNELSDONE_CONFIG.COMPANY_PHONE} | Website: ${FUNNELSDONE_CONFIG.COMPANY_WEBSITE}</div>
+        <div style="color:#475569;line-height:1.4;">No. 3/59B, 1st Floor, 3rd Street, Ragava Nagar, Moovarasampet, Chennai-600091<br/>Mobile: +91 ${FUNNELSDONE_CONFIG.COMPANY_PHONE} | Website: ${FUNNELSDONE_CONFIG.COMPANY_WEBSITE}</div>
         <div style="margin-top:6px;"><span class="badge">GSTIN: ${FUNNELSDONE_CONFIG.COMPANY_GSTIN}</span></div>
       </td>
       <td style="text-align:right;vertical-align:top;">

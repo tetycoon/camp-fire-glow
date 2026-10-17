@@ -1068,6 +1068,12 @@ const Index: React.FC = () => {
               Direct Contact
             </h4>
             <div className="space-y-3 text-xs text-slate-600 font-normal">
+              <div className="flex items-start gap-2">
+                <MapPin className="w-3.5 h-3.5 text-indigo-600 shrink-0 mt-0.5" />
+                <span className="leading-relaxed">
+                  No. 3/59B, 1st Floor, 3rd Street, Ragava Nagar, Moovarasampet, Chennai-600091
+                </span>
+              </div>
               <div className="flex items-center gap-2">
                 <Mail className="w-3.5 h-3.5 text-indigo-600" />
                 <a href="mailto:support@techtycoon.in" className="hover:underline">
@@ -1076,14 +1082,14 @@ const Index: React.FC = () => {
               </div>
               <div className="flex items-center gap-2">
                 <Phone className="w-3.5 h-3.5 text-indigo-600" />
-                <a href="tel:+916379209689" className="hover:underline">
-                  +91 63792 09689
+                <a href="tel:+917558133039" className="hover:underline">
+                  +91 7558133039
                 </a>
               </div>
               <div className="flex items-center gap-2">
                 <MessageSquare className="w-3.5 h-3.5 text-emerald-600" />
-                <a href="https://wa.me/916379209689" target="_blank" rel="noreferrer" className="hover:underline text-emerald-700 font-semibold">
-                  WhatsApp Support (+91 63792 09689)
+                <a href="https://wa.me/917558133039" target="_blank" rel="noreferrer" className="hover:underline text-emerald-700 font-semibold">
+                  WhatsApp Support (+91 7558133039)
                 </a>
               </div>
               <div className="pt-2">
@@ -1098,11 +1104,11 @@ const Index: React.FC = () => {
 
         {/* Bottom copyright & policies */}
         <div className="max-w-7xl mx-auto pt-8 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-500 font-medium">
-          <p>© 2026 Tech Tycoon Digital Solution LLP. All rights reserved.</p>
+          <p>© 2026 Tech Tycoon Digital Solution LLP (GSTIN: 33AAZFT9667P1ZP). All rights reserved.</p>
           <div className="flex items-center gap-6">
             <Link to="/privacy" className="hover:text-slate-800 transition-colors">Privacy Policy</Link>
             <span>•</span>
-            <span className="text-slate-400">Chennai, Tamil Nadu, India</span>
+            <span className="text-slate-400">No. 3/59B, 1st Floor, 3rd Street, Ragava Nagar, Moovarasampet, Chennai-600091</span>
           </div>
         </div>
       </footer>

@@ -75,7 +75,9 @@ const Privacy = () => {
                     <h2 className="text-2xl font-black mb-4 text-slate-900 tracking-tight text-center md:text-left">4. Contact Us</h2>
                     <p className="text-slate-600 leading-relaxed font-normal">
                         If you have any questions about this Privacy Policy, please contact us at: <br />
-                        <span className="text-brandGreen font-bold">support@techtycoon.in</span>
+                        <strong>Office Address:</strong> No. 3/59B, 1st Floor, 3rd Street, Ragava Nagar, Moovarasampet, Chennai-600091<br />
+                        <strong>Mobile Number:</strong> +91 7558133039<br />
+                        <strong>Email:</strong> <span className="text-brandGreen font-bold">support@techtycoon.in</span>
                     </p>
                 </section>
             </div>
@@ -88,7 +90,7 @@ const Privacy = () => {
                             <img src="/logo.png" alt="TechTycoon Logo" className="w-12 h-12 rounded-full border border-slate-700 bg-white" />
                             <div className="flex flex-col">
                                 <span className="text-xl font-black tracking-tight text-white uppercase leading-none">TechTycoon</span>
-                                <span className="text-[10px] font-bold text-brandGreen uppercase tracking-widest mt-0.5">Digital Solutions LLP</span>
+                                <span className="text-[10px] font-bold text-brandGreen uppercase tracking-widest mt-0.5">Digital Solution LLP</span>
                             </div>
                         </div>
                         <p className="text-slate-400 font-medium leading-relaxed max-w-sm">
@@ -105,8 +107,10 @@ const Privacy = () => {
 
                     <div>
                         <h4 className="text-sm font-black text-white uppercase tracking-widest mb-6 relative pl-3 before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-brandGreen">Contact</h4>
-                        <div className="flex flex-col gap-4">
-                            <div className="flex items-center gap-3 text-slate-400">
+                        <div className="flex flex-col gap-3 text-slate-400 text-xs">
+                            <p className="leading-relaxed">No. 3/59B, 1st Floor, 3rd Street, Ragava Nagar, Moovarasampet, Chennai-600091</p>
+                            <p className="font-bold text-white">+91 7558133039</p>
+                            <div className="flex items-center gap-2">
                                 <Mail className="w-4 h-4 text-brandGreen" />
                                 <a href="mailto:support@techtycoon.in" className="hover:text-brandGreen text-sm font-bold transition-colors">support@techtycoon.in</a>
                             </div>
@@ -116,7 +120,7 @@ const Privacy = () => {
 
                 <div className="max-w-7xl mx-auto border-t border-slate-800 pt-8 flex items-center justify-between">
                     <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-                        © 2026 TechTycoon Digital Solutions LLP. All Rights Reserved.
+                        © 2026 Tech Tycoon Digital Solution LLP (GSTIN: 33AAZFT9667P1ZP). All Rights Reserved.
                     </p>
                 </div>
             </footer>
