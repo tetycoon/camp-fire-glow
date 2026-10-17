@@ -1,33 +1,165 @@
 /**
- * Centralized GST Calculation (18% Exclusive) & Cybersecurity Input Validation Utilities
+ * Centralized GST Calculation (18% Exclusive), Indian CGST Rule 46 Tax Invoice Generator,
+ * & Cybersecurity Input Validation Utilities
  * For all Tech Tycoon course & masterclass checkout flows on course.techtycoon.in
  */
 
 export const GST_RATE = 0.18;
+export const CGST_RATE = 0.09;
+export const SGST_RATE = 0.09;
 
 export interface GstBreakdown {
   baseAmount: number;
+  cgstAmount: number;
+  sgstAmount: number;
+  exactGstAmount: number;
   gstRatePercent: number;
   gstAmount: number;
+  roundOff: number;
   totalAmount: number;
   totalInPaise: number;
 }
 
 /**
+ * Known standard base prices mapped from their rounded 18% GST total.
+ * Ensures that ₹117 paid maps to exact ₹99.00 Base + ₹8.91 CGST + ₹8.91 SGST + ₹0.18 Round Off,
+ * rather than ₹99.15 from naive reverse division.
+ */
+const TOTAL_TO_EXACT_BASE_MAP: Record<number, number> = {
+  117: 99,
+  471: 399,
+  589: 499,
+  943: 799,
+  1179: 999,
+  1769: 1499,
+  2359: 1999,
+  2949: 2499,
+  2950: 2500,
+  3539: 2999,
+  4130: 3500,
+  5899: 4999,
+  8259: 6999,
+  11799: 9999,
+  17699: 14999,
+};
+
+/**
  * Calculates +18% GST on top of any base session price.
- * Uses standard nearest-rupee rounding (e.g., ₹99 + ₹18 GST = ₹117).
+ * Uses standard nearest-rupee rounding under Section 170 of the CGST Act, 2017
+ * (e.g., ₹99.00 Base + ₹8.91 CGST + ₹8.91 SGST = ₹116.82 -> Round Off +₹0.18 = ₹117.00).
  */
 export function calculateGstBreakdown(baseAmount: number): GstBreakdown {
   const safeBase = Math.max(0, Math.round(Number(baseAmount) || 0));
+  const cgstAmount = Math.round(safeBase * CGST_RATE * 100) / 100;
+  const sgstAmount = Math.round(safeBase * SGST_RATE * 100) / 100;
+  const exactGstAmount = Math.round((cgstAmount + sgstAmount) * 100) / 100;
   const gstAmount = Math.round(safeBase * GST_RATE);
   const totalAmount = safeBase + gstAmount;
+  const roundOff = Math.round((totalAmount - (safeBase + exactGstAmount)) * 100) / 100;
+
   return {
     baseAmount: safeBase,
+    cgstAmount,
+    sgstAmount,
+    exactGstAmount,
     gstRatePercent: 18,
     gstAmount,
+    roundOff,
     totalAmount,
     totalInPaise: totalAmount * 100,
   };
+}
+
+/**
+ * Given the total amount paid (and optionally an explicit base amount),
+ * returns an accounting-accurate CGST Rule 46 breakdown with exact Base, CGST (9%), SGST (9%), and Round Off.
+ */
+export function getInvoiceAccountingBreakdown(totalPaid: number, explicitBase?: number) {
+  const total = Math.max(1, Math.round(Number(totalPaid) || 117));
+  if (total === 1) {
+    return {
+      isTest: true,
+      baseAmount: 1,
+      cgst: 0,
+      sgst: 0,
+      totalGst: 0,
+      roundOff: 0,
+      totalAmount: 1,
+    };
+  }
+
+  const matchedBase =
+    explicitBase && explicitBase > 0
+      ? explicitBase
+      : TOTAL_TO_EXACT_BASE_MAP[total] ?? Math.round((total / 1.18) * 100) / 100;
+
+  const cgst = Math.round(matchedBase * CGST_RATE * 100) / 100;
+  const sgst = Math.round(matchedBase * SGST_RATE * 100) / 100;
+  const totalGst = Math.round((cgst + sgst) * 100) / 100;
+  const roundOff = Math.round((total - (matchedBase + totalGst)) * 100) / 100;
+
+  return {
+    isTest: false,
+    baseAmount: matchedBase,
+    cgst,
+    sgst,
+    totalGst,
+    roundOff,
+    totalAmount: total,
+  };
+}
+
+/**
+ * Converts a number in INR into Indian Accounting Words (Rupees ... Only)
+ * Required under Rule 46 of CGST Rules, 2017.
+ */
+export function numberToIndianRupeesWords(amount: number): string {
+  const num = Math.round(Math.max(0, Number(amount) || 0));
+  if (num === 0) return "Indian Rupees Zero Only";
+
+  const ones = [
+    "", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine",
+    "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen",
+    "Seventeen", "Eighteen", "Nineteen"
+  ];
+  const tens = [
+    "", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"
+  ];
+
+  function twoDigitWords(n: number): string {
+    if (n < 20) return ones[n];
+    const t = Math.floor(n / 10);
+    const o = n % 10;
+    return tens[t] + (o ? " " + ones[o] : "");
+  }
+
+  function threeDigitWords(n: number): string {
+    const h = Math.floor(n / 100);
+    const rem = n % 100;
+    let res = "";
+    if (h > 0) res += ones[h] + " Hundred";
+    if (rem > 0) res += (res ? " and " : "") + twoDigitWords(rem);
+    return res;
+  }
+
+  let rem = num;
+  const parts: string[] = [];
+
+  const crore = Math.floor(rem / 10000000);
+  rem %= 10000000;
+  if (crore > 0) parts.push(threeDigitWords(crore) + " Crore");
+
+  const lakh = Math.floor(rem / 100000);
+  rem %= 100000;
+  if (lakh > 0) parts.push(twoDigitWords(lakh) + " Lakh");
+
+  const thousand = Math.floor(rem / 1000);
+  rem %= 1000;
+  if (thousand > 0) parts.push(twoDigitWords(thousand) + " Thousand");
+
+  if (rem > 0) parts.push(threeDigitWords(rem));
+
+  return "Indian Rupees " + parts.join(" ") + " Only";
 }
 
 /**
@@ -84,7 +216,11 @@ export function isAuthorizedTestEmail(email: string): boolean {
 export const COMPANY_GST_DETAILS = {
   legalName: "TECH TYCOON DIGITAL SOLUTION LLP",
   gstin: "33AAZFT9667P1ZP",
+  pan: "AAZFT9667P",
+  stateName: "Tamil Nadu",
+  stateCode: "33",
   sacCode: "999293",
+  sacDescription: "Commercial Training & Coaching Services",
   fullAddress: "No. 3/59B, 1st Floor, 3rd Street, Ragava Nagar, Moovarasampet, Chennai-600091",
   addressLine1: "No. 3/59B, 1st Floor, 3rd Street, Ragava Nagar",
   cityStateZip: "Moovarasampet, Chennai-600091",
@@ -100,27 +236,25 @@ export interface InvoicePrintParams {
   customerPhone?: string;
   courseName: string;
   totalAmountPaid: number;
+  baseAmount?: number;
   paymentId: string;
   orderId?: string;
+  invoiceNumber?: string;
   invoiceDate?: string;
 }
 
 /**
- * Opens a clean, printable & downloadable GST Tax Invoice window from our side
+ * Opens a clean, printable & downloadable CGST Rule 46 compliant Tax Invoice window
  */
 export function openPrintableGstInvoice(params: InvoicePrintParams): void {
-  const total = Math.max(1, Number(params.totalAmountPaid) || 117);
-  const isTest = total === 1;
-  const baseAmount = isTest ? 1 : Math.round((total / 1.18) * 100) / 100;
-  const totalGst = isTest ? 0 : Math.round((total - baseAmount) * 100) / 100;
-  const cgst = Math.round((totalGst / 2) * 100) / 100;
-  const sgst = Math.round((totalGst - cgst) * 100) / 100;
+  const acct = getInvoiceAccountingBreakdown(params.totalAmountPaid, params.baseAmount);
+  const amountInWords = numberToIndianRupeesWords(acct.totalAmount);
 
   const suffix = (params.paymentId || params.orderId || String(Date.now()))
     .replace(/[^A-Za-z0-9]/g, "")
     .slice(-6)
     .toUpperCase();
-  const invoiceNumber = `TT/26-27/${suffix}`;
+  const invoiceNumber = params.invoiceNumber || `TT/26-27/${suffix}`;
   const dateStr =
     params.invoiceDate ||
     new Date().toLocaleDateString("en-IN", {
@@ -128,6 +262,9 @@ export function openPrintableGstInvoice(params: InvoicePrintParams): void {
       month: "short",
       year: "numeric",
     });
+
+  const roundOffSign = acct.roundOff >= 0 ? "+" : "-";
+  const roundOffAbs = Math.abs(acct.roundOff).toFixed(2);
 
   const html = `<!DOCTYPE html>
 <html lang="en">
@@ -137,11 +274,13 @@ export function openPrintableGstInvoice(params: InvoicePrintParams): void {
   <style>
     * { box-sizing: border-box; font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif; }
     body { margin: 0; padding: 28px; background: #f1f5f9; color: #0f172a; }
-    .invoice-card { max-width: 780px; margin: 0 auto; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 16px; padding: 36px; box-shadow: 0 10px 25px rgba(0,0,0,0.06); }
+    .invoice-card { max-width: 800px; margin: 0 auto; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 16px; padding: 36px; box-shadow: 0 10px 25px rgba(0,0,0,0.06); }
     .top-bar { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #0f172a; padding-bottom: 20px; margin-bottom: 24px; }
     .company-name { font-size: 20px; font-weight: 900; color: #0f172a; margin: 0 0 4px; letter-spacing: 0.3px; }
     .company-meta { font-size: 12px; color: #475569; line-height: 1.5; margin: 0; }
-    .gstin-badge { display: inline-block; margin-top: 6px; padding: 4px 10px; background: #eff6ff; border: 1px solid #bfdbfe; color: #1d4ed8; font-weight: 800; font-size: 12px; border-radius: 6px; font-family: monospace; }
+    .badge-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+    .gstin-badge { display: inline-block; padding: 4px 10px; background: #eff6ff; border: 1px solid #bfdbfe; color: #1d4ed8; font-weight: 800; font-size: 11.5px; border-radius: 6px; font-family: monospace; }
+    .pan-badge { display: inline-block; padding: 4px 10px; background: #f8fafc; border: 1px solid #cbd5e1; color: #334155; font-weight: 700; font-size: 11.5px; border-radius: 6px; font-family: monospace; }
     .invoice-title { text-align: right; }
     .invoice-title h1 { font-size: 24px; font-weight: 900; color: #0f172a; margin: 0; letter-spacing: 1px; }
     .invoice-title .sub { font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 1px; }
@@ -149,16 +288,19 @@ export function openPrintableGstInvoice(params: InvoicePrintParams): void {
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
     .info-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px 16px; font-size: 12.5px; line-height: 1.6; }
     .info-box h4 { margin: 0 0 6px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; color: #64748b; font-weight: 800; }
-    table { width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 13px; }
-    th { background: #0f172a; color: #ffffff; text-align: left; padding: 11px 14px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.7px; }
-    td { padding: 12px 14px; border-bottom: 1px solid #e2e8f0; color: #1e293b; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 12.5px; }
+    th { background: #0f172a; color: #ffffff; text-align: left; padding: 10px 12px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.6px; }
+    td { padding: 12px; border-bottom: 1px solid #e2e8f0; color: #1e293b; }
     .num { text-align: right; font-family: monospace; font-weight: 700; }
-    .summary-wrap { display: flex; justify-content: flex-end; }
-    .summary-table { width: 340px; border-collapse: collapse; font-size: 13px; }
-    .summary-table td { padding: 7px 10px; border-bottom: 1px solid #e2e8f0; }
-    .summary-table tr.total-row td { border-top: 2px solid #0f172a; border-bottom: none; font-size: 15px; font-weight: 900; color: #0f172a; padding-top: 12px; }
-    .footer-note { margin-top: 28px; padding-top: 16px; border-top: 1px dashed #cbd5e1; font-size: 11px; color: #64748b; display: flex; justify-content: space-between; align-items: center; }
-    .actions { max-width: 780px; margin: 0 auto 16px; display: flex; justify-content: flex-end; gap: 10px; }
+    .summary-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; }
+    .words-box { flex: 1; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 14px; font-size: 12px; }
+    .words-box .label { font-size: 10px; font-weight: 800; text-transform: uppercase; color: #64748b; letter-spacing: 0.6px; margin-bottom: 4px; }
+    .words-box .val { font-weight: 800; color: #0f172a; }
+    .summary-table { width: 340px; border-collapse: collapse; font-size: 13px; margin-bottom: 0; }
+    .summary-table td { padding: 6px 10px; border-bottom: 1px solid #e2e8f0; }
+    .summary-table tr.total-row td { border-top: 2px solid #0f172a; border-bottom: none; font-size: 15px; font-weight: 900; color: #0f172a; padding-top: 10px; }
+    .footer-note { margin-top: 24px; padding-top: 16px; border-top: 1px dashed #cbd5e1; font-size: 11px; color: #64748b; display: flex; justify-content: space-between; align-items: flex-end; }
+    .actions { max-width: 800px; margin: 0 auto 16px; display: flex; justify-content: flex-end; gap: 10px; }
     .btn { background: #0f172a; color: #fff; border: none; padding: 10px 18px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; }
     @media print {
       body { background: #fff; padding: 0; }
@@ -177,32 +319,37 @@ export function openPrintableGstInvoice(params: InvoicePrintParams): void {
         <h2 class="company-name">${COMPANY_GST_DETAILS.legalName}</h2>
         <p class="company-meta">
           ${COMPANY_GST_DETAILS.fullAddress}<br/>
-          Mobile: ${COMPANY_GST_DETAILS.phone} • Email: ${COMPANY_GST_DETAILS.email}
+          State: ${COMPANY_GST_DETAILS.stateName} (Code: ${COMPANY_GST_DETAILS.stateCode}) • Mobile: ${COMPANY_GST_DETAILS.phone} • Email: ${COMPANY_GST_DETAILS.email}
         </p>
-        <div class="gstin-badge">GSTIN: ${COMPANY_GST_DETAILS.gstin}</div>
+        <div class="badge-row">
+          <span class="gstin-badge">GSTIN: ${COMPANY_GST_DETAILS.gstin}</span>
+          <span class="pan-badge">PAN: ${COMPANY_GST_DETAILS.pan}</span>
+          <span class="pan-badge">SAC: ${COMPANY_GST_DETAILS.sacCode}</span>
+        </div>
       </div>
       <div class="invoice-title">
         <h1>TAX INVOICE</h1>
-        <div class="sub">Original for Recipient</div>
+        <div class="sub">Original for Recipient (Rule 46 CGST Rules)</div>
         <div class="paid-stamp">✓ PAID</div>
       </div>
     </div>
 
     <div class="grid-2">
       <div class="info-box">
-        <h4>Billed To (Customer)</h4>
+        <h4>Billed To (Recipient Details)</h4>
         <strong>${sanitizeTextInput(params.customerName || "Learner", 80)}</strong><br/>
         ${params.customerEmail ? `Email: ${sanitizeTextInput(params.customerEmail, 100)}<br/>` : ""}
         ${params.customerPhone ? `Phone: ${sanitizeTextInput(params.customerPhone, 30)}<br/>` : ""}
-        Place of Supply: Tamil Nadu (33), India
+        <strong>Place of Supply:</strong> Tamil Nadu (State Code: 33)<br/>
+        <strong>Supply Type:</strong> Intra-State Supply (B2C)
       </div>
       <div class="info-box">
-        <h4>Invoice & Payment Details</h4>
+        <h4>Invoice & Statutory Details</h4>
         <strong>Invoice No:</strong> <span style="font-family:monospace">${invoiceNumber}</span><br/>
         <strong>Invoice Date:</strong> ${dateStr}<br/>
         <strong>Payment ID:</strong> <span style="font-family:monospace">${sanitizeTextInput(params.paymentId || "PAID", 60)}</span><br/>
-        ${params.orderId ? `<strong>Order ID:</strong> <span style="font-family:monospace">${sanitizeTextInput(params.orderId, 60)}</span><br/>` : ""}
-        <strong>Payment Method:</strong> Razorpay Online
+        ${params.orderId ? `<strong>Order Ref:</strong> <span style="font-family:monospace">${sanitizeTextInput(params.orderId, 60)}</span><br/>` : ""}
+        <strong>Reverse Charge (RCM):</strong> No | <strong>Mode:</strong> Razorpay
       </div>
     </div>
 
@@ -211,46 +358,69 @@ export function openPrintableGstInvoice(params: InvoicePrintParams): void {
         <tr>
           <th>#</th>
           <th>Description of Service</th>
-          <th>SAC Code</th>
-          <th class="num">Qty</th>
-          <th class="num">Taxable Value (INR)</th>
+          <th>SAC</th>
+          <th class="num">Taxable Value</th>
+          <th class="num">CGST (9%)</th>
+          <th class="num">SGST (9%)</th>
+          <th class="num">Total (INR)</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td>1</td>
-          <td><strong>${sanitizeTextInput(params.courseName, 120)}</strong><br/><span style="font-size:11px;color:#64748b">Online / Live Educational & Training Program</span></td>
+          <td><strong>${sanitizeTextInput(params.courseName, 120)}</strong><br/><span style="font-size:11px;color:#64748b">${COMPANY_GST_DETAILS.sacDescription}</span></td>
           <td style="font-family:monospace">${COMPANY_GST_DETAILS.sacCode}</td>
-          <td class="num">1</td>
-          <td class="num">₹${baseAmount.toFixed(2)}</td>
+          <td class="num">₹${acct.baseAmount.toFixed(2)}</td>
+          <td class="num">₹${acct.cgst.toFixed(2)}</td>
+          <td class="num">₹${acct.sgst.toFixed(2)}</td>
+          <td class="num">₹${(acct.baseAmount + acct.totalGst).toFixed(2)}</td>
         </tr>
       </tbody>
     </table>
 
-    <div class="summary-wrap">
+    <div class="summary-row">
+      <div class="words-box">
+        <div class="label">Total Invoice Amount in Words</div>
+        <div class="val">${amountInWords}</div>
+        <div style="margin-top:8px;font-size:11px;color:#64748b;">
+          • Tax is not payable on Reverse Charge basis (RCM: No).<br/>
+          • Rounded off to nearest Rupee u/s 170 of the CGST Act, 2017.
+        </div>
+      </div>
+
       <table class="summary-table">
         <tr>
           <td>Taxable Base Amount:</td>
-          <td class="num">₹${baseAmount.toFixed(2)}</td>
+          <td class="num">₹${acct.baseAmount.toFixed(2)}</td>
         </tr>
         <tr>
-          <td>CGST (9%):</td>
-          <td class="num">+ ₹${cgst.toFixed(2)}</td>
+          <td>Add: CGST @ 9%:</td>
+          <td class="num">+ ₹${acct.cgst.toFixed(2)}</td>
         </tr>
         <tr>
-          <td>SGST (9%):</td>
-          <td class="num">+ ₹${sgst.toFixed(2)}</td>
+          <td>Add: SGST @ 9%:</td>
+          <td class="num">+ ₹${acct.sgst.toFixed(2)}</td>
         </tr>
+        ${acct.roundOff !== 0 ? `<tr>
+          <td>Round Off (Sec 170 CGST Act):</td>
+          <td class="num">${roundOffSign} ₹${roundOffAbs}</td>
+        </tr>` : ""}
         <tr class="total-row">
-          <td>Total Amount Paid (Incl. GST):</td>
-          <td class="num">₹${total.toFixed(2)}</td>
+          <td>Total Invoice Value (INR):</td>
+          <td class="num">₹${acct.totalAmount.toFixed(2)}</td>
         </tr>
       </table>
     </div>
 
     <div class="footer-note">
-      <span>This is a computer-generated GST Tax Invoice and does not require a physical signature.</span>
-      <strong>${COMPANY_GST_DETAILS.legalName}</strong>
+      <div>
+        <span>Certified that the particulars given above are true and correct.</span><br/>
+        <span>This is a computer-generated GST Tax Invoice and requires no physical signature.</span>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:11px;color:#475569;">For <strong>${COMPANY_GST_DETAILS.legalName}</strong></div>
+        <div style="margin-top:8px;font-weight:800;color:#0f172a;">Authorised Signatory</div>
+      </div>
     </div>
   </div>
 </body>

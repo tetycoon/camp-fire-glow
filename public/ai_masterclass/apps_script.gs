@@ -17,15 +17,37 @@ const WHATSAPP_CONFIG = {
   WA_GROUP_LINK: "https://chat.whatsapp.com/FQZ85s071Id1VZifKUj7n0", // AI Secrets Revealed Group
   WA_GROUP_LINK_CLAUDE_ONLINE: "https://chat.whatsapp.com/HfVfYc6ea7iEHAMFjOb4WS", // Claude Online Group
   WA_GROUP_LINK_CLAUDE_OFFLINE: "https://chat.whatsapp.com/DMp2tRRhjwN1fziYujeQhb", // Claude Offline Group
-  POSTER_URL: "https://course.techtycoon.in/images/AI_Secrets_Revealed_Banner.jpg" 
+  POSTER_URL: "https://aitycoon.in/images/AI_Secrets_Revealed_Banner.jpg" 
 };
 
 const TRIGGER_MESSAGE = "HI I am completed registration of AI Secret Reveals";
 
+// ------------------------------------------------------------
+// FUNNELSDONE PRIVATE INTEGRATION API v2 + GST PDF INVOICE CONFIG
+// ------------------------------------------------------------
+const FUNNELSDONE_CONFIG = {
+  PIT_TOKEN: "pit-us-51307c8c-0d88-43f7-b619-3599040515db",
+  LOCATION_ID: "uUUUKRH7EP2A0oJBv4Zb",
+  API_BASE: "https://services.leadconnectorhq.com",
+  API_VERSION: "2021-07-28",
+  COMPANY_NAME: "TECH TYCOON DIGITAL SOLUTION LLP",
+  COMPANY_GSTIN: "33AAZFT9667P1ZP",
+  COMPANY_SAC: "999293",
+  COMPANY_LOGO: "https://assets.cdn.filesafe.space/uUUUKRH7EP2A0oJBv4Zb/media/6accab95bbad531ac8a6b1af.png",
+  COMPANY_PHONE: "7558133039",
+  COMPANY_WEBSITE: "https://www.techtycoon.in/",
+  ADDRESS_LINE1: "No. 3/59B, 1st Floor, 3rd Street, Ragava Nagar",
+  CITY: "Moovarasampet, Chennai",
+  STATE: "TAMILNADU",
+  POSTAL_CODE: "600091"
+};
+
+const TEST_EMAILS = ["ambroseselva001@gmail.com", "techtycoondigitalsolutions@gmail.com"];
+
 function getUpcomingWebinarTime() {
   const now = new Date();
-  // Special scheduling: Wednesday, October 7th, 2026 at 6:00 PM (month index 9 for October)
-  const specialSession = new Date(2026, 9, 7, 18, 0, 0);
+  // Special scheduling: Friday, September 11th, 2026 at 6:00 PM (month index 8 for September)
+  const specialSession = new Date(2026, 8, 11, 18, 0, 0);
   
   if (now.getTime() < specialSession.getTime()) {
     return specialSession;
@@ -34,12 +56,12 @@ function getUpcomingWebinarTime() {
   const target = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 18, 0, 0);
   const day = now.getDay();
   
-  if (day === 3) {
+  if (day === 5) {
     if (now.getTime() > target.getTime()) {
       target.setDate(target.getDate() + 7);
     }
   } else {
-    const daysToAdd = (3 - day + 7) % 7;
+    const daysToAdd = (5 - day + 7) % 7;
     target.setDate(target.getDate() + daysToAdd);
   }
   
@@ -167,7 +189,7 @@ function handleWhatsAppIncoming(body) {
 
   // 1. UPSCALE WORKSHOP LOGIC (Chennai Offline)
   if (textReceived.includes("business generative model") || textReceived.includes("upscale")) {
-    const posterUrl = "https://course.techtycoon.in/images/upscale_offline_banner.png"; 
+    const posterUrl = "https://aitycoon.in/images/upscale_offline_banner.png"; 
     sendWhatsAppImage(phone, posterUrl, "Level-2 Offline AI Workshop (Chennai)");
     
     let welcomeMsg = "Welcome! 🎉 Your registration is confirmed for the Offline AI Workshop in Chennai.\n\n";
@@ -181,7 +203,7 @@ function handleWhatsAppIncoming(body) {
 
   // 2. CLAUDE MASTERCLASS LOGIC
   if (textReceived.includes("claude")) {
-    const posterUrl = "https://course.techtycoon.in/claude_masterclass/images/poster.jpg";
+    const posterUrl = "https://aitycoon.in/claude_masterclass/images/poster.jpg";
     sendWhatsAppImage(phone, posterUrl, "Claude MasterClass 2026");
 
     let isOfflineMsg = textReceived.includes("offline") || textReceived.includes("in-person") || textReceived.includes("chennai");
@@ -200,7 +222,7 @@ function handleWhatsAppIncoming(body) {
     } else {
       let welcomeMsg = "Welcome! 🎉 Your registration is confirmed for the Claude MasterClass (Online Live Session).\n\n";
       welcomeMsg += `📍 Platform: Online Live Classroom\n`;
-      welcomeMsg += `📅 Date: September 12th & 13th, 2026 (Sat & Sun)\n`;
+      welcomeMsg += `📅 Date: October 3rd & 4th, 2026 (Sat & Sun)\n`;
       welcomeMsg += `🕒 Time: 6:00 PM – 9:00 PM IST\n\n`;
       welcomeMsg += "Please join our exclusive Online WhatsApp Community below to receive session links:\n" + WHATSAPP_CONFIG.WA_GROUP_LINK_CLAUDE_ONLINE + "\n\n";
       welcomeMsg += "If you have any doubts, feel free to call or WhatsApp us at +91 63792 09689.";
@@ -235,91 +257,212 @@ function handleWhatsAppIncoming(body) {
 }
 
 // ------------------------------------------------------------
-// FUNNELSDONE PRIVATE INTEGRATION API v2 + GST PDF INVOICE
+// 4. DUAL GST INVOICE: OUR PDF BLOB + FUNNELSDONE API v2 SYNC
 // ------------------------------------------------------------
-const FUNNELSDONE_CONFIG = {
-  PIT_TOKEN: "pit-us-51307c8c-0d88-43f7-b619-3599040515db",
-  LOCATION_ID: "uUUUKRH7EP2A0oJBv4Zb",
-  API_BASE: "https://services.leadconnectorhq.com",
-  API_VERSION: "2021-07-28",
-  COMPANY_NAME: "TECH TYCOON DIGITAL SOLUTION LLP",
-  COMPANY_GSTIN: "33AAZFT9667P1ZP",
-  COMPANY_SAC: "999293",
-  COMPANY_LOGO: "https://assets.cdn.filesafe.space/uUUUKRH7EP2A0oJBv4Zb/media/6accab95bbad531ac8a6b1af.png",
-  COMPANY_PHONE: "7558133039",
-  COMPANY_WEBSITE: "https://www.techtycoon.in/",
-  ADDRESS_LINE1: "No. 3/59B, 1st Floor, 3rd Street, Ragava Nagar",
-  CITY: "Moovarasampet, Chennai",
-  STATE: "TAMILNADU",
-  POSTAL_CODE: "600091"
+const TOTAL_TO_EXACT_BASE_MAP = {
+  117: 99,
+  471: 399,
+  589: 499,
+  943: 799,
+  1179: 999,
+  1769: 1499,
+  2359: 1999,
+  2949: 2499,
+  2950: 2500,
+  3539: 2999,
+  4130: 3500,
+  5899: 4999,
+  8259: 6999,
+  11799: 9999,
+  17699: 14999
 };
 
+function getInvoiceAccountingBreakdown(totalAmount) {
+  const total = Math.max(1, Math.round(Number(totalAmount) || 117));
+  if (total === 1) {
+    return { isTest: true, baseAmt: 1, cgst: 0, sgst: 0, totalGst: 0, roundOff: 0, total: 1 };
+  }
+  const baseAmt = TOTAL_TO_EXACT_BASE_MAP[total] !== undefined
+    ? TOTAL_TO_EXACT_BASE_MAP[total]
+    : Math.round((total / 1.18) * 100) / 100;
+  const cgst = Math.round(baseAmt * 0.09 * 100) / 100;
+  const sgst = Math.round(baseAmt * 0.09 * 100) / 100;
+  const totalGst = Math.round((cgst + sgst) * 100) / 100;
+  const roundOff = Math.round((total - (baseAmt + totalGst)) * 100) / 100;
+  return { isTest: false, baseAmt: baseAmt, cgst: cgst, sgst: sgst, totalGst: totalGst, roundOff: roundOff, total: total };
+}
+
+function numberToIndianRupeesWords(amount) {
+  const num = Math.round(Math.max(0, Number(amount) || 0));
+  if (num === 0) return "Indian Rupees Zero Only";
+  const ones = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
+  const tens = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
+  function twoDigit(n) {
+    if (n < 20) return ones[n];
+    return tens[Math.floor(n / 10)] + (n % 10 ? " " + ones[n % 10] : "");
+  }
+  function threeDigit(n) {
+    const h = Math.floor(n / 100);
+    const rem = n % 100;
+    let res = h > 0 ? ones[h] + " Hundred" : "";
+    if (rem > 0) res += (res ? " and " : "") + twoDigit(rem);
+    return res;
+  }
+  let rem = num;
+  const parts = [];
+  const crore = Math.floor(rem / 10000000); rem %= 10000000;
+  if (crore > 0) parts.push(threeDigit(crore) + " Crore");
+  const lakh = Math.floor(rem / 100000); rem %= 100000;
+  if (lakh > 0) parts.push(twoDigit(lakh) + " Lakh");
+  const thousand = Math.floor(rem / 1000); rem %= 1000;
+  if (thousand > 0) parts.push(twoDigit(thousand) + " Thousand");
+  if (rem > 0) parts.push(threeDigit(rem));
+  return "Indian Rupees " + parts.join(" ") + " Only";
+}
+
+function appendToGstSalesRegister(invNumber, dateStr, customerName, customerEmail, customerPhone, courseName, acct, paymentId, orderId) {
+  try {
+    let ss = null;
+    try { ss = SpreadsheetApp.getActiveSpreadsheet(); } catch (e) {}
+    if (!ss && typeof SPREADSHEET_ID !== "undefined" && SPREADSHEET_ID) {
+      try { ss = SpreadsheetApp.openById(SPREADSHEET_ID); } catch (e) {}
+    }
+    if (!ss) return;
+    let gstSheet = ss.getSheetByName("GST_Sales_Register");
+    if (!gstSheet) {
+      gstSheet = ss.insertSheet("GST_Sales_Register");
+      const headers = [
+        "Invoice Date", "Invoice Number", "Customer Name", "Customer Email", "Customer Phone",
+        "Place of Supply", "Supply Type", "Reverse Charge (RCM)", "SAC Code", "Description of Service",
+        "Taxable Base Value (INR)", "CGST Rate (%)", "CGST Amount (INR)", "SGST Rate (%)", "SGST Amount (INR)",
+        "Round Off (INR)", "Total Invoice Value (INR)", "Razorpay Payment ID", "Razorpay Order ID"
+      ];
+      gstSheet.appendRow(headers);
+      gstSheet.getRange(1, 1, 1, headers.length).setFontWeight("bold").setBackground("#e0e7ff");
+      gstSheet.setFrozenRows(1);
+    }
+    gstSheet.appendRow([
+      dateStr,
+      invNumber,
+      sanitizeCell(customerName || "Learner"),
+      sanitizeCell(customerEmail || ""),
+      "'" + String(customerPhone || "").replace(/[^\d+\-\s]/g, ""),
+      "33-Tamil Nadu",
+      "B2C Intra-State",
+      "No",
+      FUNNELSDONE_CONFIG.COMPANY_SAC,
+      sanitizeCell(courseName || "AI Training Program"),
+      acct.baseAmt,
+      acct.isTest ? 0 : 9,
+      acct.cgst,
+      acct.isTest ? 0 : 9,
+      acct.sgst,
+      acct.roundOff,
+      acct.total,
+      sanitizeCell(paymentId || "PAID"),
+      sanitizeCell(orderId || "")
+    ]);
+  } catch (regErr) {}
+}
+
 function generateOurGstInvoicePdfBlob(customerName, customerEmail, customerPhone, courseName, totalAmount, paymentId, orderId, invoiceNo) {
-  const total = Math.max(1, Number(totalAmount) || 117);
-  const isTest = total === 1;
-  const baseAmt = isTest ? 1 : Math.round((total / 1.18) * 100) / 100;
-  const totalGst = isTest ? 0 : Math.round((total - baseAmt) * 100) / 100;
-  const cgst = Math.round((totalGst / 2) * 100) / 100;
-  const sgst = Math.round((totalGst - cgst) * 100) / 100;
+  const acct = getInvoiceAccountingBreakdown(totalAmount);
+  const baseAmt = acct.baseAmt;
+  const cgst = acct.cgst;
+  const sgst = acct.sgst;
+  const total = acct.total;
+  const amountInWords = numberToIndianRupeesWords(total);
+  const roundOffSign = acct.roundOff >= 0 ? "+" : "-";
+  const roundOffAbs = Math.abs(acct.roundOff).toFixed(2);
   const invNumber = invoiceNo || ("TT/26-27/" + String(paymentId || orderId || Date.now()).replace(/[^A-Za-z0-9]/g, "").slice(-6).toUpperCase());
   const dateStr = Utilities.formatDate(new Date(), "Asia/Kolkata", "dd MMM yyyy");
 
+  // Automatically record in GST_Sales_Register sheet tab for monthly GSTR-1 & GSTR-3B filing
+  appendToGstSalesRegister(invNumber, dateStr, customerName, customerEmail, customerPhone, courseName, acct, paymentId, orderId);
+
   const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><style>
-    body { font-family: Arial, Helvetica, sans-serif; color: #0f172a; margin: 20px; font-size: 12px; }
-    .box { border: 1px solid #cbd5e1; border-radius: 10px; padding: 24px; }
-    .header { border-bottom: 2px solid #0f172a; padding-bottom: 14px; margin-bottom: 18px; width: 100%; }
-    .badge { background: #eff6ff; border: 1px solid #bfdbfe; color: #1d4ed8; font-weight: bold; padding: 3px 8px; border-radius: 4px; font-family: monospace; font-size: 11px; }
-    .paid { background: #dcfce7; color: #15803d; font-weight: bold; padding: 4px 10px; border-radius: 12px; font-size: 11px; }
-    table.items { width: 100%; border-collapse: collapse; margin: 18px 0; }
-    table.items th { background: #0f172a; color: #ffffff; padding: 8px 10px; text-align: left; font-size: 11px; text-transform: uppercase; }
-    table.items td { padding: 10px; border-bottom: 1px solid #e2e8f0; }
+    body { font-family: Arial, Helvetica, sans-serif; color: #0f172a; margin: 18px; font-size: 11.5px; }
+    .box { border: 1px solid #cbd5e1; border-radius: 10px; padding: 22px; }
+    .header { border-bottom: 2px solid #0f172a; padding-bottom: 12px; margin-bottom: 16px; width: 100%; }
+    .badge { background: #eff6ff; border: 1px solid #bfdbfe; color: #1d4ed8; font-weight: bold; padding: 3px 8px; border-radius: 4px; font-family: monospace; font-size: 10.5px; }
+    .pan { background: #f8fafc; border: 1px solid #cbd5e1; color: #334155; font-weight: bold; padding: 3px 8px; border-radius: 4px; font-family: monospace; font-size: 10.5px; margin-left: 6px; }
+    .paid { background: #dcfce7; color: #15803d; font-weight: bold; padding: 4px 10px; border-radius: 12px; font-size: 10.5px; }
+    table.items { width: 100%; border-collapse: collapse; margin: 14px 0; }
+    table.items th { background: #0f172a; color: #ffffff; padding: 8px; text-align: left; font-size: 10px; text-transform: uppercase; }
+    table.items td { padding: 9px 8px; border-bottom: 1px solid #e2e8f0; }
     .right { text-align: right; font-family: monospace; }
   </style></head><body><div class="box">
     <table class="header"><tr>
       <td>
-        <h2 style="margin:0 0 4px 0;font-size:16px;">${FUNNELSDONE_CONFIG.COMPANY_NAME}</h2>
-        <div style="color:#475569;line-height:1.4;">No. 3/59B, 1st Floor, 3rd Street, Ragava Nagar, Moovarasampet, Chennai-600091<br/>Mobile: +91 ${FUNNELSDONE_CONFIG.COMPANY_PHONE} | Website: ${FUNNELSDONE_CONFIG.COMPANY_WEBSITE}</div>
-        <div style="margin-top:6px;"><span class="badge">GSTIN: ${FUNNELSDONE_CONFIG.COMPANY_GSTIN}</span></div>
+        <h2 style="margin:0 0 4px 0;font-size:15px;">${FUNNELSDONE_CONFIG.COMPANY_NAME}</h2>
+        <div style="color:#475569;line-height:1.4;">No. 3/59B, 1st Floor, 3rd Street, Ragava Nagar, Moovarasampet, Chennai-600091<br/>State: Tamil Nadu (Code: 33) | Mobile: +91 ${FUNNELSDONE_CONFIG.COMPANY_PHONE} | Web: ${FUNNELSDONE_CONFIG.COMPANY_WEBSITE}</div>
+        <div style="margin-top:6px;">
+          <span class="badge">GSTIN: ${FUNNELSDONE_CONFIG.COMPANY_GSTIN}</span>
+          <span class="pan">PAN: AAZFT9667P</span>
+          <span class="pan">SAC: ${FUNNELSDONE_CONFIG.COMPANY_SAC}</span>
+        </div>
       </td>
       <td style="text-align:right;vertical-align:top;">
-        <h1 style="margin:0;font-size:20px;">TAX INVOICE</h1>
-        <div style="color:#64748b;font-size:10px;margin-bottom:6px;">ORIGINAL FOR RECIPIENT</div>
+        <h1 style="margin:0;font-size:19px;">TAX INVOICE</h1>
+        <div style="color:#64748b;font-size:9.5px;margin-bottom:6px;">ORIGINAL FOR RECIPIENT (RULE 46 CGST RULES)</div>
         <span class="paid">PAID</span>
       </td>
     </tr></table>
-    <table style="width:100%;margin-bottom:16px;"><tr>
+    <table style="width:100%;margin-bottom:14px;"><tr>
       <td style="width:50%;vertical-align:top;background:#f8fafc;padding:10px;border-radius:6px;border:1px solid #e2e8f0;">
-        <strong style="color:#64748b;font-size:10px;text-transform:uppercase;">Billed To (Customer)</strong><br/>
+        <strong style="color:#64748b;font-size:9.5px;text-transform:uppercase;">Billed To (Recipient Details)</strong><br/>
         <strong>${sanitizeCell(customerName || "Learner")}</strong><br/>
         Email: ${sanitizeCell(customerEmail || "")}<br/>
         Phone: ${sanitizeCell(customerPhone || "")}<br/>
-        Place of Supply: Tamil Nadu (33), India
+        <strong>Place of Supply:</strong> Tamil Nadu (State Code: 33)<br/>
+        <strong>Supply Type:</strong> Intra-State Supply (B2C)
       </td>
       <td style="width:50%;vertical-align:top;background:#f8fafc;padding:10px;border-radius:6px;border:1px solid #e2e8f0;">
-        <strong style="color:#64748b;font-size:10px;text-transform:uppercase;">Invoice & Payment Details</strong><br/>
+        <strong style="color:#64748b;font-size:9.5px;text-transform:uppercase;">Invoice & Statutory Details</strong><br/>
         <strong>Invoice No:</strong> ${invNumber}<br/>
         <strong>Invoice Date:</strong> ${dateStr}<br/>
         <strong>Payment ID:</strong> ${sanitizeCell(paymentId || "PAID")}<br/>
-        <strong>Order ID:</strong> ${sanitizeCell(orderId || "")}
+        <strong>Order Ref:</strong> ${sanitizeCell(orderId || "")}<br/>
+        <strong>Reverse Charge (RCM):</strong> No | <strong>Mode:</strong> Razorpay
       </td>
     </tr></table>
     <table class="items">
-      <thead><tr><th>#</th><th>Description of Service</th><th>SAC Code</th><th class="right">Qty</th><th class="right">Taxable Value (INR)</th></tr></thead>
+      <thead><tr><th>#</th><th>Description of Service</th><th>SAC</th><th class="right">Taxable Value</th><th class="right">CGST (9%)</th><th class="right">SGST (9%)</th><th class="right">Total (INR)</th></tr></thead>
       <tbody><tr>
         <td>1</td>
-        <td><strong>${sanitizeCell(courseName || "AI Secrets Revealed Masterclass")}</strong><br/><span style="color:#64748b;font-size:10px;">Live Online Educational & Training Program</span></td>
+        <td><strong>${sanitizeCell(courseName || "AI Training Program")}</strong><br/><span style="color:#64748b;font-size:9.5px;">Commercial Training & Coaching Services</span></td>
         <td>${FUNNELSDONE_CONFIG.COMPANY_SAC}</td>
-        <td class="right">1</td>
         <td class="right">Rs. ${baseAmt.toFixed(2)}</td>
+        <td class="right">Rs. ${cgst.toFixed(2)}</td>
+        <td class="right">Rs. ${sgst.toFixed(2)}</td>
+        <td class="right">Rs. ${(baseAmt + acct.totalGst).toFixed(2)}</td>
       </tr></tbody>
     </table>
-    <table style="width:280px;margin-left:auto;border-collapse:collapse;">
-      <tr><td style="padding:5px 0;border-bottom:1px solid #e2e8f0;">Taxable Base Amount:</td><td class="right" style="padding:5px 0;border-bottom:1px solid #e2e8f0;">Rs. ${baseAmt.toFixed(2)}</td></tr>
-      <tr><td style="padding:5px 0;border-bottom:1px solid #e2e8f0;">CGST (9%):</td><td class="right" style="padding:5px 0;border-bottom:1px solid #e2e8f0;">+ Rs. ${cgst.toFixed(2)}</td></tr>
-      <tr><td style="padding:5px 0;border-bottom:1px solid #e2e8f0;">SGST (9%):</td><td class="right" style="padding:5px 0;border-bottom:1px solid #e2e8f0;">+ Rs. ${sgst.toFixed(2)}</td></tr>
-      <tr><td style="padding:8px 0;font-weight:bold;font-size:13px;">Total Paid (Incl. GST):</td><td class="right" style="padding:8px 0;font-weight:bold;font-size:13px;">Rs. ${total.toFixed(2)}</td></tr>
-    </table>
-    <p style="margin-top:20px;padding-top:10px;border-top:1px dashed #cbd5e1;font-size:10px;color:#64748b;">This is a computer-generated GST Tax Invoice from ${FUNNELSDONE_CONFIG.COMPANY_NAME} and requires no physical signature.</p>
+    <table style="width:100%;border-collapse:collapse;"><tr>
+      <td style="width:52%;vertical-align:top;padding-right:14px;">
+        <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:10px;">
+          <div style="font-size:9.5px;color:#64748b;text-transform:uppercase;font-weight:bold;">Total Invoice Amount in Words</div>
+          <div style="font-weight:bold;color:#0f172a;margin-top:3px;">${amountInWords}</div>
+          <div style="margin-top:6px;font-size:9.5px;color:#64748b;">
+            • Tax is not payable on Reverse Charge basis (RCM: No).<br/>
+            • Rounded off to nearest Rupee u/s 170 of the CGST Act, 2017.
+          </div>
+        </div>
+      </td>
+      <td style="width:48%;vertical-align:top;">
+        <table style="width:100%;border-collapse:collapse;">
+          <tr><td style="padding:4px 0;border-bottom:1px solid #e2e8f0;">Taxable Base Amount:</td><td class="right" style="padding:4px 0;border-bottom:1px solid #e2e8f0;">Rs. ${baseAmt.toFixed(2)}</td></tr>
+          <tr><td style="padding:4px 0;border-bottom:1px solid #e2e8f0;">Add: CGST (9%):</td><td class="right" style="padding:4px 0;border-bottom:1px solid #e2e8f0;">+ Rs. ${cgst.toFixed(2)}</td></tr>
+          <tr><td style="padding:4px 0;border-bottom:1px solid #e2e8f0;">Add: SGST (9%):</td><td class="right" style="padding:4px 0;border-bottom:1px solid #e2e8f0;">+ Rs. ${sgst.toFixed(2)}</td></tr>
+          ${acct.roundOff !== 0 ? `<tr><td style="padding:4px 0;border-bottom:1px solid #e2e8f0;">Round Off (Sec 170 CGST Act):</td><td class="right" style="padding:4px 0;border-bottom:1px solid #e2e8f0;">${roundOffSign} Rs. ${roundOffAbs}</td></tr>` : ""}
+          <tr><td style="padding:7px 0;font-weight:bold;font-size:12.5px;">Total Invoice Value (INR):</td><td class="right" style="padding:7px 0;font-weight:bold;font-size:12.5px;">Rs. ${total.toFixed(2)}</td></tr>
+        </table>
+      </td>
+    </tr></table>
+    <table style="width:100%;margin-top:16px;padding-top:10px;border-top:1px dashed #cbd5e1;font-size:9.5px;color:#64748b;"><tr>
+      <td>Certified that the particulars given above are true and correct.<br/>This is a computer-generated GST Tax Invoice and requires no physical signature.</td>
+      <td style="text-align:right;">For <strong>${FUNNELSDONE_CONFIG.COMPANY_NAME}</strong><br/><br/><strong style="color:#0f172a;">Authorised Signatory</strong></td>
+    </tr></table>
   </div></body></html>`;
 
   const cleanFileNo = invNumber.replace(/[^A-Za-z0-9_-]/g, "_");
@@ -369,9 +512,10 @@ function syncInvoiceWithFunnelsDone(customerName, customerEmail, customerPhone, 
     const nextInvoiceNumber = numJson.invoiceNumber || String(Math.floor(100000 + Math.random() * 900000));
 
     // 3. Create Draft Invoice in FunnelsDone with 9% CGST + 9% SGST
-    const total = Math.max(1, Number(totalAmount) || 117);
-    const isTest = total === 1;
-    const baseAmt = isTest ? 1 : Math.round((total / 1.18) * 100) / 100;
+    const acct = getInvoiceAccountingBreakdown(totalAmount);
+    const total = acct.total;
+    const isTest = acct.isTest;
+    const baseAmt = acct.baseAmt;
     const todayStr = Utilities.formatDate(new Date(), "Asia/Kolkata", "yyyy-MM-dd");
 
     const createPayload = {
@@ -465,17 +609,17 @@ function syncInvoiceWithFunnelsDone(customerName, customerEmail, customerPhone, 
 function sendMasterclassEmail(email, name, sessionDate, sessionTime, totalAmount, paymentId, orderId, phone, modeOrLang) {
   const defaultTime = getUpcomingWebinarTime();
   const isUpscaleOffline = (Number(totalAmount) >= 4000) || String(modeOrLang || "").toLowerCase().includes("offline") || String(modeOrLang || "").toLowerCase().includes("chennai");
-  const dateVal = sessionDate || (isUpscaleOffline ? "Sunday (Full Day Workshop)" : defaultTime.toDateString());
+  const dateVal = sessionDate || (isUpscaleOffline ? "October 2nd week 2026 (Sunday)" : defaultTime.toDateString());
   const timeVal = sessionTime || (isUpscaleOffline ? "9:00 AM – 5:30 PM IST" : "6:00 PM IST");
   const courseTitle = isUpscaleOffline ? "UPSCALE: 1-Day Offline AI Mastery Workshop (Chennai)" : "AI Secrets Revealed Masterclass";
   const fdCourseName = isUpscaleOffline ? "UPSCALE: Offline AI Workshop (Chennai)" : "AI-Secret Revealed";
   const waGroupLink = isUpscaleOffline ? "https://chat.whatsapp.com/C88mQXMh84j1Qub9wmBTHv" : WHATSAPP_CONFIG.WA_GROUP_LINK;
   const platformText = isUpscaleOffline ? "Vestin Park Hotel, Egmore, Chennai (In-Person)" : "Online Live Classroom (Link will be shared in WhatsApp group)";
   
-  // Sync with FunnelsDone Private Integration API & get official Invoice Number
+  // 1. Sync with FunnelsDone Private Integration API & get official Invoice Number
   const fdInvoiceNo = syncInvoiceWithFunnelsDone(name, email, phone, fdCourseName, totalAmount || 117, paymentId, orderId);
   
-  // Generate our side's official GST Tax Invoice PDF attachment
+  // 2. Generate our side's official GST Tax Invoice PDF attachment
   let pdfAttachment = null;
   try {
     pdfAttachment = generateOurGstInvoicePdfBlob(name, email, phone, courseTitle, totalAmount || 117, paymentId, orderId, fdInvoiceNo);
@@ -500,7 +644,7 @@ function sendMasterclassEmail(email, name, sessionDate, sessionTime, totalAmount
             <td style="background:linear-gradient(135deg,#3b82f6,#2563eb);padding:40px 32px;text-align:center;">
               <div style="font-size:48px;margin-bottom:16px;">🚀</div>
               <h1 style="font-size:28px;font-weight:800;color:#ffffff;margin:0;letter-spacing:-0.025em;line-height:1.2;">${courseTitle}</h1>
-              <p style="color:rgba(255,255,255,0.9);font-size:13px;letter-spacing:0.2em;margin:8px 0 0;text-transform:uppercase;font-weight:700;">Tech Tycoon 2026</p>
+              <p style="color:rgba(255,255,255,0.9);font-size:13px;letter-spacing:0.2em;margin:8px 0 0;text-transform:uppercase;font-weight:700;">Live Masterclass 2026</p>
             </td>
           </tr>
           <tr>
@@ -519,7 +663,7 @@ function sendMasterclassEmail(email, name, sessionDate, sessionTime, totalAmount
                   <td style="padding:16px 20px;border-bottom:1px solid #e2e8f0;font-size:14px;color:#0f172a;font-weight:700;">${timeVal}</td>
                 </tr>
                 <tr>
-                  <td style="padding:16px 20px;font-size:14px;color:#64748b;">📍 Location / Platform</td>
+                  <td style="padding:16px 20px;font-size:14px;color:#64748b;">📍 Platform</td>
                   <td style="padding:16px 20px;font-size:14px;color:#3b82f6;font-weight:700;">${platformText}</td>
                 </tr>
               </table>
@@ -534,10 +678,10 @@ function sendMasterclassEmail(email, name, sessionDate, sessionTime, totalAmount
               </table>
               <div style="background-color:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:20px;margin-bottom:24px;">
                 <h4 style="color:#1e3a8a;font-size:14px;margin:0 0 8px;font-weight:700;">⚡ Important Instructions:</h4>
-                <p style="color:#1e40af;font-size:13px;margin:0 0 6px;line-height:1.5;">1. Make sure to join the WhatsApp group using the button above to receive session updates.</p>
-                <p style="color:#1e40af;font-size:13px;margin:0 0 6px;line-height:1.5;">2. Arrive / log in 10 minutes prior to the scheduled session time.</p>
-                <p style="color:#1e40af;font-size:13px;margin:0 0 6px;line-height:1.5;">3. Keep a notebook and laptop ready for hands-on AI workflows.</p>
-                <p style="color:#1e40af;font-size:13px;margin:6px 0 0;line-height:1.5;">4. If you have any doubts, feel free to call or WhatsApp us at +91 7558133039.</p>
+                <p style="color:#1e40af;font-size:13px;margin:0 0 6px;line-height:1.5;">1. Make sure to join the WhatsApp group using the button above to receive the session link.</p>
+                <p style="color:#1e40af;font-size:13px;margin:0 0 6px;line-height:1.5;">2. Log in 10 minutes prior to the scheduled session time.</p>
+                <p style="color:#1e40af;font-size:13px;margin:0 0 6px;line-height:1.5;">3. Keep a notebook and pen ready to take notes of critical AI tools and workflows.</p>
+                <p style="color:#1e40af;font-size:13px;margin:6px 0 0;line-height:1.5;">4. If you have any doubts, feel free to call or WhatsApp us at +91 63792 09689 / +91 7558133039.</p>
               </div>
               <p style="color:#94a3b8;font-size:12px;text-align:center;margin:32px 0 0;line-height:1.5;">
                 Have questions or doubts? Feel free to call us at +91 7558133039 or email our support team at<br>
@@ -561,7 +705,7 @@ function sendMasterclassEmail(email, name, sessionDate, sessionTime, totalAmount
     to: email,
     subject: subject,
     htmlBody: htmlBody,
-    name: courseTitle,
+    name: "AI Secrets Revealed Masterclass",
     replyTo: "support@techtycoon.in"
   };
   if (pdfAttachment) {
@@ -569,8 +713,6 @@ function sendMasterclassEmail(email, name, sessionDate, sessionTime, totalAmount
   }
   MailApp.sendEmail(emailOptions);
 }
-
-const TEST_EMAILS = ["ambroseselva001@gmail.com", "techtycoondigitalsolutions@gmail.com"];
 
 function sanitizeCell(val) {
   if (val === null || val === undefined) return "";
@@ -580,7 +722,7 @@ function sanitizeCell(val) {
 }
 
 function verifyRazorpayPaymentSignature(orderId, paymentId, signature, isIntl) {
-  if (!orderId || !paymentId || !signature) return true; // Fallback if signature not supplied by legacy client
+  if (!orderId || !paymentId || !signature) return true;
   const secret = isIntl ? "B0q7JAz8YhMat2QkTa3YCUGd" : RAZORPAY_KEY_SECRET;
   const payload = orderId + "|" + paymentId;
   const sigBytes = Utilities.computeHmacSha256Signature(payload, secret);
@@ -595,7 +737,6 @@ function validateMasterclassAmount(data) {
   const email = (data.email || "").toString().toLowerCase().trim();
   if (TEST_EMAILS.indexOf(email) !== -1 && Number(data.amount) === 1) return 1;
   const reqAmount = Number(data.amount) || 117;
-  // Valid amounts with 18% GST (e.g. 117 for 1 seat, or multiples, or Upscale 5899)
   if (reqAmount < 99) return 117;
   return Math.round(reqAmount);
 }
