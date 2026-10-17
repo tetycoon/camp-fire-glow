@@ -118,26 +118,6 @@ const courses: Course[] = [
     ]
   },
   {
-    id: "bootcamp",
-    title: "AI Master Bootcamp (30-Day Immersion)",
-    category: "bootcamp",
-    tag: "Certification Program",
-    intro: "A rigorous 30-day architectural immersion. Master agentic workflows, LLM orchestration, and the foundations of professional AI autonomy.",
-    fees: "Admissions Open",
-    originalFees: "₹24,999",
-    date: "Upcoming Monthly Cohort",
-    timing: "3 Hrs Daily (Flexi Slots)",
-    format: "Neural-Net Zoom Cohort",
-    image: "/images/summer_camp.jpg",
-    link: "/bootcamp",
-    isExternal: false,
-    highlights: [
-      "30-day deep dive into autonomous agentic systems",
-      "Dual-slot flexibility for working professionals & students",
-      "Industry-verified practitioner credential upon project defense"
-    ]
-  },
-  {
     id: "academy",
     title: "Tech Tycoon AI Academy (Lifetime Mentorship)",
     category: "academy",
@@ -482,7 +462,7 @@ const Index: React.FC = () => {
                 onClick={() => scrollToSection("programs")} 
                 className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-7 py-4 rounded-xl shadow-lg shadow-indigo-600/25 transition-all hover:shadow-indigo-600/35 hover:-translate-y-0.5 active:scale-95 flex items-center justify-center gap-3 text-sm"
               >
-                <span>Explore All 6 Programs</span>
+                <span>Explore All 5 Programs</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
               <button 
@@ -607,10 +587,9 @@ const Index: React.FC = () => {
           {/* Filter Pills */}
           <div className="flex flex-wrap items-center gap-2 bg-slate-100/80 p-1.5 rounded-2xl border border-slate-200">
             {[
-              { id: "all", label: "All Programs (6)" },
+              { id: "all", label: "All Programs (5)" },
               { id: "online", label: "Online Live (3)" },
               { id: "offline", label: "In-Person Chennai (1)" },
-              { id: "bootcamp", label: "30-Day Bootcamp (1)" },
               { id: "academy", label: "AI Academy (1)" }
             ].map(tab => (
               <button
@@ -1057,7 +1036,6 @@ const Index: React.FC = () => {
               <li><Link to="/ai_masterclass" className="hover:text-indigo-600 transition-colors">AI Secrets Revealed (₹99)</Link></li>
               <li><Link to="/upscale" className="hover:text-indigo-600 transition-colors">AI Business Workshop (Chennai)</Link></li>
               <li><a href="/advanced_masterclass/" className="hover:text-indigo-600 transition-colors">Executive Generative Models</a></li>
-              <li><Link to="/bootcamp" className="hover:text-indigo-600 transition-colors">30-Day Certification Bootcamp</Link></li>
               <li><Link to="/academy" className="hover:text-indigo-600 transition-colors">Tech Tycoon AI Academy</Link></li>
             </ul>
           </div>
