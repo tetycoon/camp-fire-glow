@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import { CheckCircle2, Loader2, ShieldCheck, X, Laptop, Utensils, MapPin, Search } from "lucide-react";
+import { CheckCircle2, Loader2, ShieldCheck, X, Laptop, Utensils, MapPin, Search, FileText } from "lucide-react";
 import { useUpscaleRegisterModal } from "./UpscaleRegisterModalContext";
 import { RazorpayOptions } from "@/types/razorpay";
 import { countryCodes } from "../../lib/countryCodes";
 import logo from "@/assets/tech_tycoon_logo.png";
 import GstPriceBreakdown from "../common/GstPriceBreakdown";
-import { calculateGstBreakdown, isAuthorizedTestEmail, isValidEmail, isValidGstin, sanitizeTextInput } from "@/lib/gstUtils";
+import { calculateGstBreakdown, isAuthorizedTestEmail, isValidEmail, isValidGstin, openPrintableGstInvoice, sanitizeTextInput } from "@/lib/gstUtils";
 
 const RAZORPAY_KEY_ID = "rzp_live_T2CbVONQc6qrqj"; 
 const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbzPxPpp0ksCcE6IY8mUlzcu0jqY1RSfhCl2Locq1iOYbbe5beBeeQ6uefCV93Nxy8rbsg/exec";
@@ -213,14 +213,13 @@ const UpscaleRegisterModal: React.FC = () => {
                     setVerifying(false);
                     setLoading(false);
 
-                    // Automatic Redirection to WhatsApp
+                    // Automatic Redirection to WhatsApp after allowing time to download GST Invoice
                     const TRIGGER_MESSAGE = "Hi I am complete Registration of AI- Business Generative Model workshop in chennai";
                     const waChatLink = `https://wa.me/917010340494?text=${encodeURIComponent(TRIGGER_MESSAGE)}`;
                     
-                    // Small delay to let the user see the "Complete" state before jumping
                     setTimeout(() => {
-                        window.location.href = waChatLink;
-                    }, 1500);
+                        window.open(waChatLink, "_blank", "noopener,noreferrer");
+                    }, 4000);
                 },
                 modal: { ondismiss: () => setLoading(false) },
             };
@@ -295,9 +294,26 @@ const UpscaleRegisterModal: React.FC = () => {
                                     </a>
                                 </div>
 
-                                <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">
+                                <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">
                                     TXN ID: {paymentId}
                                 </div>
+                                <button
+                                    type="button"
+                                    onClick={() =>
+                                        openPrintableGstInvoice({
+                                            customerName: form.name,
+                                            customerEmail: form.email,
+                                            customerPhone: `${form.countryCode} ${form.phone}`,
+                                            courseName: "UPSCALE: 1-Day Offline AI Mastery Workshop (Chennai)",
+                                            totalAmountPaid: finalPayableInr,
+                                            paymentId: paymentId || "PAID",
+                                        })
+                                    }
+                                    className="w-full mb-3 py-3 px-4 rounded-2xl bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-700 font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all"
+                                >
+                                    <FileText className="w-4 h-4" />
+                                    <span>Download Official GST Tax Invoice (PDF)</span>
+                                </button>
                                 <button onClick={handleClose} className="w-full text-slate-400 hover:text-slate-900 py-2 font-black text-[10px] uppercase tracking-widest transition-colors">Close Window</button>
                             </div>
                         ) : (

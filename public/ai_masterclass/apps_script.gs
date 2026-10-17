@@ -462,23 +462,28 @@ function syncInvoiceWithFunnelsDone(customerName, customerEmail, customerPhone, 
   }
 }
 
-function sendMasterclassEmail(email, name, sessionDate, sessionTime, totalAmount, paymentId, orderId, phone) {
+function sendMasterclassEmail(email, name, sessionDate, sessionTime, totalAmount, paymentId, orderId, phone, modeOrLang) {
   const defaultTime = getUpcomingWebinarTime();
-  const dateVal = sessionDate || defaultTime.toDateString();
-  const timeVal = sessionTime || "6:00 PM IST";
+  const isUpscaleOffline = (Number(totalAmount) >= 4000) || String(modeOrLang || "").toLowerCase().includes("offline") || String(modeOrLang || "").toLowerCase().includes("chennai");
+  const dateVal = sessionDate || (isUpscaleOffline ? "Sunday (Full Day Workshop)" : defaultTime.toDateString());
+  const timeVal = sessionTime || (isUpscaleOffline ? "9:00 AM – 5:30 PM IST" : "6:00 PM IST");
+  const courseTitle = isUpscaleOffline ? "UPSCALE: 1-Day Offline AI Mastery Workshop (Chennai)" : "AI Secrets Revealed Masterclass";
+  const fdCourseName = isUpscaleOffline ? "UPSCALE: Offline AI Workshop (Chennai)" : "AI-Secret Revealed";
+  const waGroupLink = isUpscaleOffline ? "https://chat.whatsapp.com/C88mQXMh84j1Qub9wmBTHv" : WHATSAPP_CONFIG.WA_GROUP_LINK;
+  const platformText = isUpscaleOffline ? "Vestin Park Hotel, Egmore, Chennai (In-Person)" : "Online Live Classroom (Link will be shared in WhatsApp group)";
   
   // Sync with FunnelsDone Private Integration API & get official Invoice Number
-  const fdInvoiceNo = syncInvoiceWithFunnelsDone(name, email, phone, "AI-Secret Revealed", totalAmount || 117, paymentId, orderId);
+  const fdInvoiceNo = syncInvoiceWithFunnelsDone(name, email, phone, fdCourseName, totalAmount || 117, paymentId, orderId);
   
   // Generate our side's official GST Tax Invoice PDF attachment
   let pdfAttachment = null;
   try {
-    pdfAttachment = generateOurGstInvoicePdfBlob(name, email, phone, "AI Secrets Revealed Masterclass", totalAmount || 117, paymentId, orderId, fdInvoiceNo);
+    pdfAttachment = generateOurGstInvoicePdfBlob(name, email, phone, courseTitle, totalAmount || 117, paymentId, orderId, fdInvoiceNo);
   } catch (pdfErr) {
     writeToLogs("PDF_GEN_ERROR", pdfErr.message);
   }
 
-  const subject = `🎉 Registration Confirmed & GST Invoice: AI Secrets Revealed Masterclass — ${dateVal}`;
+  const subject = `🎉 Registration Confirmed & GST Invoice: ${courseTitle} — ${dateVal}`;
   
   const htmlBody = `<!DOCTYPE html>
 <html>
@@ -494,8 +499,8 @@ function sendMasterclassEmail(email, name, sessionDate, sessionTime, totalAmount
           <tr>
             <td style="background:linear-gradient(135deg,#3b82f6,#2563eb);padding:40px 32px;text-align:center;">
               <div style="font-size:48px;margin-bottom:16px;">🚀</div>
-              <h1 style="font-size:28px;font-weight:800;color:#ffffff;margin:0;letter-spacing:-0.025em;line-height:1.2;">AI Secrets Revealed</h1>
-              <p style="color:rgba(255,255,255,0.9);font-size:13px;letter-spacing:0.2em;margin:8px 0 0;text-transform:uppercase;font-weight:700;">Live Masterclass 2026</p>
+              <h1 style="font-size:28px;font-weight:800;color:#ffffff;margin:0;letter-spacing:-0.025em;line-height:1.2;">${courseTitle}</h1>
+              <p style="color:rgba(255,255,255,0.9);font-size:13px;letter-spacing:0.2em;margin:8px 0 0;text-transform:uppercase;font-weight:700;">Tech Tycoon 2026</p>
             </td>
           </tr>
           <tr>
@@ -514,14 +519,14 @@ function sendMasterclassEmail(email, name, sessionDate, sessionTime, totalAmount
                   <td style="padding:16px 20px;border-bottom:1px solid #e2e8f0;font-size:14px;color:#0f172a;font-weight:700;">${timeVal}</td>
                 </tr>
                 <tr>
-                  <td style="padding:16px 20px;font-size:14px;color:#64748b;">📍 Platform</td>
-                  <td style="padding:16px 20px;font-size:14px;color:#3b82f6;font-weight:700;">Online Live Classroom (Link will be shared in WhatsApp group)</td>
+                  <td style="padding:16px 20px;font-size:14px;color:#64748b;">📍 Location / Platform</td>
+                  <td style="padding:16px 20px;font-size:14px;color:#3b82f6;font-weight:700;">${platformText}</td>
                 </tr>
               </table>
               <table width="100%" cellpadding="0" cellspacing="0">
                 <tr>
                   <td align="center" style="padding-bottom:32px;">
-                    <a href="${WHATSAPP_CONFIG.WA_GROUP_LINK}" target="_blank" style="display:inline-block;background-color:#22c55e;color:#ffffff;text-decoration:none;padding:16px 36px;border-radius:100px;font-size:16px;font-weight:700;box-shadow:0 4px 6px -1px rgba(34,197,94,0.3);">
+                    <a href="${waGroupLink}" target="_blank" style="display:inline-block;background-color:#22c55e;color:#ffffff;text-decoration:none;padding:16px 36px;border-radius:100px;font-size:16px;font-weight:700;box-shadow:0 4px 6px -1px rgba(34,197,94,0.3);">
                       📱 Join Official WhatsApp Group
                     </a>
                   </td>
@@ -529,20 +534,20 @@ function sendMasterclassEmail(email, name, sessionDate, sessionTime, totalAmount
               </table>
               <div style="background-color:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:20px;margin-bottom:24px;">
                 <h4 style="color:#1e3a8a;font-size:14px;margin:0 0 8px;font-weight:700;">⚡ Important Instructions:</h4>
-                <p style="color:#1e40af;font-size:13px;margin:0 0 6px;line-height:1.5;">1. Make sure to join the WhatsApp group using the button above to receive the session link.</p>
-                <p style="color:#1e40af;font-size:13px;margin:0 0 6px;line-height:1.5;">2. Log in 10 minutes prior to the scheduled session time.</p>
-                <p style="color:#1e40af;font-size:13px;margin:0 0 6px;line-height:1.5;">3. Keep a notebook and pen ready to take notes of critical AI tools and workflows.</p>
-                <p style="color:#1e40af;font-size:13px;margin:6px 0 0;line-height:1.5;">4. If you have any doubts, feel free to call or WhatsApp us at +91 63792 09689.</p>
+                <p style="color:#1e40af;font-size:13px;margin:0 0 6px;line-height:1.5;">1. Make sure to join the WhatsApp group using the button above to receive session updates.</p>
+                <p style="color:#1e40af;font-size:13px;margin:0 0 6px;line-height:1.5;">2. Arrive / log in 10 minutes prior to the scheduled session time.</p>
+                <p style="color:#1e40af;font-size:13px;margin:0 0 6px;line-height:1.5;">3. Keep a notebook and laptop ready for hands-on AI workflows.</p>
+                <p style="color:#1e40af;font-size:13px;margin:6px 0 0;line-height:1.5;">4. If you have any doubts, feel free to call or WhatsApp us at +91 7558133039.</p>
               </div>
               <p style="color:#94a3b8;font-size:12px;text-align:center;margin:32px 0 0;line-height:1.5;">
-                Have questions or doubts? Feel free to call us at +91 63792 09689 or email our support team at<br>
+                Have questions or doubts? Feel free to call us at +91 7558133039 or email our support team at<br>
                 <a href="mailto:support@techtycoon.in" style="color:#3b82f6;text-decoration:none;font-weight:600;">support@techtycoon.in</a>
               </p>
             </td>
           </tr>
           <tr>
             <td style="background-color:#f8fafc;border-top:1px solid #e2e8f0;padding:24px;text-align:center;">
-              <p style="color:#94a3b8;font-size:11px;margin:0;">© 2026 Tech Tycoon Digital Solution LLP (GSTIN: ${FUNNELSDONE_CONFIG.COMPANY_GSTIN}). All rights reserved.</p>
+              <p style="color:#94a3b8;font-size:11px;margin:0;">© 2026 Tech Tycoon Digital Solution LLP (GSTIN: ${FUNNELSDONE_CONFIG.COMPANY_GSTIN}).<br/>No. 3/59B, 1st Floor, 3rd Street, Ragava Nagar, Moovarasampet, Chennai-600091</p>
             </td>
           </tr>
         </table>
@@ -556,7 +561,7 @@ function sendMasterclassEmail(email, name, sessionDate, sessionTime, totalAmount
     to: email,
     subject: subject,
     htmlBody: htmlBody,
-    name: "AI Secrets Revealed Masterclass",
+    name: courseTitle,
     replyTo: "support@techtycoon.in"
   };
   if (pdfAttachment) {
@@ -673,9 +678,10 @@ function updatePaymentStatus(data) {
       const sessionTime = data.sessionTime || rows[i][18] || "";
       const phoneClean = rows[i][3] ? rows[i][3].toString().replace(/\D/g, '') : "";
       const paidAmt = Number(rows[i][6] || data.amount || 117);
+      const modeOrLang = rows[i][5] || data.language || data.modeOfSession || "";
       
       try {
-        sendMasterclassEmail(data.email, data.name, sessionDate, sessionTime, paidAmt, data.razorpay_payment_id, data.razorpay_order_id, phoneClean);
+        sendMasterclassEmail(data.email, data.name, sessionDate, sessionTime, paidAmt, data.razorpay_payment_id, data.razorpay_order_id, phoneClean, modeOrLang);
         triggerWhatsAppCampaign(data.name, data.email, phoneClean);
         createCalendarInvite(data.email, data.name, sessionDate, sessionTime);
       } catch (err) {
@@ -703,9 +709,10 @@ function updatePaymentStatusFromWebhook(orderId, paymentId, email) {
       const sessionTime = rows[i][18] || "";
       const phoneClean = rows[i][3] ? rows[i][3].toString().replace(/\D/g, '') : "";
       const paidAmt = Number(rows[i][6] || 117);
+      const modeOrLang = rows[i][5] || "";
       
       try {
-        sendMasterclassEmail(email, name, sessionDate, sessionTime, paidAmt, paymentId, orderId, phoneClean);
+        sendMasterclassEmail(email, name, sessionDate, sessionTime, paidAmt, paymentId, orderId, phoneClean, modeOrLang);
         triggerWhatsAppCampaign(name, email, phoneClean);
         createCalendarInvite(email, name, sessionDate, sessionTime);
       } catch (err) {

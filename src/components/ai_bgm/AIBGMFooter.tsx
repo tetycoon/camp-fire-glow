@@ -55,7 +55,7 @@ const AIBGMFooter: React.FC = () => {
 
       <div className="max-w-7xl mx-auto mt-6 pt-4 sm:mt-8 sm:pt-6 border-t border-slate-100 text-center text-slate-500 text-[10px] sm:text-[11px] space-y-1.5 sm:space-y-2">
         <p>
-          © {new Date().getFullYear()} Tech Tycoon Digital Solutions LLP. All Rights Reserved. "Advance AI-Business Generative Model" (AI-BGM) is a proprietary executive education program.
+          © {new Date().getFullYear()} Tech Tycoon Digital Solution LLP (GSTIN: 33AAZFT9667P1ZP). All Rights Reserved. • Office: No. 3/59B, 1st Floor, 3rd Street, Ragava Nagar, Moovarasampet, Chennai-600091 • Mobile: +91 7558133039
         </p>
         <p>
           Disclaimer: Results depend on personal commitment and execution of business fundamentals. Tech Tycoon provides high-level frameworks, continuous AI updates, and actionable business strategies.

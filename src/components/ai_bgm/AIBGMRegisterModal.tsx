@@ -21,11 +21,12 @@ import {
   RefreshCw,
   Award,
   Zap,
-  HelpCircle
+  HelpCircle,
+  FileText
 } from "lucide-react";
 import { countryCodes, CountryCode } from "../../lib/countryCodes";
 import GstPriceBreakdown from "../common/GstPriceBreakdown";
-import { calculateGstBreakdown, isAuthorizedTestEmail, isValidEmail, isValidGstin, sanitizeTextInput } from "../../lib/gstUtils";
+import { calculateGstBreakdown, isAuthorizedTestEmail, isValidEmail, isValidGstin, openPrintableGstInvoice, sanitizeTextInput } from "../../lib/gstUtils";
 
 declare global {
   interface Window {
@@ -526,10 +527,21 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
 
                 <button
                   type="button"
-                  onClick={() => window.print()}
-                  className="w-full sm:w-auto px-4 py-2.5 sm:px-5 sm:py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs border border-slate-300"
+                  onClick={() =>
+                    openPrintableGstInvoice({
+                      customerName: successDetails.name,
+                      customerEmail: successDetails.email,
+                      customerPhone: `${selectedCountry.code} ${phone}`,
+                      courseName: "Advance AI-Business Generative Model (AI-BGM)",
+                      totalAmountPaid: successDetails.amount || 6999,
+                      paymentId: successDetails.paymentId,
+                      orderId: successDetails.orderId,
+                    })
+                  }
+                  className="w-full sm:w-auto px-4 py-2.5 sm:px-5 sm:py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs border border-slate-300 flex items-center justify-center gap-1.5"
                 >
-                  🖨️ Print Receipt
+                  <FileText className="w-3.5 h-3.5 text-indigo-600" />
+                  <span>Download GST Tax Invoice (PDF)</span>
                 </button>
               </div>
             </div>

@@ -82,11 +82,11 @@ const ProfessionalFooter: React.FC = () => {
               </div>
               <div className="flex items-center gap-2">
                 <Phone className="w-3.5 h-3.5 text-indigo-400 flex-shrink-0" />
-                <span>+91 93457 40049</span>
+                <span>+91 7558133039</span>
               </div>
               <div className="flex items-start gap-2">
                 <MapPin className="w-3.5 h-3.5 text-indigo-400 mt-0.5 flex-shrink-0" />
-                <span>Tech Tycoon Digital Solution LLP, Tamil Nadu, India</span>
+                <span>No. 3/59B, 1st Floor, 3rd Street, Ragava Nagar, Moovarasampet, Chennai-600091</span>
               </div>
             </div>
           </div>
@@ -94,7 +94,7 @@ const ProfessionalFooter: React.FC = () => {
 
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-slate-800 text-center sm:flex sm:justify-between sm:items-center text-[11px] text-slate-500">
-          <p>© 2026 TECH TYCOON Digital Solution LLP. All rights reserved.</p>
+          <p>© 2026 TECH TYCOON Digital Solution LLP (GSTIN: 33AAZFT9667P1ZP). All rights reserved.</p>
           <div className="mt-2 sm:mt-0 space-x-4">
             <a href="/privacy" className="hover:text-slate-400 transition-colors">Privacy Policy</a>
             <span>•</span>

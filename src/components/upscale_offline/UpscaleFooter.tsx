@@ -60,12 +60,15 @@ const UpscaleFooter: React.FC = () => {
                     <div>
                         <div className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] mb-6">CONTACT US</div>
                         <div className="space-y-4">
-                            <a href="tel:+916379209689" className="flex items-center gap-3 text-sm font-bold text-slate-400 hover:text-blue-500 transition-colors">
-                                <Phone className="w-4 h-4" /> +91 63792 09689
+                            <a href="tel:+917558133039" className="flex items-center gap-3 text-sm font-bold text-slate-400 hover:text-blue-500 transition-colors">
+                                <Phone className="w-4 h-4" /> +91 7558133039
                             </a>
                             <a href="mailto:support@techtycoon.in" className="flex items-center gap-3 text-sm font-bold text-slate-400 hover:text-blue-500 transition-colors break-all">
                                 <Mail className="w-4 h-4 shrink-0" /> support@techtycoon.in
                             </a>
+                            <div className="text-xs font-medium text-slate-400 leading-relaxed pt-1">
+                                No. 3/59B, 1st Floor, 3rd Street, Ragava Nagar, Moovarasampet, Chennai-600091
+                            </div>
                         </div>
 
                         <div className="mt-8 pt-6 border-t border-white/5">
@@ -77,7 +80,7 @@ const UpscaleFooter: React.FC = () => {
                 </div>
 
                 <div className="pt-8 border-t border-white/5 text-center text-[10px] font-black text-slate-600 uppercase tracking-[0.3em]">
-                    © 2026 Tech Tycoon Digital Solution. All Rights Reserved.
+                    © 2026 Tech Tycoon Digital Solution LLP (GSTIN: 33AAZFT9667P1ZP). All Rights Reserved.
                 </div>
             </div>
         </footer>

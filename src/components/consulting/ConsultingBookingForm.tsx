@@ -12,11 +12,12 @@ import {
   Clock,
   Video,
   ExternalLink,
-  MessageSquare
+  MessageSquare,
+  FileText
 } from "lucide-react";
 import { countryCodes, CountryCode } from "../../lib/countryCodes";
 import GstPriceBreakdown from "../common/GstPriceBreakdown";
-import { calculateGstBreakdown, isAuthorizedTestEmail, isValidEmail, isValidGstin, sanitizeTextInput } from "../../lib/gstUtils";
+import { calculateGstBreakdown, isAuthorizedTestEmail, isValidEmail, isValidGstin, openPrintableGstInvoice, sanitizeTextInput } from "../../lib/gstUtils";
 
 declare global {
   interface Window {
@@ -388,15 +389,36 @@ const ConsultingBookingForm: React.FC<ConsultingBookingFormProps> = ({ onSuccess
           </p>
         </div>
 
-        <a
-          href="https://wa.me/919940306161?text=Hi%20Tech%20Tycoon%20Team%2C%20I%20have%20booked%20a%201-on-1%20AI%20Consulting%20session.%20Order%20ID%3A%20"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-full py-3 px-5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/25 transition-all"
-        >
-          <Phone className="w-4 h-4" />
-          <span>Connect via WhatsApp Support</span>
-        </a>
+        <div className="space-y-2.5">
+          <a
+            href="https://wa.me/917558133039?text=Hi%20Tech%20Tycoon%20Team%2C%20I%20have%20booked%20a%201-on-1%20AI%20Consulting%20session.%20Order%20ID%3A%20"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full py-3 px-5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/25 transition-all"
+          >
+            <Phone className="w-4 h-4" />
+            <span>Connect via WhatsApp Support</span>
+          </a>
+
+          <button
+            type="button"
+            onClick={() =>
+              openPrintableGstInvoice({
+                customerName: successDetails.name,
+                customerEmail: successDetails.email,
+                customerPhone: successDetails.phone,
+                courseName: "1-on-1 AI Strategy & Mentorship Session",
+                totalAmountPaid: successDetails.amount || 2950,
+                paymentId: successDetails.paymentId,
+                orderId: successDetails.orderId,
+              })
+            }
+            className="w-full py-2.5 px-5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-800 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all"
+          >
+            <FileText className="w-4 h-4 text-indigo-600" />
+            <span>Download Official GST Tax Invoice (PDF)</span>
+          </button>
+        </div>
       </div>
     );
   }

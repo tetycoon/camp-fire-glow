@@ -16,11 +16,12 @@ import {
   Clock, 
   Gift, 
   Check, 
-  ExternalLink 
+  ExternalLink,
+  FileText
 } from "lucide-react";
 import { countryCodes, CountryCode } from "../../lib/countryCodes";
 import GstPriceBreakdown from "../common/GstPriceBreakdown";
-import { calculateGstBreakdown, isAuthorizedTestEmail, isValidEmail, isValidGstin, sanitizeTextInput } from "../../lib/gstUtils";
+import { calculateGstBreakdown, isAuthorizedTestEmail, isValidEmail, isValidGstin, openPrintableGstInvoice, sanitizeTextInput } from "../../lib/gstUtils";
 
 declare global {
   interface Window {
@@ -450,15 +451,36 @@ const ProfessionalRegistrationForm: React.FC = () => {
           </p>
         </div>
 
-        <a
-          href="https://academy.techtycoon.in"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-full py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-md shadow-indigo-600/25 transition-all"
-        >
-          <span>Open Academy Student Portal</span>
-          <ExternalLink className="w-3.5 h-3.5" />
-        </a>
+        <div className="space-y-2">
+          <a
+            href="https://academy.techtycoon.in"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-md shadow-indigo-600/25 transition-all"
+          >
+            <span>Open Academy Student Portal</span>
+            <ExternalLink className="w-3.5 h-3.5" />
+          </a>
+
+          <button
+            type="button"
+            onClick={() =>
+              openPrintableGstInvoice({
+                customerName: successDetails.name,
+                customerEmail: successDetails.email,
+                customerPhone: `${selectedCountry.code} ${phone}`,
+                courseName: "Advance AI for Non-Tech Working Professionals",
+                totalAmountPaid: successDetails.amount || 5899,
+                paymentId: successDetails.paymentId,
+                orderId: successDetails.orderId,
+              })
+            }
+            className="w-full py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-800 font-bold text-xs flex items-center justify-center gap-1.5 transition-all"
+          >
+            <FileText className="w-3.5 h-3.5 text-indigo-600" />
+            <span>Download Official GST Tax Invoice (PDF)</span>
+          </button>
+        </div>
       </div>
     );
   }
