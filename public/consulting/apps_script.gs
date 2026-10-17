@@ -1,12 +1,8 @@
 /**
  * ============================================================================
- * 1-ON-1 AI CONSULTATION — DEDICATED GOOGLE APPS SCRIPT AUTOMATION
- * Service: "1-on-1 AI Strategy & Mentorship Session" (₹2,500 / Hour)
- * 
- * Target Google Sheet URL:
- * https://docs.google.com/spreadsheets/d/1LP37n3zb1d0UkXjddQBCKqmSU0j5-HvPSI-Rda36E3s/edit?gid=0#gid=0
- * Spreadsheet ID: 1LP37n3zb1d0UkXjddQBCKqmSU0j5-HvPSI-Rda36E3s
- * Sheet Name: Sheet1 (or Active Tab)
+ * 1-ON-1 AI CONSULTATION — GOOGLE APPS SCRIPT AUTOMATION
+ * Spreadsheet: "consulting" (ID: 1LP37n3zb1d0UkXjddQBCKqmSU0j5-HvPSI-Rda36E3s)
+ * Fee: ₹2,500 + 18% GST (₹2,950) / 1 Hour Consultation
  * 
  * Columns in Sheet1:
  * Col A: Date and Time
@@ -21,20 +17,37 @@
  * ============================================================================
  */
 
-// Razorpay Credentials
 const RAZORPAY_KEY_ID = "rzp_live_T2CbVONQc6qrqj";
 const RAZORPAY_KEY_SECRET = "0ZmzKfvHIwbnvkTCPxkWC1a6";
 
-// International Razorpay Credentials
 const RAZORPAY_KEY_ID_INTL = "rzp_live_gfoS1OjC8tvWjP";
 const RAZORPAY_KEY_SECRET_INTL = "B0q7JAz8YhMat2QkTa3YCUGd";
 
 const SPREADSHEET_ID = "1LP37n3zb1d0UkXjddQBCKqmSU0j5-HvPSI-Rda36E3s";
 const SHEET_NAME = "Sheet1";
 
-/**
- * Safely retrieve target sheet
- */
+// ------------------------------------------------------------
+// FUNNELSDONE PRIVATE INTEGRATION API v2 + GST PDF INVOICE CONFIG
+// ------------------------------------------------------------
+const FUNNELSDONE_CONFIG = {
+  PIT_TOKEN: "pit-us-51307c8c-0d88-43f7-b619-3599040515db",
+  LOCATION_ID: "uUUUKRH7EP2A0oJBv4Zb",
+  API_BASE: "https://services.leadconnectorhq.com",
+  API_VERSION: "2021-07-28",
+  COMPANY_NAME: "TECH TYCOON DIGITAL SOLUTION LLP",
+  COMPANY_GSTIN: "33AAZFT9667P1ZP",
+  COMPANY_SAC: "999293",
+  COMPANY_LOGO: "https://assets.cdn.filesafe.space/uUUUKRH7EP2A0oJBv4Zb/media/6accab95bbad531ac8a6b1af.png",
+  COMPANY_PHONE: "7558133039",
+  COMPANY_WEBSITE: "https://www.techtycoon.in/",
+  ADDRESS_LINE1: "No. 3/59B, 1st Floor, 3rd Street, Ragava Nagar",
+  CITY: "Moovarasampet, Chennai",
+  STATE: "TAMILNADU",
+  POSTAL_CODE: "600091"
+};
+
+const TEST_EMAILS = ["ambroseselva001@gmail.com", "techtycoondigitalsolutions@gmail.com"];
+
 function getTargetSheet(requestedSpreadsheetId) {
   let ss = null;
   const targetId = requestedSpreadsheetId || SPREADSHEET_ID;
@@ -49,24 +62,11 @@ function getTargetSheet(requestedSpreadsheetId) {
     try {
       ss = SpreadsheetApp.openById(targetId);
     } catch (e) {
-      Logger.log("openById notice: " + e.toString());
-      throw new Error("Cannot open Spreadsheet ID " + targetId + ". Please run via Extensions -> Apps Script inside the sheet.");
+      throw new Error("Cannot open Spreadsheet ID " + targetId);
     }
   }
 
   return ss.getSheetByName(SHEET_NAME) || ss.getSheets()[0];
-}
-
-/**
- * Handle GET Requests (Health Check & Verification)
- */
-function doGet(e) {
-  return ContentService.createTextOutput(JSON.stringify({
-    status: "success",
-    service: "1-on-1 AI Strategy & Consultation (₹2,500/Hour)",
-    spreadsheetId: SPREADSHEET_ID,
-    timestamp: new Date().toISOString()
-  })).setMimeType(ContentService.MimeType.JSON);
 }
 
 function sanitizeCell(val) {
@@ -76,29 +76,23 @@ function sanitizeCell(val) {
   return str;
 }
 
-function verifyPaymentSignature(orderId, paymentId, signature, isIntl) {
-  if (!orderId || !paymentId || !signature) return true;
-  const secret = isIntl ? RAZORPAY_KEY_SECRET_INTL : RAZORPAY_KEY_SECRET;
-  const payload = orderId + "|" + paymentId;
-  const sigBytes = Utilities.computeHmacSha256Signature(payload, secret);
-  const expectedSig = sigBytes.map(function (b) {
-    const v = (b < 0) ? 256 + b : b;
-    return ("0" + v.toString(16)).slice(-2);
-  }).join("");
-  return expectedSig === signature;
+function doGet(e) {
+  return ContentService.createTextOutput(JSON.stringify({
+    status: "success",
+    service: "1-on-1 AI Consultation (₹2,500 + 18% GST)",
+    spreadsheetId: SPREADSHEET_ID,
+    timestamp: new Date().toISOString()
+  })).setMimeType(ContentService.MimeType.JSON);
 }
 
-/**
- * Handle POST Requests from Landing Page & Razorpay
- */
 function doPost(e) {
   const lock = LockService.getScriptLock();
   try {
-    lock.waitLock(30000); // Wait up to 30s to prevent concurrent write collisions
+    lock.waitLock(30000);
   } catch (lockErr) {
     return ContentService.createTextOutput(JSON.stringify({
       success: false,
-      error: "Could not acquire sheet lock. Please try again."
+      error: "Could not acquire lock. Please try again."
     })).setMimeType(ContentService.MimeType.JSON);
   }
 
@@ -108,29 +102,30 @@ function doPost(e) {
     const targetSpreadsheetId = data.spreadsheetId || SPREADSHEET_ID;
     const sheet = getTargetSheet(targetSpreadsheetId);
 
-    // Ensure headers exist
     ensureHeaders(sheet);
+
+    // Razorpay Server Webhook Fallback
+    if (data.event === "payment.captured" || data.event === "order.paid") {
+      const paymentEntity = data.payload.payment.entity;
+      data.paymentSuccess = true;
+      data.razorpay_order_id = paymentEntity.order_id;
+      data.razorpay_payment_id = paymentEntity.id;
+      data.email = paymentEntity.email;
+      data.amount = Math.round((Number(paymentEntity.amount) || 295000) / 100);
+    }
 
     // SCENARIO 1: Payment Success Update
     if (data.paymentSuccess === true || (data.razorpay_payment_id && !data.orderId && !data.status)) {
-      const orderIdToFind = sanitizeCell(data.razorpay_order_id || data.orderId || "");
-      const paymentId = sanitizeCell(data.razorpay_payment_id || data.paymentId || "PAID");
-      const isInternational = data.isInternational === true;
-      if (data.razorpay_signature && orderIdToFind && paymentId) {
-        if (!verifyPaymentSignature(orderIdToFind, paymentId, data.razorpay_signature, isInternational)) {
-          throw new Error("Payment signature verification failed");
-        }
-      }
-      const userEmail = (data.email || "").toLowerCase().trim();
-      const userPhone = (data.phone || "").trim();
-      let finalName = sanitizeCell(data.name || "Consulting Client");
-      let finalEmail = sanitizeCell(data.email || "");
-      let finalPhone = String(data.phone || "").replace(/[^\d+\-\s]/g, "");
-      let finalAmount = Number(data.amount) || 2950;
-      let alreadyPaid = false;
+      const orderIdToFind = data.razorpay_order_id || data.orderId || "";
+      const paymentId = data.razorpay_payment_id || data.paymentId || "PAID";
+      let userName = data.name || "Consulting Client";
+      let userEmail = (data.email || "").toLowerCase().trim();
+      let userPhone = (data.phone || "").trim();
+      let paidAmount = Number(data.amount) || 2950;
 
       const lastRow = sheet.getLastRow();
       let matched = false;
+      let alreadyPaid = false;
 
       if (lastRow > 1) {
         const values = sheet.getRange(2, 1, lastRow - 1, 9).getValues();
@@ -149,15 +144,15 @@ function doPost(e) {
             if (String(values[i][6] || "").trim() === "PAID") {
               alreadyPaid = true;
             }
-            if (!data.name && values[i][1]) finalName = String(values[i][1]);
-            if (!finalEmail && values[i][2]) finalEmail = String(values[i][2]);
-            if (!finalPhone && values[i][3]) finalPhone = String(values[i][3]).replace(/^'/, "");
-            if (!data.amount && values[i][5]) finalAmount = Number(values[i][5]) || 2950;
+            userName = values[i][1] || userName;
+            userEmail = values[i][2] || userEmail;
+            userPhone = values[i][3] || userPhone;
+            paidAmount = Number(data.amount || values[i][5] || 2950);
 
             sheet.getRange(sheetRowIndex, 7).setValue("PAID"); // Col G: Status
             sheet.getRange(sheetRowIndex, 9).setValue(paymentId); // Col I: Payment ID
             if (data.amount) {
-              sheet.getRange(sheetRowIndex, 6).setValue(Number(data.amount) || 2950); // Col F: Amount
+              sheet.getRange(sheetRowIndex, 6).setValue(data.amount); // Col F: Amount
             }
             matched = true;
             break;
@@ -165,52 +160,51 @@ function doPost(e) {
         }
       }
 
-      // If no initiated row matched, append a fresh paid row
       if (!matched) {
         const now = new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
         sheet.appendRow([
           now,
-          finalName,
-          finalEmail,
-          "'" + finalPhone,
-          sanitizeCell(data.profession || "1-on-1 Consultation"),
-          finalAmount,
+          sanitizeCell(userName),
+          sanitizeCell(userEmail),
+          sanitizeCell(userPhone),
+          sanitizeCell(data.profession || "1-on-1 AI Consultation"),
+          paidAmount,
           "PAID",
           orderIdToFind || ("ORD_DIRECT_" + Date.now()),
           paymentId
         ]);
       }
 
-      // Trigger Dual GST Invoices (1. FunnelsDone API v2 + 2. Our GST Invoice PDF attached to confirmation email)
-      if (!alreadyPaid && finalEmail) {
+      // Trigger Dual GST Invoices (FunnelsDone API v2 + Our GST PDF Invoice Email)
+      if (!alreadyPaid && userEmail && userEmail.includes("@")) {
         try {
-          sendConsultingConfirmationEmail(finalEmail, finalName, finalPhone, finalAmount, paymentId, orderIdToFind);
+          sendConsultationEmail(userName, userEmail, userPhone, paidAmount, paymentId, orderIdToFind);
         } catch (mailErr) {
-          Logger.log("Consulting Confirmation / Invoice Error: " + mailErr.toString());
+          Logger.log("Consultation Invoice Email Error: " + mailErr.toString());
         }
       }
 
       lock.releaseLock();
       return ContentService.createTextOutput(JSON.stringify({
         success: true,
-        message: "Consultation payment recorded successfully.",
+        message: "Consultation payment saved & GST Invoice issued.",
         paymentId: paymentId
       })).setMimeType(ContentService.MimeType.JSON);
     }
 
-    // SCENARIO 2: Create Razorpay Order & Log INITIATED Row
+    // SCENARIO 2: Create Order & Log INITIATED
     const now = data.dateTime || new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
     const name = sanitizeCell(data.name || "");
     const email = sanitizeCell(data.email || "");
-    const phone = "'" + String(data.phone || "").replace(/[^\d+\-\s]/g, "");
-    const gstSuffix = data.gstin ? ` | GSTIN: ${sanitizeCell(data.gstin)} (${sanitizeCell(data.companyName || "")})` : "";
-    const profession = sanitizeCell((data.profession || "1-on-1 AI Consultation") + gstSuffix);
-    const amount = Number(data.amount) || 2950;
+    const phone = sanitizeCell(data.phone || "");
+    const profession = sanitizeCell(data.profession || "1-on-1 AI Consultation");
+    const emailLower = email.toLowerCase().trim();
+    const rawAmt = Number(data.amount) || 2950;
+    const amount = (TEST_EMAILS.indexOf(emailLower) !== -1 && rawAmt === 1) ? 1 : (rawAmt < 2500 ? 2950 : Math.round(rawAmt));
     const isInternational = data.isInternational === true;
 
-    let orderId = sanitizeCell(data.orderId || ("ORD_CONSULT_" + Date.now()));
+    let orderId = data.orderId || ("ORD_CONSULT_" + Date.now());
 
-    // Call Razorpay API to generate live official Order ID
     try {
       const activeKeyId = isInternational ? RAZORPAY_KEY_ID_INTL : RAZORPAY_KEY_ID;
       const activeKeySecret = isInternational ? RAZORPAY_KEY_SECRET_INTL : RAZORPAY_KEY_SECRET;
@@ -223,7 +217,7 @@ function doPost(e) {
           "Content-Type": "application/json"
         },
         payload: JSON.stringify({
-          amount: Math.round(amount * 100), // paise
+          amount: amount * 100,
           currency: "INR",
           receipt: orderId.slice(0, 40),
           notes: {
@@ -233,9 +227,7 @@ function doPost(e) {
             phone: phone,
             profession: profession,
             base_amount: data.baseAmount || 2500,
-            gst_amount: data.gstAmount || 450,
-            gstin: sanitizeCell(data.gstin || ""),
-            company_name: sanitizeCell(data.companyName || "")
+            gst_amount: data.gstAmount || 450
           }
         }),
         muteHttpExceptions: true
@@ -249,8 +241,6 @@ function doPost(e) {
       Logger.log("Razorpay Order API fallback: " + rzpErr.toString());
     }
 
-    // Append Col A - Col I row
-    // Col A: Date and Time | Col B: Name | Col C: Email | Col D: Phone | Col E: Profession | Col F: Amount | Col G: Status | Col H: Order ID | Col I: Payment ID
     sheet.appendRow([
       now,
       name,
@@ -260,7 +250,7 @@ function doPost(e) {
       amount,
       "INITIATED",
       orderId,
-      "" // Payment ID empty until paid
+      ""
     ]);
 
     lock.releaseLock();
@@ -280,48 +270,9 @@ function doPost(e) {
   }
 }
 
-/**
- * Ensures Table Headers in Row 1 match expected format
- */
-function ensureHeaders(sheet) {
-  if (sheet.getLastRow() === 0) {
-    const headers = [
-      "Date and Time",
-      "Name",
-      "Email",
-      "Phone",
-      "Profession",
-      "Amount",
-      "Status",
-      "Order ID",
-      "Payment ID"
-    ];
-    sheet.appendRow(headers);
-    sheet.getRange(1, 1, 1, headers.length).setFontWeight("bold").setBackground("#f3f4f6");
-    sheet.setFrozenRows(1);
-  }
-}
-
-// ============================================================================
-// FUNNELSDONE PRIVATE INTEGRATION API v2 + GST PDF INVOICE
-// ============================================================================
-const FUNNELSDONE_CONFIG = {
-  PIT_TOKEN: "pit-us-51307c8c-0d88-43f7-b619-3599040515db",
-  LOCATION_ID: "uUUUKRH7EP2A0oJBv4Zb",
-  API_BASE: "https://services.leadconnectorhq.com",
-  API_VERSION: "2021-07-28",
-  COMPANY_NAME: "TECH TYCOON DIGITAL SOLUTION LLP",
-  COMPANY_GSTIN: "33AAZFT9667P1ZP",
-  COMPANY_SAC: "999293",
-  COMPANY_LOGO: "https://assets.cdn.filesafe.space/uUUUKRH7EP2A0oJBv4Zb/media/6accab95bbad531ac8a6b1af.png",
-  COMPANY_PHONE: "7558133039",
-  COMPANY_WEBSITE: "https://www.techtycoon.in/",
-  ADDRESS_LINE1: "No. 3/59B, 1st Floor, 3rd Street, Ragava Nagar",
-  CITY: "Moovarasampet, Chennai",
-  STATE: "TAMILNADU",
-  POSTAL_CODE: "600091"
-};
-
+// ------------------------------------------------------------
+// DUAL GST INVOICE: OUR PDF BLOB + FUNNELSDONE API v2 SYNC
+// ------------------------------------------------------------
 function generateOurGstInvoicePdfBlob(customerName, customerEmail, customerPhone, courseName, totalAmount, paymentId, orderId, invoiceNo) {
   const total = Math.max(1, Number(totalAmount) || 2950);
   const isTest = total === 1;
@@ -358,7 +309,7 @@ function generateOurGstInvoicePdfBlob(customerName, customerEmail, customerPhone
     <table style="width:100%;margin-bottom:16px;"><tr>
       <td style="width:50%;vertical-align:top;background:#f8fafc;padding:10px;border-radius:6px;border:1px solid #e2e8f0;">
         <strong style="color:#64748b;font-size:10px;text-transform:uppercase;">Billed To (Customer)</strong><br/>
-        <strong>${sanitizeCell(customerName || "Consulting Client")}</strong><br/>
+        <strong>${sanitizeCell(customerName || "Client")}</strong><br/>
         Email: ${sanitizeCell(customerEmail || "")}<br/>
         Phone: ${sanitizeCell(customerPhone || "")}<br/>
         Place of Supply: Tamil Nadu (33), India
@@ -375,7 +326,7 @@ function generateOurGstInvoicePdfBlob(customerName, customerEmail, customerPhone
       <thead><tr><th>#</th><th>Description of Service</th><th>SAC Code</th><th class="right">Qty</th><th class="right">Taxable Value (INR)</th></tr></thead>
       <tbody><tr>
         <td>1</td>
-        <td><strong>${sanitizeCell(courseName || "1-on-1 AI Strategy & Mentorship Session")}</strong><br/><span style="color:#64748b;font-size:10px;">Live 1-on-1 AI Consulting & Advisory Session</span></td>
+        <td><strong>${sanitizeCell(courseName || "1-on-1 AI Strategy & Implementation Consultation (1 Hour)")}</strong><br/><span style="color:#64748b;font-size:10px;">Executive AI Advisory & Architecture Consultation</span></td>
         <td>${FUNNELSDONE_CONFIG.COMPANY_SAC}</td>
         <td class="right">1</td>
         <td class="right">Rs. ${baseAmt.toFixed(2)}</td>
@@ -407,9 +358,10 @@ function syncInvoiceWithFunnelsDone(customerName, customerEmail, customerPhone, 
     if (cleanPhone.length === 10) cleanPhone = "+91" + cleanPhone;
     else if (cleanPhone.length > 10 && !cleanPhone.startsWith("+")) cleanPhone = "+" + cleanPhone;
 
+    // 1. Upsert Contact in FunnelsDone
     const contactPayload = {
       locationId: FUNNELSDONE_CONFIG.LOCATION_ID,
-      name: customerName || "Consulting Client",
+      name: customerName || "Client",
       email: customerEmail || "",
       phone: cleanPhone,
       tags: ["consulting_paid", "gst_invoice_issued"]
@@ -422,8 +374,12 @@ function syncInvoiceWithFunnelsDone(customerName, customerEmail, customerPhone, 
     });
     const contactJson = JSON.parse(contactRes.getContentText() || "{}");
     const contactId = contactJson.contact && contactJson.contact.id ? contactJson.contact.id : null;
-    if (!contactId) return null;
+    if (!contactId) {
+      Logger.log("FUNNELSDONE_CONTACT_ERR: " + contactRes.getContentText());
+      return null;
+    }
 
+    // 2. Get Next Invoice Number from FunnelsDone
     const numRes = UrlFetchApp.fetch(
       FUNNELSDONE_CONFIG.API_BASE + "/invoices/generate-invoice-number?altId=" + FUNNELSDONE_CONFIG.LOCATION_ID + "&altType=location",
       { method: "get", headers: headers, muteHttpExceptions: true }
@@ -431,6 +387,7 @@ function syncInvoiceWithFunnelsDone(customerName, customerEmail, customerPhone, 
     const numJson = JSON.parse(numRes.getContentText() || "{}");
     const nextInvoiceNumber = numJson.invoiceNumber || String(Math.floor(100000 + Math.random() * 900000));
 
+    // 3. Create Draft Invoice in FunnelsDone with 9% CGST + 9% SGST
     const total = Math.max(1, Number(totalAmount) || 2950);
     const isTest = total === 1;
     const baseAmt = isTest ? 1 : Math.round((total / 1.18) * 100) / 100;
@@ -439,7 +396,7 @@ function syncInvoiceWithFunnelsDone(customerName, customerEmail, customerPhone, 
     const createPayload = {
       altId: FUNNELSDONE_CONFIG.LOCATION_ID,
       altType: "location",
-      name: courseName || "1-on-1 AI Strategy & Mentorship Session",
+      name: courseName || "1-on-1 AI Strategy & Implementation Consultation",
       title: "TAX INVOICE",
       currency: "INR",
       invoiceNumber: nextInvoiceNumber,
@@ -463,14 +420,14 @@ function syncInvoiceWithFunnelsDone(customerName, customerEmail, customerPhone, 
       },
       contactDetails: {
         id: contactId,
-        name: customerName || "Consulting Client",
+        name: customerName || "Client",
         email: customerEmail || "",
         phoneNo: cleanPhone,
         address: { countryCode: "IN", state: "TAMILNADU" }
       },
       items: [
         {
-          name: courseName || "1-on-1 AI Strategy & Mentorship Session",
+          name: courseName || "1-on-1 AI Strategy & Implementation Consultation",
           description: "SAC: " + FUNNELSDONE_CONFIG.COMPANY_SAC + " | Razorpay Payment ID: " + (paymentId || ""),
           currency: "INR",
           amount: baseAmt,
@@ -496,8 +453,12 @@ function syncInvoiceWithFunnelsDone(customerName, customerEmail, customerPhone, 
     });
     const invJson = JSON.parse(invRes.getContentText() || "{}");
     const invoiceId = invJson._id || (invJson.invoice && invJson.invoice._id);
-    if (!invoiceId) return "TT/26-27/" + nextInvoiceNumber;
+    if (!invoiceId) {
+      Logger.log("FUNNELSDONE_INV_ERR: " + invRes.getContentText());
+      return "TT/26-27/" + nextInvoiceNumber;
+    }
 
+    // 4. Record Payment on FunnelsDone Invoice so it is immediately marked PAID
     const recordPayload = {
       altId: FUNNELSDONE_CONFIG.LOCATION_ID,
       altType: "location",
@@ -506,63 +467,86 @@ function syncInvoiceWithFunnelsDone(customerName, customerEmail, customerPhone, 
       notes: "Paid via Razorpay | Payment ID: " + (paymentId || "") + " | Order ID: " + (orderId || ""),
       fulfilledAt: new Date().toISOString()
     };
-    UrlFetchApp.fetch(FUNNELSDONE_CONFIG.API_BASE + "/invoices/" + invoiceId + "/record-payment", {
+    const payRes = UrlFetchApp.fetch(FUNNELSDONE_CONFIG.API_BASE + "/invoices/" + invoiceId + "/record-payment", {
       method: "post",
       headers: headers,
       payload: JSON.stringify(recordPayload),
       muteHttpExceptions: true
     });
+    Logger.log("FUNNELSDONE_INVOICE_PAID: Invoice TT/26-27/" + nextInvoiceNumber + " (" + invoiceId + ") recorded: " + payRes.getResponseCode());
     return "TT/26-27/" + nextInvoiceNumber;
   } catch (err) {
-    Logger.log("FunnelsDone Sync Error: " + err.toString());
+    Logger.log("FUNNELSDONE_SYNC_ERROR: " + err.message);
     return null;
   }
 }
 
-function sendConsultingConfirmationEmail(email, name, phone, totalAmount, paymentId, orderId) {
-  const courseTitle = "1-on-1 AI Strategy & Mentorship Session";
-  const fdInvoiceNo = syncInvoiceWithFunnelsDone(name, email, phone, courseTitle, totalAmount || 2950, paymentId, orderId);
+function sendConsultationEmail(userName, userEmail, userPhone, paidAmount, paymentId, orderId) {
+  const courseTitle = "1-on-1 AI Strategy & Implementation Consultation (1 Hour)";
 
+  // 1. Sync with FunnelsDone Private Integration API & get official Invoice Number
+  const fdInvoiceNo = syncInvoiceWithFunnelsDone(userName, userEmail, userPhone, courseTitle, paidAmount, paymentId, orderId);
+
+  // 2. Generate our side's official GST Tax Invoice PDF attachment
   let pdfAttachment = null;
   try {
-    pdfAttachment = generateOurGstInvoicePdfBlob(name, email, phone, courseTitle, totalAmount || 2950, paymentId, orderId, fdInvoiceNo);
+    pdfAttachment = generateOurGstInvoicePdfBlob(userName, userEmail, userPhone, courseTitle, paidAmount, paymentId, orderId, fdInvoiceNo);
   } catch (pdfErr) {
-    Logger.log("PDF Gen Error: " + pdfErr.toString());
+    Logger.log("PDF_GEN_ERROR: " + pdfErr.message);
   }
 
-  const subject = `🎉 Booking Confirmed & GST Invoice: ${courseTitle}`;
-  const htmlBody = `<!DOCTYPE html><html><body style="font-family:Arial,sans-serif;background:#f8fafc;padding:24px;color:#0f172a;">
-    <div style="max-width:600px;margin:0 auto;background:#ffffff;border:1px solid #e2e8f0;border-radius:16px;padding:32px;">
-      <h2 style="margin-top:0;color:#1d4ed8;">Welcome, ${sanitizeCell(name)}! 🚀</h2>
-      <p style="font-size:15px;line-height:1.6;color:#334155;">
-        Your <strong>${courseTitle}</strong> booking is officially confirmed. Your official <strong>GST Tax Invoice (PDF)</strong> is attached to this email for your records.
+  const subject = "✅ 1-on-1 AI Consultation Confirmed & GST Invoice — TECH TYCOON";
+  const htmlBody = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff; color: #0f172a; padding: 30px; border-radius: 16px; border: 1px solid #e2e8f0;">
+      <h2 style="color: #0f172a; margin-top: 0;">Dear ${sanitizeCell(userName)},</h2>
+      <p style="color: #334155; font-size: 14px; line-height: 1.6;">
+        Your booking and payment for the <strong>1-on-1 AI Strategy & Implementation Consultation</strong> with Tech Tycoon is officially confirmed! Your official <strong>GST Tax Invoice (PDF)</strong> is attached to this email for your records.
       </p>
-      <div style="background:#f1f5f9;border-radius:12px;padding:16px;margin:20px 0;font-size:14px;line-height:1.8;">
-        <strong>Service:</strong> ${courseTitle}<br/>
-        <strong>Amount Paid (Incl. 18% GST):</strong> Rs. ${Number(totalAmount || 2950).toFixed(2)}<br/>
-        <strong>Payment ID:</strong> ${sanitizeCell(paymentId)}<br/>
-        <strong>Invoice No:</strong> ${fdInvoiceNo || "Attached"}
+      <div style="background-color: #f8fafc; padding: 18px; border-radius: 12px; border: 1px solid #e2e8f0; margin: 20px 0;">
+        <p style="margin: 6px 0; font-size: 13px;"><strong>Service:</strong> ${courseTitle}</p>
+        <p style="margin: 6px 0; font-size: 13px;"><strong>Total Paid (Incl. 18% GST):</strong> ₹${Number(paidAmount).toLocaleString("en-IN")}</p>
+        <p style="margin: 6px 0; font-size: 13px;"><strong>Payment ID:</strong> ${sanitizeCell(paymentId)}</p>
+        <p style="margin: 6px 0; font-size: 13px;"><strong>Invoice No:</strong> ${fdInvoiceNo || "Attached PDF"}</p>
       </div>
-      <p style="font-size:13px;color:#64748b;">
-        Have any questions? Call or WhatsApp us at <strong>+91 7558133039</strong> or email <a href="mailto:support@techtycoon.in">support@techtycoon.in</a>.
+      <p style="color: #334155; font-size: 14px; line-height: 1.6;">
+        Our team will reach out to you on WhatsApp to finalize your preferred 1-hour slot, or you can message us directly at <strong>+91 75581 33039</strong>.
       </p>
-      <hr style="border:none;border-top:1px solid #e2e8f0;margin:24px 0;"/>
-      <p style="font-size:11px;color:#94a3b8;margin:0;">
+      <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 24px 0;" />
+      <p style="color: #64748b; font-size: 11px; text-align: center; margin: 0;">
         © 2026 ${FUNNELSDONE_CONFIG.COMPANY_NAME} (GSTIN: ${FUNNELSDONE_CONFIG.COMPANY_GSTIN})<br/>
         No. 3/59B, 1st Floor, 3rd Street, Ragava Nagar, Moovarasampet, Chennai-600091
       </p>
     </div>
-  </body></html>`;
+  `;
 
-  const emailOptions = {
-    to: email,
+  const mailOptions = {
+    to: userEmail,
     subject: subject,
     htmlBody: htmlBody,
     name: "Tech Tycoon AI Consulting",
-    replyTo: "support@techtycoon.in"
+    replyTo: "techtycoondigitalsolutions@gmail.com"
   };
   if (pdfAttachment) {
-    emailOptions.attachments = [pdfAttachment];
+    mailOptions.attachments = [pdfAttachment];
   }
-  MailApp.sendEmail(emailOptions);
+  MailApp.sendEmail(mailOptions);
+}
+
+function ensureHeaders(sheet) {
+  if (sheet.getLastRow() === 0) {
+    const headers = [
+      "Date and Time",
+      "Name",
+      "Email",
+      "Phone",
+      "Profession",
+      "Amount",
+      "Status",
+      "Order ID",
+      "Payment ID"
+    ];
+    sheet.appendRow(headers);
+    sheet.getRange(1, 1, 1, headers.length).setFontWeight("bold").setBackground("#f3f4f6");
+    sheet.setFrozenRows(1);
+  }
 }
