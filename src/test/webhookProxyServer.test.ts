@@ -160,12 +160,48 @@ describe('Central Webhook Proxy Server Suite', () => {
     expect(resp.data.error).toContain('FORBIDDEN');
   });
 
-  it('accepts webhooks signed with international webhook secret (dual-account support)', async () => {
+  it('accepts webhooks signed with international webhook secret (dual-account support via /webhook/intl)', async () => {
     const INTL_SECRET = 'intl_secret_for_foreign_razorpay_account';
     const payload = JSON.stringify({
       event: 'payment.failed',
-      payload: { payment: { entity: { id: 'pay_intl_001', order_id: 'order_intl_001' } } }
+      payload: { payment: { entity: { id: 'pay_intl_001', order_id: 'order_intl_001', currency: 'USD' } } }
     });
+    const sig = crypto.createHmac('sha256', INTL_SECRET).update(payload, 'utf8').digest('hex');
+
+    const { req, res, getResponse } = mockHttpRequest({
+      method: 'POST',
+      url: '/webhook/intl',
+      headers: {
+        'x-razorpay-signature': sig,
+        'content-type': 'application/json',
+      },
+    });
+
+    setTimeout(() => {
+      req.emit('data', Buffer.from(payload));
+      req.emit('end');
+    }, 10);
+
+    await handleRequest(req, res, {
+      environment: 'production',
+      webhookSecret: TEST_WEBHOOK_SECRET,
+      webhookSecretIntl: INTL_SECRET,
+      proxySecret: TEST_PROXY_SECRET,
+    });
+
+    const resp = getResponse();
+    expect(resp.status).toBe(200);
+    expect(resp.data.success).toBe(true);
+    expect(resp.data.ignored).toBe(true);
+  });
+
+  it('strictly rejects domestic webhook signed with international secret (no unsafe fallback)', async () => {
+    const INTL_SECRET = 'intl_secret_for_foreign_razorpay_account';
+    const payload = JSON.stringify({
+      event: 'payment.captured',
+      payload: { payment: { entity: { id: 'pay_test_001', order_id: 'order_test_001', currency: 'INR' } } }
+    });
+    // Signed with INTL secret instead of domestic secret
     const sig = crypto.createHmac('sha256', INTL_SECRET).update(payload, 'utf8').digest('hex');
 
     const { req, res, getResponse } = mockHttpRequest({
@@ -190,9 +226,108 @@ describe('Central Webhook Proxy Server Suite', () => {
     });
 
     const resp = getResponse();
-    expect(resp.status).toBe(200);
-    expect(resp.data.success).toBe(true);
-    expect(resp.data.ignored).toBe(true);
+    expect(resp.status).toBe(401);
+    expect(resp.data.error).toContain('Domestic webhook signature verification failed');
+  });
+
+  it('strictly rejects international webhook signed with domestic secret (no unsafe fallback)', async () => {
+    const INTL_SECRET = 'intl_secret_for_foreign_razorpay_account';
+    const payload = JSON.stringify({
+      event: 'payment.captured',
+      payload: { payment: { entity: { id: 'pay_test_002', order_id: 'order_test_002', currency: 'USD' } } }
+    });
+    // Signed with domestic secret instead of INTL secret
+    const sig = crypto.createHmac('sha256', TEST_WEBHOOK_SECRET).update(payload, 'utf8').digest('hex');
+
+    const { req, res, getResponse } = mockHttpRequest({
+      method: 'POST',
+      url: '/webhook/intl',
+      headers: {
+        'x-razorpay-signature': sig,
+        'content-type': 'application/json',
+      },
+    });
+
+    setTimeout(() => {
+      req.emit('data', Buffer.from(payload));
+      req.emit('end');
+    }, 10);
+
+    await handleRequest(req, res, {
+      environment: 'production',
+      webhookSecret: TEST_WEBHOOK_SECRET,
+      webhookSecretIntl: INTL_SECRET,
+      proxySecret: TEST_PROXY_SECRET,
+    });
+
+    const resp = getResponse();
+    expect(resp.status).toBe(401);
+    expect(resp.data.error).toContain('International webhook signature verification failed');
+  });
+
+  it('staging mode rejects live payment credentials and live payment IDs', async () => {
+    const payload = JSON.stringify({
+      event: 'payment.captured',
+      payload: { payment: { entity: { id: 'pay_live_realPayment123', order_id: 'order_live_001', notes: { product_key: 'claude_masterclass' } } } }
+    });
+    const sig = crypto.createHmac('sha256', TEST_WEBHOOK_SECRET).update(payload, 'utf8').digest('hex');
+
+    const { req, res, getResponse } = mockHttpRequest({
+      method: 'POST',
+      url: '/webhook',
+      headers: {
+        'x-razorpay-signature': sig,
+        'content-type': 'application/json',
+      },
+    });
+
+    setTimeout(() => {
+      req.emit('data', Buffer.from(payload));
+      req.emit('end');
+    }, 10);
+
+    await handleRequest(req, res, {
+      environment: 'staging',
+      webhookSecret: TEST_WEBHOOK_SECRET,
+      proxySecret: TEST_PROXY_SECRET,
+    });
+
+    const resp = getResponse();
+    expect(resp.status).toBe(422);
+    expect(resp.data.error).toContain('LIVE_PAYMENT_IN_STAGING');
+  });
+
+  it('staging mode rejects default production Google Apps Script URLs', async () => {
+    const payload = JSON.stringify({
+      event: 'payment.captured',
+      payload: { payment: { entity: { id: 'pay_test_staging001', order_id: 'order_test_001', notes: { product_key: 'claude_masterclass' } } } }
+    });
+    const sig = crypto.createHmac('sha256', TEST_WEBHOOK_SECRET).update(payload, 'utf8').digest('hex');
+
+    const { req, res, getResponse } = mockHttpRequest({
+      method: 'POST',
+      url: '/webhook',
+      headers: {
+        'x-razorpay-signature': sig,
+        'content-type': 'application/json',
+      },
+    });
+
+    setTimeout(() => {
+      req.emit('data', Buffer.from(payload));
+      req.emit('end');
+    }, 10);
+
+    await handleRequest(req, res, {
+      environment: 'staging',
+      webhookSecret: TEST_WEBHOOK_SECRET,
+      proxySecret: TEST_PROXY_SECRET,
+      // No customEndpointMap provided; uses default prod URLs which staging must reject
+    });
+
+    const resp = getResponse();
+    expect(resp.status).toBe(422);
+    expect(resp.data.error).toContain('PRODUCTION_DESTINATION_IN_STAGING');
   });
 
   it('createProxyServer initializes cleanly without crashing', () => {

@@ -611,24 +611,7 @@ export function handleIncomingRazorpayWebhook(options) {
     };
   }
 
-  // 1. Verify exact raw body signature against X-Razorpay-Signature (supports dual domestic + international secrets)
-  const sigToVerify = signatureHeader || signature || options.signature;
-  const combinedWebhookSecrets = [
-    ...(Array.isArray(webhookSecret) ? webhookSecret : String(webhookSecret || '').split(',')),
-    options.webhookSecretIntl,
-    (typeof process !== 'undefined' && process.env && process.env.RAZORPAY_WEBHOOK_SECRET_INTL),
-  ].map(s => String(s || '').trim()).filter(Boolean);
-
-  const isSigValid = verifyRazorpayWebhookSignature(rawBody, sigToVerify, combinedWebhookSecrets);
-  if (!isSigValid) {
-    return {
-      status: 401,
-      success: false,
-      error: 'INVALID_RAZORPAY_WEBHOOK_SIGNATURE: Webhook signature verification failed.'
-    };
-  }
-
-  // 2. Parse JSON body safely
+  // 1. Parse JSON body safely first to enable deterministic account determination
   let payload;
   try {
     payload = JSON.parse(rawBody);
@@ -637,6 +620,71 @@ export function handleIncomingRazorpayWebhook(options) {
       status: 400,
       success: false,
       error: 'MALFORMED_WEBHOOK_JSON: Request body is not valid JSON.'
+    };
+  }
+
+  // 2. Deterministic domestic vs. international account determination
+  const paymentEntity = payload.payload?.payment?.entity;
+  const isExplicitIntl = options.accountType === 'international' || options.accountType === 'intl';
+  const isExplicitDom = options.accountType === 'domestic';
+  const payloadAccountId = String(payload.account_id || paymentEntity?.account_id || '').trim();
+  const configuredIntlAccountId = String(options.accountIdIntl || (typeof process !== 'undefined' && process.env && process.env.RAZORPAY_ACCOUNT_ID_INTL) || '').trim();
+  const configuredDomAccountId = String(options.accountIdDomestic || (typeof process !== 'undefined' && process.env && process.env.RAZORPAY_ACCOUNT_ID) || '').trim();
+
+  let isIntl = false;
+  if (isExplicitIntl) {
+    isIntl = true;
+  } else if (isExplicitDom) {
+    isIntl = false;
+  } else if (configuredIntlAccountId && payloadAccountId && payloadAccountId === configuredIntlAccountId) {
+    isIntl = true;
+  } else if (configuredDomAccountId && payloadAccountId && payloadAccountId === configuredDomAccountId) {
+    isIntl = false;
+  } else if (paymentEntity && (
+    paymentEntity.notes?.is_international === true ||
+    paymentEntity.notes?.account_type === 'international' ||
+    paymentEntity.notes?.is_intl === 'true' ||
+    (paymentEntity.currency && String(paymentEntity.currency).toUpperCase() !== 'INR')
+  )) {
+    isIntl = true;
+  }
+
+  // 3. Strict secret selection without unsafe cross-account fallback
+  const intlSecret = options.webhookSecretIntl || (typeof process !== 'undefined' && process.env && process.env.RAZORPAY_WEBHOOK_SECRET_INTL) || '';
+  const domSecret = webhookSecret || (typeof process !== 'undefined' && process.env && process.env.RAZORPAY_WEBHOOK_SECRET) || '';
+
+  let targetSecret = domSecret;
+  if (isIntl) {
+    if (!intlSecret && !domSecret) {
+      return {
+        status: 500,
+        success: false,
+        error: 'CONFIGURATION_ERROR: International webhook secret is not configured.'
+      };
+    }
+    // If intlSecret is configured, use it exclusively; if unconfigured, fallback only in single-secret setups
+    targetSecret = intlSecret || domSecret;
+  } else {
+    if (!domSecret) {
+      return {
+        status: 500,
+        success: false,
+        error: 'CONFIGURATION_ERROR: Domestic webhook secret is not configured.'
+      };
+    }
+    targetSecret = domSecret;
+  }
+
+  // 4. Verify exact raw body signature against the authoritative selected secret
+  const sigToVerify = signatureHeader || signature || options.signature;
+  const isSigValid = verifyRazorpayWebhookSignature(rawBody, sigToVerify, targetSecret);
+  if (!isSigValid) {
+    return {
+      status: 401,
+      success: false,
+      error: isIntl
+        ? 'INVALID_RAZORPAY_WEBHOOK_SIGNATURE: International webhook signature verification failed.'
+        : 'INVALID_RAZORPAY_WEBHOOK_SIGNATURE: Domestic webhook signature verification failed.'
     };
   }
 

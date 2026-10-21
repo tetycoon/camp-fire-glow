@@ -108,11 +108,24 @@ export async function handleRequest(req, res, configOverrides = {}) {
     });
   }
 
-  // 2. Razorpay Webhook Receiver (POST /webhook or POST /webhook/razorpay)
-  if (method === 'POST' && (pathname === '/webhook' || pathname === '/webhook/razorpay')) {
+  // 2. Razorpay Webhook Receiver (POST /webhook, /webhook/razorpay, /webhook/intl, /webhook/domestic)
+  if (method === 'POST' && (
+    pathname === '/webhook' ||
+    pathname === '/webhook/razorpay' ||
+    pathname === '/webhook/intl' ||
+    pathname === '/webhook/domestic'
+  )) {
     try {
       const rawBody = await readRequestBody(req);
       const signatureHeader = req.headers['x-razorpay-signature'] || '';
+
+      const accountParam = (urlObj.searchParams.get('account') || '').toLowerCase();
+      let accountType = 'auto';
+      if (pathname === '/webhook/intl' || accountParam === 'intl' || accountParam === 'international') {
+        accountType = 'international';
+      } else if (pathname === '/webhook/domestic' || accountParam === 'domestic') {
+        accountType = 'domestic';
+      }
 
       if (!config.webhookSecret) {
         console.error('[CONFIG_ERROR] RAZORPAY_WEBHOOK_SECRET is not configured.');
@@ -136,6 +149,7 @@ export async function handleRequest(req, res, configOverrides = {}) {
         signature: signatureHeader,
         webhookSecret: config.webhookSecret,
         webhookSecretIntl: config.webhookSecretIntl,
+        accountType,
         proxySecret: config.proxySecret,
         environment: config.environment,
         customEndpointMap: config.customEndpointMap,
