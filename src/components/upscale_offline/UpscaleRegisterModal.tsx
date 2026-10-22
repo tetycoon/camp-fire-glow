@@ -5,7 +5,7 @@ import { RazorpayOptions } from "@/types/razorpay";
 import { countryCodes } from "../../lib/countryCodes";
 import logo from "@/assets/tech_tycoon_logo.png";
 import GstPriceBreakdown from "../common/GstPriceBreakdown";
-import { calculateGstBreakdown, isAuthorizedTestEmail, isValidEmail, isValidGstin, openPrintableGstInvoice, sanitizeTextInput } from "@/lib/gstUtils";
+import { InvoicePrintParams, calculateGstBreakdown, isAuthorizedTestEmail, isValidEmail, isValidGstin, openPrintableGstInvoice, registerVerifiedInvoiceRecord, sanitizeTextInput } from "@/lib/gstUtils";
 
 const RAZORPAY_KEY_ID = "rzp_live_T2CbVONQc6qrqj"; 
 const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbzPxPpp0ksCcE6IY8mUlzcu0jqY1RSfhCl2Locq1iOYbbe5beBeeQ6uefCV93Nxy8rbsg/exec";
@@ -35,6 +35,7 @@ const UpscaleRegisterModal: React.FC = () => {
     const [verifying, setVerifying] = useState(false);
     const [seatsCount, setSeatsCount] = useState(1);
     const [paymentId, setPaymentId] = useState<string>("");
+    const [verifiedInvoice, setVerifiedInvoice] = useState<InvoicePrintParams | null>(null);
     const [visible, setVisible] = useState(false);
     const paymentHandled = useRef(false);
 
@@ -186,40 +187,78 @@ const UpscaleRegisterModal: React.FC = () => {
                 theme: { color: "#2563eb" },
                 handler: async (resp) => {
                     if (paymentHandled.current) return;
+                    const payId = String(resp?.razorpay_payment_id || "").trim();
+                    const ordId = String(resp?.razorpay_order_id || result.orderId || "").trim();
+                    const sig = String(resp?.razorpay_signature || "").trim();
+
+                    if (!payId || !ordId || !sig) {
+                        alert("Payment verification failed: Missing Razorpay signature or payment ID.");
+                        setLoading(false);
+                        setVerifying(false);
+                        return;
+                    }
+
                     paymentHandled.current = true;
                     setLoading(true);
                     setVerifying(true);
-                    setPaymentId(resp.razorpay_payment_id || "OFFLINE_TXN");
+                    setPaymentId(payId);
 
-                    await fetch(GOOGLE_SHEET_URL, {
-                        method: "POST",
-                        headers: { "Content-Type": "text/plain;charset=utf-8" },
-                        body: JSON.stringify({
-                            paymentSuccess: true,
-                            razorpay_order_id: resp.razorpay_order_id || result.orderId,
-                            razorpay_payment_id: resp.razorpay_payment_id,
-                            razorpay_signature: resp.razorpay_signature || "",
-                            email: sanitizedEmail,
-                            name: sanitizedName,
-                            baseAmount: isTestEmail ? 1 : gstBreakdown.baseAmount,
-                            gstAmount: isTestEmail ? 0 : gstBreakdown.gstAmount,
-                            amount: finalPayableInr,
-                            companyName: sanitizedCompany,
-                            gstin: sanitizedGstin,
-                        })
-                    }).catch(console.error);
+                    try {
+                        const verifyRes = await fetch(GOOGLE_SHEET_URL, {
+                            method: "POST",
+                            headers: { "Content-Type": "text/plain;charset=utf-8" },
+                            body: JSON.stringify({
+                                paymentSuccess: true,
+                                razorpay_order_id: ordId,
+                                razorpay_payment_id: payId,
+                                razorpay_signature: sig,
+                                email: sanitizedEmail,
+                                name: sanitizedName,
+                                baseAmount: isTestEmail ? 1 : gstBreakdown.baseAmount,
+                                gstAmount: isTestEmail ? 0 : gstBreakdown.gstAmount,
+                                amount: finalPayableInr,
+                                companyName: sanitizedCompany,
+                                gstin: sanitizedGstin,
+                            })
+                        });
+                        const verifyData = await verifyRes.json();
+                        if (!verifyData || !verifyData.success) {
+                            paymentHandled.current = false;
+                            setVerifying(false);
+                            setLoading(false);
+                            alert(`Payment verification failed: ${verifyData?.error || "Unable to verify payment signature."}`);
+                            return;
+                        }
 
-                    setSubmitted(true);
-                    setVerifying(false);
-                    setLoading(false);
+                        const verifiedAmt = Number(verifyData.amount) || finalPayableInr;
+                        const registeredInv = registerVerifiedInvoiceRecord({
+                            customerName: sanitizedName,
+                            customerEmail: sanitizedEmail,
+                            customerPhone: `${form.countryCode} ${form.phone}`,
+                            courseName: "UPSCALE: 1-Day Offline AI Mastery Workshop (Chennai)",
+                            totalAmountPaid: verifiedAmt,
+                            paymentId: payId,
+                            orderId: ordId,
+                            invoiceNumber: verifyData.invoiceNumber || undefined,
+                        });
+                        setVerifiedInvoice(registeredInv);
+                        setSubmitted(true);
+                        setVerifying(false);
+                        setLoading(false);
 
-                    // Automatic Redirection to WhatsApp after allowing time to download GST Invoice
-                    const TRIGGER_MESSAGE = "Hi I am complete Registration of AI- Business Generative Model workshop in chennai";
-                    const waChatLink = `https://wa.me/917010340494?text=${encodeURIComponent(TRIGGER_MESSAGE)}`;
-                    
-                    setTimeout(() => {
-                        window.open(waChatLink, "_blank", "noopener,noreferrer");
-                    }, 4000);
+                        // Automatic Redirection to WhatsApp after allowing time to download GST Invoice
+                        const TRIGGER_MESSAGE = "Hi I am complete Registration of AI- Business Generative Model workshop in chennai";
+                        const waChatLink = `https://wa.me/917010340494?text=${encodeURIComponent(TRIGGER_MESSAGE)}`;
+                        
+                        setTimeout(() => {
+                            window.open(waChatLink, "_blank", "noopener,noreferrer");
+                        }, 4000);
+                    } catch (err) {
+                        paymentHandled.current = false;
+                        setVerifying(false);
+                        setLoading(false);
+                        alert("Could not verify payment with server. Please check your email or contact +91 7558133039");
+                    }
                 },
                 modal: { ondismiss: () => setLoading(false) },
             };
@@ -299,16 +338,11 @@ const UpscaleRegisterModal: React.FC = () => {
                                 </div>
                                 <button
                                     type="button"
-                                    onClick={() =>
-                                        openPrintableGstInvoice({
-                                            customerName: form.name,
-                                            customerEmail: form.email,
-                                            customerPhone: `${form.countryCode} ${form.phone}`,
-                                            courseName: "UPSCALE: 1-Day Offline AI Mastery Workshop (Chennai)",
-                                            totalAmountPaid: finalPayableInr,
-                                            paymentId: paymentId || "PAID",
-                                        })
-                                    }
+                                    onClick={() => {
+                                        if (verifiedInvoice) {
+                                            openPrintableGstInvoice(verifiedInvoice);
+                                        }
+                                    }}
                                     className="w-full mb-3 py-3 px-4 rounded-2xl bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-700 font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all"
                                 >
                                     <FileText className="w-4 h-4" />

@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import { countryCodes, CountryCode } from "../../lib/countryCodes";
 import GstPriceBreakdown from "../common/GstPriceBreakdown";
-import { calculateGstBreakdown, isAuthorizedTestEmail, isValidEmail, isValidGstin, openPrintableGstInvoice, sanitizeTextInput } from "../../lib/gstUtils";
+import { InvoicePrintParams, calculateGstBreakdown, isAuthorizedTestEmail, isValidEmail, isValidGstin, openPrintableGstInvoice, registerVerifiedInvoiceRecord, sanitizeTextInput } from "../../lib/gstUtils";
 
 declare global {
   interface Window {
@@ -92,6 +92,7 @@ const ConsultingBookingForm: React.FC<ConsultingBookingFormProps> = ({ onSuccess
     email?: string;
     phone?: string;
     topic?: string;
+    verifiedInvoice?: InvoicePrintParams;
   } | null>(null);
 
   const cleanPhone = formData.phone.replace(/\D/g, "");
@@ -261,17 +262,23 @@ const ConsultingBookingForm: React.FC<ConsultingBookingFormProps> = ({ onSuccess
           color: "#0f172a" // Premium Slate / Navy
         },
         handler: async function (response: any) {
-          setIsSubmitting(false);
-          const payId = response.razorpay_payment_id || `PAID_${Date.now()}`;
-          const ordId = response.razorpay_order_id || generatedOrderId;
+          const payId = String(response?.razorpay_payment_id || "").trim();
+          const ordId = String(response?.razorpay_order_id || generatedOrderId).trim();
+          const sig = String(response?.razorpay_signature || "").trim();
 
-          // 4. Update Google Sheet status to PAID
-          if (scriptUrl) {
+          if (!payId || !ordId || !sig) {
+            setIsSubmitting(false);
+            alert("Payment verification failed: Missing Razorpay signature or payment ID.");
+            return;
+          }
+
+          try {
             const successPayload = {
               paymentSuccess: true,
               razorpay_payment_id: payId,
               razorpay_order_id: ordId,
-              razorpay_signature: response.razorpay_signature || "",
+              razorpay_signature: sig,
+              isInternational,
               email: sanitizedEmail,
               name: sanitizedName,
               phone: fullPhone,
@@ -284,31 +291,47 @@ const ConsultingBookingForm: React.FC<ConsultingBookingFormProps> = ({ onSuccess
               spreadsheetId: CONSULTING_SPREADSHEET_ID
             };
 
-            fetch(scriptUrl, {
+            const verifyRes = await fetch(scriptUrl, {
               method: "POST",
               headers: { "Content-Type": "text/plain;charset=utf-8" },
               body: JSON.stringify(successPayload)
-            }).catch(() => {
-              fetch(scriptUrl, {
-                method: "POST",
-                mode: "no-cors",
-                headers: { "Content-Type": "text/plain;charset=utf-8" },
-                body: JSON.stringify(successPayload)
-              }).catch(() => {});
             });
-          }
+            const verifyData = await verifyRes.json();
+            if (!verifyData || !verifyData.success) {
+              setIsSubmitting(false);
+              alert(`Payment verification failed: ${verifyData?.error || "Unable to verify payment signature."}`);
+              return;
+            }
 
-          setSuccessDetails({
-            orderId: ordId,
-            paymentId: payId,
-            amount: payableInr,
-            name: sanitizedName,
-            email: sanitizedEmail,
-            phone: fullPhone,
-            topic: formData.topic
-          });
-          setPaymentSuccess(true);
-          if (onSuccess) onSuccess();
+            const verifiedAmount = Number(verifyData.amount) || payableInr;
+            const verifiedInvoice = registerVerifiedInvoiceRecord({
+              customerName: sanitizedName,
+              customerEmail: sanitizedEmail,
+              customerPhone: fullPhone,
+              courseName: "1-on-1 AI Strategy & Mentorship Session",
+              totalAmountPaid: verifiedAmount,
+              paymentId: payId,
+              orderId: ordId,
+              invoiceNumber: verifyData.invoiceNumber || undefined
+            });
+
+            setSuccessDetails({
+              orderId: ordId,
+              paymentId: payId,
+              amount: verifiedAmount,
+              name: sanitizedName,
+              email: sanitizedEmail,
+              phone: fullPhone,
+              topic: formData.topic,
+              verifiedInvoice
+            });
+            setPaymentSuccess(true);
+            setIsSubmitting(false);
+            if (onSuccess) onSuccess();
+          } catch {
+            setIsSubmitting(false);
+            alert("Could not verify payment with server. Please check your email for confirmation or contact support.");
+          }
         },
         modal: {
           ondismiss: function () {
@@ -402,17 +425,11 @@ const ConsultingBookingForm: React.FC<ConsultingBookingFormProps> = ({ onSuccess
 
           <button
             type="button"
-            onClick={() =>
-              openPrintableGstInvoice({
-                customerName: successDetails.name,
-                customerEmail: successDetails.email,
-                customerPhone: successDetails.phone,
-                courseName: "1-on-1 AI Strategy & Mentorship Session",
-                totalAmountPaid: successDetails.amount || 2950,
-                paymentId: successDetails.paymentId,
-                orderId: successDetails.orderId,
-              })
-            }
+            onClick={() => {
+              if (successDetails.verifiedInvoice) {
+                openPrintableGstInvoice(successDetails.verifiedInvoice);
+              }
+            }}
             className="w-full py-2.5 px-5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-800 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all"
           >
             <FileText className="w-4 h-4 text-indigo-600" />

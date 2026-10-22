@@ -3,11 +3,11 @@ import { CheckCircle2, Loader2, ShieldCheck, X } from "lucide-react";
 import { useAIMasterclass2RegisterModal } from "./AIMasterclass2RegisterModalContext";
 import { RazorpayOptions } from "@/types/razorpay";
 import { getMasterclassDateStrings } from "../../lib/masterclassDateUtils";
-import { calculateGstBreakdown, isValidGstin, sanitizeTextInput, isAuthorizedTestEmail } from "../../lib/gstUtils";
+import { calculateGstBreakdown, isValidGstin, sanitizeTextInput, isAuthorizedTestEmail, VERIFIED_BACKEND_ENDPOINTS } from "../../lib/gstUtils";
 import GstPriceBreakdown from "../common/GstPriceBreakdown";
 
 const RAZORPAY_KEY_ID = "rzp_live_gfoS1OjC8tvWjP";
-const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbylIyBX6wgBhb5BUJoc6x_eqe_ArHdDcCmwS6zi49FjbAAhZnkmiTAkHMYfcLubxCTHmQ/exec";
+const GOOGLE_SHEET_URL = VERIFIED_BACKEND_ENDPOINTS.ai_masterclass;
 
 
 function loadRazorpayScript(): Promise<boolean> {
@@ -156,21 +156,29 @@ const AIMasterclass2RegisterModal: React.FC = () => {
                     color: "#10b981",
                 },
                 handler: async (response) => {
-                    setLoading(true);
                     setVerifying(true);
-                    setPaymentId(response.razorpay_payment_id || "TEST_ID");
+                    const payId = String(response.razorpay_payment_id || "").trim();
+                    const ordId = String(response.razorpay_order_id || result.orderId || "").trim();
+                    const sig = String(response.razorpay_signature || "").trim();
+
+                    if (!payId || !ordId || !sig) {
+                        setLoading(false);
+                        setVerifying(false);
+                        alert("Payment verification failed: Missing Razorpay signature or payment ID.");
+                        return;
+                    }
+                    setPaymentId(payId);
 
                     // Notify backend of payment success
                     try {
-                        // 1. Fire and forget tracking (Background)
-                        fetch(GOOGLE_SHEET_URL, {
+                        const verifyRes = await fetch(GOOGLE_SHEET_URL, {
                             method: "POST",
                             headers: { "Content-Type": "text/plain;charset=utf-8" },
                             body: JSON.stringify({
                                 paymentSuccess: true,
-                                razorpay_order_id: response.razorpay_order_id || result.orderId,
-                                razorpay_payment_id: response.razorpay_payment_id,
-                                razorpay_signature: response.razorpay_signature || "",
+                                razorpay_order_id: ordId,
+                                razorpay_payment_id: payId,
+                                razorpay_signature: sig,
                                 email: safeEmail,
                                 name: safeName,
                                 language: form.language,
@@ -183,13 +191,26 @@ const AIMasterclass2RegisterModal: React.FC = () => {
                                 companyName: safeCompany,
                                 gstin: safeGstin
                             })
-                        }).catch(() => {});
+                        });
+                        const verifyData = await verifyRes.json();
+                        if (!verifyData || !verifyData.success) {
+                            setLoading(false);
+                            setVerifying(false);
+                            alert(`Payment verification failed: ${verifyData?.error || "Unable to verify payment signature."}`);
+                            return;
+                        }
+
+                        if (verifyData.invoiceToken) {
+                            try {
+                                sessionStorage.setItem(`inv_tok_${payId}`, verifyData.invoiceToken);
+                            } catch (_) {}
+                        }
 
                         setSubmitted(true);
                         setVerifying(false);
                         setLoading(false);
 
-                        // 2. INSTANT JUMP TO WHATSAPP
+                        // 2. JUMP TO WHATSAPP
                         const TRIGGER_MESSAGE = `Hi, I have completed the registration for the AI Secrets Revealed webinar on ${regularDate} at ${form.timing}`;
                         const waChatLink = `https://wa.me/917010340494?text=${encodeURIComponent(TRIGGER_MESSAGE)}`;
                         
@@ -197,9 +218,9 @@ const AIMasterclass2RegisterModal: React.FC = () => {
 
                     } catch (e) {
                         console.error("Failed to notify payment success", e);
-                        setSubmitted(true);
-                        setVerifying(false);
                         setLoading(false);
+                        setVerifying(false);
+                        alert("Could not verify payment with server. Please check your email or contact +91 7558133039.");
                     }
 
                     // Handle private coupons if used

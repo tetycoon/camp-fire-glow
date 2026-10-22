@@ -109,59 +109,126 @@
             align-items: center !important;
         }
         /* COMPACT FORM HEIGHT OVERRIDES */
+        .modal-overlay {
+            align-items: center !important;
+            justify-content: center !important;
+            padding: 12px !important;
+            overflow-y: auto !important;
+        }
         .modal-content {
-            padding: 20px 24px !important;
-            border-radius: 16px !important;
-            max-width: 480px !important;
+            padding: 16px 20px !important;
+            border-radius: 14px !important;
+            max-width: 460px !important;
+            max-height: 94vh !important;
+            overflow-y: auto !important;
+            margin: auto !important;
         }
-        .back-link {
-            margin-bottom: 6px !important;
+        .modal-close {
+            top: 10px !important;
+            right: 10px !important;
+            width: 26px !important;
+            height: 26px !important;
             font-size: 11px !important;
         }
-        .modal-header-step2 {
-            margin-bottom: 8px !important;
+        .modal-back-btn {
+            background: none !important;
+            border: none !important;
+            color: #6E6B65 !important;
+            font-size: 10px !important;
+            font-weight: 600 !important;
+            cursor: pointer !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 4px !important;
+            padding: 0 !important;
+            margin-bottom: 3px !important;
         }
-        .modal-header-step2 h3 {
-            font-size: 17px !important;
-            margin-bottom: 1px !important;
+        .modal-header h3 {
+            font-size: 16px !important;
+            margin: 0 0 2px 0 !important;
         }
-        .modal-header-step2 p {
+        .modal-header p {
             font-size: 11px !important;
+            margin: 0 !important;
         }
         .session-pill {
             padding: 2px 8px !important;
-            margin-top: 4px !important;
-            font-size: 10px !important;
+            margin-top: 3px !important;
+            font-size: 9.5px !important;
+            border-radius: 6px !important;
+            display: inline-flex !important;
         }
-        .modal-form {
-            gap: 8px !important;
-            margin-top: 8px !important;
-        }
-        .form-group label {
-            font-size: 9px !important;
-            margin-bottom: 2px !important;
-            letter-spacing: 0.5px !important;
-        }
-        .form-group input, .form-group select {
-            padding: 7px 10px !important;
-            font-size: 12px !important;
+        .step2-pass-switcher {
+            margin-top: 6px !important;
+            padding: 2px !important;
+            gap: 3px !important;
             border-radius: 8px !important;
         }
-        .cert-addon-box {
-            padding: 8px 10px !important;
-            margin: 4px 0 !important;
-            border-radius: 10px !important;
-        }
-        .cert-addon-box p {
+        .step2-pass-switcher button {
+            padding: 4px 6px !important;
             font-size: 10px !important;
-            line-height: 1.3 !important;
+            border-radius: 6px !important;
         }
-        .wa-agree-grp {
+        .modal-form {
+            gap: 6px !important;
+            margin-top: 6px !important;
+        }
+        .form-group {
+            margin-bottom: 0 !important;
+        }
+        .form-group label {
+            font-size: 8.5px !important;
+            margin-bottom: 2px !important;
+            letter-spacing: 0.4px !important;
+        }
+        .form-group input, .form-group select {
+            padding: 5px 10px !important;
+            font-size: 11.5px !important;
+            height: 32px !important;
+            border-radius: 6px !important;
+        }
+        .phone-input-grp {
+            gap: 6px !important;
+        }
+        .country-select-trigger {
+            height: 32px !important;
+            padding: 0 6px !important;
+            font-size: 10px !important;
+            border-radius: 6px !important;
+        }
+        .certificate-addon-card {
+            padding: 6px 10px !important;
+            margin-bottom: 4px !important;
+            border-radius: 8px !important;
+        }
+        .certificate-addon-card p {
+            font-size: 9.5px !important;
+            line-height: 1.25 !important;
+            margin-top: 1px !important;
+        }
+        .gst-breakdown-card {
+            padding: 5px 10px !important;
+            margin-bottom: 4px !important;
+            border-radius: 8px !important;
+            font-size: 10px !important;
+        }
+        .pass-warning-note {
+            font-size: 9.5px !important;
+            padding: 1px 0 !important;
+        }
+        #promo-message {
+            font-size: 9px !important;
+            margin-top: 1px !important;
+        }
+        #pay-submit-btn {
+            padding: 8px 14px !important;
+            font-size: 12.5px !important;
+            border-radius: 8px !important;
             margin-top: 2px !important;
         }
-        .wa-agree-grp label {
-            font-size: 10px !important;
-            line-height: 1.2 !important;
+        .secured-footer {
+            margin-top: 3px !important;
+            font-size: 8px !important;
         }
         /* HIDE FLOATING WIDGET WHEN MODAL IS OPEN */
         body.modal-open .bottom-floating-widget,
@@ -169,13 +236,6 @@
             display: none !important;
             opacity: 0 !important;
             pointer-events: none !important;
-        }
-
-        #pay-submit-btn {
-            padding: 10px 16px !important;
-            font-size: 13px !important;
-            border-radius: 10px !important;
-            margin-top: 4px !important;
         }
 
         /* DEDICATED MOBILE RESPONSIVE OVERRIDES (< 768px) — DESKTOP UNTOUCHED */
@@ -446,7 +506,7 @@
                         <p style="color: #524F4A; font-size: 13px; margin-bottom: 18px; line-height: 1.5;">Learn Claude AI prompt architecture, custom MCP creation, and full web application development live from anywhere.</p>
                         
                         <ul style="list-style: none; padding: 0; margin: 0 0 20px 0; font-size: 13px; color: #2C2A29; display: flex; flex-direction: column; gap: 10px;">
-                            <li style="display: flex; align-items: center; gap: 10px;"><i class="fa-regular fa-calendar text-terracotta"></i> <strong>October 3 & 4, 2026 (Sat & Sun)</strong></li>
+                            <li style="display: flex; align-items: center; gap: 10px;"><i class="fa-regular fa-calendar text-terracotta"></i> <strong id="portal-online-date">October 24 & 25, 2026 (Saturday & Sunday)</strong></li>
                             <li style="display: flex; align-items: center; gap: 10px;"><i class="fa-regular fa-clock text-terracotta"></i> 6:00 PM – 9:00 PM IST (3 Hours/day)</li>
                             <li style="display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-comments text-terracotta"></i> 100% Tamil Instruction & Direct Q&A</li>
                         </ul>
@@ -464,21 +524,21 @@
                             <img src="images/offline.webp" alt="Claude AI In-Person Workshop Chennai" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" class="portal-card-img">
                         </div>
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-                            <span style="background: #D85A30; color: #fff; font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 50px; text-transform: uppercase;"><span class="pulse-dot" style="background:#fff;"></span>🏨 IN-PERSON CHENNAI</span>
-                            <span style="color: #D85A30; font-size: 18px; font-weight: 900;">₹4,999</span>
+                            <span style="background: #6E6B65; color: #fff; font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 50px; text-transform: uppercase;"><span class="pulse-dot" style="background:#fff;"></span>🏨 IN-PERSON CHENNAI — COMING SOON</span>
+                            <span style="color: #6E6B65; font-size: 16px; font-weight: 800;">Coming Soon</span>
                         </div>
                         <h2 style="color: #1F1E1C; font-size: 20px; font-weight: 800; margin-bottom: 10px; line-height: 1.3;">1-Day Classroom Workshop @ Vestin Park Hotel</h2>
                         <p style="color: #524F4A; font-size: 13px; margin-bottom: 18px; line-height: 1.5;">Full-day hands-on classroom workshop in Egmore, Chennai. Includes luxury hotel buffet lunch, morning & evening high tea.</p>
                         
                         <ul style="list-style: none; padding: 0; margin: 0 0 20px 0; font-size: 13px; color: #2C2A29; display: flex; flex-direction: column; gap: 10px;">
-                            <li style="display: flex; align-items: center; gap: 10px;"><i class="fa-regular fa-calendar text-terracotta"></i> <strong>October 11, 2026 (Sunday • Full Day)</strong></li>
-                            <li style="display: flex; align-items: center; gap: 10px;"><i class="fa-regular fa-clock text-terracotta"></i> 9:00 AM – 5:30 PM IST</li>
+                            <li style="display: flex; align-items: center; gap: 10px;"><i class="fa-regular fa-calendar text-terracotta"></i> <strong>Next Batch: Coming Soon (Dates TBA)</strong></li>
+                            <li style="display: flex; align-items: center; gap: 10px;"><i class="fa-regular fa-clock text-terracotta"></i> 9:00 AM – 5:30 PM IST (Full Day)</li>
                             <li style="display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-utensils text-terracotta"></i> <strong>Hotel Buffet Lunch & High Tea Included</strong></li>
                         </ul>
                     </div>
 
                     <button type="button" onclick="event.stopPropagation(); openBatchPage('offline');" class="btn btn-primary btn-block" style="padding: 14px; font-size: 14px; border-radius: 12px; font-weight: 800; background-color: #1F1E1C; border-color: #1F1E1C; color: #FFFFFF; cursor: pointer;">
-                        Explore In-Person Workshop <i class="fa-solid fa-arrow-right" style="margin-left: 6px;"></i>
+                        Explore Classroom Workshop (Coming Soon) <i class="fa-solid fa-arrow-right" style="margin-left: 6px;"></i>
                     </button>
                 </div>
 
@@ -551,7 +611,7 @@
                             <div class="info-icon icon-terracotta"><i class="fa-regular fa-calendar"></i></div>
                             <div>
                                 <strong>Date & Days</strong>
-                                <p id="info-date-text">October 3 & 4, 2026 (Saturday & Sunday)</p>
+                                <p id="info-date-text">October 24 & 25, 2026 (Saturday & Sunday)</p>
                             </div>
                         </div>
 
@@ -667,8 +727,8 @@
                         <div class="day-title-grp">
                             <span class="badge-day badge-terracotta">DAY 1</span>
                             <div>
-                                <h3>Saturday, October 3rd • 6:00 PM – 9:00 PM IST</h3>
-                                <p>Foundations, Prompt Architecture & Building Custom MCPs</p>
+                                 <h3 id="curriculum-day1-title">Saturday, October 24th • 6:00 PM – 9:00 PM IST</h3>
+                                 <p>Foundations, Prompt Architecture & Building Custom MCPs</p>
                             </div>
                         </div>
                     </div>
@@ -697,7 +757,7 @@
                         <div class="day-title-grp">
                             <span class="badge-day badge-purple">DAY 2</span>
                             <div>
-                                <h3>Sunday, October 4th • 6:00 PM – 9:00 PM IST</h3>
+                                <h3 id="curriculum-day2-title">Sunday, October 25th • 6:00 PM – 9:00 PM IST</h3>
                                 <p>Claude Code CLI, Web App Construction & Live Projects</p>
                             </div>
                         </div>
@@ -780,7 +840,7 @@
                     <p class="card-sub">Ideal for live interactive participation across both days.</p>
 
                     <ul class="feature-list">
-                        <li><i class="fa-solid fa-check text-terracotta"></i> 2-Day Live Online Session (October 3 & 4)</li>
+                        <li><i class="fa-solid fa-check text-terracotta"></i> <span id="pricing-online-date">2-Day Live Online Session (October 24 & 25)</span></li>
                         <li><i class="fa-solid fa-check text-terracotta"></i> Tamil & English Instruction</li>
                         <li><i class="fa-solid fa-check text-terracotta"></i> Direct Q&A with Antony Praveen</li>
                         <li class="disabled"><i class="fa-solid fa-xmark"></i> Recorded Video Access</li>
@@ -818,24 +878,23 @@
                 
                 <!-- In-Person Pass ₹4,999 -->
                 <div class="pricing-card card-recommended">
-                    <span class="badge-recommended" style="background-color: #D85A30;">HOTEL LUNCH & SNACKS INCLUDED</span>
+                    <span class="badge-recommended" style="background-color: #D85A30;">NEXT BATCH COMING SOON</span>
                     <span class="card-type text-terracotta">IN-PERSON CHENNAI MASTERCLASS</span>
                     <div class="price-row">
-                        <strong class="price-val">₹4,999</strong>
-                        <span class="currency">INR</span>
+                        <strong class="price-val">Coming Soon</strong>
                     </div>
                     <p class="card-sub">Full-day in-person hands-on workshop at Vestin Park Hotel, Egmore, Chennai.</p>
 
                     <ul class="feature-list">
-                        <li class="font-bold"><i class="fa-solid fa-check text-terracotta"></i> Full-Day In-Person Training (Oct 11 • 9:00 AM - 5:30 PM)</li>
+                        <li class="font-bold"><i class="fa-solid fa-calendar text-terracotta"></i> Next In-Person Batch: Coming Soon (Dates TBA)</li>
                         <li class="highlight-item"><i class="fa-solid fa-utensils text-terracotta"></i> Luxury Hotel Buffet Lunch Included</li>
                         <li class="highlight-item"><i class="fa-solid fa-mug-hot text-terracotta"></i> Morning & Evening High Tea & Refreshments</li>
                         <li><i class="fa-solid fa-check text-terracotta"></i> Hands on Practical Session</li>
                         <li><i class="fa-solid fa-laptop text-terracotta"></i> Bring your own Laptop with internet connection (No -WiFi connections)</li>
                     </ul>
 
-                    <button class="btn btn-primary btn-block" onclick="openPaymentModal(4999)">
-                        Register In-Person Pass @ ₹4,999 <i class="fa-solid fa-arrow-right"></i>
+                    <button class="btn btn-primary btn-block" disabled style="opacity: 0.6; cursor: not-allowed;">
+                        In-Person Batch Coming Soon
                     </button>
                 </div>
 
@@ -868,7 +927,7 @@
                         <i class="fa-solid fa-chevron-down text-terracotta"></i>
                     </button>
                     <div class="faq-answer">
-                        The ₹499 pass grants live interactive participation on October 3 & 4. The ₹999 Recording Pass includes everything in the ₹499 pass PLUS recorded video access of these 2 live classes.
+                        The ₹499 pass grants live interactive participation on Saturday & Sunday (October 24 & 25, rolling every weekend). The ₹999 Recording Pass includes everything in the ₹499 pass PLUS recorded video access of these 2 live classes.
                     </div>
                 </div>
 
@@ -911,7 +970,7 @@
             <div class="footer-logo">
                 <img src="images/tech_tycoon_logo.png" alt="TECH TYCOON Digital Solution LLP" class="footer-logo-img">
             </div>
-            <p>Conducted by TECH TYCOON Digital Solution LLP • October 3 & 4, 2026</p>
+            <p>Conducted by TECH TYCOON Digital Solution LLP • Every Saturday & Sunday</p>
             <div class="footer-links" style="margin: 12px 0; display: flex; justify-content: center; gap: 14px; font-size: 11px; flex-wrap: wrap;">
                 <a href="#terms-modal" onclick="openTermsModal(event)" style="color: #A09C94; text-decoration: underline; cursor: pointer;">Terms & Conditions</a>
                 <span style="color: #524F4A;">•</span>
@@ -934,7 +993,7 @@
             <div class="widget-item">
                 <i class="fa-regular fa-calendar text-terracotta"></i>
                 <div>
-                    <strong id="float-date-title">October 3 & 4</strong>
+                    <strong id="float-date-title">October 24 & 25</strong>
                     <small id="float-date-sub">6:00 PM IST</small>
                 </div>
             </div>
@@ -1034,14 +1093,14 @@
                 <div class="modal-header text-center">
                     <h3>Complete Your Registration</h3>
                     <p>Registration fee: <strong class="text-terracotta" id="form-fee-display">₹499 INR</strong></p>
-                    <div class="session-pill" id="modal-session-pill"><i class="fa-regular fa-calendar"></i> October 3 & 4, 2026 • 6:00 PM IST</div>
+                    <div class="session-pill" id="modal-session-pill"><i class="fa-regular fa-calendar"></i> October 24 & 25, 2026 • 6:00 PM IST</div>
 
                     <!-- INTERACTIVE PASS SWITCHER TAB BAR INSIDE STEP 2 -->
-                    <div class="step2-pass-switcher" id="step2-pass-switcher" style="display: flex; background: #F7F4EE; padding: 4px; border-radius: 12px; border: 1px solid #E6E2D9; gap: 4px; margin-top: 12px;">
-                        <button type="button" id="tab-pass-499" onclick="selectPass(499)" style="flex: 1; padding: 7px 10px; border-radius: 8px; border: none; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.2s; background: #ffffff; color: #D85A30; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+                    <div class="step2-pass-switcher" id="step2-pass-switcher" style="display: flex; background: #F7F4EE; padding: 2px; border-radius: 8px; border: 1px solid #E6E2D9; gap: 3px; margin-top: 6px;">
+                        <button type="button" id="tab-pass-499" onclick="selectPass(499)" style="flex: 1; padding: 4px 6px; border-radius: 6px; border: none; font-size: 10px; font-weight: 700; cursor: pointer; transition: all 0.2s; background: #ffffff; color: #D85A30; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
                             Standard Live (₹499)
                         </button>
-                        <button type="button" id="tab-pass-999" onclick="selectPass(999)" style="flex: 1; padding: 7px 10px; border-radius: 8px; border: none; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.2s; background: transparent; color: #6E6B65;">
+                        <button type="button" id="tab-pass-999" onclick="selectPass(999)" style="flex: 1; padding: 4px 6px; border-radius: 6px; border: none; font-size: 10px; font-weight: 700; cursor: pointer; transition: all 0.2s; background: transparent; color: #6E6B65;">
                             ⭐ Live + Recording (₹999)
                         </button>
                     </div>
@@ -1060,9 +1119,9 @@
 
                     <div class="form-group">
                         <label>WHATSAPP NUMBER</label>
-                        <div class="phone-input-grp" style="display: flex; gap: 8px; align-items: center; position: relative;">
-                            <div class="custom-country-select-container" id="country-select-container" style="position: relative; width: 95px; flex-shrink: 0;">
-                                <button type="button" class="country-select-trigger" id="country-select-trigger" onclick="toggleCountryDropdown(event)" style="background: #F7F4EE; border: 1px solid #E6E2D9; border-radius: 12px; padding: 0 8px; font-size: 11px; font-weight: 700; color: #524F4A; height: 38px; display: flex; align-items: center; justify-content: space-between; gap: 4px; cursor: pointer; width: 100%;">
+                        <div class="phone-input-grp" style="display: flex; gap: 6px; align-items: center; position: relative;">
+                            <div class="custom-country-select-container" id="country-select-container" style="position: relative; width: 90px; flex-shrink: 0;">
+                                <button type="button" class="country-select-trigger" id="country-select-trigger" onclick="toggleCountryDropdown(event)" style="background: #F7F4EE; border: 1px solid #E6E2D9; border-radius: 6px; padding: 0 6px; font-size: 10.5px; font-weight: 700; color: #524F4A; height: 32px; display: flex; align-items: center; justify-content: space-between; gap: 4px; cursor: pointer; width: 100%;">
                                     <span id="selected-country-label">🇮🇳 +91</span>
                                     <i class="fa-solid fa-chevron-down" style="font-size: 9px; color: #A09C94;"></i>
                                 </button>
@@ -1095,11 +1154,11 @@
 
                     <div class="form-group">
                         <label>PROMO CODE</label>
-                        <div style="display: flex; gap: 8px;">
+                        <div style="display: flex; gap: 6px;">
                             <input type="text" id="cust-promo" placeholder="Enter promo code" value="CLAUDE" style="text-transform: uppercase; flex: 1;">
-                            <button type="button" class="btn btn-secondary btn-sm" onclick="applyPromoCode()" style="padding: 0 16px;">Apply</button>
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="applyPromoCode()" style="padding: 0 12px; height: 32px; font-size: 11px; border-radius: 6px;">Apply</button>
                         </div>
-                        <span id="promo-message" style="display: block; font-size: 11px; margin-top: 4px; color: #10b981; font-weight: 600;">CLAUDE code applied! 10% discount matches. 🎉</span>
+                        <span id="promo-message" style="display: block; font-size: 9.5px; margin-top: 2px; color: #10b981; font-weight: 600;">CLAUDE code applied! 10% discount matches. 🎉</span>
                     </div>
 
                     <div class="pass-warning-note" id="pass-note">
@@ -1107,15 +1166,15 @@
                     </div>
 
                     <!-- E-CERTIFICATE ADD-ON CHECKBOX -->
-                    <div class="certificate-addon-card" style="background: rgba(216, 90, 48, 0.06); border: 1.5px dashed #D85A30; border-radius: 12px; padding: 12px 14px; margin-bottom: 12px; transition: all 0.2s ease;">
-                        <label for="want-certificate" style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; margin: 0; user-select: none;">
-                            <input type="checkbox" id="want-certificate" onchange="toggleCertificate()" style="width: 18px; height: 18px; margin-top: 2px; flex-shrink: 0; accent-color: #D85A30; cursor: pointer;">
+                    <div class="certificate-addon-card" style="background: rgba(216, 90, 48, 0.06); border: 1.5px dashed #D85A30; border-radius: 8px; padding: 6px 10px; margin-bottom: 4px; transition: all 0.2s ease;">
+                        <label for="want-certificate" style="display: flex; align-items: flex-start; gap: 8px; cursor: pointer; margin: 0; user-select: none;">
+                            <input type="checkbox" id="want-certificate" onchange="toggleCertificate()" style="width: 15px; height: 15px; margin-top: 1px; flex-shrink: 0; accent-color: #D85A30; cursor: pointer;">
                             <div>
-                                <div style="font-weight: 700; font-size: 13px; color: #1F1E1C; display: flex; align-items: center; gap: 6px;">
+                                <div style="font-weight: 700; font-size: 11.5px; color: #1F1E1C; display: flex; align-items: center; gap: 5px;">
                                     <span>🎓 Official E-Certificate</span>
-                                    <span style="background: #D85A30; color: white; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 6px;">+ ₹1,000</span>
+                                    <span style="background: #D85A30; color: white; font-size: 9px; font-weight: 800; padding: 1px 5px; border-radius: 4px;">+ ₹1,000</span>
                                 </div>
-                                <p style="font-size: 11px; color: #524F4A; margin: 3px 0 0 0; line-height: 1.4;">
+                                <p style="font-size: 9.5px; color: #524F4A; margin: 1px 0 0 0; line-height: 1.25;">
                                     Get an official verified E-Certificate upon masterclass completion to share on LinkedIn & Resume.
                                 </p>
                             </div>
@@ -1123,33 +1182,33 @@
                     </div>
 
                     <!-- +18% GST PRICE BREAKDOWN -->
-                    <div style="background: #F7F4EE; border: 1px solid #E6E2D9; border-radius: 12px; padding: 10px 12px; margin-bottom: 12px; font-size: 11px;">
-                        <div style="display: flex; justify-content: space-between; color: #524F4A; margin-bottom: 4px;">
+                    <div class="gst-breakdown-card" style="background: #F7F4EE; border: 1px solid #E6E2D9; border-radius: 8px; padding: 5px 10px; margin-bottom: 4px; font-size: 10px;">
+                        <div style="display: flex; justify-content: space-between; color: #524F4A; margin-bottom: 2px;">
                             <span>Base Session Fee:</span>
                             <span id="gst-base-display" style="font-weight: 600; font-family: monospace;">₹499</span>
                         </div>
-                        <div style="display: flex; justify-content: space-between; color: #524F4A; margin-bottom: 6px;">
+                        <div style="display: flex; justify-content: space-between; color: #524F4A; margin-bottom: 2px;">
                             <span>GST (18%):</span>
                             <span id="gst-tax-display" style="font-weight: 600; font-family: monospace;">+ ₹90</span>
                         </div>
-                        <div style="display: flex; justify-content: space-between; color: #1F1E1C; font-weight: 800; padding-top: 6px; border-top: 1px solid #E6E2D9; font-size: 12px;">
+                        <div style="display: flex; justify-content: space-between; color: #1F1E1C; font-weight: 800; padding-top: 3px; border-top: 1px solid #E6E2D9; font-size: 11px;">
                             <span>Total Payable (Incl. 18% GST):</span>
                             <span id="gst-total-display" style="color: #D85A30; font-family: monospace;">₹589</span>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label class="form-checkbox" for="agree-wa" style="display: flex; align-items: center; gap: 8px; font-size: 10px; color: #8E8A83; font-weight: 400; letter-spacing: 0; cursor: pointer; margin: 0;">
-                            <input type="checkbox" id="agree-wa" checked style="width: 14px; height: 14px; flex-shrink: 0; accent-color: #D85A30; cursor: pointer;">
+                        <label class="form-checkbox" for="agree-wa" style="display: flex; align-items: center; gap: 6px; font-size: 9.5px; color: #8E8A83; font-weight: 400; letter-spacing: 0; cursor: pointer; margin: 0; line-height: 1.2;">
+                            <input type="checkbox" id="agree-wa" checked style="width: 13px; height: 13px; flex-shrink: 0; accent-color: #D85A30; cursor: pointer;">
                             I agree to receive workshop updates and automated reminders on WhatsApp.
                         </label>
                     </div>
 
-                    <button type="submit" class="btn btn-primary btn-block" id="pay-submit-btn">
+                    <button type="submit" class="btn btn-primary btn-block" id="pay-submit-btn" style="padding: 9px 14px; font-size: 12.5px; border-radius: 8px; margin-top: 2px;">
                         Proceed to payment — <span id="btn-fee-display">₹589 (Incl. GST)</span>
                     </button>
 
-                    <div class="secured-footer" style="margin-top: 8px;">
+                    <div class="secured-footer" style="margin-top: 3px; font-size: 8.5px;">
                         <i class="fa-solid fa-shield-halved"></i> SECURED BY RAZORPAY
                     </div>
                 </form>
@@ -1169,7 +1228,7 @@
 
                 <div style="font-size: 12px; color: #524F4A; line-height: 1.6; space-y: 12px;">
                     <h4 style="font-size: 13px; font-weight: 700; color: #1F1E1C; margin-top: 12px;">1. Workshop Schedule & Access</h4>
-                    <p style="margin-bottom: 8px;">The Claude MasterClass is a 2-Day Live Virtual Session taking place on October 3rd & 4th, 2026 (6:00 PM – 9:00 PM IST). Access details and session meeting links are provided via the official WhatsApp group upon registration.</p>
+                    <p style="margin-bottom: 8px;">The Claude MasterClass is a 2-Day Live Virtual Session taking place Every Saturday & Sunday (6:00 PM – 9:00 PM IST). Access details and session meeting links are provided via the official WhatsApp group upon registration.</p>
 
                     <h4 style="font-size: 13px; font-weight: 700; color: #1F1E1C; margin-top: 12px;">2. Registration & Pass Types</h4>
                     <p style="margin-bottom: 8px;"><strong>Standard Live Pass (₹499)</strong> includes live interactive participation across both days. Video recording access is excluded from the standard pass.</p>

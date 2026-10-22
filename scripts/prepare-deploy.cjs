@@ -88,4 +88,47 @@ spaRoutes.forEach(route => {
   }
 });
 
+// 4. Security Gate: Verify no .gs files or secret patterns exist in public/ or dist/
+function scanDirForExposures(dirPath, violations = []) {
+  if (!fs.existsSync(dirPath)) return violations;
+  const entries = fs.readdirSync(dirPath, { withFileTypes: true });
+  const forbiddenPatterns = [
+    { label: 'RAZORPAY_KEY_SECRET assignment', regex: /RAZORPAY_KEY_SECRET(?:_INTL)?\s*=\s*["'][^"']+["']/ },
+    { label: 'FunnelsDone PIT token', regex: /pit-us-[0-9a-f-]{20,}/i },
+    { label: 'Meta Graph EAA access token', regex: /EAef8[A-Za-z0-9]{30,}/ }
+  ];
+
+  for (const entry of entries) {
+    const fullPath = path.join(dirPath, entry.name);
+    if (entry.isDirectory()) {
+      scanDirForExposures(fullPath, violations);
+    } else if (entry.isFile()) {
+      if (entry.name.endsWith('.gs')) {
+        violations.push(`Forbidden backend script file in web-accessible directory: ${fullPath}`);
+      }
+      if (/\.(js|html|json|txt|gs|map|css)$/i.test(entry.name)) {
+        const content = fs.readFileSync(fullPath, 'utf8');
+        for (const p of forbiddenPatterns) {
+          if (p.regex.test(content)) {
+            violations.push(`Forbidden secret pattern (${p.label}) detected in: ${fullPath}`);
+          }
+        }
+      }
+    }
+  }
+  return violations;
+}
+
+const securityViolations = [
+  ...scanDirForExposures('public'),
+  ...scanDirForExposures('dist')
+];
+
+if (securityViolations.length > 0) {
+  console.error('❌ SECURITY GATE FAILED:');
+  securityViolations.forEach(v => console.error('  - ' + v));
+  process.exit(1);
+}
+
+console.log('✓ Security gate passed: zero .gs files or secret patterns in public/ and dist/.');
 console.log('✓ Static SPA route preparation complete.');

@@ -232,21 +232,84 @@ function updatePricesUI() {
 
 
 
+// Dynamic weekend calculation starting from October 24 & 25, 2026
+function getUpcomingMasterclassWeekend() {
+    const now = new Date();
+    // Baseline minimum Saturday: October 24, 2026
+    const minSat = new Date(2026, 9, 24, 18, 0, 0); // Month 9 = October
+
+    const day = now.getDay(); // 0 = Sun, 1 = Mon, ..., 6 = Sat
+    let daysUntilSat = (6 - day + 7) % 7;
+
+    if (day === 6 && now.getHours() >= 21) {
+        daysUntilSat = 7;
+    } else if (day === 0) {
+        daysUntilSat = 6;
+    }
+
+    let nextSat = new Date(now.getFullYear(), now.getMonth(), now.getDate() + daysUntilSat, 18, 0, 0);
+    if (nextSat.getTime() < minSat.getTime()) {
+        nextSat = minSat;
+    }
+
+    const nextSun = new Date(nextSat.getFullYear(), nextSat.getMonth(), nextSat.getDate() + 1, 18, 0, 0);
+
+    const fullMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const shortMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+    const satM = fullMonths[nextSat.getMonth()];
+    const sunM = fullMonths[nextSun.getMonth()];
+    const satMShort = shortMonths[nextSat.getMonth()];
+    const sunMShort = shortMonths[nextSun.getMonth()];
+
+    const satDay = nextSat.getDate();
+    const sunDay = nextSun.getDate();
+    const year = nextSat.getFullYear();
+
+    const getOrdinal = (n) => {
+        const s = ["th", "st", "nd", "rd"];
+        const v = n % 100;
+        return s[(v - 20) % 10] || s[v] || s[0];
+    };
+
+    const isSameMonth = satM === sunM;
+    const shortRange = isSameMonth ? `${satM} ${satDay} & ${sunDay}` : `${satMShort} ${satDay} & ${sunMShort} ${sunDay}`;
+    const dateRange = isSameMonth ? `${satM} ${satDay} & ${sunDay}, ${year}` : `${satM} ${satDay} & ${sunM} ${sunDay}, ${year}`;
+    const fullDisplay = `${dateRange} (Saturday & Sunday)`;
+
+    return {
+        targetTimestamp: nextSat.getTime(),
+        satDateText: `Saturday, ${satM} ${satDay}${getOrdinal(satDay)}`,
+        sunDateText: `Sunday, ${sunM} ${sunDay}${getOrdinal(sunDay)}`,
+        shortRange: shortRange,
+        dateRange: dateRange,
+        fullDisplay: fullDisplay
+    };
+}
+
 // Countdown Timer Logic
 function updateCountdownTimer() {
-    const targetISO = currentMasterclassMode === 'offline' 
-        ? '2026-10-11T09:00:00+05:30' 
-        : '2026-10-03T18:00:00+05:30';
-    const targetDate = new Date(targetISO).getTime();
+    const labelEl = document.querySelector('.countdown-label');
+    const elDays = document.getElementById('cd-days');
+    const elHours = document.getElementById('cd-hours');
+    const elMins = document.getElementById('cd-mins');
+    const elSecs = document.getElementById('cd-secs');
+
+    if (currentMasterclassMode === 'offline') {
+        if (labelEl) labelEl.innerText = 'IN-PERSON WORKSHOP STATUS';
+        if (elDays) elDays.innerText = '--';
+        if (elHours) elHours.innerText = '--';
+        if (elMins) elMins.innerText = '--';
+        if (elSecs) elSecs.innerText = '--';
+        return;
+    }
+
+    if (labelEl) labelEl.innerText = 'LIVE SESSION STARTS IN';
+
+    const weekend = getUpcomingMasterclassWeekend();
+    const targetDate = weekend.targetTimestamp;
     const now = new Date().getTime();
     const diff = targetDate - now;
-
-    const labelEl = document.querySelector('.countdown-label');
-    if (labelEl) {
-        labelEl.innerText = currentMasterclassMode === 'offline' 
-            ? 'IN-PERSON WORKSHOP STARTS IN' 
-            : 'LIVE SESSION STARTS IN';
-    }
 
     if (diff > 0) {
         const days = Math.floor(diff / (1000 * 60 * 60 * 24));
@@ -254,15 +317,15 @@ function updateCountdownTimer() {
         const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         const secs = Math.floor((diff % (1000 * 60)) / 1000);
 
-        const elDays = document.getElementById('cd-days');
-        const elHours = document.getElementById('cd-hours');
-        const elMins = document.getElementById('cd-mins');
-        const elSecs = document.getElementById('cd-secs');
-
         if (elDays) elDays.innerText = String(days).padStart(2, '0');
         if (elHours) elHours.innerText = String(hours).padStart(2, '0');
         if (elMins) elMins.innerText = String(mins).padStart(2, '0');
         if (elSecs) elSecs.innerText = String(secs).padStart(2, '0');
+    } else {
+        if (elDays) elDays.innerText = '00';
+        if (elHours) elHours.innerText = '00';
+        if (elMins) elMins.innerText = '00';
+        if (elSecs) elSecs.innerText = '00';
     }
 }
 
@@ -415,21 +478,21 @@ function switchMasterclassMode(mode) {
         if (gridOnline) gridOnline.style.display = 'none';
         if (gridOffline) gridOffline.style.display = 'grid';
         
-        if (document.getElementById('nav-date-text')) document.getElementById('nav-date-text').innerText = 'Oct 11, 2026';
+        if (document.getElementById('nav-date-text')) document.getElementById('nav-date-text').innerText = 'Coming Soon';
         if (document.getElementById('nav-time-text')) document.getElementById('nav-time-text').innerText = '9:00 AM – 5:30 PM IST';
-        if (document.getElementById('nav-reg-btn')) document.getElementById('nav-reg-btn').innerHTML = 'Register In-Person @ ₹4,999 <i class="fa-solid fa-arrow-right"></i>';
+        if (document.getElementById('nav-reg-btn')) document.getElementById('nav-reg-btn').innerHTML = 'In-Person Coming Soon <i class="fa-solid fa-arrow-right"></i>';
         if (document.getElementById('nav-reg-btn')) document.getElementById('nav-reg-btn').setAttribute('onclick', 'openPaymentModal(4999)');
         
-        if (document.getElementById('hero-badge-text')) document.getElementById('hero-badge-text').innerText = '🏨 IN-PERSON 1-DAY MASTERCLASS IN TAMIL';
+        if (document.getElementById('hero-badge-text')) document.getElementById('hero-badge-text').innerText = '🏨 IN-PERSON 1-DAY MASTERCLASS — COMING SOON';
         if (document.getElementById('hero-title-el')) document.getElementById('hero-title-el').innerHTML = 'Master <span class="text-terracotta">Claude AI</span> & MCP In-Person in Chennai';
         if (document.getElementById('hero-desc-el')) document.getElementById('hero-desc-el').innerText = 'Join Antony Praveen live at Vestin Park Hotel, Egmore, Chennai for an intensive full-day classroom workshop. Includes luxury hotel buffet lunch, high tea & hands-on practical session.';
         if (document.getElementById('hero-access-text')) document.getElementById('hero-access-text').innerText = 'Direct face-to-face mentorship • Hotel Buffet Lunch & High Tea Included';
-        if (document.getElementById('hero-cta-btn')) document.getElementById('hero-cta-btn').innerHTML = 'Register In-Person @ ₹4,999 <i class="fa-solid fa-arrow-right"></i>';
+        if (document.getElementById('hero-cta-btn')) document.getElementById('hero-cta-btn').innerHTML = 'In-Person Batch Coming Soon <i class="fa-solid fa-arrow-right"></i>';
         if (document.getElementById('hero-cta-btn')) document.getElementById('hero-cta-btn').setAttribute('onclick', 'openPaymentModal(4999)');
         
         if (document.getElementById('session-tag-el')) document.getElementById('session-tag-el').innerText = 'IN-PERSON VENUE DETAILS';
         if (document.getElementById('venue-badge-el')) document.getElementById('venue-badge-el').innerHTML = '<i class="fa-solid fa-hotel"></i> Vestin Park Hotel, Chennai';
-        if (document.getElementById('info-date-text')) document.getElementById('info-date-text').innerText = 'October 11, 2026 (Sunday • Full Day)';
+        if (document.getElementById('info-date-text')) document.getElementById('info-date-text').innerText = 'Coming Soon (Dates to be announced)';
         if (document.getElementById('info-time-text')) document.getElementById('info-time-text').innerText = '9:00 AM – 5:30 PM IST (Hotel Lunch Included)';
         if (document.getElementById('info-venue-text')) document.getElementById('info-venue-text').innerText = 'Vestin Park Hotel, Egmore, Chennai, Tamil Nadu';
         
@@ -439,15 +502,16 @@ function switchMasterclassMode(mode) {
         if (document.getElementById('pricing-title-el')) document.getElementById('pricing-title-el').innerText = 'Select your pass for the In-Person Workshop';
         if (document.getElementById('pricing-desc-el')) document.getElementById('pricing-desc-el').innerText = 'Includes 1-Day Full Day Hands-on Workshop, Hotel Buffet Lunch, High Tea & Snacks at Vestin Park Hotel, Egmore, Chennai.';
 
-        if (document.getElementById('float-date-title')) document.getElementById('float-date-title').innerText = 'October 11, 2026';
-        if (document.getElementById('float-date-sub')) document.getElementById('float-date-sub').innerText = 'Sunday (Full Day)';
+        if (document.getElementById('float-date-title')) document.getElementById('float-date-title').innerText = 'Coming Soon';
+        if (document.getElementById('float-date-sub')) document.getElementById('float-date-sub').innerText = 'In-Person Chennai';
         if (document.getElementById('float-time-title')) document.getElementById('float-time-title').innerText = '9:00 AM – 5:30 PM';
         if (document.getElementById('float-time-sub')) document.getElementById('float-time-sub').innerText = 'IST';
-        if (document.getElementById('float-cta-btn')) document.getElementById('float-cta-btn').innerHTML = 'Register In-Person @ ₹4,999 <i class="fa-solid fa-arrow-right"></i>';
+        if (document.getElementById('float-cta-btn')) document.getElementById('float-cta-btn').innerHTML = 'In-Person Coming Soon <i class="fa-solid fa-arrow-right"></i>';
         if (document.getElementById('float-cta-btn')) document.getElementById('float-cta-btn').setAttribute('onclick', 'openPaymentModal(4999)');
 
         selectedPlan = 4999;
     } else {
+        const weekend = getUpcomingMasterclassWeekend();
         if (cardOnline) {
             cardOnline.style.borderColor = '#D85A30';
             cardOnline.style.opacity = '1';
@@ -470,7 +534,7 @@ function switchMasterclassMode(mode) {
         if (gridOnline) gridOnline.style.display = 'grid';
         if (gridOffline) gridOffline.style.display = 'none';
         
-        if (document.getElementById('nav-date-text')) document.getElementById('nav-date-text').innerText = 'October 3 & 4';
+        if (document.getElementById('nav-date-text')) document.getElementById('nav-date-text').innerText = weekend.shortRange;
         if (document.getElementById('nav-time-text')) document.getElementById('nav-time-text').innerText = '6:00 PM – 9:00 PM IST';
         if (document.getElementById('nav-reg-btn')) document.getElementById('nav-reg-btn').innerHTML = 'Register Now @ ₹499 <i class="fa-solid fa-arrow-right"></i>';
         if (document.getElementById('nav-reg-btn')) document.getElementById('nav-reg-btn').setAttribute('onclick', 'openPaymentModal(499)');
@@ -484,7 +548,7 @@ function switchMasterclassMode(mode) {
         
         if (document.getElementById('session-tag-el')) document.getElementById('session-tag-el').innerText = 'SESSION DETAILS';
         if (document.getElementById('venue-badge-el')) document.getElementById('venue-badge-el').innerHTML = '<i class="fa-solid fa-video"></i> Live Online';
-        if (document.getElementById('info-date-text')) document.getElementById('info-date-text').innerText = 'October 3 & 4, 2026 (Saturday & Sunday)';
+        if (document.getElementById('info-date-text')) document.getElementById('info-date-text').innerText = weekend.fullDisplay;
         if (document.getElementById('info-time-text')) document.getElementById('info-time-text').innerText = '6:00 PM – 9:00 PM IST';
         if (document.getElementById('info-venue-text')) document.getElementById('info-venue-text').innerText = 'Live Interactive Virtual Classroom';
 
@@ -494,12 +558,18 @@ function switchMasterclassMode(mode) {
         if (document.getElementById('pricing-title-el')) document.getElementById('pricing-title-el').innerText = 'Select your pass for the live batch';
         if (document.getElementById('pricing-desc-el')) document.getElementById('pricing-desc-el').innerText = 'Choose between the standard live interactive pass or the pass with recorded video access.';
 
-        if (document.getElementById('float-date-title')) document.getElementById('float-date-title').innerText = 'October 3 & 4';
+        if (document.getElementById('float-date-title')) document.getElementById('float-date-title').innerText = weekend.shortRange;
         if (document.getElementById('float-date-sub')) document.getElementById('float-date-sub').innerText = '6:00 PM IST';
         if (document.getElementById('float-time-title')) document.getElementById('float-time-title').innerText = '6:00 PM – 9:00 PM';
         if (document.getElementById('float-time-sub')) document.getElementById('float-time-sub').innerText = 'IST';
         if (document.getElementById('float-cta-btn')) document.getElementById('float-cta-btn').innerHTML = 'Register Now @ ₹499 <i class="fa-solid fa-arrow-right"></i>';
         if (document.getElementById('float-cta-btn')) document.getElementById('float-cta-btn').setAttribute('onclick', 'openPaymentModal(499)');
+
+        // Portal & Curriculum & Pricing dynamic updates
+        if (document.getElementById('portal-online-date')) document.getElementById('portal-online-date').innerText = weekend.fullDisplay;
+        if (document.getElementById('curriculum-day1-title')) document.getElementById('curriculum-day1-title').innerText = weekend.satDateText + ' • 6:00 PM – 9:00 PM IST';
+        if (document.getElementById('curriculum-day2-title')) document.getElementById('curriculum-day2-title').innerText = weekend.sunDateText + ' • 6:00 PM – 9:00 PM IST';
+        if (document.getElementById('pricing-online-date')) document.getElementById('pricing-online-date').innerHTML = '<i class="fa-solid fa-check text-terracotta"></i> 2-Day Live Online Session (' + weekend.shortRange + ')';
 
         selectedPlan = 499;
     }
@@ -573,9 +643,10 @@ function selectPass(plan) {
     const modalPill = document.getElementById('modal-session-pill');
     if (modalPill) {
         if (currentMasterclassMode === 'offline' || plan === 4999) {
-            modalPill.innerHTML = '<i class="fa-regular fa-calendar"></i> October 11, 2026 (Sunday) • 9:00 AM – 5:30 PM IST';
+            modalPill.innerHTML = '<i class="fa-regular fa-calendar"></i> Next Batch: Coming Soon (Dates to be announced)';
         } else {
-            modalPill.innerHTML = '<i class="fa-regular fa-calendar"></i> October 3 & 4, 2026 • 6:00 PM IST';
+            const weekend = getUpcomingMasterclassWeekend();
+            modalPill.innerHTML = '<i class="fa-regular fa-calendar"></i> ' + weekend.fullDisplay + ' • 6:00 PM IST';
         }
     }
 }
@@ -660,7 +731,14 @@ async function handleFormSubmit(e) {
                 orderId = data.orderId;
             }
         } catch (err) {
-            console.warn("Backend order creation warning, opening Razorpay direct checkout", err);
+            console.error("Backend order creation failed:", err);
+        }
+
+        if (!orderId || !orderId.startsWith("order_")) {
+            alert("Unable to initialize a verified payment order. Please try again.");
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+            return;
         }
 
         // Step 2: Open Razorpay Modal
@@ -668,6 +746,7 @@ async function handleFormSubmit(e) {
             key: razorpayKey,
             amount: finalPrice * 100,
             currency: "INR",
+            order_id: orderId,
             name: "Claude Masterclass 2026",
             description: selectedPlan === 999 
                 ? "Live + Recording Pass (Incl. 18% GST)" 
@@ -687,7 +766,7 @@ async function handleFormSubmit(e) {
             },
             handler: async function (response) {
                 try {
-                    await fetch(APPS_SCRIPT_WEBAPP_URL, {
+                    const verifyRes = await fetch(APPS_SCRIPT_WEBAPP_URL, {
                         method: "POST",
                         headers: { "Content-Type": "text/plain;charset=utf-8" },
                         body: JSON.stringify({
@@ -705,8 +784,19 @@ async function handleFormSubmit(e) {
                             mode: currentMasterclassMode
                         })
                     });
+                    const verifyData = await verifyRes.json();
+                    if (!verifyData || !verifyData.success) {
+                        alert(verifyData?.error || "Payment verification failed on server. Please contact support with Payment ID: " + (response.razorpay_payment_id || ""));
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.disabled = false;
+                        return;
+                    }
                 } catch (e) {
-                    console.error("Payment notification error", e);
+                    console.error("Payment verification error", e);
+                    alert("Could not verify payment with server. Please contact support with Payment ID: " + (response.razorpay_payment_id || ""));
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                    return;
                 }
 
                 closePaymentModal();
@@ -731,10 +821,6 @@ async function handleFormSubmit(e) {
                 }
             }
         };
-
-        if (orderId && orderId.startsWith("order_")) {
-            options.order_id = orderId;
-        }
 
         const rzp = new Razorpay(options);
         rzp.open();

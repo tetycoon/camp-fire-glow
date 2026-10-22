@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 import { countryCodes, CountryCode } from "../../lib/countryCodes";
 import GstPriceBreakdown from "../common/GstPriceBreakdown";
-import { calculateGstBreakdown, isAuthorizedTestEmail, isValidEmail, isValidGstin, openPrintableGstInvoice, sanitizeTextInput } from "../../lib/gstUtils";
+import { InvoicePrintParams, calculateGstBreakdown, isAuthorizedTestEmail, isValidEmail, isValidGstin, openPrintableGstInvoice, registerVerifiedInvoiceRecord, sanitizeTextInput } from "../../lib/gstUtils";
 
 declare global {
   interface Window {
@@ -91,6 +91,7 @@ const ProfessionalRegistrationForm: React.FC = () => {
     name?: string;
     email?: string;
     phone?: string;
+    verifiedInvoice?: InvoicePrintParams;
   } | null>(null);
 
   // Pricing Calculation matching /ai_bgm:
@@ -331,53 +332,76 @@ const ProfessionalRegistrationForm: React.FC = () => {
           color: "#4f46e5" // Indigo primary
         },
         handler: async function (response: any) {
-          setIsSubmitting(false);
-          const payId = response.razorpay_payment_id || "PAID_" + Date.now();
-          const ordId = response.razorpay_order_id || generatedOrderId;
+          const payId = String(response?.razorpay_payment_id || "").trim();
+          const ordId = String(response?.razorpay_order_id || generatedOrderId).trim();
+          const sig = String(response?.razorpay_signature || "").trim();
 
-          // 4. Update Google Sheet Status to PAID with Payment ID in Col I
-          const successPayload = {
-            paymentSuccess: true,
-            razorpay_payment_id: payId,
-            razorpay_order_id: ordId,
-            razorpay_signature: response.razorpay_signature || "",
-            email: sanitizedEmail,
-            name: sanitizedName,
-            phone: fullPhone,
-            profession: finalProfession,
-            baseAmount: isTestEmail ? 1 : gstBreakdown.baseAmount,
-            gstAmount: isTestEmail ? 0 : gstBreakdown.gstAmount,
-            amount: payableInr,
-            companyName: sanitizedCompany,
-            gstin: sanitizedGstin,
-            coupon: appliedCoupon,
-            course: "Advance AI for Non-Tech Working Professionals",
-            spreadsheetId: SPREADSHEET_ID
-          };
+          if (!payId || !ordId || !sig) {
+            setIsSubmitting(false);
+            alert("Payment verification failed: Missing Razorpay signature or payment ID.");
+            return;
+          }
 
-          fetch(scriptUrl, {
-            method: "POST",
-            headers: { "Content-Type": "text/plain;charset=utf-8" },
-            body: JSON.stringify(successPayload)
-          }).catch(() => {
-            fetch(scriptUrl, {
+          try {
+            const successPayload = {
+              paymentSuccess: true,
+              razorpay_payment_id: payId,
+              razorpay_order_id: ordId,
+              razorpay_signature: sig,
+              isInternational,
+              email: sanitizedEmail,
+              name: sanitizedName,
+              phone: fullPhone,
+              profession: finalProfession,
+              baseAmount: isTestEmail ? 1 : gstBreakdown.baseAmount,
+              gstAmount: isTestEmail ? 0 : gstBreakdown.gstAmount,
+              amount: payableInr,
+              companyName: sanitizedCompany,
+              gstin: sanitizedGstin,
+              coupon: appliedCoupon,
+              course: "Advance AI for Non-Tech Working Professionals",
+              spreadsheetId: SPREADSHEET_ID
+            };
+
+            const verifyRes = await fetch(scriptUrl, {
               method: "POST",
-              mode: "no-cors",
               headers: { "Content-Type": "text/plain;charset=utf-8" },
               body: JSON.stringify(successPayload)
-            }).catch(() => {});
-          });
+            });
+            const verifyData = await verifyRes.json();
+            if (!verifyData || !verifyData.success) {
+              setIsSubmitting(false);
+              alert(`Payment verification failed: ${verifyData?.error || "Unable to verify payment signature."}`);
+              return;
+            }
 
-          // Show in-page confirmation
-          setSuccessDetails({
-            orderId: ordId,
-            paymentId: payId,
-            amount: payableInr,
-            name: sanitizedName,
-            email: sanitizedEmail,
-            phone: fullPhone
-          });
-          setPaymentSuccess(true);
+            const verifiedAmount = Number(verifyData.amount) || payableInr;
+            const verifiedInvoice = registerVerifiedInvoiceRecord({
+              customerName: sanitizedName,
+              customerEmail: sanitizedEmail,
+              customerPhone: fullPhone,
+              courseName: "Advance AI for Non-Tech Working Professionals",
+              totalAmountPaid: verifiedAmount,
+              paymentId: payId,
+              orderId: ordId,
+              invoiceNumber: verifyData.invoiceNumber || undefined
+            });
+
+            setSuccessDetails({
+              orderId: ordId,
+              paymentId: payId,
+              amount: verifiedAmount,
+              name: sanitizedName,
+              email: sanitizedEmail,
+              phone: fullPhone,
+              verifiedInvoice
+            });
+            setPaymentSuccess(true);
+            setIsSubmitting(false);
+          } catch {
+            setIsSubmitting(false);
+            alert("Could not verify payment with server. Please check your email for confirmation or contact support.");
+          }
         },
         modal: {
           ondismiss: function () {
@@ -464,17 +488,11 @@ const ProfessionalRegistrationForm: React.FC = () => {
 
           <button
             type="button"
-            onClick={() =>
-              openPrintableGstInvoice({
-                customerName: successDetails.name,
-                customerEmail: successDetails.email,
-                customerPhone: `${selectedCountry.code} ${phone}`,
-                courseName: "Advance AI for Non-Tech Working Professionals",
-                totalAmountPaid: successDetails.amount || 5899,
-                paymentId: successDetails.paymentId,
-                orderId: successDetails.orderId,
-              })
-            }
+            onClick={() => {
+              if (successDetails.verifiedInvoice) {
+                openPrintableGstInvoice(successDetails.verifiedInvoice);
+              }
+            }}
             className="w-full py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-800 font-bold text-xs flex items-center justify-center gap-1.5 transition-all"
           >
             <FileText className="w-3.5 h-3.5 text-indigo-600" />

@@ -326,19 +326,24 @@ const ClaudeMasterclassPage: React.FC = () => {
 
 
 
-  // Dynamically compute the upcoming Saturday & Sunday dates so the masterclass is always live every weekend
+  // Dynamically compute the upcoming Saturday & Sunday dates starting from October 24 & 25, 2026
   const weekendInfo = useMemo(() => {
     const now = new Date();
+    // Baseline minimum Saturday: October 24, 2026
+    const minSat = new Date(2026, 9, 24, 18, 0, 0); // Month 9 is October (0-indexed)
     const currentDay = now.getDay(); // 0 = Sun, 1 = Mon, ..., 6 = Sat
     let daysUntilSat = (6 - currentDay + 7) % 7;
     
-    if (currentDay === 6 && now.getHours() >= 18) {
+    if (currentDay === 6 && now.getHours() >= 21) {
       daysUntilSat = 7;
-    } else if (currentDay === 0 && now.getHours() >= 21) {
+    } else if (currentDay === 0) {
       daysUntilSat = 6;
     }
     
-    const nextSat = new Date(now.getFullYear(), now.getMonth(), now.getDate() + daysUntilSat, 18, 0, 0);
+    let nextSat = new Date(now.getFullYear(), now.getMonth(), now.getDate() + daysUntilSat, 18, 0, 0);
+    if (nextSat.getTime() < minSat.getTime()) {
+      nextSat = minSat;
+    }
     const nextSun = new Date(nextSat.getFullYear(), nextSat.getMonth(), nextSat.getDate() + 1, 18, 0, 0);
     
     const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -352,26 +357,37 @@ const ClaudeMasterclassPage: React.FC = () => {
     const sunDay = nextSun.getDate();
     const year = nextSat.getFullYear();
 
-    const formattedRange = satM === sunM ? `${satM} ${satDay} & ${sunDay}` : `${satM} ${satDay} & ${sunM} ${sunDay}`;
-    const shortRange = satM === sunM ? `${satShort} ${satDay} & ${sunDay}` : `${satShort} ${satDay} & ${monthNames[nextSun.getMonth()]} ${sunDay}`;
+    const getOrdinal = (n: number) => {
+      const s = ["th", "st", "nd", "rd"];
+      const v = n % 100;
+      return s[(v - 20) % 10] || s[v] || s[0];
+    };
+
+    const isSameMonth = satM === sunM;
+    const formattedRange = isSameMonth ? `${satM} ${satDay} & ${sunDay}` : `${satM} ${satDay} & ${sunM} ${sunDay}`;
+    const shortRange = isSameMonth ? `${satShort} ${satDay} & ${sunDay}` : `${satShort} ${satDay} & ${monthNames[nextSun.getMonth()]} ${sunDay}`;
+    const dateRange = isSameMonth ? `${satM} ${satDay} & ${sunDay}, ${year}` : `${satM} ${satDay} & ${sunM} ${sunDay}, ${year}`;
 
     return {
       targetTimestamp: nextSat.getTime(),
-      satDateText: `Saturday, ${satM} ${satDay}`,
-      sunDateText: `Sunday, ${sunM} ${sunDay}`,
+      satDateText: `Saturday, ${satM} ${satDay}${getOrdinal(satDay)}`,
+      sunDateText: `Sunday, ${sunM} ${sunDay}${getOrdinal(sunDay)}`,
       rangeText: formattedRange,
       shortRangeText: shortRange,
+      dateRange,
       year,
-      fullDisplay: `Every Saturday & Sunday (Upcoming: ${formattedRange}, ${year})`,
+      fullDisplay: `${dateRange} (Saturday & Sunday)`,
       badgeDisplay: `Every Sat & Sun (${shortRange})`
     };
   }, []);
 
-  // Target Date: October 3, 2026 @ 18:00 IST (Online) | Oct 11, 2026 @ 09:00 IST (Offline)
+  // Target Date: Upcoming Saturday @ 18:00 IST for Online, disabled for Offline
   useEffect(() => {
-    const targetDate = masterclassMode === 'offline' 
-      ? new Date('2026-10-11T09:00:00+05:30').getTime() 
-      : new Date('2026-10-03T18:00:00+05:30').getTime();
+    if (masterclassMode === 'offline') {
+      setTimeLeft({ days: '00', hours: '00', minutes: '00', seconds: '00' });
+      return;
+    }
+    const targetDate = weekendInfo.targetTimestamp;
 
     const updateTimer = () => {
       const now = new Date().getTime();
@@ -389,6 +405,8 @@ const ClaudeMasterclassPage: React.FC = () => {
           minutes: String(minutes).padStart(2, '0'),
           seconds: String(seconds).padStart(2, '0')
         });
+      } else {
+        setTimeLeft({ days: '00', hours: '00', minutes: '00', seconds: '00' });
       }
     };
 
@@ -720,7 +738,7 @@ const ClaudeMasterclassPage: React.FC = () => {
                 <h2 className="text-[#1F1E1C] text-xl font-bold mb-2">2-Day Live Virtual MasterClass</h2>
                 <p className="text-[#524F4A] text-xs mb-4 leading-relaxed">Learn Claude AI prompt architecture, custom MCP creation, and full web application development live from anywhere.</p>
                 <ul className="space-y-2.5 text-xs text-[#2C2A29] mb-6">
-                  <li className="flex items-center gap-2.5"><Calendar className="w-4 h-4 text-[#D85A30]" /> <strong>October 3 & 4, 2026 (Sat & Sun)</strong></li>
+                  <li className="flex items-center gap-2.5"><Calendar className="w-4 h-4 text-[#D85A30]" /> <strong>{weekendInfo.fullDisplay}</strong></li>
                   <li className="flex items-center gap-2.5"><Clock className="w-4 h-4 text-[#D85A30]" /> 6:00 PM – 9:00 PM IST (3 Hours/day)</li>
                   <li className="flex items-center gap-2.5"><Globe className="w-4 h-4 text-[#D85A30]" /> 100% Tamil Instruction & Direct Q&A</li>
                 </ul>
@@ -747,15 +765,15 @@ const ClaudeMasterclassPage: React.FC = () => {
                   <img src={offlineWebp} alt="Claude AI In-Person Workshop Chennai" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                 </div>
                 <div className="flex justify-between items-center mb-3">
-                  <span className="bg-[#1F1E1C] text-white text-[11px] font-extrabold px-3 py-1 rounded-full uppercase">🏢 IN-PERSON WORKSHOP</span>
-                  <span className="text-[#1F1E1C] text-lg font-black">₹4,999</span>
+                  <span className="bg-[#6E6B65] text-white text-[11px] font-extrabold px-3 py-1 rounded-full uppercase">🏢 IN-PERSON WORKSHOP — COMING SOON</span>
+                  <span className="text-[#6E6B65] text-sm font-extrabold">Coming Soon</span>
                 </div>
                 <h2 className="text-[#1F1E1C] text-xl font-bold mb-2">1-Day Classroom Workshop</h2>
                 <p className="text-[#524F4A] text-xs mb-4 leading-relaxed">Exclusive full-day in-person practical lab in Chennai. Direct 1-on-1 guidance, live terminal builds, lunch, and networking.</p>
                 <ul className="space-y-2.5 text-xs text-[#2C2A29] mb-6">
-                  <li className="flex items-center gap-2.5"><Calendar className="w-4 h-4 text-[#1F1E1C]" /> <strong>October 11, 2026 (Sunday)</strong></li>
-                  <li className="flex items-center gap-2.5"><Clock className="w-4 h-4 text-[#1F1E1C]" /> 9:00 AM – 5:30 PM IST (Full Day)</li>
-                  <li className="flex items-center gap-2.5"><UserCheck className="w-4 h-4 text-[#1F1E1C]" /> Vestin Park Hotel, Egmore, Chennai</li>
+                  <li className="flex items-center gap-2.5"><Calendar className="w-4 h-4 text-[#D85A30]" /> <strong>Next Batch: Coming Soon (Dates TBA)</strong></li>
+                  <li className="flex items-center gap-2.5"><Clock className="w-4 h-4 text-[#6E6B65]" /> 9:00 AM – 5:30 PM IST (Full Day)</li>
+                  <li className="flex items-center gap-2.5"><UserCheck className="w-4 h-4 text-[#6E6B65]" /> Vestin Park Hotel, Egmore, Chennai</li>
                 </ul>
               </div>
               <button 
@@ -766,7 +784,7 @@ const ClaudeMasterclassPage: React.FC = () => {
                 }}
                 className="w-full bg-[#1F1E1C] hover:bg-black text-white font-extrabold py-3.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
               >
-                Explore Classroom Workshop <ArrowRight className="w-4 h-4" />
+                Explore Classroom Workshop (Coming Soon) <ArrowRight className="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -794,15 +812,15 @@ const ClaudeMasterclassPage: React.FC = () => {
               ← Main Hub
             </a>
             <div className="hidden md:flex items-center gap-4 text-xs text-[#524F4A]">
-              <span>{masterclassMode === 'offline' ? 'October 11, 2026' : 'October 3 & 4, 2026'}</span>
+              <span>{masterclassMode === 'offline' ? 'Coming Soon' : weekendInfo.shortRangeText}</span>
               <span className="w-1 h-1 rounded-full bg-[#C5C0B8]"></span>
-              <span>{masterclassMode === 'offline' ? '9:00 AM – 5:30 PM IST' : '6:00 PM – 9:00 PM IST'}</span>
+              <span>{masterclassMode === 'offline' ? 'Full Day' : '6:00 PM – 9:00 PM IST'}</span>
             </div>
             <button 
               onClick={() => handleOpenModal(masterclassMode === 'offline' ? 4999 : 499)}
               className="bg-[#D85A30] hover:bg-[#C04E27] text-white font-semibold px-4 py-2 rounded-xl text-xs transition-all shadow-sm flex items-center gap-1.5"
             >
-              {masterclassMode === 'offline' ? 'Register @ ₹4,999' : 'Register @ ₹499'} <ArrowRight className="w-3.5 h-3.5" />
+              {masterclassMode === 'offline' ? 'Coming Soon' : 'Register @ ₹499'} <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>
@@ -852,7 +870,7 @@ const ClaudeMasterclassPage: React.FC = () => {
                 onClick={() => handleOpenModal(masterclassMode === 'offline' ? 4999 : 499)}
                 className="bg-[#D85A30] hover:bg-[#C04E27] text-white font-bold py-3.5 px-7 rounded-xl text-base transition-all shadow-md flex items-center justify-center gap-2"
               >
-                {masterclassMode === 'offline' ? 'Register In-Person @ ₹4,999' : 'Register Now @ ₹499'} <ArrowRight className="w-4 h-4" />
+                {masterclassMode === 'offline' ? 'In-Person Batch Coming Soon' : 'Register Now @ ₹499'} <ArrowRight className="w-4 h-4" />
               </button>
               <a 
                 href="#curriculum"
@@ -896,8 +914,8 @@ const ClaudeMasterclassPage: React.FC = () => {
                     <strong className="block font-bold text-[#1F1E1C]">Date & Days</strong>
                     <span className="text-xs text-[#524F4A]">
                       {masterclassMode === 'offline' 
-                        ? 'October 11, 2026 (Sunday • Full Day)' 
-                        : 'October 3 & 4, 2026 (Saturday & Sunday)'}
+                        ? 'Coming Soon (Dates to be announced)' 
+                        : weekendInfo.fullDisplay}
                     </span>
                   </div>
                 </div>
@@ -908,7 +926,11 @@ const ClaudeMasterclassPage: React.FC = () => {
                   </div>
                   <div>
                     <strong className="block font-bold text-[#1F1E1C]">Timing</strong>
-                    <span className="text-xs text-[#524F4A]">6:00 PM – 9:00 PM IST (3.0 Hours / day)</span>
+                    <span className="text-xs text-[#524F4A]">
+                      {masterclassMode === 'offline' 
+                        ? '9:00 AM – 5:30 PM IST (Full Day)' 
+                        : '6:00 PM – 9:00 PM IST (3.0 Hours / day)'}
+                    </span>
                   </div>
                 </div>
 
@@ -917,8 +939,14 @@ const ClaudeMasterclassPage: React.FC = () => {
                     <Globe className="w-4 h-4" />
                   </div>
                   <div>
-                    <strong className="block font-bold text-[#1F1E1C]">Medium of Instruction</strong>
-                    <span className="text-xs text-[#524F4A]">100% Tamil (தமிழ்)</span>
+                    <strong className="block font-bold text-[#1F1E1C]">
+                      {masterclassMode === 'offline' ? 'Venue & Platform' : 'Medium of Instruction'}
+                    </strong>
+                    <span className="text-xs text-[#524F4A]">
+                      {masterclassMode === 'offline' 
+                        ? 'Vestin Park Hotel, Egmore, Chennai' 
+                        : '100% Tamil (தமிழ்)'}
+                    </span>
                   </div>
                 </div>
 
@@ -936,26 +964,33 @@ const ClaudeMasterclassPage: React.FC = () => {
               {/* Countdown Timer Widget */}
               <div className="bg-[#F7F4EE] border border-[#E6E2D9] rounded-xl p-4 text-center">
                 <span className="text-[11px] font-semibold text-[#6E6B65] uppercase tracking-wider block mb-2">
-                  {masterclassMode === 'offline' ? 'In-Person Workshop Starts In' : 'Live Session Starts In'}
+                  {masterclassMode === 'offline' ? 'In-Person Workshop Status' : 'Live Session Starts In'}
                 </span>
-                <div className="grid grid-cols-4 gap-2">
-                  <div className="bg-white border border-[#E6E2D9] rounded-lg py-2">
-                    <span className="text-xl font-bold text-[#1F1E1C] block leading-none">{timeLeft.days}</span>
-                    <span className="text-[9px] text-[#6E6B65] uppercase">Days</span>
+                {masterclassMode === 'offline' ? (
+                  <div className="bg-white border border-[#E6E2D9] rounded-lg py-3 px-4">
+                    <span className="text-base font-extrabold text-[#D85A30] block">Coming Soon</span>
+                    <span className="text-[11px] text-[#6E6B65]">New batch dates will be announced shortly</span>
                   </div>
-                  <div className="bg-white border border-[#E6E2D9] rounded-lg py-2">
-                    <span className="text-xl font-bold text-[#1F1E1C] block leading-none">{timeLeft.hours}</span>
-                    <span className="text-[9px] text-[#6E6B65] uppercase">Hours</span>
+                ) : (
+                  <div className="grid grid-cols-4 gap-2">
+                    <div className="bg-white border border-[#E6E2D9] rounded-lg py-2">
+                      <span className="text-xl font-bold text-[#1F1E1C] block leading-none">{timeLeft.days}</span>
+                      <span className="text-[9px] text-[#6E6B65] uppercase">Days</span>
+                    </div>
+                    <div className="bg-white border border-[#E6E2D9] rounded-lg py-2">
+                      <span className="text-xl font-bold text-[#1F1E1C] block leading-none">{timeLeft.hours}</span>
+                      <span className="text-[9px] text-[#6E6B65] uppercase">Hours</span>
+                    </div>
+                    <div className="bg-white border border-[#E6E2D9] rounded-lg py-2">
+                      <span className="text-xl font-bold text-[#1F1E1C] block leading-none">{timeLeft.minutes}</span>
+                      <span className="text-[9px] text-[#6E6B65] uppercase">Mins</span>
+                    </div>
+                    <div className="bg-white border border-[#E6E2D9] rounded-lg py-2">
+                      <span className="text-xl font-bold text-[#1F1E1C] block leading-none">{timeLeft.seconds}</span>
+                      <span className="text-[9px] text-[#6E6B65] uppercase">Secs</span>
+                    </div>
                   </div>
-                  <div className="bg-white border border-[#E6E2D9] rounded-lg py-2">
-                    <span className="text-xl font-bold text-[#1F1E1C] block leading-none">{timeLeft.minutes}</span>
-                    <span className="text-[9px] text-[#6E6B65] uppercase">Mins</span>
-                  </div>
-                  <div className="bg-white border border-[#E6E2D9] rounded-lg py-2">
-                    <span className="text-xl font-bold text-[#1F1E1C] block leading-none">{timeLeft.seconds}</span>
-                    <span className="text-[9px] text-[#6E6B65] uppercase">Secs</span>
-                  </div>
-                </div>
+                )}
               </div>
 
               {/* Pricing Callout */}
@@ -1050,7 +1085,7 @@ const ClaudeMasterclassPage: React.FC = () => {
               <div className="flex items-center gap-3">
                 <span className="bg-[#D85A30] text-white font-bold text-xs px-3 py-1 rounded-md uppercase">Day 1</span>
                 <div>
-                  <h3 className="font-bold text-base text-[#1F1E1C]">Saturday, October 3rd • 6:00 PM – 9:00 PM IST</h3>
+                  <h3 className="font-bold text-base text-[#1F1E1C]">{weekendInfo.satDateText} • 6:00 PM – 9:00 PM IST</h3>
                   <span className="text-xs text-[#6E6B65]">Foundations, Prompt Architecture & Building Custom MCPs</span>
                 </div>
               </div>
@@ -1083,7 +1118,7 @@ const ClaudeMasterclassPage: React.FC = () => {
               <div className="flex items-center gap-3">
                 <span className="bg-[#6B4FBB] text-white font-bold text-xs px-3 py-1 rounded-md uppercase">Day 2</span>
                 <div>
-                  <h3 className="font-bold text-base text-[#1F1E1C]">Sunday, October 4th • 6:00 PM – 9:00 PM IST</h3>
+                  <h3 className="font-bold text-base text-[#1F1E1C]">{weekendInfo.sunDateText} • 6:00 PM – 9:00 PM IST</h3>
                   <span className="text-xs text-[#6E6B65]">Claude Code CLI, Web App Construction & Live Projects</span>
                 </div>
               </div>
@@ -1187,7 +1222,7 @@ const ClaudeMasterclassPage: React.FC = () => {
 
                 <ul className="space-y-3 mb-8 text-xs text-[#2C2A29]">
                   <li className="flex items-center gap-2.5 font-semibold">
-                    <Check className="w-4 h-4 text-[#D85A30]" /> Full-Day In-Person Training (Sep 6 • 9:00 AM - 5:30 PM)
+                    <Calendar className="w-4 h-4 text-[#D85A30]" /> Next In-Person Batch: Coming Soon (Dates to be announced)
                   </li>
                   <li className="flex items-center gap-2.5 font-semibold bg-[#F7F4EE] p-2 rounded-lg border border-[#E6E2D9]">
                     <Utensils className="w-4 h-4 text-[#D85A30]" /> Luxury Hotel Buffet Lunch Included
@@ -1206,9 +1241,9 @@ const ClaudeMasterclassPage: React.FC = () => {
 
               <button 
                 onClick={() => handleOpenModal(4999)}
-                className="w-full bg-[#D85A30] hover:bg-[#C04E27] text-white font-bold py-3.5 px-5 rounded-xl transition-all text-xs shadow-sm flex items-center justify-center gap-1.5"
+                className="w-full bg-[#1F1E1C] hover:bg-black text-white font-bold py-3.5 px-5 rounded-xl transition-all text-xs shadow-sm flex items-center justify-center gap-1.5 cursor-pointer"
               >
-                Register In-Person Pass @ ₹4,999 <ArrowRight className="w-4 h-4" />
+                In-Person Batch Coming Soon <ArrowRight className="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -1312,7 +1347,7 @@ const ClaudeMasterclassPage: React.FC = () => {
             ? [
               {
                 q: "What are the timings and venue for the Chennai Classroom Workshop?",
-                a: "The workshop is held on Sunday, October 11, 2026, from 9:00 AM to 5:30 PM IST at the prestigious Vestin Park Hotel, Montieth Road, Egmore, Chennai. Comprehensive buffet lunch and morning/evening high tea are included."
+                a: "The upcoming classroom workshop in Chennai is currently being scheduled and dates will be announced shortly. The session is held from 9:00 AM to 5:30 PM IST at the prestigious Vestin Park Hotel, Montieth Road, Egmore, Chennai. Comprehensive buffet lunch and morning/evening high tea are included."
               },
               {
                 q: "What should I bring to the workshop?",
@@ -1407,10 +1442,10 @@ const ClaudeMasterclassPage: React.FC = () => {
           <Calendar className="w-4 h-4 text-[#D85A30] shrink-0" />
           <div>
             <strong className="block text-xs font-bold text-[#1F1E1C] leading-tight">
-              {masterclassMode === 'offline' ? 'October 11, 2026' : 'October 3 & 4, 2026'}
+              {masterclassMode === 'offline' ? 'Coming Soon' : weekendInfo.shortRangeText}
             </strong>
             <span className="text-[10px] text-[#6E6B65] hidden sm:block">
-              {masterclassMode === 'offline' ? 'Sunday (Full Day)' : 'Live Virtual (6-9 PM)'}
+              {masterclassMode === 'offline' ? 'In-Person Chennai' : 'Live Virtual (6-9 PM)'}
             </span>
           </div>
         </div>
@@ -1421,7 +1456,9 @@ const ClaudeMasterclassPage: React.FC = () => {
         <div className="flex items-center gap-2">
           <Clock className="w-4 h-4 text-[#6B4FBB] shrink-0" />
           <div>
-            <strong className="block text-xs font-bold text-[#1F1E1C] leading-tight">5:30 PM – 8:30 PM</strong>
+            <strong className="block text-xs font-bold text-[#1F1E1C] leading-tight">
+              {masterclassMode === 'offline' ? 'Full Day' : '6:00 PM – 9:00 PM'}
+            </strong>
             <span className="text-[10px] text-[#6E6B65]">IST</span>
           </div>
         </div>
@@ -1430,11 +1467,11 @@ const ClaudeMasterclassPage: React.FC = () => {
 
         {/* Column 3: CTA Button */}
         <button 
-          onClick={() => handleOpenModal(499)}
-          className="bg-[#D85A30] hover:bg-[#C04E27] text-white font-bold px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl text-xs shadow-sm flex items-center gap-1.5 shrink-0 transition-all"
+          onClick={() => handleOpenModal(masterclassMode === 'offline' ? 4999 : 499)}
+          className="bg-[#D85A30] hover:bg-[#C04E27] text-white font-bold px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl text-xs shadow-sm flex items-center gap-1.5 shrink-0 transition-all cursor-pointer"
         >
-          <span>Register Now</span>
-          <span className="hidden md:inline text-[11px] font-normal opacity-90">@ ₹499</span>
+          <span>{masterclassMode === 'offline' ? 'Coming Soon' : 'Register Now'}</span>
+          {masterclassMode !== 'offline' && <span className="hidden md:inline text-[11px] font-normal opacity-90">@ ₹499</span>}
           <ArrowRight className="w-3.5 h-3.5" />
         </button>
       </div>
@@ -1442,7 +1479,7 @@ const ClaudeMasterclassPage: React.FC = () => {
       {/* 2-STEP REGISTRATION & PAYMENT MODAL */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-3 overflow-y-auto">
-          <div className="bg-white border border-[#E6E2D9] rounded-2xl w-full max-w-md p-5 sm:p-6 relative shadow-2xl my-4 text-[#1F1E1C]">
+          <div className="bg-white border border-[#E6E2D9] rounded-2xl w-full max-w-md p-4 sm:p-5 relative shadow-2xl my-auto text-[#1F1E1C] max-h-[94vh] overflow-y-auto">
             
             {/* Close Button */}
             <button 
@@ -1561,27 +1598,27 @@ const ClaudeMasterclassPage: React.FC = () => {
                   <ArrowLeft className="w-3 h-3" /> Change pass selection (₹{getCalculatedBasePrice()} + 18% GST)
                 </button>
 
-                <div className="text-center mb-3">
-                  <h3 className="text-lg font-extrabold text-[#1F1E1C]">
+                <div className="text-center mb-2">
+                  <h3 className="text-base font-extrabold text-[#1F1E1C]">
                     Complete Your Registration
                   </h3>
-                  <p className="text-[11px] text-[#6E6B65] mt-0.5">
+                  <p className="text-[10px] text-[#6E6B65] mt-0.5">
                     Total Payable (Incl. 18% GST): <strong className="text-[#D85A30]">₹{getCalculatedPrice().toLocaleString("en-IN")} INR</strong>
                   </p>
 
-                  <div className="inline-flex items-center gap-1.5 bg-[#F7F4EE] border border-[#E6E2D9] text-[#524F4A] px-2.5 py-0.5 rounded-md text-[10px] font-medium mt-1">
+                  <div className="inline-flex items-center gap-1.5 bg-[#F7F4EE] border border-[#E6E2D9] text-[#524F4A] px-2 py-0.5 rounded-md text-[9.5px] font-medium mt-1">
                     <Calendar className="w-3 h-3 text-[#D85A30]" />
                     {masterclassMode === 'offline' 
-                      ? 'October 11, 2026 (Sunday • Full Day) • 9:00 AM IST' 
-                      : 'October 3 & 4, 2026 • 6:00 PM IST'}
+                      ? 'Next Batch: Coming Soon (Dates to be announced)' 
+                      : `${weekendInfo.fullDisplay} • 6:00 PM IST`}
                   </div>
 
                   {masterclassMode !== 'offline' && (
-                    <div className="mt-2.5 flex bg-[#F7F4EE] p-1 rounded-xl border border-[#E6E2D9] gap-1">
+                    <div className="mt-2 flex bg-[#F7F4EE] p-0.5 rounded-lg border border-[#E6E2D9] gap-1">
                       <button
                         type="button"
                         onClick={() => setSelectedPlan(499)}
-                        className={`flex-1 py-1.5 px-2 rounded-lg text-[11px] font-bold transition-all flex items-center justify-center gap-1 ${
+                        className={`flex-1 py-1 px-2 rounded text-[10px] font-bold transition-all flex items-center justify-center gap-1 ${
                           selectedPlan === 499 || selectedPlan === 399
                             ? 'bg-white text-[#D85A30] shadow-sm border border-[#E6E2D9]'
                             : 'text-[#6E6B65] hover:text-[#1F1E1C]'
@@ -1592,7 +1629,7 @@ const ClaudeMasterclassPage: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => setSelectedPlan(999)}
-                        className={`flex-1 py-1.5 px-2 rounded-lg text-[11px] font-bold transition-all flex items-center justify-center gap-1 ${
+                        className={`flex-1 py-1 px-2 rounded text-[10px] font-bold transition-all flex items-center justify-center gap-1 ${
                           selectedPlan === 999 
                             ? 'bg-white text-[#D85A30] shadow-sm border border-[#E6E2D9]'
                             : 'text-[#6E6B65] hover:text-[#1F1E1C]'
@@ -1604,9 +1641,9 @@ const ClaudeMasterclassPage: React.FC = () => {
                   )}
                 </div>
 
-                <form onSubmit={handleProceedPayment} className="space-y-3 text-left">
+                <form onSubmit={handleProceedPayment} className="space-y-2 text-left">
                   <div>
-                    <label className="block text-[10px] font-bold text-[#524F4A] uppercase tracking-wider mb-1">Full Name</label>
+                    <label className="block text-[9px] font-bold text-[#524F4A] uppercase tracking-wider mb-0.5">Full Name</label>
                     <input 
                       type="text" 
                       name="name"
@@ -1614,12 +1651,12 @@ const ClaudeMasterclassPage: React.FC = () => {
                       value={formData.name}
                       onChange={handleInputChange}
                       placeholder="Enter your name"
-                      className="w-full bg-[#F7F4EE] border border-[#E6E2D9] rounded-xl px-3.5 py-2.5 text-xs text-[#1F1E1C] focus:outline-none focus:border-[#D85A30] transition-colors"
+                      className="w-full bg-[#F7F4EE] border border-[#E6E2D9] rounded-lg px-3 py-1.5 text-xs text-[#1F1E1C] focus:outline-none focus:border-[#D85A30] transition-colors"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[10px] font-bold text-[#524F4A] uppercase tracking-wider mb-1">Email Address</label>
+                    <label className="block text-[9px] font-bold text-[#524F4A] uppercase tracking-wider mb-0.5">Email Address</label>
                     <input 
                       type="email" 
                       name="email"
@@ -1627,18 +1664,18 @@ const ClaudeMasterclassPage: React.FC = () => {
                       value={formData.email}
                       onChange={handleInputChange}
                       placeholder="email@example.com"
-                      className="w-full bg-[#F7F4EE] border border-[#E6E2D9] rounded-xl px-3.5 py-2.5 text-xs text-[#1F1E1C] focus:outline-none focus:border-[#D85A30] transition-colors"
+                      className="w-full bg-[#F7F4EE] border border-[#E6E2D9] rounded-lg px-3 py-1.5 text-xs text-[#1F1E1C] focus:outline-none focus:border-[#D85A30] transition-colors"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[10px] font-bold text-[#524F4A] uppercase tracking-wider mb-1">WhatsApp Number</label>
+                    <label className="block text-[9px] font-bold text-[#524F4A] uppercase tracking-wider mb-0.5">WhatsApp Number</label>
                     <div className="flex gap-2">
-                      <div className="relative w-[90px] shrink-0">
+                      <div className="relative w-[85px] shrink-0">
                         <button 
                           type="button" 
                           onClick={() => setIsCountryDropdownOpen(!isCountryDropdownOpen)}
-                          className="w-full bg-[#F7F4EE] border border-[#E6E2D9] rounded-xl px-2 py-2.5 text-xs font-semibold text-[#524F4A] flex items-center justify-between gap-1"
+                          className="w-full bg-[#F7F4EE] border border-[#E6E2D9] rounded-lg px-2 py-1.5 text-xs font-semibold text-[#524F4A] flex items-center justify-between gap-1"
                         >
                           <span className="truncate">
                             {(() => {
@@ -1653,7 +1690,7 @@ const ClaudeMasterclassPage: React.FC = () => {
                           <div className="absolute bottom-full mb-1 left-0 w-64 bg-white border border-[#E6E2D9] rounded-xl shadow-xl z-50 overflow-hidden">
                             <div className="p-2 border-b border-[#E6E2D9] bg-[#F7F4EE]">
                               <input 
-                                type="text"
+                                type="text" 
                                 value={countrySearchQuery}
                                 onChange={(e) => setCountrySearchQuery(e.target.value)}
                                 placeholder="🔍 Search country..."
@@ -1687,19 +1724,19 @@ const ClaudeMasterclassPage: React.FC = () => {
                         value={formData.phone}
                         onChange={handleInputChange}
                         placeholder="WhatsApp number"
-                        className="flex-1 bg-[#F7F4EE] border border-[#E6E2D9] rounded-xl px-3.5 py-2.5 text-xs text-[#1F1E1C] focus:outline-none focus:border-[#D85A30] transition-colors"
+                        className="flex-1 bg-[#F7F4EE] border border-[#E6E2D9] rounded-lg px-3 py-1.5 text-xs text-[#1F1E1C] focus:outline-none focus:border-[#D85A30] transition-colors"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-[10px] font-bold text-[#524F4A] uppercase tracking-wider mb-1">Current Profession</label>
+                    <label className="block text-[9px] font-bold text-[#524F4A] uppercase tracking-wider mb-0.5">Current Profession</label>
                     <select 
                       name="profession"
                       required
                       value={formData.profession}
                       onChange={handleInputChange}
-                      className="w-full bg-[#F7F4EE] border border-[#E6E2D9] rounded-xl px-3.5 py-2.5 text-xs text-[#1F1E1C] focus:outline-none focus:border-[#D85A30] transition-colors"
+                      className="w-full bg-[#F7F4EE] border border-[#E6E2D9] rounded-lg px-3 py-1.5 text-xs text-[#1F1E1C] focus:outline-none focus:border-[#D85A30] transition-colors"
                     >
                       <option value="">Select profession...</option>
                       <option value="Trainer / Coach">Trainer / Coach</option>
@@ -1713,19 +1750,19 @@ const ClaudeMasterclassPage: React.FC = () => {
                   </div>
 
                   <div>
-                    <label className="block text-[10px] font-bold text-[#524F4A] uppercase tracking-wider mb-1">Promo Code</label>
+                    <label className="block text-[9px] font-bold text-[#524F4A] uppercase tracking-wider mb-0.5">Promo Code</label>
                     <div className="flex gap-2">
                       <input 
                         type="text" 
                         value={promoCodeInput}
                         onChange={(e) => setPromoCodeInput(e.target.value.toUpperCase())}
                         placeholder="Enter promo code"
-                        className="flex-1 bg-[#F7F4EE] border border-[#E6E2D9] rounded-xl px-3.5 py-2 text-xs text-[#1F1E1C] focus:outline-none focus:border-[#D85A30] uppercase font-bold"
+                        className="flex-1 bg-[#F7F4EE] border border-[#E6E2D9] rounded-lg px-3 py-1.5 text-xs text-[#1F1E1C] focus:outline-none focus:border-[#D85A30] uppercase font-bold"
                       />
                       <button 
                         type="button" 
                         onClick={handleApplyPromo}
-                        className="bg-[#EFECE6] hover:bg-[#E6E2D9] text-[#1F1E1C] font-semibold px-4 py-2 rounded-xl text-xs border border-[#E6E2D9] transition-all"
+                        className="bg-[#EFECE6] hover:bg-[#E6E2D9] text-[#1F1E1C] font-semibold px-3 py-1.5 rounded-lg text-xs border border-[#E6E2D9] transition-all"
                       >
                         Apply
                       </button>
@@ -1733,20 +1770,20 @@ const ClaudeMasterclassPage: React.FC = () => {
                   </div>
 
                   {/* E-CERTIFICATE ADD-ON CHECKBOX */}
-                  <div className="bg-[#D85A30]/5 border border-dashed border-[#D85A30] rounded-xl p-3 text-left">
-                    <label className="flex items-start gap-2.5 cursor-pointer select-none">
+                  <div className="bg-[#D85A30]/5 border border-dashed border-[#D85A30] rounded-lg p-2 text-left">
+                    <label className="flex items-start gap-2 cursor-pointer select-none">
                       <input 
                         type="checkbox" 
                         checked={wantCertificate}
                         onChange={(e) => setWantCertificate(e.target.checked)}
-                        className="mt-0.5 w-4 h-4 accent-[#D85A30] rounded cursor-pointer"
+                        className="mt-0.5 w-3.5 h-3.5 accent-[#D85A30] rounded cursor-pointer"
                       />
                       <div>
-                        <div className="font-bold text-xs text-[#1F1E1C] flex items-center gap-1.5">
+                        <div className="font-bold text-[11px] text-[#1F1E1C] flex items-center gap-1.5">
                           <span>🎓 Official E-Certificate</span>
-                          <span className="bg-[#D85A30] text-white text-[9px] font-extrabold px-1.5 py-0.5 rounded">+ ₹1,000</span>
+                          <span className="bg-[#D85A30] text-white text-[8.5px] font-extrabold px-1.5 py-0.2 rounded">+ ₹1,000</span>
                         </div>
-                        <p className="text-[10px] text-[#524F4A] mt-0.5 leading-snug">
+                        <p className="text-[9.5px] text-[#524F4A] mt-0.5 leading-snug">
                           Get an official verified E-Certificate upon masterclass completion to share on LinkedIn & Resume.
                         </p>
                       </div>
@@ -1774,7 +1811,7 @@ const ClaudeMasterclassPage: React.FC = () => {
                     theme="light"
                   />
 
-                  <label className="flex items-center gap-2 cursor-pointer text-[10px] text-[#8E8A83]">
+                  <label className="flex items-center gap-2 cursor-pointer text-[9.5px] text-[#8E8A83]">
                     <input 
                       type="checkbox" 
                       name="agreeWhatsapp"
@@ -1787,12 +1824,12 @@ const ClaudeMasterclassPage: React.FC = () => {
 
                   <button 
                     type="submit" 
-                    className="w-full bg-[#D85A30] hover:bg-[#C04E27] text-white font-bold py-3.5 px-5 rounded-xl shadow-md transition-all text-sm mt-2"
+                    className="w-full bg-[#D85A30] hover:bg-[#C04E27] text-white font-bold py-2.5 px-4 rounded-xl shadow-md transition-all text-xs mt-1"
                   >
                     Proceed to payment — ₹{getCalculatedPrice().toLocaleString("en-IN")} (Incl. 18% GST)
                   </button>
 
-                  <div className="text-center text-[10px] text-[#8E8A83] font-semibold flex items-center justify-center gap-1 pt-1">
+                  <div className="text-center text-[9px] text-[#8E8A83] font-semibold flex items-center justify-center gap-1 pt-0.5">
                     <ShieldCheck className="w-3 h-3 text-[#D85A30]" /> SECURED BY RAZORPAY
                   </div>
                 </form>
@@ -1820,7 +1857,7 @@ const ClaudeMasterclassPage: React.FC = () => {
             <div className="space-y-3 text-xs text-[#524F4A] leading-relaxed">
               <div>
                 <h4 className="font-bold text-[#1F1E1C] text-xs">1. Workshop Schedule & Access</h4>
-                <p className="mt-0.5">The Claude MasterClass is a 2-Day Live Virtual Session taking place on October 3rd & 4th, 2026 (6:00 PM – 9:00 PM IST). Access details and session meeting links are provided via the official WhatsApp group upon registration.</p>
+                <p className="mt-0.5">The Claude MasterClass is a 2-Day Live Virtual Session taking place Every Saturday & Sunday (6:00 PM – 9:00 PM IST). Access details and session meeting links are provided via the official WhatsApp group upon registration.</p>
               </div>
 
               <div>

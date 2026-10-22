@@ -4,6 +4,12 @@ import path from "path";
 
 export default defineConfig({
   plugins: [react()],
+  server: {
+    fs: {
+      strict: false,
+      allow: ["D:/techtycoon", "E:/AI_Agent_MCP/camp-fire-glow"],
+    },
+  },
   test: {
     environment: "jsdom",
     globals: true,

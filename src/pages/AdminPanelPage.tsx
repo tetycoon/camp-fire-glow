@@ -1360,7 +1360,7 @@ const AdminPanelPage: React.FC = () => {
 
                   <div className="pt-3 border-t border-white/5 flex items-center justify-between text-xs">
                     <a
-                      href="https://chat.whatsapp.com/HfVfYc6ea7iEHAMFjOb4WS"
+                      href="https://chat.whatsapp.com/LABV7lxs19RAlwqHzlsgRw"
                       target="_blank"
                       rel="noreferrer"
                       className="inline-flex items-center gap-2 text-emerald-400 hover:text-emerald-300 font-bold bg-emerald-500/10 border border-emerald-500/20 px-4 py-2.5 rounded-xl transition-all"
@@ -1393,7 +1393,7 @@ const AdminPanelPage: React.FC = () => {
 
                   <div className="pt-3 border-t border-white/5 flex items-center justify-between text-xs gap-2">
                     <a
-                      href="https://chat.whatsapp.com/C88mQXMh84j1Qub9wmBTHv"
+                      href="https://chat.whatsapp.com/EpsuzpxGz6F98ml2GUBejC"
                       target="_blank"
                       rel="noreferrer"
                       className="inline-flex items-center gap-1.5 text-blue-400 hover:text-blue-300 font-bold bg-blue-500/10 border border-blue-500/20 px-3.5 py-2.5 rounded-xl transition-all"

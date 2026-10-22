@@ -9,16 +9,20 @@ import { HelpCircle } from "lucide-react";
 
 const faqs = [
     {
+        q: "What days and times are the masterclass sessions conducted?",
+        a: "Sessions are conducted live every week in two convenient batches: Wednesday Evening from 6:00 PM to 9:00 PM IST, and Sunday Morning from 10:00 AM to 1:00 PM IST. You can select your preferred session date and time directly in the registration form."
+    },
+    {
         q: "Do I need technical or coding skills?",
         a: "Not at all! This masterclass is specially designed for non-technical professionals, coaches, trainers, and business owners. If you can type an email, you can easily use ChatGPT and AI tools with our step-by-step frameworks."
     },
     {
         q: "How much does the masterclass cost and are there hidden charges?",
-        a: "The early bird ticket is just ₹99 (discounted from ₹999). There are no hidden fees or recurring subscriptions. Your ₹99 ticket gives you full access to the live 3-hour session and all ₹14,996 worth of bonus tools."
+        a: "The early bird ticket is just ₹99 (discounted from ₹999). There are no hidden fees or recurring subscriptions. Your ₹99 ticket gives you full access to the live 3-hour session and all ₹9,997 worth of bonus resources."
     },
     {
         q: "Will I receive access to session templates and prompts?",
-        a: "Yes! All registered participants will receive our 500+ Master ChatGPT Prompts Vault, AI Lead Automation Blueprint, and 30-Day Social Content Calendar free of charge."
+        a: "Yes! All registered participants will receive our 500+ Master ChatGPT Prompts Vault and 30-Day Social Content Calendar free of charge."
     },
     {
         q: "How will I receive the meeting link after registering?",

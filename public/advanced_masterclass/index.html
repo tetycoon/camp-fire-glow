@@ -810,9 +810,9 @@ async function processPayment() {
         gst_amount: String(gstAmt)
       },
       handler: async function(paymentRes) {
-        // Sync payment to backend
+        // Sync and verify payment with backend before confirming
         try {
-          await fetch("https://script.google.com/macros/s/AKfycbw59X8thSpB9xrJSI0GhACEm617vAbc7BDH6hJFOOBsOeq-B4az0p3B_O6koMjYfsppgA/exec", {
+          const verifyRes = await fetch("https://script.google.com/macros/s/AKfycbw59X8thSpB9xrJSI0GhACEm617vAbc7BDH6hJFOOBsOeq-B4az0p3B_O6koMjYfsppgA/exec", {
             method: "POST",
             headers: { "Content-Type": "text/plain;charset=utf-8" },
             body: JSON.stringify({
@@ -823,7 +823,16 @@ async function processPayment() {
               method: paymentRes.razorpay_payment_method || "Razorpay"
             })
           });
-        } catch(e) { console.error("Sync error:", e); }
+          const verifyJson = await verifyRes.json();
+          if (!verifyJson || !verifyJson.success) {
+            alert(verifyJson?.error || "Payment verification failed on server. Please contact support with Payment ID: " + (paymentRes.razorpay_payment_id || ""));
+            return;
+          }
+        } catch(e) {
+          console.error("Verification error:", e);
+          alert("Could not verify payment with server. Please contact support with Payment ID: " + (paymentRes.razorpay_payment_id || ""));
+          return;
+        }
 
         // Show success screen inside modal
         const txId = paymentRes.razorpay_payment_id || result.orderId;

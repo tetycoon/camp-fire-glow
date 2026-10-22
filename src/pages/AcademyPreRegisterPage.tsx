@@ -212,55 +212,72 @@ export default function AcademyPreRegisterPage() {
         theme: {
           color: "#0EA5E9" // Light Blue Brand Accent
         },
-        handler: function (response: any) {
-          setIsSubmitting(false);
-          setIsModalOpen(false);
-          const paymentId = response.razorpay_payment_id || "PAID";
-          const rzpOrderId = response.razorpay_order_id || orderId;
+        handler: async function (response: any) {
+          const paymentId = String(response?.razorpay_payment_id || "").trim();
+          const rzpOrderId = String(response?.razorpay_order_id || orderId || "").trim();
+          const signature = String(response?.razorpay_signature || "").trim();
 
-          const successPayload = {
-            paymentSuccess: true,
-            razorpay_payment_id: paymentId,
-            razorpay_order_id: rzpOrderId,
-            razorpay_signature: response.razorpay_signature || "",
-            email: sanitizedEmail,
-            name: sanitizedName,
-            phone: fullPhone,
-            baseAmount: isTestEmail ? 1 : gstBreakdown.baseAmount,
-            gstAmount: isTestEmail ? 0 : gstBreakdown.gstAmount,
-            amount: finalAmount,
-            companyName: sanitizedCompany,
-            gstin: sanitizedGstin,
-            promoCode: appliedCoupon
-          };
+          if (!paymentId || !rzpOrderId || !signature) {
+            setIsSubmitting(false);
+            alert("Payment verification failed: Missing Razorpay signature or payment ID.");
+            return;
+          }
 
-          fetch(APPS_SCRIPT_URL, {
-            method: "POST",
-            headers: { "Content-Type": "text/plain;charset=utf-8" },
-            body: JSON.stringify(successPayload)
-          }).catch(() => {
-            fetch(APPS_SCRIPT_URL, {
+          try {
+            const successPayload = {
+              paymentSuccess: true,
+              razorpay_payment_id: paymentId,
+              razorpay_order_id: rzpOrderId,
+              razorpay_signature: signature,
+              isInternational,
+              email: sanitizedEmail,
+              name: sanitizedName,
+              phone: fullPhone,
+              baseAmount: isTestEmail ? 1 : gstBreakdown.baseAmount,
+              gstAmount: isTestEmail ? 0 : gstBreakdown.gstAmount,
+              amount: finalAmount,
+              companyName: sanitizedCompany,
+              gstin: sanitizedGstin,
+              promoCode: appliedCoupon
+            };
+
+            const verifyRes = await fetch(APPS_SCRIPT_URL, {
               method: "POST",
-              mode: "no-cors",
               headers: { "Content-Type": "text/plain;charset=utf-8" },
               body: JSON.stringify(successPayload)
-            }).catch(() => {});
-          });
-
-          const thankYouUrl = `/claude_masterclass/thank-you?name=${encodeURIComponent(sanitizedName)}&email=${encodeURIComponent(sanitizedEmail)}&phone=${encodeURIComponent(fullPhone)}&paymentId=${encodeURIComponent(paymentId)}&amount=${finalAmount}&course=${encodeURIComponent("TECH TYCOON Academy")}&coupon=${encodeURIComponent(appliedCoupon)}&orderId=${encodeURIComponent(rzpOrderId)}`;
-
-          navigate(thankYouUrl, {
-            state: {
-              name: sanitizedName,
-              email: sanitizedEmail,
-              phone: fullPhone,
-              amount: finalAmount,
-              paymentId: paymentId,
-              orderId: rzpOrderId,
-              coupon: appliedCoupon,
-              course: "TECH TYCOON Academy"
+            });
+            const verifyData = await verifyRes.json();
+            if (!verifyData || !verifyData.success) {
+              setIsSubmitting(false);
+              alert(`Payment verification failed: ${verifyData?.error || "Unable to verify payment signature."}`);
+              return;
             }
-          });
+
+            setIsSubmitting(false);
+            setIsModalOpen(false);
+
+            const token = verifyData?.invoiceToken || "";
+            if (token) {
+              try {
+                sessionStorage.setItem(`inv_tok_${paymentId}`, token);
+              } catch (_) {}
+            }
+
+            // Never place token in URL query params to prevent token leakage in history, logs, or Referer headers
+            const thankYouUrl = `/claude_masterclass/thank-you?paymentId=${encodeURIComponent(paymentId)}&orderId=${encodeURIComponent(rzpOrderId)}`;
+            navigate(thankYouUrl, {
+              state: {
+                paymentId,
+                orderId: rzpOrderId,
+                token,
+                coupon: appliedCoupon,
+                backendUrl: APPS_SCRIPT_URL
+              }
+            });
+          } catch {
+            setIsSubmitting(false);
+            alert("Could not verify payment with server. Please check your email or contact support.");
+          }
         },
         modal: {
           ondismiss: function() {

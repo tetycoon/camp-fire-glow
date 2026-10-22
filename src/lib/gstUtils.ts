@@ -243,10 +243,162 @@ export interface InvoicePrintParams {
   invoiceDate?: string;
 }
 
+const RAZORPAY_PAYMENT_ID_REGEX = /^pay_[A-Za-z0-9]{6,}$/;
+const RAZORPAY_ORDER_ID_REGEX = /^order_[A-Za-z0-9]{6,}$/;
+
 /**
- * Opens a clean, printable & downloadable CGST Rule 46 compliant Tax Invoice window
+ * Unforgeable in-memory registry of server-verified invoice records.
+ * Prevents URL parameter tampering or unverified client calls from generating an official PAID GST Tax Invoice.
+ */
+const VERIFIED_INVOICE_RECORDS = new WeakSet<InvoicePrintParams>();
+
+export const VERIFIED_BACKEND_ENDPOINTS: Record<string, string> = {
+  ai_masterclass: "https://script.google.com/macros/s/AKfycby0fX7tjbOciJbg0Mw1SRMhlazBe4FG1Ko-f5mIFCW6Y7zGKHGZjdUZQKXclfye1FzegA/exec",
+  advanced_masterclass: "https://script.google.com/macros/s/AKfycbw59X8thSpB9xrJSI0GhACEm617vAbc7BDH6hJFOOBsOeq-B4az0p3B_O6koMjYfsppgA/exec",
+  upscale: "https://script.google.com/macros/s/AKfycbzPxPpp0ksCcE6IY8mUlzcu0jqY1RSfhCl2Locq1iOYbbe5beBeeQ6uefCV93Nxy8rbsg/exec",
+  claude_masterclass: "https://script.google.com/macros/s/AKfycbwP2rffwhgGYQjJFlfxYU4XHt-jFbUlWtYPAJOZcxIO--yvw2NTlnLvJDHHh4_giLq7/exec",
+  academy: "https://script.google.com/macros/s/AKfycbwl1WKBrQxxMRbz7aj6GBUNbmR4ePHshhrBwcNjhxorIayQpMTmHaHHT_MvTroQ-ZrFbA/exec",
+  ai_bgm: "https://script.google.com/macros/s/AKfycbwGaOKJYsQiHuhueRVy_iosxeKKO1qPj748jnUqkfwnmYmvgxWdkHiXB4cON6wF4iXnaA/exec",
+  consulting: "https://script.google.com/macros/s/AKfycbzF4e05xth7Kdzx8gJKXI-vqPgKUSacLE8aGRT8hvg-7B75qvQw_gYwmRacsq3cNIsD/exec",
+  professionals: "https://script.google.com/macros/s/AKfycbzuTE9PUoTneN4PF0TKhHwrDXZEfSo-92Ly10dHFd8pGsY1DzjmBa6A5A3aTCRSd6TpFQ/exec",
+};
+
+export function isValidRazorpayIds(paymentId?: string, orderId?: string): boolean {
+  return (
+    RAZORPAY_PAYMENT_ID_REGEX.test((paymentId || "").trim()) &&
+    RAZORPAY_ORDER_ID_REGEX.test((orderId || "").trim())
+  );
+}
+
+/**
+ * Unforgeable in-memory registry of server-verified invoice records.
+ * Private to gstUtils module. Prevents client-side scripts from forging verified records.
+ */
+export function registerVerifiedInvoiceRecord(record: InvoicePrintParams): InvoicePrintParams {
+  if (!record || typeof record !== "object") {
+    throw new Error("UNVERIFIED_INVOICE_BLOCKED: Invalid invoice record.");
+  }
+  const cleanPayId = (record.paymentId || "").trim();
+  const cleanOrdId = (record.orderId || "").trim();
+  if (!RAZORPAY_PAYMENT_ID_REGEX.test(cleanPayId) || !RAZORPAY_ORDER_ID_REGEX.test(cleanOrdId)) {
+    throw new Error(
+      "UNVERIFIED_INVOICE_BLOCKED: Official GST Tax Invoices require a server-verified Razorpay paymentId (pay_...) and orderId (order_...)."
+    );
+  }
+  if (!Number.isFinite(Number(record.totalAmountPaid)) || Number(record.totalAmountPaid) <= 0) {
+    throw new Error("UNVERIFIED_INVOICE_BLOCKED: Verified amount must be a positive number.");
+  }
+  const frozenRecord: InvoicePrintParams = {
+    customerName: record.customerName || "Learner",
+    customerEmail: record.customerEmail || "",
+    customerPhone: record.customerPhone || "",
+    courseName: record.courseName || "AI Training Program",
+    totalAmountPaid: Number(record.totalAmountPaid),
+    baseAmount: record.baseAmount,
+    paymentId: cleanPayId,
+    orderId: cleanOrdId,
+    invoiceNumber: record.invoiceNumber,
+    invoiceDate: record.invoiceDate,
+  };
+  VERIFIED_INVOICE_RECORDS.add(frozenRecord);
+  return frozenRecord;
+}
+
+/**
+ * Retrieves server-verified invoice details from the backend using paymentId, orderId, and auth token.
+ * Rejects tampered URL parameters, unauthenticated access, or unverified payment IDs.
+ */
+export async function fetchVerifiedInvoiceFromBackend(options: {
+  paymentId: string;
+  orderId: string;
+  token?: string;
+  contact?: string;
+  backendUrl?: string;
+  fetchImpl?: typeof fetch;
+}): Promise<InvoicePrintParams> {
+  const cleanPayId = (options.paymentId || "").trim();
+  const cleanOrdId = (options.orderId || "").trim();
+
+  if (!isValidRazorpayIds(cleanPayId, cleanOrdId)) {
+    throw new Error(
+      "UNVERIFIED_INVOICE_BLOCKED: Missing or invalid Razorpay paymentId or orderId. URL parameters cannot be used to generate an unverified invoice."
+    );
+  }
+
+  const fetcher = options.fetchImpl || fetch;
+  const candidateUrls = options.backendUrl
+    ? [options.backendUrl]
+    : Object.values(VERIFIED_BACKEND_ENDPOINTS);
+
+  for (const endpoint of candidateUrls) {
+    try {
+      // POST request body eliminates token exposure in URL query strings,
+      // browser history, access logs, and HTTP Referer headers.
+      const postPayload = {
+        action: "getVerifiedInvoice",
+        paymentId: cleanPayId,
+        orderId: cleanOrdId,
+        token: options.token ? String(options.token).trim() : undefined,
+        contact: options.contact ? String(options.contact).trim() : undefined,
+      };
+
+      const res = await fetcher(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(postPayload),
+      });
+      if (!res || !res.ok) continue;
+      const data = await res.json();
+      if (
+        data &&
+        data.success === true &&
+        data.verified === true &&
+        data.invoice &&
+        data.invoice.paymentId === cleanPayId &&
+        data.invoice.orderId === cleanOrdId
+      ) {
+        const inv = data.invoice;
+        const totalPaid = Number(inv.totalAmountPaid ?? inv.amount ?? inv.total);
+        if (!Number.isFinite(totalPaid) || totalPaid <= 0) continue;
+
+        return registerVerifiedInvoiceRecord({
+          customerName: String(inv.customerName || inv.name || "Learner"),
+          customerEmail: String(inv.customerEmail || inv.email || ""),
+          customerPhone: String(inv.customerPhone || inv.phone || ""),
+          courseName: String(inv.courseName || inv.course || "AI Training Program"),
+          totalAmountPaid: totalPaid,
+          baseAmount: inv.baseAmount ? Number(inv.baseAmount) : undefined,
+          paymentId: cleanPayId,
+          orderId: cleanOrdId,
+          invoiceNumber: inv.invoiceNumber ? String(inv.invoiceNumber) : undefined,
+          invoiceDate: inv.invoiceDate ? String(inv.invoiceDate) : undefined,
+        });
+      }
+    } catch {
+      // Try next endpoint if multiple candidates exist
+    }
+  }
+
+  throw new Error(
+    "UNVERIFIED_INVOICE_BLOCKED: Payment could not be verified with the backend server."
+  );
+}
+
+/**
+ * Opens a clean, printable & downloadable CGST Rule 46 compliant Tax Invoice window.
+ * Strictly blocks unverified calls or URL-parameter-forged invoice requests.
  */
 export function openPrintableGstInvoice(params: InvoicePrintParams): void {
+  if (
+    !params ||
+    !VERIFIED_INVOICE_RECORDS.has(params) ||
+    !isValidRazorpayIds(params.paymentId, params.orderId)
+  ) {
+    throw new Error(
+      "UNVERIFIED_INVOICE_BLOCKED: Cannot generate an official PAID GST Tax Invoice without server-side payment verification."
+    );
+  }
+
   const acct = getInvoiceAccountingBreakdown(params.totalAmountPaid, params.baseAmount);
   const amountInWords = numberToIndianRupeesWords(acct.totalAmount);
 
