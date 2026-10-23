@@ -93,8 +93,10 @@ const ThankYou = () => {
 
     const inferredBackendUrl =
         stateData.backendUrl ||
-        (location.pathname.includes("claude_masterclass")
+        (location.pathname.includes("academy")
             ? VERIFIED_BACKEND_ENDPOINTS.academy
+            : location.pathname.includes("claude")
+            ? VERIFIED_BACKEND_ENDPOINTS.claude_masterclass
             : VERIFIED_BACKEND_ENDPOINTS.ai_masterclass);
 
     useEffect(() => {

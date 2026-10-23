@@ -634,7 +634,7 @@ const ClaudeMasterclassPage: React.FC = () => {
         },
         handler: async function (response: any) {
           try {
-            await fetch(APPS_SCRIPT_WEBAPP_URL, {
+            const verifyRes = await fetch(APPS_SCRIPT_WEBAPP_URL, {
               method: "POST",
               headers: { "Content-Type": "text/plain;charset=utf-8" },
               body: JSON.stringify({
@@ -654,6 +654,13 @@ const ClaudeMasterclassPage: React.FC = () => {
                 mode: masterclassMode
               })
             });
+            const verifyData = await verifyRes.json();
+            const token = verifyData?.invoiceToken || "";
+            const payId = String(response.razorpay_payment_id || "").trim();
+            if (token && payId) {
+              try { sessionStorage.setItem(`inv_tok_${payId}`, token); } catch (_) {}
+              try { localStorage.setItem(`inv_tok_${payId}`, token); } catch (_) {}
+            }
           } catch (e) {
             console.error("Failed to notify backend of payment success", e);
           }

@@ -1491,14 +1491,28 @@ function processVerifiedClaudePayment(orderId, paymentId, isInternational, clien
     validatePaymentEnvironment({ id: cleanPaymentId, notes: (extraData && extraData.notes) || {} });
     const props = PropertiesService.getScriptProperties();
 
+    // Helper to issue an authenticated bearer token for already verified payments
+    const issueInvoiceToken = function(pId, oId) {
+      const invSecret = getOptionalScriptSecret("INVOICE_TOKEN_SECRET");
+      if (!invSecret) {
+        throw new Error("MISSING_INVOICE_TOKEN_SECRET: Dedicated INVOICE_TOKEN_SECRET must be configured in Script Properties.");
+      }
+      const expiresAt = Date.now() + 86400000; // 24 hours validity
+      return expiresAt + "." + computeHmacSha256Hex(pId + "|" + oId + "|" + expiresAt, invSecret);
+    };
+
     if (props && props.getProperty("PROCESSED_PAY_" + cleanPaymentId)) {
       const existingInv = props.getProperty("VERIFIED_INV_" + cleanPaymentId);
+      const parsedInv = existingInv ? JSON.parse(existingInv) : null;
+      const invoiceToken = issueInvoiceToken(cleanPaymentId, cleanOrderId);
       return {
         success: true,
         alreadyProcessed: true,
         paymentId: cleanPaymentId,
         orderId: cleanOrderId,
-        invoice: existingInv ? JSON.parse(existingInv) : null
+        invoiceNumber: parsedInv ? parsedInv.invoiceNumber : null,
+        invoiceToken: invoiceToken,
+        invoice: parsedInv
       };
     }
 
@@ -1511,11 +1525,17 @@ function processVerifiedClaudePayment(orderId, paymentId, isInternational, clien
     for (let i = 1; i < rows.length; i++) {
       const rowPayId = String(rows[i][9] || "").trim().replace(/^'/, "");
       if (rowPayId && rowPayId === cleanPaymentId) {
+        const existingInv = props ? props.getProperty("VERIFIED_INV_" + cleanPaymentId) : null;
+        const parsedInv = existingInv ? JSON.parse(existingInv) : null;
+        const invoiceToken = issueInvoiceToken(cleanPaymentId, cleanOrderId);
         return {
           success: true,
           alreadyProcessed: true,
           paymentId: cleanPaymentId,
-          orderId: cleanOrderId
+          orderId: cleanOrderId,
+          invoiceNumber: parsedInv ? parsedInv.invoiceNumber : null,
+          invoiceToken: invoiceToken,
+          invoice: parsedInv
         };
       }
       if (String(rows[i][8] || "").trim() === cleanOrderId) {
@@ -1529,11 +1549,17 @@ function processVerifiedClaudePayment(orderId, paymentId, isInternational, clien
 
     const row = rows[foundIndex];
     if (String(row[7] || "").trim() === "✅ PAID") {
+      const existingInv = props ? props.getProperty("VERIFIED_INV_" + cleanPaymentId) : null;
+      const parsedInv = existingInv ? JSON.parse(existingInv) : null;
+      const invoiceToken = issueInvoiceToken(cleanPaymentId, cleanOrderId);
       return {
         success: true,
         alreadyProcessed: true,
         paymentId: cleanPaymentId,
-        orderId: cleanOrderId
+        orderId: cleanOrderId,
+        invoiceNumber: parsedInv ? parsedInv.invoiceNumber : null,
+        invoiceToken: invoiceToken,
+        invoice: parsedInv
       };
     }
 

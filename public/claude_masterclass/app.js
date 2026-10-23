@@ -791,6 +791,12 @@ async function handleFormSubmit(e) {
                         submitBtn.disabled = false;
                         return;
                     }
+                    if (verifyData.invoiceToken && response.razorpay_payment_id) {
+                        try {
+                            sessionStorage.setItem("inv_tok_" + response.razorpay_payment_id, verifyData.invoiceToken);
+                            localStorage.setItem("inv_tok_" + response.razorpay_payment_id, verifyData.invoiceToken);
+                        } catch (e) {}
+                    }
                 } catch (e) {
                     console.error("Payment verification error", e);
                     alert("Could not verify payment with server. Please contact support with Payment ID: " + (response.razorpay_payment_id || ""));
