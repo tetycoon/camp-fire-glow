@@ -1481,15 +1481,28 @@ function processVerifiedMasterclassPayment(orderId, paymentId, isInternational, 
     validatePaymentEnvironment({ id: cleanPaymentId, notes: (extraData && extraData.notes) || {} });
     const props = PropertiesService.getScriptProperties();
 
+    // Helper to issue an authenticated bearer token for already verified payments
+    const issueInvoiceToken = function(pId, oId) {
+      const invSecret = getOptionalScriptSecret("INVOICE_TOKEN_SECRET");
+      if (!invSecret) {
+        throw new Error("MISSING_INVOICE_TOKEN_SECRET: Dedicated INVOICE_TOKEN_SECRET must be configured in Script Properties.");
+      }
+      const expiresAt = Date.now() + 86400000; // 24 hours validity
+      return expiresAt + "." + computeHmacSha256Hex(pId + "|" + oId + "|" + expiresAt, invSecret);
+    };
+
     if (props && props.getProperty("PROCESSED_PAY_" + cleanPaymentId)) {
       const existingInv = props.getProperty("VERIFIED_INV_" + cleanPaymentId);
+      const parsedInv = existingInv ? JSON.parse(existingInv) : null;
+      const invoiceToken = issueInvoiceToken(cleanPaymentId, cleanOrderId);
       return {
         success: true,
         alreadyProcessed: true,
         paymentId: cleanPaymentId,
         orderId: cleanOrderId,
-        invoiceNumber: existingInv ? JSON.parse(existingInv).invoiceNumber : null,
-        invoice: existingInv ? JSON.parse(existingInv) : null
+        invoiceNumber: parsedInv ? parsedInv.invoiceNumber : null,
+        invoiceToken: invoiceToken,
+        invoice: parsedInv
       };
     }
 
@@ -1504,11 +1517,17 @@ function processVerifiedMasterclassPayment(orderId, paymentId, isInternational, 
       const rowStatus = String(rows[i][7] || "").trim();
       if (rowPayId && rowPayId === cleanPaymentId) {
         if (rowStatus === "✅ PAID" || rowStatus.indexOf("PAID") !== -1 || rowStatus.indexOf("TEST_VERIFIED") !== -1) {
+          const existingInv = props ? props.getProperty("VERIFIED_INV_" + cleanPaymentId) : null;
+          const parsedInv = existingInv ? JSON.parse(existingInv) : null;
+          const invoiceToken = issueInvoiceToken(cleanPaymentId, cleanOrderId);
           return {
             success: true,
             alreadyProcessed: true,
             paymentId: cleanPaymentId,
-            orderId: cleanOrderId
+            orderId: cleanOrderId,
+            invoiceNumber: parsedInv ? parsedInv.invoiceNumber : null,
+            invoiceToken: invoiceToken,
+            invoice: parsedInv
           };
         } else {
           // Found matching row with payment ID that was stuck (e.g. in reconciliation)
@@ -1557,11 +1576,17 @@ function processVerifiedMasterclassPayment(orderId, paymentId, isInternational, 
 
     const row = rows[targetRowIndex];
     if (String(row[7] || "").trim() === "✅ PAID") {
+      const existingInv = props ? props.getProperty("VERIFIED_INV_" + cleanPaymentId) : null;
+      const parsedInv = existingInv ? JSON.parse(existingInv) : null;
+      const invoiceToken = issueInvoiceToken(cleanPaymentId, cleanOrderId);
       return {
         success: true,
         alreadyProcessed: true,
         paymentId: cleanPaymentId,
-        orderId: cleanOrderId
+        orderId: cleanOrderId,
+        invoiceNumber: parsedInv ? parsedInv.invoiceNumber : null,
+        invoiceToken: invoiceToken,
+        invoice: parsedInv
       };
     }
 

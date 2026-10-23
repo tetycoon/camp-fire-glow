@@ -296,6 +296,7 @@ const AIMasterclassRegisterModal: React.FC = () => {
                                 paymentId,
                                 orderId,
                                 token,
+                                invoice: verifyData.invoice,
                                 backendUrl: GOOGLE_SHEET_URL,
                                 alreadyTrackedPurchase: true
                             }

@@ -116,6 +116,19 @@ const ThankYou = () => {
                 return;
             }
 
+            // Fast-path: If server already returned verified invoice in state with valid token
+            if (stateData.invoice && token) {
+                try {
+                    const reg = registerVerifiedInvoiceRecord(stateData.invoice);
+                    if (!cancelled) {
+                        setVerifiedInvoice(reg);
+                        setVerificationError(null);
+                        setVerifying(false);
+                        return;
+                    }
+                } catch (_) {}
+            }
+
             const maxAttempts = 3;
             let lastErrorMsg = "Payment verification failed. Invoice generation is blocked until payment is verified.";
 
