@@ -7,6 +7,100 @@
 export const GST_RATE = 0.18;
 export const CGST_RATE = 0.09;
 export const SGST_RATE = 0.09;
+export const INDIAN_GST_STATE_CODES: Record<string, string> = {
+  "01": "Jammu & Kashmir",
+  "02": "Himachal Pradesh",
+  "03": "Punjab",
+  "04": "Chandigarh",
+  "05": "Uttarakhand",
+  "06": "Haryana",
+  "07": "Delhi",
+  "08": "Rajasthan",
+  "09": "Uttar Pradesh",
+  "10": "Bihar",
+  "11": "Sikkim",
+  "12": "Arunachal Pradesh",
+  "13": "Nagaland",
+  "14": "Manipur",
+  "15": "Mizoram",
+  "16": "Tripura",
+  "17": "Meghalaya",
+  "18": "Assam",
+  "19": "West Bengal",
+  "20": "Jharkhand",
+  "21": "Odisha",
+  "22": "Chhattisgarh",
+  "23": "Madhya Pradesh",
+  "24": "Gujarat",
+  "26": "Dadra & Nagar Haveli and Daman & Diu",
+  "27": "Maharashtra",
+  "28": "Andhra Pradesh",
+  "29": "Karnataka",
+  "30": "Goa",
+  "31": "Lakshadweep",
+  "32": "Kerala",
+  "33": "Tamil Nadu",
+  "34": "Puducherry",
+  "35": "Andaman & Nicobar Islands",
+  "36": "Telangana",
+  "37": "Andhra Pradesh (New)",
+  "38": "Ladakh",
+  "97": "Other Territory",
+};
+
+export function determinePlaceOfSupply(stateInput?: string, gstin?: string) {
+  const cleanGstin = String(gstin || "").trim().toUpperCase();
+  if (/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(cleanGstin)) {
+    const code = cleanGstin.substring(0, 2);
+    const stateName = INDIAN_GST_STATE_CODES[code] || "India";
+    const isInterState = code !== "33";
+    return {
+      placeOfSupply: code + "-" + stateName,
+      isInterState,
+      supplyType: isInterState ? "B2B Inter-State" : "B2B Intra-State",
+      isB2B: true,
+      stateCode: code,
+      stateName,
+    };
+  }
+
+  const cleanState = String(stateInput || "").trim().toLowerCase();
+  if (!cleanState) {
+    return {
+      placeOfSupply: "33-Tamil Nadu",
+      isInterState: false,
+      supplyType: "B2C Intra-State",
+      isB2B: false,
+      stateCode: "33",
+      stateName: "Tamil Nadu",
+      isUnspecified: true,
+    };
+  }
+
+  for (const [code, name] of Object.entries(INDIAN_GST_STATE_CODES)) {
+    if (cleanState === code || cleanState === name.toLowerCase()) {
+      const isInterState = code !== "33";
+      return {
+        placeOfSupply: code + "-" + name,
+        isInterState,
+        supplyType: isInterState ? "B2C Inter-State" : "B2C Intra-State",
+        isB2B: false,
+        stateCode: code,
+        stateName: name,
+      };
+    }
+  }
+
+  return {
+    placeOfSupply: "33-Tamil Nadu",
+    isInterState: false,
+    supplyType: "B2C Intra-State",
+    isB2B: false,
+    stateCode: "33",
+    stateName: "Tamil Nadu",
+    isUnresolved: true,
+  };
+}
 
 export interface GstBreakdown {
   baseAmount: number;
@@ -74,7 +168,11 @@ export function calculateGstBreakdown(baseAmount: number): GstBreakdown {
  * Given the total amount paid (and optionally an explicit base amount),
  * returns an accounting-accurate CGST Rule 46 breakdown with exact Base, CGST (9%), SGST (9%), and Round Off.
  */
-export function getInvoiceAccountingBreakdown(totalPaid: number, explicitBase?: number) {
+export function getInvoiceAccountingBreakdown(
+  totalPaid: number,
+  explicitBase?: number,
+  options?: { isInterState?: boolean }
+) {
   const total = Math.max(1, Math.round(Number(totalPaid) || 117));
   if (total === 1) {
     return {
@@ -82,6 +180,7 @@ export function getInvoiceAccountingBreakdown(totalPaid: number, explicitBase?: 
       baseAmount: 1,
       cgst: 0,
       sgst: 0,
+      igst: 0,
       totalGst: 0,
       roundOff: 0,
       totalAmount: 1,
@@ -93,6 +192,23 @@ export function getInvoiceAccountingBreakdown(totalPaid: number, explicitBase?: 
       ? explicitBase
       : TOTAL_TO_EXACT_BASE_MAP[total] ?? Math.round((total / 1.18) * 100) / 100;
 
+  const isInterState = Boolean(options?.isInterState);
+
+  if (isInterState) {
+    const igst = Math.round(matchedBase * GST_RATE * 100) / 100;
+    const roundOff = Math.round((total - (matchedBase + igst)) * 100) / 100;
+    return {
+      isTest: false,
+      baseAmount: matchedBase,
+      cgst: 0,
+      sgst: 0,
+      igst,
+      totalGst: igst,
+      roundOff,
+      totalAmount: total,
+    };
+  }
+
   const cgst = Math.round(matchedBase * CGST_RATE * 100) / 100;
   const sgst = Math.round(matchedBase * SGST_RATE * 100) / 100;
   const totalGst = Math.round((cgst + sgst) * 100) / 100;
@@ -103,6 +219,7 @@ export function getInvoiceAccountingBreakdown(totalPaid: number, explicitBase?: 
     baseAmount: matchedBase,
     cgst,
     sgst,
+    igst: 0,
     totalGst,
     roundOff,
     totalAmount: total,

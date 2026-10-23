@@ -22,6 +22,7 @@
 const SHEET_NAME_DEFAULT_REG = "Sheet1";
 const SHEET_NAME_LOGS = "Logs";
 const SHEET_NAME_GST = "GST_Sales_Register";
+const SHEET_NAME_MASTER_GST = "Master_GST_Sales_Register";
 const REQUIRED_PROXY_VERSION = "v2.1";
 
 // Required tab headers verified by runStagingDiagnostics()
@@ -35,6 +36,14 @@ const REQUIRED_GST_HEADERS = [
   "customer phone", "place of supply", "supply type", "reverse charge", "sac code",
   "service description", "taxable value", "cgst rate", "cgst amount", "sgst rate",
   "sgst amount", "round off", "total invoice value", "payment id", "order id"
+];
+
+const REQUIRED_MASTER_GST_HEADERS = [
+  "Timestamp", "Document Type", "Invoice / Note No", "Invoice Date", "Customer Name",
+  "Customer Email", "Customer Phone", "Customer GSTIN", "Place of Supply", "Supply Type",
+  "Reverse Charge", "SAC Code", "Service Description", "Taxable Value (₹)", "CGST Amount (₹)",
+  "SGST Amount (₹)", "IGST Amount (₹)", "Round Off (₹)", "Total Invoice Value (₹)", "Payment ID",
+  "Order ID", "Original Invoice No"
 ];
 
 const REQUIRED_LOGS_HEADERS = [
@@ -873,6 +882,36 @@ function createStagingMockInvoice(paymentId, orderId, productKey) {
  * Appends transaction to GST Sales Register preserving 18% inclusive GST mathematics.
  * Guarantees idempotency on retries by verifying payment has not already been appended.
  */
+
+function determinePlaceOfSupplyStaging(stateInput, gstin) {
+  var cleanGstin = String(gstin || "").trim().toUpperCase();
+  if (/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(cleanGstin)) {
+    var code = cleanGstin.substring(0, 2);
+    var isInter = code !== "33";
+    return {
+      placeOfSupply: code + "-RegisteredState",
+      isInterState: isInter,
+      supplyType: isInter ? "B2B Inter-State" : "B2B Intra-State"
+    };
+  }
+
+  var cleanState = String(stateInput || "").trim().toLowerCase();
+  if (cleanState.includes("tamil nadu") || cleanState === "33" || cleanState === "tn") {
+    return {
+      placeOfSupply: "33-Tamil Nadu",
+      isInterState: false,
+      supplyType: "B2C Intra-State"
+    };
+  }
+
+  // Inter-State case (Gated in staging)
+  return {
+    placeOfSupply: "Inter-State (Pending Review)",
+    isInterState: true,
+    supplyType: "B2C Inter-State (HOLD_ACCOUNTANT_REVIEW)"
+  };
+}
+
 function appendToStagingGstSalesRegister(ss, paymentEntity, invoiceNumber, productKey) {
   assertSpreadsheetIsolation(ss);
   var gstSheet = ss.getSheetByName(SHEET_NAME_GST) || ss.insertSheet(SHEET_NAME_GST);
@@ -888,50 +927,324 @@ function appendToStagingGstSalesRegister(ss, paymentEntity, invoiceNumber, produ
     throw new Error("SPREADSHEET_READ_FAILED: Unable to inspect GST Sales Register for deduplication: " + gstReadErr.message);
   }
 
+  var alreadyInGst = false;
   if (gRows && gRows.length > 1) {
     for (var gi = 1; gi < gRows.length; gi++) {
       var existingPay = String(gRows[gi][18] || "").trim().replace(/^'/, "");
       var existingOrd = String(gRows[gi][19] || "").trim();
       if (existingPay === cleanPayId && existingOrd === cleanOrdId) {
         writeToLogs("GST_ROW_EXISTS", "Payment " + cleanPayId + " already recorded in GST register (Row " + (gi + 1) + "). Skipping duplicate append.");
-        return;
+        alreadyInGst = true;
+        break;
       }
     }
   }
 
+  var notes = (paymentEntity.notes && typeof paymentEntity.notes === "object") ? paymentEntity.notes : {};
+  var customerState = notes.billing_state || notes.state || notes.customer_state || "Tamil Nadu";
+  var customerGstin = notes.gstin || notes.customer_gstin || "";
+  var posInfo = determinePlaceOfSupplyStaging(customerState, customerGstin);
+
   var grossAmount = (Number(paymentEntity.amount) || 0) / 100;
   var baseAmount = Math.round((grossAmount / 1.18) * 100) / 100;
   var totalGst = Math.round((grossAmount - baseAmount) * 100) / 100;
-  var cgst = Math.round((totalGst / 2) * 100) / 100;
-  var sgst = Math.round((totalGst - cgst) * 100) / 100;
+
+  var cgst = 0;
+  var sgst = 0;
+  var igst = 0;
+
+  if (posInfo.isInterState) {
+    igst = totalGst;
+  } else {
+    cgst = Math.round((totalGst / 2) * 100) / 100;
+    sgst = Math.round((totalGst - cgst) * 100) / 100;
+  }
+
+  var roundOff = Math.round((grossAmount - (baseAmount + cgst + sgst + igst)) * 100) / 100;
 
   var catalogItem = STAGING_PRODUCT_CATALOG[productKey] || {
     name: productKey,
     sacCode: "999293"
   };
 
-  gstSheet.appendRow([
-    new Date().toISOString(),
-    invoiceNumber,
-    new Date().toLocaleDateString("en-IN"),
-    (paymentEntity.notes && paymentEntity.notes.customer_name) || "Staging Student",
-    paymentEntity.email || "",
-    paymentEntity.contact || "",
-    "Tamil Nadu (33)",
-    "B2C",
-    "No",
-    catalogItem.sacCode,
-    catalogItem.name,
-    baseAmount,
-    "9%",
-    cgst,
-    "9%",
-    sgst,
-    0,
-    grossAmount,
-    cleanPayId,
-    cleanOrdId
-  ]);
+  var customerName = notes.customer_name || notes.name || "Staging Student";
+
+  if (!alreadyInGst) {
+    gstSheet.appendRow([
+      new Date().toISOString(),
+      invoiceNumber,
+      new Date().toLocaleDateString("en-IN"),
+      customerName,
+      paymentEntity.email || "",
+      paymentEntity.contact || "",
+      posInfo.placeOfSupply,
+      posInfo.supplyType,
+      "No",
+      catalogItem.sacCode,
+      catalogItem.name,
+      baseAmount,
+      posInfo.isInterState ? "0%" : "9%",
+      cgst,
+      posInfo.isInterState ? "0%" : "9%",
+      sgst,
+      roundOff,
+      grossAmount,
+      cleanPayId,
+      cleanOrdId
+    ]);
+  }
+
+  // Dual-Write to Master_GST_Sales_Register (22 Columns)
+  try {
+    var masterSheet = ss.getSheetByName(SHEET_NAME_MASTER_GST);
+    if (!masterSheet) {
+      masterSheet = ss.insertSheet(SHEET_NAME_MASTER_GST);
+      masterSheet.appendRow(REQUIRED_MASTER_GST_HEADERS);
+    }
+
+    var mRows = masterSheet.getDataRange().getValues();
+    var alreadyInMaster = false;
+    if (mRows && mRows.length > 1) {
+      for (var mi = 1; mi < mRows.length; mi++) {
+        var mPayId = String(mRows[mi][19] || "").trim().replace(/^'/, "");
+        var mInvNo = String(mRows[mi][2] || "").trim();
+        if (mPayId === cleanPayId && mInvNo === invoiceNumber) {
+          alreadyInMaster = true;
+          break;
+        }
+      }
+    }
+
+    if (!alreadyInMaster) {
+      masterSheet.appendRow([
+        new Date().toISOString(),
+        "INVOICE",
+        invoiceNumber,
+        new Date().toLocaleDateString("en-IN"),
+        customerName,
+        paymentEntity.email || "",
+        paymentEntity.contact || "",
+        customerGstin || "URP",
+        posInfo.placeOfSupply,
+        posInfo.supplyType,
+        "No",
+        catalogItem.sacCode,
+        catalogItem.name,
+        baseAmount,
+        cgst,
+        sgst,
+        igst,
+        roundOff,
+        grossAmount,
+        cleanPayId,
+        cleanOrdId,
+        "-" // Original Invoice No (not applicable for invoices)
+      ]);
+      writeToLogs("MASTER_GST_ROW_APPENDED", "Payment " + cleanPayId + " written to Master GST register.");
+    }
+  } catch (mErr) {
+    writeToLogs("MASTER_GST_WRITE_ERROR", "Failed to dual-write to Master GST register: " + mErr.message);
+  }
+}
+
+/**
+ * Processes refund event and generates a compliant Staging Credit Note (Rule 54).
+ * Idempotent: caches CREDIT_NOTE_<refundId> in script properties.
+ * Appends negative adjustment row to GST_Sales_Register and Master_GST_Sales_Register.
+ */
+function handleStagingRefund(ss, refundEntity) {
+  assertSpreadsheetIsolation(ss);
+  isMockInvoiceAdapterEnabled();
+  var props = PropertiesService.getScriptProperties();
+
+  if (!refundEntity || typeof refundEntity !== "object") {
+    throw new Error("INVALID_REFUND_ENTITY: refundEntity is required.");
+  }
+
+  var refundId = String(refundEntity.id || refundEntity.refund_id || "").trim();
+  var paymentId = String(refundEntity.payment_id || refundEntity.paymentId || "").trim();
+  if (!refundId || !paymentId) {
+    throw new Error("MISSING_REFUND_IDENTIFIERS: Both refund ID and payment ID are mandatory.");
+  }
+
+  // 1. Idempotency check: Return existing Credit Note if already generated
+  var cachedCn = props.getProperty("CREDIT_NOTE_" + refundId);
+  if (cachedCn) {
+    writeToLogs("CREDIT_NOTE_ALREADY_ISSUED", "Refund " + refundId + " already has Credit Note " + cachedCn);
+    return {
+      success: true,
+      status: 200,
+      alreadyProcessed: true,
+      creditNoteNumber: cachedCn,
+      refundId: refundId,
+      paymentId: paymentId
+    };
+  }
+
+  // 2. Authoritative lookup of the original invoice in GST_Sales_Register or properties
+  var originalInvoiceNumber = "";
+  var customerName = "Staging Student";
+  var customerEmail = "";
+  var customerPhone = "";
+  var orderId = "";
+  var sacCode = "999293";
+  var serviceDescription = "Staging Course";
+  var placeOfSupply = "33-Tamil Nadu";
+  var supplyType = "B2C Intra-State";
+  var customerGstin = "URP";
+  var originalAmount = 0;
+
+  var gstSheet = ss.getSheetByName(SHEET_NAME_GST);
+  if (gstSheet) {
+    var gData = gstSheet.getDataRange().getValues();
+    for (var r = gData.length - 1; r >= 1; r--) {
+      var rowPayId = String(gData[r][18] || "").trim().replace(/^'/, "");
+      if (rowPayId === paymentId) {
+        originalInvoiceNumber = String(gData[r][1] || "").trim();
+        customerName = String(gData[r][3] || customerName).trim();
+        customerEmail = String(gData[r][4] || "").trim();
+        customerPhone = String(gData[r][5] || "").trim();
+        placeOfSupply = String(gData[r][6] || placeOfSupply).trim();
+        supplyType = String(gData[r][7] || supplyType).trim();
+        sacCode = String(gData[r][9] || sacCode).trim();
+        serviceDescription = String(gData[r][10] || serviceDescription).trim();
+        originalAmount = Number(gData[r][17]) || 0;
+        orderId = String(gData[r][19] || "").trim();
+        break;
+      }
+    }
+  }
+
+  if (!originalInvoiceNumber) {
+    var cachedInvStr = props.getProperty("VERIFIED_INV_" + paymentId);
+    if (cachedInvStr) {
+      try {
+        var parsedInv = JSON.parse(cachedInvStr);
+        originalInvoiceNumber = parsedInv.invoiceNumber || "";
+        orderId = parsedInv.orderId || "";
+        customerName = parsedInv.name || customerName;
+        customerEmail = parsedInv.email || "";
+        customerPhone = parsedInv.phone || "";
+      } catch (e) {
+        originalInvoiceNumber = cachedInvStr;
+      }
+    }
+  }
+
+  if (!originalInvoiceNumber) {
+    originalInvoiceNumber = "ORIGINAL_NOT_FOUND";
+    writeToLogs("ORIGINAL_INVOICE_MISSING", "Original invoice for payment " + paymentId + " not found. Proceeding with unlinked credit note.");
+  }
+
+  // 3. Calculate refund amount and negative GST values
+  var refundAmountGross = 0;
+  if (refundEntity.amount !== undefined) {
+    refundAmountGross = Number(refundEntity.amount) / 100;
+  } else if (originalAmount > 0) {
+    refundAmountGross = originalAmount;
+  } else {
+    refundAmountGross = 0;
+  }
+
+  var isInterState = placeOfSupply.toLowerCase().indexOf("33") === -1 && placeOfSupply.toLowerCase().indexOf("tamil nadu") === -1;
+  var baseRefund = Math.round((refundAmountGross / 1.18) * 100) / 100;
+  var totalGstRefund = Math.round((refundAmountGross - baseRefund) * 100) / 100;
+  var cgstRefund = 0;
+  var sgstRefund = 0;
+  var igstRefund = 0;
+
+  if (isInterState) {
+    igstRefund = totalGstRefund;
+  } else {
+    cgstRefund = Math.round((totalGstRefund / 2) * 100) / 100;
+    sgstRefund = Math.round((totalGstRefund - cgstRefund) * 100) / 100;
+  }
+
+  var roundOffRefund = Math.round((refundAmountGross - (baseRefund + cgstRefund + sgstRefund + igstRefund)) * 100) / 100;
+
+  // 4. Generate sequential Credit Note number in staging (STAGE-CN-101, STAGE-CN-102...)
+  var cnCounterKey = "STAGING_CREDIT_NOTE_COUNTER";
+  var currentCnCount = parseInt(props.getProperty(cnCounterKey) || "100", 10);
+  var nextCnCount = currentCnCount + 1;
+  props.setProperty(cnCounterKey, String(nextCnCount));
+  var creditNoteNumber = "STAGE-CN-" + nextCnCount;
+
+  // 5. Append negative adjustment row to GST_Sales_Register
+  if (gstSheet) {
+    gstSheet.appendRow([
+      new Date().toISOString(),
+      creditNoteNumber,
+      new Date().toLocaleDateString("en-IN"),
+      customerName,
+      customerEmail,
+      customerPhone,
+      placeOfSupply,
+      supplyType + " (Credit Note)",
+      "No",
+      sacCode,
+      "Refund: " + serviceDescription,
+      -baseRefund,
+      isInterState ? "0%" : "9%",
+      -cgstRefund,
+      isInterState ? "0%" : "9%",
+      -sgstRefund,
+      -roundOffRefund,
+      -refundAmountGross,
+      refundId,
+      originalInvoiceNumber
+    ]);
+  }
+
+  // 6. Dual-write to Master_GST_Sales_Register
+  try {
+    var masterSheet = ss.getSheetByName(SHEET_NAME_MASTER_GST);
+    if (!masterSheet) {
+      masterSheet = ss.insertSheet(SHEET_NAME_MASTER_GST);
+      masterSheet.appendRow(REQUIRED_MASTER_GST_HEADERS);
+    }
+    masterSheet.appendRow([
+      new Date().toISOString(),
+      "CREDIT_NOTE",
+      creditNoteNumber,
+      new Date().toLocaleDateString("en-IN"),
+      customerName,
+      customerEmail,
+      customerPhone,
+      customerGstin,
+      placeOfSupply,
+      supplyType,
+      "No",
+      sacCode,
+      "Refund: " + serviceDescription,
+      -baseRefund,
+      -cgstRefund,
+      -sgstRefund,
+      -igstRefund,
+      -roundOffRefund,
+      -refundAmountGross,
+      refundId,
+      orderId,
+      originalInvoiceNumber
+    ]);
+  } catch (mErr) {
+    writeToLogs("MASTER_GST_CN_WRITE_ERROR", "Error dual-writing Credit Note: " + mErr.message);
+  }
+
+  // 7. Store Credit Note reference
+  props.setProperty("CREDIT_NOTE_" + refundId, creditNoteNumber);
+  writeToLogs("STAGING_CREDIT_NOTE_ISSUED", "Credit Note " + creditNoteNumber + " issued for refund " + refundId + " linked to invoice " + originalInvoiceNumber);
+
+  return {
+    success: true,
+    status: 200,
+    creditNoteNumber: creditNoteNumber,
+    refundId: refundId,
+    paymentId: paymentId,
+    originalInvoiceNumber: originalInvoiceNumber,
+    refundAmount: refundAmountGross,
+    baseRefund: -baseRefund,
+    totalGstRefund: -totalGstRefund
+  };
 }
 
 // ----------------------------------------------------------------------------
@@ -975,6 +1288,12 @@ function doPost(e) {
     // Invoice Retrieval Route (Task 4: Token-authorized invoice fetching)
     if (body.action === "getVerifiedInvoice") {
       return createJsonResponse(getVerifiedInvoiceRecord(ss, body.paymentId, body.orderId, body.token, body.email || body.phone || body.contact));
+    }
+
+    // Direct Refund / Credit Note Route (Task 6: Mock Credit Note generation)
+    if (body.action === "processRefund" || body.action === "createCreditNote") {
+      var refEntity = body.refund || body.payload || body;
+      return createJsonResponse(handleStagingRefund(ss, refEntity));
     }
 
     // Central Webhook Proxy Forwarding Route

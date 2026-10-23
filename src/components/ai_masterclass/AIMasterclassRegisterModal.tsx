@@ -284,6 +284,9 @@ const AIMasterclassRegisterModal: React.FC = () => {
                             try {
                                 sessionStorage.setItem(`inv_tok_${paymentId}`, token);
                             } catch (_) {}
+                            try {
+                                localStorage.setItem(`inv_tok_${paymentId}`, token);
+                            } catch (_) {}
                         }
 
                         // Never place token in URL query params to prevent token leakage in history, logs, or Referer headers

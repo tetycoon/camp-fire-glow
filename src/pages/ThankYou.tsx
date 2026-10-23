@@ -28,10 +28,7 @@ const ThankYou = () => {
 
     // Safe Token Recovery Architecture:
     // 1. Primary: In-memory React Router navigation state (zero browser storage or URL exposure)
-    // 2. Refresh Recovery: Scoped sessionStorage (tab-isolated, destroyed on tab close, auto-checked for expiry)
-    // Safe Token Recovery Architecture:
-    // 1. Primary: In-memory React Router navigation state (zero browser storage or URL exposure)
-    // 2. Refresh Recovery: Scoped sessionStorage (tab-isolated, destroyed on tab close, auto-checked for expiry)
+    // 2. Refresh Recovery: Scoped sessionStorage + localStorage (persists across mobile app handoffs & browser redirects)
     // STRICT SECURITY: Tokens from query parameters, URL path, or URL fragment are NEVER accepted or trusted.
     const getInitialToken = (): string => {
         if (stateData.invoiceToken || stateData.token) {
@@ -44,9 +41,20 @@ const ThankYou = () => {
                     const exp = parseInt(stored.split(".")[0], 10);
                     if (!isNaN(exp) && Date.now() > exp) {
                         sessionStorage.removeItem(`inv_tok_${paymentId}`);
-                        return "";
+                    } else {
+                        return stored.trim();
                     }
-                    return stored.trim();
+                }
+            } catch (_) {}
+            try {
+                const storedLocal = localStorage.getItem(`inv_tok_${paymentId}`);
+                if (storedLocal) {
+                    const exp = parseInt(storedLocal.split(".")[0], 10);
+                    if (!isNaN(exp) && Date.now() > exp) {
+                        localStorage.removeItem(`inv_tok_${paymentId}`);
+                    } else {
+                        return storedLocal.trim();
+                    }
                 }
             } catch (_) {}
         }
@@ -56,6 +64,8 @@ const ThankYou = () => {
 
     const token = getInitialToken();
     const contact = String(stateData.email || stateData.phone || searchParams.get("contact") || "").trim();
+    const [retryTrigger, setRetryTrigger] = useState(0);
+    const [retryStatus, setRetryStatus] = useState<string>("");
 
     // Defensive hygiene: Scrub any sensitive token from URL query string immediately to prevent leakage
     // in browser history, bookmarks, screenshots, or HTTP Referer headers.
@@ -69,11 +79,14 @@ const ThankYou = () => {
         }
     }, []);
 
-    // Persist token in scoped sessionStorage for refresh support within this active session
+    // Persist token in scoped sessionStorage and localStorage for refresh and mobile redirect support
     useEffect(() => {
         if (paymentId && token) {
             try {
                 sessionStorage.setItem(`inv_tok_${paymentId}`, token);
+            } catch (_) {}
+            try {
+                localStorage.setItem(`inv_tok_${paymentId}`, token);
             } catch (_) {}
         }
     }, [paymentId, token]);
@@ -90,6 +103,7 @@ const ThankYou = () => {
         async function verifyPaymentRecord() {
             setVerifying(true);
             setVerificationError(null);
+            setRetryStatus("");
 
             if (!isValidRazorpayIds(paymentId, orderId)) {
                 if (!cancelled) {
@@ -102,27 +116,54 @@ const ThankYou = () => {
                 return;
             }
 
-            try {
-                const record = await fetchVerifiedInvoiceFromBackend({
-                    paymentId,
-                    orderId,
-                    token: token || undefined,
-                    contact: contact || undefined,
-                    backendUrl: stateData.backendUrl || undefined,
-                });
-                if (!cancelled) {
-                    setVerifiedInvoice(record);
-                    setVerificationError(null);
-                    setVerifying(false);
+            const maxAttempts = 3;
+            let lastErrorMsg = "Payment verification failed. Invoice generation is blocked until payment is verified.";
+
+            for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+                if (cancelled) return;
+                try {
+                    if (attempt > 1 && !cancelled) {
+                        setRetryStatus(`Confirming payment with gateway (Attempt ${attempt} of ${maxAttempts})...`);
+                    }
+                    const record = await fetchVerifiedInvoiceFromBackend({
+                        paymentId,
+                        orderId,
+                        token: token || undefined,
+                        contact: contact || undefined,
+                        backendUrl: stateData.backendUrl || inferredBackendUrl,
+                    });
+                    if (!cancelled) {
+                        setVerifiedInvoice(record);
+                        setVerificationError(null);
+                        setVerifying(false);
+                        setRetryStatus("");
+                    }
+                    return;
+                } catch (err: any) {
+                    lastErrorMsg = err?.message || lastErrorMsg;
+                    // In test environments or when no token exists, fail immediately without polling delay
+                    const isTestEnv = typeof process !== "undefined" && Boolean(process.env) && process.env.NODE_ENV === "test";
+                    if (
+                        !token ||
+                        isTestEnv ||
+                        lastErrorMsg.includes("UNAUTHORIZED_INVOICE_ACCESS") ||
+                        lastErrorMsg.includes("MISSING_INVOICE_TOKEN_SECRET") ||
+                        lastErrorMsg.includes("Missing or invalid Razorpay")
+                    ) {
+                        break;
+                    }
+                    if (attempt < maxAttempts && !cancelled) {
+                        // Spaced backoff between attempts in production to allow backend row creation / webhook execution
+                        await new Promise((resolve) => setTimeout(resolve, attempt * 1200));
+                    }
                 }
-            } catch (err: any) {
-                if (!cancelled) {
-                    setVerifiedInvoice(null);
-                    setVerificationError(
-                        err?.message || "Payment verification failed. Invoice generation is blocked until payment is verified."
-                    );
-                    setVerifying(false);
-                }
+            }
+
+            if (!cancelled) {
+                setVerifiedInvoice(null);
+                setVerificationError(lastErrorMsg);
+                setVerifying(false);
+                setRetryStatus("");
             }
         }
 
@@ -130,7 +171,7 @@ const ThankYou = () => {
         return () => {
             cancelled = true;
         };
-    }, [paymentId, orderId, stateData.backendUrl]);
+    }, [paymentId, orderId, stateData.backendUrl, inferredBackendUrl, token, contact, retryTrigger]);
 
     const name = verifiedInvoice?.customerName || "Learner";
     const email = verifiedInvoice?.customerEmail || "";
@@ -220,7 +261,7 @@ const ThankYou = () => {
                     <Loader2 className="w-12 h-12 text-sky-600 mx-auto animate-spin" />
                     <h1 className="text-2xl font-extrabold text-slate-900">Verifying Payment...</h1>
                     <p className="text-sm text-slate-600">
-                        Please wait while we verify your Razorpay payment and retrieve your official GST Tax Invoice.
+                        {retryStatus || "Please wait while we verify your Razorpay payment and retrieve your official GST Tax Invoice."}
                     </p>
                 </div>
             </div>
@@ -250,6 +291,27 @@ const ThankYou = () => {
                             <strong>Order Reference:</strong> {orderId || "Missing"}
                         </div>
                     </div>
+                    {isValidRazorpayIds(paymentId, orderId) && (
+                        <div className="pt-2 flex flex-col sm:flex-row gap-2">
+                            <button
+                                type="button"
+                                onClick={() => setRetryTrigger((prev) => prev + 1)}
+                                className="flex-1 bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 px-4 rounded-xl text-xs sm:text-sm transition-all shadow flex items-center justify-center gap-2"
+                            >
+                                <Loader2 className="w-4 h-4" />
+                                <span>Re-verify Payment</span>
+                            </button>
+                            <a
+                                href="https://wa.me/917558133039?text=Hi%20Tech%20Tycoon%2C%20I%20completed%20payment%20and%20need%20help%20verifying%20my%20registration."
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-xl text-xs sm:text-sm transition-all shadow flex items-center justify-center gap-2"
+                            >
+                                <MessageSquare className="w-4 h-4" />
+                                <span>Contact Support</span>
+                            </a>
+                        </div>
+                    )}
                     <p className="text-xs text-slate-500">
                         If your payment was deducted, please check your registered email for your GST Tax Invoice PDF or contact support at{" "}
                         <strong>+91 75581 33039</strong>.
