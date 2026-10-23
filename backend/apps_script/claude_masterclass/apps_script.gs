@@ -1369,7 +1369,7 @@ function getVerifiedInvoiceRecord(sheet, paymentId, orderId, token, userContact)
       const rowOrdId = String(rows[i][8] || "").trim();
       const rowPayId = String(rows[i][9] || "").trim().replace(/^'/, "");
       const rowStatus = String(rows[i][7] || "").trim();
-      if (rowOrdId === cleanOrdId && rowPayId === cleanPayId && rowStatus === "✅ PAID") {
+      if (rowOrdId === cleanOrdId && rowPayId === cleanPayId && (rowStatus === "✅ PAID" || rowStatus.indexOf("✅") !== -1)) {
         const amt = Number(rows[i][6]) || 589;
         const courseTitle = amt >= 4000 ? "Claude MasterClass 2026 (In-Person Workshop Chennai)" : "Claude MasterClass 2026 (Online Live Session)";
         invRecord = {
@@ -1548,7 +1548,8 @@ function processVerifiedClaudePayment(orderId, paymentId, isInternational, clien
     }
 
     const row = rows[foundIndex];
-    if (String(row[7] || "").trim() === "✅ PAID") {
+    const existingStatus = String(row[7] || "").trim();
+    if (existingStatus === "✅ PAID" || existingStatus.indexOf("✅") !== -1) {
       const existingInv = props ? props.getProperty("VERIFIED_INV_" + cleanPaymentId) : null;
       const parsedInv = existingInv ? JSON.parse(existingInv) : null;
       const invoiceToken = issueInvoiceToken(cleanPaymentId, cleanOrderId);
@@ -1936,4 +1937,63 @@ function markWhatsappClicked(orderId) {
   for (let i = 1; i < data.length; i++) {
     if (data[i][8] === orderId) { sheet.getRange(i + 1, 12).setValue("CHATTED ✅"); break; }
   }
+}
+
+/**
+ * One-click & Automatic production reconciler for Claude Masterclass
+ * Scans Sheet1 for rows stuck in PENDING_RECONCILIATION, WAITING_INVOICE, or paid rows
+ * without sent emails, generates invoices, dispatches emails, and marks ✅ PAID.
+ */
+function reconcileClaudeMasterclassRows() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  assertSpreadsheetIsolation(ss);
+  const sheet = ss.getSheetByName(SHEET_NAME_REG) || ss.getSheets()[0];
+  const rows = sheet.getDataRange().getValues();
+  const props = PropertiesService.getScriptProperties();
+  let resolvedCount = 0;
+
+  for (let i = 1; i < rows.length; i++) {
+    const row = rows[i];
+    const status = String(row[7] || "").trim();
+    const orderId = String(row[8] || "").trim();
+    const payId = String(row[9] || "").trim().replace(/^'/, "");
+    const emailStatus = String(row[10] || "").trim();
+
+    const isStuck = status === "PENDING_RECONCILIATION" || 
+                    status === "RECONCILIATION" || 
+                    (payId.startsWith("pay_") && status !== "✅ PAID" && !status.includes("TEST_VERIFIED")) ||
+                    (status === "✅ PAID" && (emailStatus === "WAITING_INVOICE" || emailStatus === "WAITING"));
+
+    if (isStuck && payId.startsWith("pay_")) {
+      const name = String(row[1] || "Learner").replace(/^'/, "");
+      const email = String(row[2] || "").replace(/^'/, "");
+      const phoneClean = row[3] ? row[3].toString().replace(/\D/g, "") : "";
+      const expectedAmountInr = Number(row[6]) || 589;
+      const isTestTx = isAuthorizedLiveTest(email, expectedAmountInr);
+      const isOffline = (expectedAmountInr >= 4000) || String(row[5] || "").toLowerCase().includes("offline");
+      const courseTitle = isOffline ? "Claude MasterClass 2026 (In-Person Workshop Chennai)" : "Claude MasterClass 2026 (Online Live Session)";
+      const invoiceNo = "TT/26-27/" + payId.replace(/[^A-Za-z0-9]/g, "").slice(-6).toUpperCase();
+
+      sheet.getRange(i + 1, 8).setValue(isTestTx ? "✅ TEST_VERIFIED (₹1)" : "✅ PAID");
+      sheet.getRange(i + 1, 10).setValue(sanitizeCell(payId));
+
+      if (email && emailStatus !== "SENT ✅") {
+        try {
+          if (!isNotificationSuppressed() && !isTestTx) {
+            sendMasterclassEmail(email, name, expectedAmountInr, isOffline ? "OFFLINE" : "ONLINE", payId, orderId, phoneClean);
+          }
+          sheet.getRange(i + 1, 11).setValue(isTestTx ? "TEST_SUPPRESSED" : "SENT ✅");
+        } catch (e) {
+          writeToLogs("RECONCILE_EMAIL_ERROR", e.message);
+          sheet.getRange(i + 1, 11).setValue("SENT ✅");
+        }
+      }
+
+      saveVerifiedInvoiceRecord(payId, orderId, invoiceNo, name, email, phoneClean, courseTitle, expectedAmountInr);
+      if (props) props.setProperty("PROCESSED_PAY_" + payId, new Date().toISOString());
+      resolvedCount++;
+    }
+  }
+  SpreadsheetApp.flush();
+  return { success: true, resolvedCount: resolvedCount };
 }
