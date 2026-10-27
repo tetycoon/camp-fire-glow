@@ -317,7 +317,7 @@ function saveVerifiedInvoiceRecord(record) {
     email: record.email || "",
     phone: record.phone || "",
     course: record.course || "Advance AI for Non-Tech Working Professionals",
-    amount: Number(record.amount) || 3539,
+    amount: Number(record.amount) || 6449,
     paidAt: record.paidAt || Utilities.formatDate(new Date(), "Asia/Kolkata", "dd MMM yyyy, hh:mm a")
   });
   props.setProperty("VERIFIED_INV_" + record.paymentId, payload);
@@ -402,7 +402,7 @@ function getVerifiedInvoiceRecord(sheet, paymentId, orderId, token, userContact)
             customerEmail: String(data[i][2] || ""),
             customerPhone: String(data[i][3] || ""),
             courseName: "Advance AI for Non-Tech Working Professionals",
-            totalAmountPaid: Number(data[i][5]) || 3539,
+            totalAmountPaid: Number(data[i][5]) || 6449,
             paidAt: String(data[i][0] || "")
           };
           break;
@@ -575,8 +575,8 @@ function createOrderAndLogRow(sheet, data) {
   const phone = sanitizeCell((data.phone || "").toString().trim());
   const profession = sanitizeCell((data.profession || data.customProfession || "Working Professional").toString().trim());
   const emailLower = email.toLowerCase();
-  const rawAmt = Number(data.amount) || 3539;
-  const amount = (TEST_EMAILS.indexOf(emailLower) !== -1 && rawAmt === 1) ? 1 : (rawAmt < 2999 ? 3539 : Math.round(rawAmt));
+  const rawAmt = Number(data.amount) || 6449;
+  const amount = (TEST_EMAILS.indexOf(emailLower) !== -1 && rawAmt === 1) ? 1 : (rawAmt < 3500 ? 6449 : Math.round(rawAmt));
   const isIntl = data.isInternational === true || data.isInternational === "true";
 
   const orderId = createRazorpayOrder(amount, isIntl, {
@@ -586,8 +586,8 @@ function createOrderAndLogRow(sheet, data) {
     phone: phone,
     profession: profession,
     course: "Advance AI for Non-Tech Working Professionals",
-    base_amount: data.baseAmount || 2999,
-    gst_amount: data.gstAmount || 540
+    base_amount: data.baseAmount || 5465.25,
+    gst_amount: data.gstAmount || 983.75
   });
 
   // Check if order already exists in sheet to avoid duplicates
@@ -631,7 +631,9 @@ const TOTAL_TO_EXACT_BASE_MAP = {
   3539: 2999,
   4130: 3500,
   5899: 4999,
+  6449: 5465.25,
   8259: 6999,
+  8449: 7160.17,
   11799: 9999,
   17699: 14999
 };
@@ -1273,7 +1275,7 @@ function processVerifiedProfessionalsPayment(sheet, data, isWebhook) {
       })).setMimeType(ContentService.MimeType.JSON);
     }
 
-    const expectedAmountInr = Number(rowData[5]) || 3539;
+    const expectedAmountInr = Number(rowData[5]) || 6449;
     const name = String(rowData[1] || data.name || "Learner").trim();
     const email = String(rowData[2] || data.email || "").trim();
     const phone = String(rowData[3] || data.phone || "").trim();
