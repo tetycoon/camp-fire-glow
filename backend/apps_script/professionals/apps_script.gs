@@ -304,10 +304,25 @@ function verifyPaymentWithRazorpayServer(paymentId, expectedOrderId, expectedAmo
   return payment;
 }
 
-function saveVerifiedInvoiceRecord(record) {
-  if (!record || !record.paymentId) return;
+function saveVerifiedInvoiceRecord(recordOrPaymentId, orderId, invoiceNumber, name, email, phone, course, amount) {
+  let record = {};
+  if (recordOrPaymentId && typeof recordOrPaymentId === "object") {
+    record = recordOrPaymentId;
+  } else {
+    record = {
+      paymentId: recordOrPaymentId,
+      orderId: orderId,
+      invoiceNumber: invoiceNumber,
+      name: name,
+      email: email,
+      phone: phone,
+      course: course,
+      amount: amount
+    };
+  }
+  if (!record || !record.paymentId) return null;
   const props = PropertiesService.getScriptProperties();
-  const payload = JSON.stringify({
+  const recordObj = {
     verified: true,
     status: "PAID",
     paymentId: record.paymentId,
@@ -319,11 +334,13 @@ function saveVerifiedInvoiceRecord(record) {
     course: record.course || "Advance AI for Non-Tech Working Professionals",
     amount: Number(record.amount) || 6449,
     paidAt: record.paidAt || Utilities.formatDate(new Date(), "Asia/Kolkata", "dd MMM yyyy, hh:mm a")
-  });
+  };
+  const payload = JSON.stringify(recordObj);
   props.setProperty("VERIFIED_INV_" + record.paymentId, payload);
   if (record.orderId) {
     props.setProperty("VERIFIED_INV_ORD_" + record.orderId, payload);
   }
+  return recordObj;
 }
 
 function getVerifiedInvoiceRecord(sheet, paymentId, orderId, token, userContact) {
@@ -1368,7 +1385,7 @@ function processVerifiedProfessionalsPayment(sheet, data, isWebhook) {
       status: "PAID",
       orderId: orderId,
       paymentId: paymentId,
-      invoiceNumber: invRecord.invoiceNumber,
+      invoiceNumber: (invRecord && invRecord.invoiceNumber) || "",
       invoiceToken: invoiceToken,
       invoice: invRecord,
       amount: verifiedAmountInr
