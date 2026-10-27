@@ -3,7 +3,7 @@ import { CheckCircle2, Loader2, ShieldCheck, X } from "lucide-react";
 import { useAIMasterclass2RegisterModal } from "./AIMasterclass2RegisterModalContext";
 import { RazorpayOptions } from "@/types/razorpay";
 import { getMasterclassDateStrings } from "../../lib/masterclassDateUtils";
-import { calculateGstBreakdown, isValidGstin, sanitizeTextInput, isAuthorizedTestEmail, VERIFIED_BACKEND_ENDPOINTS } from "../../lib/gstUtils";
+import { calculateInclusiveGstBreakdown, isValidGstin, sanitizeTextInput, isAuthorizedTestEmail, VERIFIED_BACKEND_ENDPOINTS } from "../../lib/gstUtils";
 import GstPriceBreakdown from "../common/GstPriceBreakdown";
 
 const RAZORPAY_KEY_ID = "rzp_live_gfoS1OjC8tvWjP";
@@ -28,7 +28,7 @@ function loadRazorpayScript(): Promise<boolean> {
 const AIMasterclass2RegisterModal: React.FC = () => {
     const { isOpen, closeRegisterModal } = useAIMasterclass2RegisterModal();
     const { regularDate } = getMasterclassDateStrings();
-    const [form, setForm] = useState({ name: "", email: "", phone: "", countryCode: "+91", profession: "", language: "Tamil", timing: "6 PM to 9 PM", coupon: "WELCOME33" });
+    const [form, setForm] = useState({ name: "", email: "", phone: "", countryCode: "+91", profession: "", language: "Tamil", timing: "5:30 PM to 8:30 PM", coupon: "WELCOME33" });
     const [claimGst, setClaimGst] = useState(false);
     const [gstin, setGstin] = useState("");
     const [companyName, setCompanyName] = useState("");
@@ -40,8 +40,8 @@ const AIMasterclass2RegisterModal: React.FC = () => {
     const [visible, setVisible] = useState(false);
     const [discountApplied, setDiscountApplied] = useState(false);
 
-    const baseSessionAmount = 99;
-    const { gstAmount, totalAmount, totalInPaise } = calculateGstBreakdown(baseSessionAmount);
+    const inclusiveSessionPrice = 99;
+    const { baseAmount: baseSessionAmount, gstAmount, totalAmount, totalInPaise } = calculateInclusiveGstBreakdown(inclusiveSessionPrice);
 
     useEffect(() => {
         if (isOpen) {
@@ -59,7 +59,7 @@ const AIMasterclass2RegisterModal: React.FC = () => {
         setTimeout(() => {
             closeRegisterModal();
             if (!submitted) {
-                setForm({ name: "", email: "", phone: "", countryCode: "+91", profession: "", language: "Tamil", timing: "6 PM to 9 PM", coupon: "WELCOME33" });
+                setForm({ name: "", email: "", phone: "", countryCode: "+91", profession: "", language: "Tamil", timing: "5:30 PM to 8:30 PM", coupon: "WELCOME33" });
                 setClaimGst(false);
                 setGstin("");
                 setCompanyName("");
@@ -278,7 +278,7 @@ const AIMasterclass2RegisterModal: React.FC = () => {
                     <>
                         <div className="text-center mb-6">
                             <h2 className="font-display text-2xl font-bold mb-1 italic !text-white" style={{ color: "white" }}>Register <span className="text-blue-500">Now</span></h2>
-                            <p className="text-sm text-muted-foreground">Join the AI revolution for just ₹99 + 18% GST</p>
+                            <p className="text-sm text-muted-foreground">Join the AI revolution for just ₹99 (Incl. 18% GST)</p>
                             <div className="mt-3 inline-block bg-blue-500/10 border border-blue-500/20 text-blue-400 px-4 py-2 rounded-2xl text-xs font-bold tracking-wide shadow-sm">
                                 📅 Session: {regularDate} at {form.timing}
                             </div>
@@ -355,7 +355,7 @@ const AIMasterclass2RegisterModal: React.FC = () => {
                                 onChange={e => setForm({ ...form, timing: e.target.value })}
                                 className="bg-muted/50 border border-border rounded-xl px-4 py-3 text-sm text-white focus:border-emerald-500/50 outline-none appearance-none cursor-pointer"
                             >
-                                <option value="6 PM to 9 PM">6 PM to 9 PM</option>
+                                <option value="5:30 PM to 8:30 PM">5:30 PM to 8:30 PM (Wed & Fri)</option><option value="10:00 AM to 1:00 PM">10:00 AM to 1:00 PM (Sun Morning)</option>
                             </select>
 
                             <select
@@ -376,7 +376,7 @@ const AIMasterclass2RegisterModal: React.FC = () => {
 
                             <div className="sm:col-span-2">
                                 <GstPriceBreakdown
-                                    baseAmount={baseSessionAmount}
+                                    baseAmount={inclusiveSessionPrice} inclusive={true}
                                     claimGst={claimGst}
                                     onClaimGstChange={setClaimGst}
                                     gstin={gstin}

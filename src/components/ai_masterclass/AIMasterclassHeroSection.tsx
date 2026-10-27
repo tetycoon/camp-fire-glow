@@ -7,7 +7,7 @@ import { getMasterclassDateStrings } from "../../lib/masterclassDateUtils";
 const AIMasterclassHeroSection: React.FC = () => {
     const { openRegisterModal } = useAIMasterclassRegisterModal();
     const { orderedSlots, nextSession } = getMasterclassDateStrings();
-    const [selectedSlotId, setSelectedSlotId] = useState<"wednesday" | "sunday">(nextSession.id);
+    const [selectedSlotId, setSelectedSlotId] = useState<"wednesday" | "friday" | "sunday">(nextSession.id);
 
     const activeSlot = orderedSlots.find(s => s.id === selectedSlotId) || nextSession;
 
@@ -54,7 +54,7 @@ const AIMasterclassHeroSection: React.FC = () => {
                                 <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-600"></span>
                             </span>
                             <span className="text-[11px] font-black text-blue-800 uppercase tracking-wider">
-                                LIVE 3-HOUR PRACTICAL WORKSHOP • 2 CONVENIENT BATCHES
+                                LIVE 3-HOUR PRACTICAL WORKSHOP • WED, FRI & SUN BATCHES
                             </span>
                         </div>
 
@@ -142,33 +142,34 @@ const AIMasterclassHeroSection: React.FC = () => {
                                 <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-2">
                                     Select Your Preferred Batch:
                                 </label>
-                                <div className="grid grid-cols-2 gap-2">
+                                <div className="grid grid-cols-3 gap-2">
                                     {orderedSlots.map((slot) => {
                                         const isSelected = selectedSlotId === slot.id;
+                                        const isEvening = slot.id === "wednesday" || slot.id === "friday";
                                         return (
                                             <button
                                                 key={slot.id}
                                                 type="button"
                                                 onClick={() => setSelectedSlotId(slot.id)}
-                                                className={`p-3 rounded-2xl border text-left transition-all cursor-pointer relative ${
+                                                className={`p-2.5 rounded-2xl border text-left transition-all cursor-pointer relative ${
                                                     isSelected
                                                         ? "bg-emerald-50/90 border-2 border-emerald-600 shadow-sm"
                                                         : "bg-slate-50 hover:bg-slate-100 border-slate-200 text-slate-600"
                                                 }`}
                                             >
-                                                <div className="text-xs font-black text-slate-900 flex items-center justify-between">
-                                                    <span>{slot.dayName}</span>
+                                                <div className="text-[11px] font-black text-slate-900 flex items-center justify-between gap-1">
+                                                    <span className="truncate">{slot.dayName}</span>
                                                     {slot.id === nextSession.id && (
-                                                        <span className="text-[8px] font-extrabold uppercase bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded">
+                                                        <span className="text-[7px] font-extrabold uppercase bg-emerald-100 text-emerald-800 px-1 py-0.5 rounded shrink-0">
                                                             Next
                                                         </span>
                                                     )}
                                                 </div>
-                                                <div className="text-[11px] font-bold text-emerald-700 mt-1">
-                                                    {slot.id === "wednesday" ? "6 PM – 9 PM" : "10 AM – 1 PM"}
+                                                <div className="text-[10px] font-bold text-emerald-700 mt-1 leading-tight">
+                                                    {isEvening ? "5:30 – 8:30 PM" : "10 AM – 1 PM"}
                                                 </div>
-                                                <div className="text-[10px] text-slate-500 font-medium mt-0.5">
-                                                    {slot.id === "wednesday" ? "Evening" : "Morning"}
+                                                <div className="text-[9px] text-slate-500 font-medium mt-0.5">
+                                                    {isEvening ? "Evening" : "Morning"}
                                                 </div>
                                             </button>
                                         );
@@ -227,7 +228,7 @@ const AIMasterclassHeroSection: React.FC = () => {
                                             <span className="text-3xl font-black text-slate-900 leading-none">₹99</span>
                                             <span className="text-sm font-bold text-slate-400 line-through">₹999</span>
                                         </div>
-                                        <span className="text-[10px] font-bold text-slate-500 uppercase">+ 18% GST (Total ₹117)</span>
+                                        <span className="text-[10px] font-bold text-emerald-700 uppercase">Inclusive of 18% GST (Final Price ₹99)</span>
                                     </div>
                                     <span className="text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg">
                                         Save ₹900 Today

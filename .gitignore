@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Safety guard: prevent accidental staging of hazardous untracked scratch files
+UPDATED*.js
+

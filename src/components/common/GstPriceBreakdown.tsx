@@ -1,8 +1,9 @@
 import React from "react";
-import { calculateGstBreakdown } from "../../lib/gstUtils";
+import { calculateGstBreakdown, calculateInclusiveGstBreakdown } from "../../lib/gstUtils";
 
 interface GstPriceBreakdownProps {
   baseAmount: number;
+  inclusive?: boolean;
   claimGst?: boolean;
   onClaimGstChange?: (claimed: boolean) => void;
   gstin?: string;
@@ -15,10 +16,14 @@ interface GstPriceBreakdownProps {
 
 export const GstPriceBreakdown: React.FC<GstPriceBreakdownProps> = ({
   baseAmount,
+  inclusive = false,
   theme = "light",
   label = "Session Fee",
 }) => {
-  const { gstAmount, totalAmount } = calculateGstBreakdown(baseAmount);
+  const breakdown = inclusive
+    ? calculateInclusiveGstBreakdown(baseAmount)
+    : calculateGstBreakdown(baseAmount);
+  const { baseAmount: displayBase, gstAmount, totalAmount } = breakdown;
   const isDark = theme === "dark";
 
   return (
@@ -33,11 +38,17 @@ export const GstPriceBreakdown: React.FC<GstPriceBreakdownProps> = ({
       >
         <div className="flex items-center justify-between">
           <span className={isDark ? "text-white/60" : "text-slate-500"}>{label} (Base):</span>
-          <span className="font-mono font-semibold">₹{baseAmount.toLocaleString("en-IN")}</span>
+          <span className="font-mono font-semibold">
+            ₹{inclusive ? displayBase.toFixed(2) : displayBase.toLocaleString("en-IN")}
+          </span>
         </div>
         <div className="flex items-center justify-between">
-          <span className={isDark ? "text-white/60" : "text-slate-500"}>GST (18%):</span>
-          <span className="font-mono font-semibold">+ ₹{gstAmount.toLocaleString("en-IN")}</span>
+          <span className={isDark ? "text-white/60" : "text-slate-500"}>
+            {inclusive ? "GST (18% Included):" : "GST (18%):"}
+          </span>
+          <span className="font-mono font-semibold">
+            {inclusive ? `₹${gstAmount.toFixed(2)}` : `+ ₹${gstAmount.toLocaleString("en-IN")}`}
+          </span>
         </div>
         <div
           className={`flex items-center justify-between pt-1.5 border-t font-bold text-sm ${

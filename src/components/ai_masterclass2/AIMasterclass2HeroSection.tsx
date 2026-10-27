@@ -5,7 +5,7 @@ import { getMasterclassDateStrings } from "../../lib/masterclassDateUtils";
 
 const AIMasterclass2HeroSection: React.FC = () => {
     const { openRegisterModal } = useAIMasterclass2RegisterModal();
-    const { upperDate, regularDate } = getMasterclassDateStrings();
+    const { upperDate, regularDate, timeSlot, shortTime, dayOfWeek } = getMasterclassDateStrings();
     const scrollTo = (id: string) => {
         document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
     };
@@ -38,7 +38,7 @@ const AIMasterclass2HeroSection: React.FC = () => {
                         <div className="inline-flex items-center gap-2 mb-8 px-4 py-2 rounded-full bg-[#fce7f3] border border-pink-200">
                             <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
                             <span className="font-display text-[10px] font-bold text-blue-600 uppercase tracking-[0.2em]">
-                                LIVE MASTERCLASS • {upperDate} • 6:00 PM IST
+                                LIVE MASTERCLASS • {upperDate} • {shortTime}
                             </span>
                         </div>
 
@@ -88,7 +88,7 @@ const AIMasterclass2HeroSection: React.FC = () => {
                                     </div>
                                     <div>
                                         <div className="font-display text-xl font-black text-slate-900 leading-none">{regularDate.split(" (")[0]}</div>
-                                        <div className="font-body text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">SATURDAY</div>
+                                        <div className="font-body text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">{dayOfWeek}</div>
                                     </div>
                                 </div>
 
@@ -98,7 +98,7 @@ const AIMasterclass2HeroSection: React.FC = () => {
                                         <Clock className="w-6 h-6 text-pink-500" />
                                     </div>
                                     <div>
-                                        <div className="font-display text-xl font-black text-slate-900 leading-none">6:00 PM – 9:00 PM</div>
+                                        <div className="font-display text-xl font-black text-slate-900 leading-none">{timeSlot.replace(" IST", "")}</div>
                                         <div className="font-body text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">IST • ONLINE LIVE</div>
                                     </div>
                                 </div>

@@ -4,7 +4,7 @@ import { useAIMasterclassRegisterModal } from "./AIMasterclassRegisterModalConte
 import { getMasterclassDateStrings } from "../../lib/masterclassDateUtils";
 
 const valueStack = [
-    { item: "3-Hour Live Interactive Masterclass (Wed or Sun)", value: "₹4,999" },
+    { item: "3-Hour Live Interactive Masterclass (Wed, Fri or Sun)", value: "₹4,999" },
     { item: "Bonus #1: 500+ Master ChatGPT Prompts Vault", value: "₹2,999" },
     { item: "Bonus #2: 30-Day AI Social Content Calendar", value: "₹3,999" },
     { item: "Bonus #3: Lifetime VIP WhatsApp Mastermind Group", value: "₹2,999" },
@@ -49,8 +49,8 @@ const AIMasterclassPricingSection: React.FC = () => {
                                         <span className="text-2xl text-slate-400 line-through font-bold">₹999</span>
                                         <span className="text-5xl sm:text-6xl font-black text-slate-900 leading-none">₹99</span>
                                     </div>
-                                    <p className="text-xs font-bold text-slate-500 mb-6">
-                                        + 18% GST (Total ₹117 at checkout)
+                                    <p className="text-xs font-bold text-emerald-700 mb-6">
+                                        Inclusive of 18% GST (Final Price ₹99)
                                     </p>
 
                                     <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-2 mb-6">
@@ -60,7 +60,7 @@ const AIMasterclassPricingSection: React.FC = () => {
                                         </div>
                                         <div className="flex items-center justify-between text-xs text-slate-600 font-semibold">
                                             <span>Batch Times:</span>
-                                            <span className="font-bold text-slate-900">Wed 6-9 PM / Sun 10-1 PM</span>
+                                            <span className="font-bold text-slate-900">Wed & Fri 5:30-8:30 PM / Sun 10-1 PM</span>
                                         </div>
                                         <div className="flex items-center justify-between text-xs text-slate-600 font-semibold">
                                             <span>Language:</span>
@@ -111,7 +111,7 @@ const AIMasterclassPricingSection: React.FC = () => {
                                 </div>
                                 <div className="pt-1 flex items-center justify-between">
                                     <span className="text-sm font-black text-emerald-700">Your Price Today:</span>
-                                    <span className="text-lg font-black text-emerald-700">₹99 (+ 18% GST)</span>
+                                    <span className="text-lg font-black text-emerald-700">₹99 (Incl. 18% GST)</span>
                                 </div>
                             </div>
                         </div>

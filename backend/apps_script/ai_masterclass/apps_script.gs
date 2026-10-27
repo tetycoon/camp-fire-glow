@@ -239,11 +239,24 @@ const TEST_EMAILS = ["ambroseselva001@gmail.com", "techtycoondigitalsolutions@gm
 function getNextWednesdaySession(now) {
   now = now || new Date();
   const day = now.getDay(); // 0: Sun, 3: Wed
-  const target = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 18, 0, 0);
+  const target = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 17, 30, 0);
   if (day === 3) {
     if (now.getTime() >= target.getTime()) target.setDate(target.getDate() + 7);
   } else {
     const diff = (3 - day + 7) % 7;
+    target.setDate(target.getDate() + diff);
+  }
+  return target;
+}
+
+function getNextFridaySession(now) {
+  now = now || new Date();
+  const day = now.getDay(); // 0: Sun, 5: Fri
+  const target = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 17, 30, 0);
+  if (day === 5) {
+    if (now.getTime() >= target.getTime()) target.setDate(target.getDate() + 7);
+  } else {
+    const diff = (5 - day + 7) % 7;
     target.setDate(target.getDate() + diff);
   }
   return target;
@@ -265,8 +278,10 @@ function getNextSundaySession(now) {
 function getUpcomingWebinarTime() {
   const now = new Date();
   const wed = getNextWednesdaySession(now);
+  const fri = getNextFridaySession(now);
   const sun = getNextSundaySession(now);
-  return (wed.getTime() < sun.getTime()) ? wed : sun;
+  const slots = [wed, fri, sun].sort(function(a, b) { return a.getTime() - b.getTime(); });
+  return slots[0];
 }
 
 // ------------------------------------------------------------
@@ -629,7 +644,13 @@ function generateOurGstInvoicePdfBlob(customerName, customerEmail, customerPhone
   const amountInWords = numberToIndianRupeesWords(total);
   const roundOffSign = acct.roundOff >= 0 ? "+" : "-";
   const roundOffAbs = Math.abs(acct.roundOff).toFixed(2);
-  const invNumber = invoiceNo || ("TT/26-27/" + String(paymentId || orderId || Date.now()).replace(/[^A-Za-z0-9]/g, "").slice(-6).toUpperCase());
+  if (!invoiceNo || typeof invoiceNo !== "string" || !invoiceNo.trim()) {
+    if (typeof writeToLogs === "function") {
+      writeToLogs("INVOICE_PDF_FAILED", "Cannot generate Tax Invoice PDF without authoritative invoice number for " + paymentId);
+    }
+    throw new Error("INVOICE_NUMBER_ALLOCATION_FAILED: Missing authoritative invoice number for PDF generation.");
+  }
+  const invNumber = String(invoiceNo).trim();
   const dateStr = Utilities.formatDate(new Date(), "Asia/Kolkata", "dd MMM yyyy");
 
   // Automatically record in GST_Sales_Register sheet tab for monthly GSTR-1 & GSTR-3B filing
@@ -908,7 +929,12 @@ function syncInvoiceWithFunnelsDone(customerName, customerEmail, customerPhone, 
       { method: "get", headers: headers, muteHttpExceptions: true }
     );
     const numJson = JSON.parse(numRes.getContentText() || "{}");
-    const nextInvoiceNumber = numJson.invoiceNumber || String(Math.floor(100000 + Math.random() * 900000));
+    const rawInvNum = numJson ? (numJson.invoiceNumber || (numJson.invoice && numJson.invoice.invoiceNumber)) : null;
+    if (!rawInvNum || (typeof rawInvNum !== "string" && typeof rawInvNum !== "number") || !String(rawInvNum).trim()) {
+      writeToLogs("INVOICE_NUM_ALLOC_FAILED", "Authoritative invoice number allocation failed from FunnelsDone for " + cleanPayId + ". Response: " + numRes.getContentText());
+      throw new Error("INVOICE_NUMBER_ALLOCATION_FAILED: FunnelsDone returned missing or malformed sequence number.");
+    }
+    const nextInvoiceNumber = String(rawInvNum).trim();
 
     // 3. Create Draft Invoice in FunnelsDone with 9% CGST + 9% SGST
     const acct = getInvoiceAccountingBreakdown(totalAmount);
@@ -1039,18 +1065,9 @@ function sendMasterclassEmail(email, name, sessionDate, sessionTime, totalAmount
   }
 
   if (!fdInvoiceNo) {
-    const props = PropertiesService.getScriptProperties();
-    const invState = props ? props.getProperty("INVOICE_STATE_" + paymentId) : "";
-    if (invState === "UNCERTAIN_INVOICE_PENDING" || invState === "INVOICE_REQUEST_PENDING") {
-      writeToLogs("HOLDING_CONFIRMATION_EMAIL", "FunnelsDone invoice outcome is uncertain for payment " + paymentId + ". Holding customer confirmation.");
-      writeToLogs("INVOICE_PENDING_HOLD", "FunnelsDone invoice outcome is uncertain for payment " + paymentId + ". Holding customer confirmation.");
-      return { invoiceNumber: null, courseTitle: courseTitle, uncertain: true };
-    }
-    // Autonomous GST Invoice Fallback:
-    // If FunnelsDone is unreachable, generate authoritative internal invoice so payment succeeds automatically
-    const cleanPaySuffix = String(paymentId || "").replace(/[^A-Za-z0-9]/g, "").slice(-6).toUpperCase() || Math.floor(100000 + Math.random() * 900000);
-    fdInvoiceNo = "TT/26-27/" + cleanPaySuffix;
-    writeToLogs("AUTONOMOUS_INVOICE", "Using authoritative fallback invoice number " + fdInvoiceNo + " for payment " + paymentId);
+    writeToLogs("HOLDING_CONFIRMATION_EMAIL", "FunnelsDone invoice outcome is uncertain for payment " + paymentId + ". Holding customer confirmation.");
+    writeToLogs("INVOICE_PENDING_HOLD", "FunnelsDone invoice outcome is uncertain for payment " + paymentId + ". Holding customer confirmation.");
+    return { invoiceNumber: null, courseTitle: courseTitle, uncertain: true };
   }
 
   // 2. Generate our side's official GST Tax Invoice PDF attachment
@@ -1294,11 +1311,17 @@ function verifyPaymentWithRazorpayServer(orderId, paymentId, expectedAmountInr, 
 }
 
 function saveVerifiedInvoiceRecord(paymentId, orderId, invoiceNumber, customerName, customerEmail, customerPhone, courseName, totalAmountPaid) {
+  if (!invoiceNumber || typeof invoiceNumber !== "string" || !invoiceNumber.trim()) {
+    if (typeof writeToLogs === "function") {
+      writeToLogs("SAVE_RECORD_SKIPPED", "Cannot save verified invoice record without authoritative invoice number for " + paymentId);
+    }
+    return null;
+  }
   const record = {
     verified: true,
     paymentId: String(paymentId || "").trim(),
     orderId: String(orderId || "").trim(),
-    invoiceNumber: invoiceNumber || ("TT/26-27/" + String(paymentId).replace(/[^A-Za-z0-9]/g, "").slice(-6).toUpperCase()),
+    invoiceNumber: String(invoiceNumber).trim(),
     invoiceDate: Utilities.formatDate(new Date(), "Asia/Kolkata", "dd MMM yyyy"),
     customerName: sanitizeCell(customerName || "Learner"),
     customerEmail: sanitizeCell(customerEmail || ""),
@@ -1380,15 +1403,16 @@ function getVerifiedInvoiceRecord(sheet, paymentId, orderId, token, userContact)
       const rowOrdId = String(rows[i][8] || "").trim();
       const rowPayId = String(rows[i][9] || "").trim().replace(/^'/, "");
       const rowStatus = String(rows[i][7] || "").trim();
-      if (rowOrdId === cleanOrdId && rowPayId === cleanPayId && rowStatus === "✅ PAID") {
+      if (rowOrdId === cleanOrdId && rowPayId === cleanPayId && (rowStatus === "✅ PAID" || rowStatus.indexOf("✅") !== -1)) {
         const amt = Number(rows[i][6]) || 117;
         const courseTitle = amt >= 4000 ? "UPSCALE: 1-Day Offline AI Mastery Workshop (Chennai)" : "AI Secrets Revealed Masterclass";
         invRecord = {
-          verified: true,
-          status: "PAID",
+          verified: false,
+          status: "UNCERTAIN_INVOICE_PENDING",
           paymentId: cleanPayId,
           orderId: cleanOrdId,
-          invoiceNumber: "TT/26-27/" + cleanPayId.replace(/[^A-Za-z0-9]/g, "").slice(-6).toUpperCase(),
+          invoiceNumber: null,
+          needsReconciliation: true,
           invoiceDate: Utilities.formatDate(new Date(), "Asia/Kolkata", "dd MMM yyyy"),
           customerName: String(rows[i][1] || "Learner").replace(/^'/, ""),
           customerEmail: String(rows[i][2] || "").replace(/^'/, ""),
@@ -1405,14 +1429,25 @@ function getVerifiedInvoiceRecord(sheet, paymentId, orderId, token, userContact)
     return { success: false, verified: false, error: "Payment record not found or not verified." };
   }
 
+  if (invRecord.needsReconciliation || !invRecord.invoiceNumber) {
+    return {
+      success: true,
+      verified: false,
+      status: "UNCERTAIN_INVOICE_PENDING",
+      needsReconciliation: true,
+      error: "INVOICE_RECONCILIATION_REQUIRED: Payment record exists but authoritative invoice number is pending reconciliation.",
+      invoice: invRecord
+    };
+  }
+
   return { success: true, verified: true, invoice: invRecord };
 }
 
 function validateMasterclassAmount(data) {
   const email = (data.email || "").toString().toLowerCase().trim();
   if (TEST_EMAILS.indexOf(email) !== -1 && Number(data.amount) === 1) return 1;
-  const reqAmount = Number(data.amount) || 117;
-  if (reqAmount < 99) return 117;
+  const reqAmount = Number(data.amount) || 99;
+  if (reqAmount < 99) return 99;
   return Math.round(reqAmount);
 }
 
@@ -2035,7 +2070,7 @@ function createCalendarInvite(email, name, sessionDate, sessionTime) {
         
         if (startTime && !isNaN(startTime.getTime())) {
           const isMorning = String(sessionTime || "").indexOf("10") !== -1;
-          startTime.setHours(isMorning ? 10 : 18, 0, 0, 0);
+          startTime.setHours(isMorning ? 10 : 17, isMorning ? 0 : 30, 0, 0);
         } else {
           startTime = getUpcomingWebinarTime();
         }
@@ -2176,7 +2211,6 @@ function reconcileAiMasterclassRows() {
       const sessionDate = row[17] || (isUpscaleOffline ? "October 2nd week 2026 (Sunday)" : defaultTime.toDateString());
       const sessionTime = row[18] || (isUpscaleOffline ? "9:00 AM – 5:30 PM IST" : "6:00 PM IST");
       const courseTitle = isUpscaleOffline ? "UPSCALE: 1-Day Offline AI Mastery Workshop (Chennai)" : "AI Secrets Revealed Masterclass";
-      const invoiceNo = "TT/26-27/" + payId.replace(/[^A-Za-z0-9]/g, "").slice(-6).toUpperCase();
 
       // 1. Mark as PAID in Sheet1
       sheet.getRange(i + 1, 8).setValue(isTestTx ? "✅ TEST_VERIFIED (₹1)" : "✅ PAID");

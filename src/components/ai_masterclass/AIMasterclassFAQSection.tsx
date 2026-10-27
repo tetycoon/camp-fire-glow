@@ -10,7 +10,7 @@ import { HelpCircle } from "lucide-react";
 const faqs = [
     {
         q: "What days and times are the masterclass sessions conducted?",
-        a: "Sessions are conducted live every week in two convenient batches: Wednesday Evening from 6:00 PM to 9:00 PM IST, and Sunday Morning from 10:00 AM to 1:00 PM IST. You can select your preferred session date and time directly in the registration form."
+        a: "Sessions are conducted live every week in three convenient batches: Wednesday Evening (5:30 PM to 8:30 PM IST), Friday Evening (5:30 PM to 8:30 PM IST), and Sunday Morning (10:00 AM to 1:00 PM IST). You can select your preferred session date and time directly in the registration form."
     },
     {
         q: "Do I need technical or coding skills?",
@@ -18,7 +18,7 @@ const faqs = [
     },
     {
         q: "How much does the masterclass cost and are there hidden charges?",
-        a: "The early bird ticket is just ₹99 (discounted from ₹999). There are no hidden fees or recurring subscriptions. Your ₹99 ticket gives you full access to the live 3-hour session and all ₹9,997 worth of bonus resources."
+        a: "The early bird ticket is just ₹99 (inclusive of 18% GST, discounted from ₹999). There are no hidden fees or recurring subscriptions. Your ₹99 ticket gives you full access to the live 3-hour session and all ₹9,997 worth of bonus resources."
     },
     {
         q: "Will I receive access to session templates and prompts?",

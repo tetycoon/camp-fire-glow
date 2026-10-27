@@ -67,13 +67,13 @@ export function determinePlaceOfSupply(stateInput?: string, gstin?: string) {
   const cleanState = String(stateInput || "").trim().toLowerCase();
   if (!cleanState) {
     return {
-      placeOfSupply: "33-Tamil Nadu",
+      placeOfSupply: "Unspecified State (Missing)",
       isInterState: false,
-      supplyType: "B2C Intra-State",
+      supplyType: "HOLD_FOR_REVIEW_MISSING_STATE",
       isB2B: false,
-      stateCode: "33",
-      stateName: "Tamil Nadu",
-      isUnspecified: true,
+      isMissingState: true,
+      stateCode: undefined,
+      stateName: undefined,
     };
   }
 
@@ -92,13 +92,13 @@ export function determinePlaceOfSupply(stateInput?: string, gstin?: string) {
   }
 
   return {
-    placeOfSupply: "33-Tamil Nadu",
+    placeOfSupply: "Invalid State (" + stateInput + ")",
     isInterState: false,
-    supplyType: "B2C Intra-State",
+    supplyType: "HOLD_FOR_REVIEW_INVALID_STATE",
     isB2B: false,
-    stateCode: "33",
-    stateName: "Tamil Nadu",
-    isUnresolved: true,
+    isInvalidState: true,
+    stateCode: undefined,
+    stateName: undefined,
   };
 }
 
@@ -161,6 +161,31 @@ export function calculateGstBreakdown(baseAmount: number): GstBreakdown {
     roundOff,
     totalAmount,
     totalInPaise: totalAmount * 100,
+  };
+}
+
+/**
+ * Calculates GST-inclusive breakdown where `totalAmount` is the final payable price (inclusive of 18% GST).
+ * E.g., for ₹99 inclusive: Base ₹83.90 + CGST ₹7.55 + SGST ₹7.55 = ₹99.00 Total Payable.
+ */
+export function calculateInclusiveGstBreakdown(totalAmount: number): GstBreakdown {
+  const safeTotal = Math.max(0, Math.round(Number(totalAmount) || 0));
+  const baseAmount = Math.round((safeTotal / (1 + GST_RATE)) * 100) / 100;
+  const cgstAmount = Math.round(baseAmount * CGST_RATE * 100) / 100;
+  const sgstAmount = Math.round(baseAmount * SGST_RATE * 100) / 100;
+  const exactGstAmount = Math.round((cgstAmount + sgstAmount) * 100) / 100;
+  const roundOff = Math.round((safeTotal - (baseAmount + exactGstAmount)) * 100) / 100;
+
+  return {
+    baseAmount,
+    cgstAmount,
+    sgstAmount,
+    exactGstAmount,
+    gstRatePercent: 18,
+    gstAmount: exactGstAmount,
+    roundOff,
+    totalAmount: safeTotal,
+    totalInPaise: safeTotal * 100,
   };
 }
 
@@ -516,14 +541,15 @@ export function openPrintableGstInvoice(params: InvoicePrintParams): void {
     );
   }
 
+  if (!params.invoiceNumber || typeof params.invoiceNumber !== "string" || !params.invoiceNumber.trim()) {
+    throw new Error(
+      "INVOICE_NUMBER_ALLOCATION_FAILED: Official Tax Invoice cannot be rendered without an authoritative invoice number."
+    );
+  }
+
   const acct = getInvoiceAccountingBreakdown(params.totalAmountPaid, params.baseAmount);
   const amountInWords = numberToIndianRupeesWords(acct.totalAmount);
-
-  const suffix = (params.paymentId || params.orderId || String(Date.now()))
-    .replace(/[^A-Za-z0-9]/g, "")
-    .slice(-6)
-    .toUpperCase();
-  const invoiceNumber = params.invoiceNumber || `TT/26-27/${suffix}`;
+  const invoiceNumber = params.invoiceNumber.trim();
   const dateStr =
     params.invoiceDate ||
     new Date().toLocaleDateString("en-IN", {

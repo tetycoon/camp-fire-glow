@@ -392,11 +392,12 @@ function getVerifiedInvoiceRecord(sheet, paymentId, orderId, token, userContact)
         const rowPayId = String(data[i][8] || "").trim();
         if (rowStatus === "PAID" && rowPayId === cleanPayId && (!cleanOrdId || rowOrderId === cleanOrdId)) {
           invRecord = {
-            verified: true,
-            status: "PAID",
+            verified: false,
+            status: "UNCERTAIN_INVOICE_PENDING",
             paymentId: rowPayId,
             orderId: rowOrderId,
-            invoiceNumber: "TT/26-27/" + cleanPayId.replace(/[^A-Za-z0-9]/g, "").slice(-6).toUpperCase(),
+            invoiceNumber: null,
+            needsReconciliation: true,
             customerName: String(data[i][1] || "Learner"),
             customerEmail: String(data[i][2] || ""),
             customerPhone: String(data[i][3] || ""),
@@ -412,6 +413,17 @@ function getVerifiedInvoiceRecord(sheet, paymentId, orderId, token, userContact)
 
   if (!invRecord) {
     return { success: false, verified: false, error: "UNVERIFIED_OR_NOT_FOUND: No verified PAID transaction found for this paymentId/orderId." };
+  }
+
+  if (invRecord.needsReconciliation || !invRecord.invoiceNumber) {
+    return {
+      success: true,
+      verified: false,
+      status: "UNCERTAIN_INVOICE_PENDING",
+      needsReconciliation: true,
+      error: "INVOICE_RECONCILIATION_REQUIRED: Payment record exists but authoritative invoice number is pending reconciliation.",
+      invoice: invRecord
+    };
   }
 
   return { success: true, verified: true, invoice: invRecord };
@@ -740,7 +752,13 @@ function generateOurGstInvoicePdfBlob(customerName, customerEmail, customerPhone
   const amountInWords = numberToIndianRupeesWords(total);
   const roundOffSign = acct.roundOff >= 0 ? "+" : "-";
   const roundOffAbs = Math.abs(acct.roundOff).toFixed(2);
-  const invNumber = invoiceNo || ("TT/26-27/" + String(paymentId || orderId || Date.now()).replace(/[^A-Za-z0-9]/g, "").slice(-6).toUpperCase());
+  if (!invoiceNo || typeof invoiceNo !== "string" || !invoiceNo.trim()) {
+    if (typeof writeToLogs === "function") {
+      writeToLogs("INVOICE_PDF_FAILED", "Cannot generate Tax Invoice PDF without authoritative invoice number for " + paymentId);
+    }
+    throw new Error("INVOICE_NUMBER_ALLOCATION_FAILED: Missing authoritative invoice number for PDF generation.");
+  }
+  const invNumber = String(invoiceNo).trim();
   const dateStr = Utilities.formatDate(new Date(), "Asia/Kolkata", "dd MMM yyyy");
 
   // Automatically record in GST_Sales_Register sheet tab for monthly GSTR-1 & GSTR-3B filing
@@ -1010,7 +1028,12 @@ function syncInvoiceWithFunnelsDone(customerName, customerEmail, customerPhone, 
       { method: "get", headers: headers, muteHttpExceptions: true }
     );
     const numJson = JSON.parse(numRes.getContentText() || "{}");
-    const nextInvoiceNumber = numJson.invoiceNumber || String(Math.floor(100000 + Math.random() * 900000));
+    const rawInvNum = numJson ? (numJson.invoiceNumber || (numJson.invoice && numJson.invoice.invoiceNumber)) : null;
+    if (!rawInvNum || (typeof rawInvNum !== "string" && typeof rawInvNum !== "number") || !String(rawInvNum).trim()) {
+      writeToLogs("INVOICE_NUM_ALLOC_FAILED", "Authoritative invoice number allocation failed from FunnelsDone for " + cleanPayId + ". Response: " + numRes.getContentText());
+      throw new Error("INVOICE_NUMBER_ALLOCATION_FAILED: FunnelsDone returned missing or malformed sequence number.");
+    }
+    const nextInvoiceNumber = String(rawInvNum).trim();
 
     // 3. Create Draft Invoice in FunnelsDone with 9% CGST + 9% SGST
     const acct = getInvoiceAccountingBreakdown(totalAmount);

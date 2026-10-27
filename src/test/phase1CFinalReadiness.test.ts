@@ -516,13 +516,26 @@ describe("PHASE 1C: Invoice Token Leakage Fix & Pre-Deployment Readiness Suite",
       });
     }).toThrow("UNVERIFIED_INVOICE_BLOCKED");
 
-    // Valid registered record succeeds
+    // Registered record missing invoiceNumber throws INVOICE_NUMBER_ALLOCATION_FAILED
+    const missingNumberRecord = registerVerifiedInvoiceRecord({
+      customerName: "No Number Customer",
+      paymentId: "pay_NoNumCustomer1",
+      orderId: "order_NoNumCustomer1",
+      totalAmountPaid: 117,
+      courseName: "AI Secrets Revealed Masterclass",
+    });
+    expect(() => openPrintableGstInvoice(missingNumberRecord)).toThrow(
+      "INVOICE_NUMBER_ALLOCATION_FAILED"
+    );
+
+    // Valid registered record with authoritative invoiceNumber succeeds
     const legit = registerVerifiedInvoiceRecord({
       customerName: "Alice Customer",
       paymentId: "pay_CustomerAPay01",
       orderId: "order_CustomerA01",
       totalAmountPaid: 117,
       courseName: "AI Secrets Revealed Masterclass",
+      invoiceNumber: "TT/26-27/000101",
     });
 
     const openSpy = vi.spyOn(window, "open").mockReturnValue({

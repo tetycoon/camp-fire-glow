@@ -287,6 +287,24 @@ function createPhase1DSandbox(options: SandboxOptions = {}) {
               }),
           };
         }
+        if (urlStr.includes("/contacts/upsert")) {
+          return {
+            getResponseCode: () => 200,
+            getContentText: () => JSON.stringify({ contact: { id: "cnt_123" } }),
+          };
+        }
+        if (urlStr.includes("/invoices/generate-invoice-number")) {
+          return {
+            getResponseCode: () => 200,
+            getContentText: () => JSON.stringify({ invoiceNumber: "889900" }),
+          };
+        }
+        if (urlStr.includes("/invoices/")) {
+          return {
+            getResponseCode: () => 200,
+            getContentText: () => JSON.stringify({ _id: "inv_123", total: 117 }),
+          };
+        }
         if (urlStr.includes("funnelsdone.com")) {
           const bodyStr = String(params.payload || "");
           if (bodyStr.includes("invoice_created")) {

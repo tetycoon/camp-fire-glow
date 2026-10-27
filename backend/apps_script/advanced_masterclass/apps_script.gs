@@ -614,7 +614,13 @@ function generateOurGstInvoicePdfBlob(customerName, customerEmail, customerPhone
   const amountInWords = numberToIndianRupeesWords(total);
   const roundOffSign = acct.roundOff >= 0 ? "+" : "-";
   const roundOffAbs = Math.abs(acct.roundOff).toFixed(2);
-  const invNumber = invoiceNo || ("TT/26-27/" + String(paymentId || orderId || Date.now()).replace(/[^A-Za-z0-9]/g, "").slice(-6).toUpperCase());
+  if (!invoiceNo || typeof invoiceNo !== "string" || !invoiceNo.trim()) {
+    if (typeof writeToLogs === "function") {
+      writeToLogs("INVOICE_PDF_FAILED", "Cannot generate Tax Invoice PDF without authoritative invoice number for " + paymentId);
+    }
+    throw new Error("INVOICE_NUMBER_ALLOCATION_FAILED: Missing authoritative invoice number for PDF generation.");
+  }
+  const invNumber = String(invoiceNo).trim();
   const dateStr = Utilities.formatDate(new Date(), "Asia/Kolkata", "dd MMM yyyy");
 
   // Automatically record in GST_Sales_Register sheet tab for monthly GSTR-1 & GSTR-3B filing
@@ -893,7 +899,12 @@ function syncInvoiceWithFunnelsDone(customerName, customerEmail, customerPhone, 
       { method: "get", headers: headers, muteHttpExceptions: true }
     );
     const numJson = JSON.parse(numRes.getContentText() || "{}");
-    const nextInvoiceNumber = numJson.invoiceNumber || String(Math.floor(100000 + Math.random() * 900000));
+    const rawInvNum = numJson ? (numJson.invoiceNumber || (numJson.invoice && numJson.invoice.invoiceNumber)) : null;
+    if (!rawInvNum || (typeof rawInvNum !== "string" && typeof rawInvNum !== "number") || !String(rawInvNum).trim()) {
+      writeToLogs("INVOICE_NUM_ALLOC_FAILED", "Authoritative invoice number allocation failed from FunnelsDone for " + cleanPayId + ". Response: " + numRes.getContentText());
+      throw new Error("INVOICE_NUMBER_ALLOCATION_FAILED: FunnelsDone returned missing or malformed sequence number.");
+    }
+    const nextInvoiceNumber = String(rawInvNum).trim();
 
     // 3. Create Draft Invoice in FunnelsDone with 9% CGST + 9% SGST
     const acct = getInvoiceAccountingBreakdown(totalAmount);
@@ -1125,12 +1136,10 @@ function sendMasterclassEmail(email, name, sessionDate, sessionTime, totalAmount
     if (typeof writeToLogs === "function") {
       writeToLogs("STAGING_NOTIFICATION_SUPPRESSED", "Email suppressed to " + email);
     }
-    const finalInvNo = fdInvoiceNo || ("STAGE-INV-" + String(paymentId || orderId || Date.now()).replace(/[^A-Za-z0-9]/g, "").slice(-4).toUpperCase());
-    return { invoiceNumber: finalInvNo, courseTitle: courseTitle, suppressed: true };
+    return { invoiceNumber: fdInvoiceNo, courseTitle: courseTitle, suppressed: true };
   }
   MailApp.sendEmail(emailOptions);
-  const finalInvNo = fdInvoiceNo || ("TT/26-27/" + String(paymentId || orderId || Date.now()).replace(/[^A-Za-z0-9]/g, "").slice(-6).toUpperCase());
-  return { invoiceNumber: finalInvNo, courseTitle: courseTitle };
+  return { invoiceNumber: fdInvoiceNo, courseTitle: courseTitle };
 }
 
 function constantTimeEquals(a, b) {
@@ -1256,11 +1265,17 @@ function verifyPaymentWithRazorpayServer(orderId, paymentId, expectedAmountInr, 
 }
 
 function saveVerifiedInvoiceRecord(paymentId, orderId, invoiceNumber, customerName, customerEmail, customerPhone, courseName, totalAmountPaid) {
+  if (!invoiceNumber || typeof invoiceNumber !== "string" || !invoiceNumber.trim()) {
+    if (typeof writeToLogs === "function") {
+      writeToLogs("SAVE_RECORD_SKIPPED", "Cannot save verified invoice record without authoritative invoice number for " + paymentId);
+    }
+    return null;
+  }
   const record = {
     verified: true,
     paymentId: String(paymentId || "").trim(),
     orderId: String(orderId || "").trim(),
-    invoiceNumber: invoiceNumber || ("TT/26-27/" + String(paymentId).replace(/[^A-Za-z0-9]/g, "").slice(-6).toUpperCase()),
+    invoiceNumber: String(invoiceNumber).trim(),
     invoiceDate: Utilities.formatDate(new Date(), "Asia/Kolkata", "dd MMM yyyy"),
     customerName: sanitizeCell(customerName || "Learner"),
     customerEmail: sanitizeCell(customerEmail || ""),
@@ -1342,14 +1357,15 @@ function getVerifiedInvoiceRecord(sheet, paymentId, orderId, token, userContact)
       const rowOrdId = String(rows[i][8] || "").trim();
       const rowPayId = String(rows[i][9] || "").trim().replace(/^'/, "");
       const rowStatus = String(rows[i][7] || "").trim();
-      if (rowOrdId === cleanOrdId && rowPayId === cleanPayId && rowStatus === "✅ PAID") {
+      if (rowOrdId === cleanOrdId && rowPayId === cleanPayId && (rowStatus === "✅ PAID" || rowStatus.indexOf("✅") !== -1)) {
         const amt = Number(rows[i][6]) || 117;
         invRecord = {
-          verified: true,
-          status: "PAID",
+          verified: false,
+          status: "UNCERTAIN_INVOICE_PENDING",
           paymentId: cleanPayId,
           orderId: cleanOrdId,
-          invoiceNumber: "TT/26-27/" + cleanPayId.replace(/[^A-Za-z0-9]/g, "").slice(-6).toUpperCase(),
+          invoiceNumber: null,
+          needsReconciliation: true,
           invoiceDate: Utilities.formatDate(new Date(), "Asia/Kolkata", "dd MMM yyyy"),
           customerName: String(rows[i][1] || "Learner").replace(/^'/, ""),
           customerEmail: String(rows[i][2] || "").replace(/^'/, ""),
@@ -1364,6 +1380,17 @@ function getVerifiedInvoiceRecord(sheet, paymentId, orderId, token, userContact)
 
   if (!invRecord) {
     return { success: false, verified: false, error: "Payment record not found or not verified." };
+  }
+
+  if (invRecord.needsReconciliation || !invRecord.invoiceNumber) {
+    return {
+      success: true,
+      verified: false,
+      status: "UNCERTAIN_INVOICE_PENDING",
+      needsReconciliation: true,
+      error: "INVOICE_RECONCILIATION_REQUIRED: Payment record exists but authoritative invoice number is pending reconciliation.",
+      invoice: invRecord
+    };
   }
 
   return { success: true, verified: true, invoice: invRecord };

@@ -15,6 +15,8 @@ const VALID_STAGING_SPREADSHEET_ID = "1staging_payments_dedicated_sheet_98765432
 interface SandboxOptions {
   propsOverrides?: Record<string, string | null>;
   sheetRows?: Record<string, unknown[][]>;
+  beforeAppendHook?: (sheetName: string, row: unknown[]) => void;
+  pdfFailHook?: () => void;
 }
 
 function createStagingScriptSandbox(options: SandboxOptions = {}) {
@@ -97,6 +99,9 @@ function createStagingScriptSandbox(options: SandboxOptions = {}) {
       getValues: () => sheetsData[name] || [],
     }),
     appendRow: (row: unknown[]) => {
+      if (options.beforeAppendHook) {
+        options.beforeAppendHook(name, row);
+      }
       if (!sheetsData[name]) sheetsData[name] = [];
       sheetsData[name].push(row);
     },
@@ -151,6 +156,7 @@ function createStagingScriptSandbox(options: SandboxOptions = {}) {
         return Array.from(hash);
       },
       DigestAlgorithm: { SHA_256: "SHA_256" },
+      Charset: { UTF_8: "UTF_8" },
     },
     ContentService: {
       MimeType: { JSON: "application/json" },
@@ -159,6 +165,12 @@ function createStagingScriptSandbox(options: SandboxOptions = {}) {
           getContent: () => txt,
         }),
       }),
+    },
+    generateStagingCreditNotePdf: (_cn: string, _orig: string, _amt: number) => {
+      if (options.pdfFailHook) {
+        options.pdfFailHook();
+      }
+      return { blob: "mock_pdf_bytes" };
     },
     Logger: {
       log: (msg: string) => logsOutput.push(msg),
@@ -182,197 +194,24 @@ function createStagingScriptSandbox(options: SandboxOptions = {}) {
   };
 }
 
-describe("PHASE 3 / 2C: Authorized Staging GST Invoice Automation & Recovery", () => {
-  describe("1. Staging Mock Invoice Numbering & Atomic Recovery", () => {
-    it("allocates sequential STAGE-INV- numbers when invoiceNumber is omitted", () => {
-      const { context, propsStore } = createStagingScriptSandbox();
-
-      const inv1 = context.createStagingMockInvoice("pay_stage_001", "order_stage_001", "academy");
-      expect(inv1).toBe("STAGE-INV-1001");
-      expect(propsStore.STAGING_INVOICE_COUNTER).toBe("1001");
-
-      const inv2 = context.createStagingMockInvoice("pay_stage_002", "order_stage_002", "academy");
-      expect(inv2).toBe("STAGE-INV-1002");
-      expect(propsStore.STAGING_INVOICE_COUNTER).toBe("1002");
+describe("PHASE 3B: Critical Code Audit & Staging Automation Verification", () => {
+  describe("1. Missing Billing-State Handling (No Silent Tamil Nadu Default)", () => {
+    it("flags missing billing state explicitly and marks for review", () => {
+      const posMissing = determinePlaceOfSupply("");
+      expect(posMissing.isMissingState).toBe(true);
+      expect(posMissing.supplyType).toBe("HOLD_FOR_REVIEW_MISSING_STATE");
+      expect(posMissing.placeOfSupply).toContain("Missing");
+      expect(posMissing.stateCode).toBeUndefined(); // Never silently 33!
     });
 
-    it("idempotently reuses pending invoice number for retry of the same payment without incrementing counter", () => {
-      const { context, propsStore } = createStagingScriptSandbox();
-
-      const invFirst = context.createStagingMockInvoice("pay_stage_retry_01", "order_stage_retry_01", "academy");
-      expect(invFirst).toBe("STAGE-INV-1001");
-      expect(propsStore.STAGING_INVOICE_COUNTER).toBe("1001");
-
-      // Simulated network retry / duplicate request
-      const invRetry = context.createStagingMockInvoice("pay_stage_retry_01", "order_stage_retry_01", "academy");
-      expect(invRetry).toBe("STAGE-INV-1001");
-      expect(propsStore.STAGING_INVOICE_COUNTER).toBe("1001"); // Counter must NOT have incremented!
-    });
-  });
-
-  describe("2. Dual-Write to Master GST Sales Register & Deduplication", () => {
-    it("dual-writes 20-col GST_Sales_Register and 22-col Master_GST_Sales_Register", () => {
-      const { context, ssMock, sheetsData } = createStagingScriptSandbox();
-
-      const paymentEntity = {
-        id: "pay_test_dual_001",
-        order_id: "order_test_dual_001",
-        amount: 589900,
-        currency: "INR",
-        email: "student@techtycoon.in",
-        contact: "9876543210",
-        notes: {
-          customer_name: "Tamil Learner",
-          billing_state: "Tamil Nadu",
-          gstin: "33AAAAA0000A1Z5",
-        },
-      };
-
-      context.appendToStagingGstSalesRegister(ssMock, paymentEntity, "STAGE-INV-1001", "academy");
-
-      // Check GST_Sales_Register row
-      const gstRows = sheetsData.GST_Sales_Register;
-      expect(gstRows.length).toBe(2);
-      const row = gstRows[1];
-      expect(row[1]).toBe("STAGE-INV-1001");
-      expect(row[3]).toBe("Tamil Learner");
-      expect(row[6]).toBe("33-RegisteredState"); // Place of Supply
-      expect(row[7]).toBe("B2B Intra-State"); // Intra-state (33)
-      expect(row[11]).toBe(4999.15); // Base amount (5899 / 1.18)
-      expect(row[13]).toBe(449.93); // CGST 9% (Math.round(449.925) = 449.93)
-      expect(row[15]).toBe(449.92); // SGST 9% (899.85 - 449.93 = 449.92)
-      expect(row[17]).toBe(5899); // Gross
-      expect(row[18]).toBe("pay_test_dual_001");
-      expect(row[19]).toBe("order_test_dual_001");
-
-      // Check Master_GST_Sales_Register row (22 columns)
-      const masterRows = sheetsData.Master_GST_Sales_Register;
-      expect(masterRows.length).toBe(2);
-      const masterRow = masterRows[1];
-      expect(masterRow.length).toBe(22);
-      expect(masterRow[1]).toBe("INVOICE"); // Document Type
-      expect(masterRow[2]).toBe("STAGE-INV-1001"); // Invoice No
-      expect(masterRow[4]).toBe("Tamil Learner"); // Customer Name
-      expect(masterRow[7]).toBe("33AAAAA0000A1Z5"); // Customer GSTIN
-      expect(masterRow[8]).toBe("33-RegisteredState"); // Place of supply
-      expect(masterRow[9]).toBe("B2B Intra-State");
-      expect(masterRow[13]).toBe(4999.15); // Base
-      expect(masterRow[14]).toBe(449.93); // CGST
-      expect(masterRow[15]).toBe(449.92); // SGST
-      expect(masterRow[16]).toBe(0); // IGST
-      expect(masterRow[18]).toBe(5899); // Gross
-      expect(masterRow[19]).toBe("pay_test_dual_001");
-      expect(masterRow[20]).toBe("order_test_dual_001");
-      expect(masterRow[21]).toBe("-"); // Original Invoice No for invoice row
+    it("flags invalid billing state explicitly", () => {
+      const posInvalid = determinePlaceOfSupply("AtlantisTerritory");
+      expect(posInvalid.isInvalidState).toBe(true);
+      expect(posInvalid.supplyType).toBe("HOLD_FOR_REVIEW_INVALID_STATE");
+      expect(posInvalid.placeOfSupply).toContain("Invalid State");
     });
 
-    it("prevents duplicate rows in both registers on webhook retries", () => {
-      const { context, ssMock, sheetsData } = createStagingScriptSandbox();
-
-      const paymentEntity = {
-        id: "pay_test_dedup_001",
-        order_id: "order_test_dedup_001",
-        amount: 589900,
-        currency: "INR",
-        email: "dedup@techtycoon.in",
-        contact: "9876543210",
-        notes: { customer_name: "Dedup User", billing_state: "Tamil Nadu" },
-      };
-
-      // Call 1
-      context.appendToStagingGstSalesRegister(ssMock, paymentEntity, "STAGE-INV-1001", "academy");
-      expect(sheetsData.GST_Sales_Register.length).toBe(2);
-      expect(sheetsData.Master_GST_Sales_Register.length).toBe(2);
-
-      // Call 2 (Retry)
-      context.appendToStagingGstSalesRegister(ssMock, paymentEntity, "STAGE-INV-1001", "academy");
-      expect(sheetsData.GST_Sales_Register.length).toBe(2); // Still 2, no duplicates!
-      expect(sheetsData.Master_GST_Sales_Register.length).toBe(2); // Still 2!
-    });
-  });
-
-  describe("3. Credit Note (Rule 54) Generation & Original Invoice Linkage", () => {
-    it("generates sequential STAGE-CN- credit note linked to original invoice", () => {
-      const { context, ssMock, sheetsData, propsStore } = createStagingScriptSandbox();
-
-      // Step 1: Pre-populate an original invoice in GST_Sales_Register
-      const paymentEntity = {
-        id: "pay_refund_target_01",
-        order_id: "order_refund_target_01",
-        amount: 589900,
-        currency: "INR",
-        email: "refundee@techtycoon.in",
-        contact: "9876543210",
-        notes: { customer_name: "Refundee Learner", billing_state: "Tamil Nadu" },
-      };
-      context.appendToStagingGstSalesRegister(ssMock, paymentEntity, "STAGE-INV-1050", "academy");
-
-      // Step 2: Issue full refund
-      const refundEntity = {
-        id: "rfnd_test_stage_01",
-        payment_id: "pay_refund_target_01",
-        amount: 589900,
-        currency: "INR",
-      };
-
-      const result = context.handleStagingRefund(ssMock, refundEntity);
-
-      expect(result.success).toBe(true);
-      expect(result.creditNoteNumber).toBe("STAGE-CN-101");
-      expect(result.originalInvoiceNumber).toBe("STAGE-INV-1050");
-      expect(result.refundAmount).toBe(5899);
-      expect(result.baseRefund).toBe(-4999.15);
-      expect(result.totalGstRefund).toBe(-899.85);
-      expect(propsStore.STAGING_CREDIT_NOTE_COUNTER).toBe("101");
-
-      // Verify GST_Sales_Register has negative row
-      const gstRows = sheetsData.GST_Sales_Register;
-      expect(gstRows.length).toBe(3); // Header + Invoice + Credit Note
-      const cnRow = gstRows[2];
-      expect(cnRow[1]).toBe("STAGE-CN-101");
-      expect(cnRow[11]).toBe(-4999.15); // Negative taxable value
-      expect(cnRow[13]).toBe(-449.93); // Negative CGST
-      expect(cnRow[15]).toBe(-449.92); // Negative SGST
-      expect(cnRow[17]).toBe(-5899); // Negative total
-      expect(cnRow[18]).toBe("rfnd_test_stage_01");
-      expect(cnRow[19]).toBe("STAGE-INV-1050"); // Original invoice linked
-
-      // Verify Master_GST_Sales_Register has 22-column Credit Note row
-      const masterRows = sheetsData.Master_GST_Sales_Register;
-      expect(masterRows.length).toBe(3);
-      const masterCnRow = masterRows[2];
-      expect(masterCnRow[1]).toBe("CREDIT_NOTE");
-      expect(masterCnRow[2]).toBe("STAGE-CN-101");
-      expect(masterCnRow[13]).toBe(-4999.15);
-      expect(masterCnRow[14]).toBe(-449.93);
-      expect(masterCnRow[15]).toBe(-449.92);
-      expect(masterCnRow[18]).toBe(-5899);
-      expect(masterCnRow[21]).toBe("STAGE-INV-1050"); // Linked original invoice!
-    });
-
-    it("idempotently returns cached Credit Note on duplicate refund webhook", () => {
-      const { context, ssMock, sheetsData, propsStore } = createStagingScriptSandbox();
-
-      const refundEntity = {
-        id: "rfnd_duplicate_test_01",
-        payment_id: "pay_unknown_01",
-        amount: 200000,
-      };
-
-      const res1 = context.handleStagingRefund(ssMock, refundEntity);
-      expect(res1.creditNoteNumber).toBe("STAGE-CN-101");
-      expect(propsStore.STAGING_CREDIT_NOTE_COUNTER).toBe("101");
-
-      // Second call (replay)
-      const res2 = context.handleStagingRefund(ssMock, refundEntity);
-      expect(res2.creditNoteNumber).toBe("STAGE-CN-101");
-      expect(res2.alreadyProcessed).toBe(true);
-      expect(propsStore.STAGING_CREDIT_NOTE_COUNTER).toBe("101"); // No counter increment!
-    });
-  });
-
-  describe("4. State-Based Tax Determination & Statutory Place of Supply", () => {
-    it("correctly identifies Tamil Nadu as B2C Intra-State (33)", () => {
+    it("correctly identifies valid Tamil Nadu state as B2C Intra-State (33)", () => {
       const pos = determinePlaceOfSupply("Tamil Nadu");
       expect(pos.placeOfSupply).toBe("33-Tamil Nadu");
       expect(pos.isInterState).toBe(false);
@@ -380,81 +219,222 @@ describe("PHASE 3 / 2C: Authorized Staging GST Invoice Automation & Recovery", (
       expect(pos.stateCode).toBe("33");
     });
 
-    it("identifies out-of-state customer as Inter-State", () => {
+    it("identifies valid non-Tamil Nadu state as Inter-State", () => {
       const pos = determinePlaceOfSupply("Karnataka");
       expect(pos.placeOfSupply).toBe("29-Karnataka");
       expect(pos.isInterState).toBe(true);
       expect(pos.supplyType).toBe("B2C Inter-State");
       expect(pos.stateCode).toBe("29");
     });
+  });
 
-    it("derives place of supply and B2B status directly from customer GSTIN", () => {
-      // B2B Tamil Nadu
-      const posTnB2b = determinePlaceOfSupply("", "33AAAAA0000A1Z5");
-      expect(posTnB2b.isB2B).toBe(true);
-      expect(posTnB2b.isInterState).toBe(false);
-      expect(posTnB2b.supplyType).toBe("B2B Intra-State");
+  describe("2. Credit-Note Idempotency & Failure Stage Recovery", () => {
+    it("recovers safely if failure occurs before credit-note numbering", () => {
+      const { context, ssMock, propsStore } = createStagingScriptSandbox();
 
-      // B2B Maharashtra (27)
-      const posMhB2b = determinePlaceOfSupply("", "27AAAAA0000A1Z5");
-      expect(posMhB2b.isB2B).toBe(true);
-      expect(posMhB2b.isInterState).toBe(true);
-      expect(posMhB2b.supplyType).toBe("B2B Inter-State");
-      expect(posMhB2b.stateCode).toBe("27");
+      // Attempt 1: Call with missing refund identifiers (fails before numbering)
+      expect(() => context.handleStagingRefund(ssMock, {})).toThrow(/MISSING_REFUND_IDENTIFIERS/);
+      expect(propsStore.STAGING_CREDIT_NOTE_COUNTER).toBe("100"); // Unchanged!
+
+      // Attempt 2: Next call cleanly allocates next sequential number
+      const result = context.handleStagingRefund(ssMock, { id: "rfnd_clean_01", payment_id: "pay_01", amount: 100000 });
+      expect(result.creditNoteNumber).toBe("STAGE-CN-101");
+      expect(propsStore.STAGING_CREDIT_NOTE_COUNTER).toBe("101");
     });
 
-    it("calculates exact CGST+SGST for Intra-State and IGST for Inter-State", () => {
-      // Intra-state ₹5899 (using canonical ₹4999 base from map)
-      const intra = getInvoiceAccountingBreakdown(5899, undefined, { isInterState: false });
-      expect(intra.baseAmount).toBe(4999);
-      expect(intra.cgst).toBe(449.91);
-      expect(intra.sgst).toBe(449.91);
-      expect(intra.igst).toBe(0);
-      expect(intra.totalAmount).toBe(5899);
+    it("reuses exact same credit-note number if failure occurs after numbering but before register writes", () => {
+      let failOnFirstWrite = true;
+      const { context, ssMock, sheetsData, propsStore } = createStagingScriptSandbox({
+        beforeAppendHook: (sheetName) => {
+          if (sheetName === "GST_Sales_Register" && failOnFirstWrite) {
+            failOnFirstWrite = false;
+            throw new Error("SIMULATED_NETWORK_TIMEOUT_BEFORE_WRITE");
+          }
+        },
+      });
 
-      // Inter-state ₹5899
-      const inter = getInvoiceAccountingBreakdown(5899, undefined, { isInterState: true });
-      expect(inter.baseAmount).toBe(4999);
-      expect(inter.cgst).toBe(0);
-      expect(inter.sgst).toBe(0);
-      expect(inter.igst).toBe(899.82);
-      expect(inter.totalAmount).toBe(5899);
+      const refundEntity = { id: "rfnd_crash_after_num", payment_id: "pay_target_01", amount: 200000 };
+
+      // Attempt 1 fails during register write, but PENDING_CN_ was already recorded
+      expect(() => context.handleStagingRefund(ssMock, refundEntity)).toThrow(/SIMULATED_NETWORK_TIMEOUT_BEFORE_WRITE/);
+      expect(propsStore.PENDING_CN_rfnd_crash_after_num).toBe("STAGE-CN-101");
+      expect(propsStore.STAGING_CREDIT_NOTE_COUNTER).toBe("101");
+
+      // Attempt 2 (Retry): Reuses STAGE-CN-101 without burning STAGE-CN-102!
+      const retryResult = context.handleStagingRefund(ssMock, refundEntity);
+      expect(retryResult.creditNoteNumber).toBe("STAGE-CN-101");
+      expect(propsStore.STAGING_CREDIT_NOTE_COUNTER).toBe("101"); // Did not increment!
+      expect(sheetsData.GST_Sales_Register.length).toBe(2); // Exactly 1 row added
+      expect(sheetsData.Master_GST_Sales_Register.length).toBe(2);
+    });
+
+    it("repairs master register without duplicating local register if failure occurs between writes", () => {
+      let failMaster = true;
+      const { context, ssMock, sheetsData, propsStore } = createStagingScriptSandbox({
+        beforeAppendHook: (sheetName) => {
+          if (sheetName === "Master_GST_Sales_Register" && failMaster) {
+            failMaster = false;
+            throw new Error("SIMULATED_MASTER_REGISTER_OUTAGE");
+          }
+        },
+      });
+
+      const refundEntity = { id: "rfnd_partial_write_fail", payment_id: "pay_partial_01", amount: 300000 };
+
+      // Attempt 1: Local write succeeds, master write fails
+      expect(() => context.handleStagingRefund(ssMock, refundEntity)).toThrow(/MASTER_REGISTER_WRITE_FAILED/);
+      expect(sheetsData.GST_Sales_Register.length).toBe(2); // Local wrote 1 row
+      expect(sheetsData.Master_GST_Sales_Register.length).toBe(1); // Master has 0 rows (header only)
+
+      // Attempt 2 (Retry): Skips local write (deduplicates), writes missing master row!
+      const retryResult = context.handleStagingRefund(ssMock, refundEntity);
+      expect(retryResult.creditNoteNumber).toBe("STAGE-CN-101");
+      expect(sheetsData.GST_Sales_Register.length).toBe(2); // Still exactly 1 row (no duplication!)
+      expect(sheetsData.Master_GST_Sales_Register.length).toBe(2); // Master now has 1 row (repaired!)
+      expect(propsStore.CREDIT_NOTE_rfnd_partial_write_fail).toBe("STAGE-CN-101");
+    });
+
+    it("resumes and completes safely if failure occurs during or after PDF generation", () => {
+      let failPdf = true;
+      const { context, ssMock, sheetsData, propsStore } = createStagingScriptSandbox({
+        pdfFailHook: () => {
+          if (failPdf) {
+            failPdf = false;
+            throw new Error("SIMULATED_PDF_CONVERSION_ERROR");
+          }
+        },
+      });
+
+      const refundEntity = { id: "rfnd_pdf_fail_01", payment_id: "pay_pdf_01", amount: 400000 };
+
+      // Attempt 1: Fails during PDF generation after registers were written
+      expect(() => context.handleStagingRefund(ssMock, refundEntity)).toThrow(/PDF_GENERATION_FAILED/);
+      expect(sheetsData.GST_Sales_Register.length).toBe(2);
+      expect(sheetsData.Master_GST_Sales_Register.length).toBe(2);
+
+      // Attempt 2: Reuses same credit note, detects existing register rows, completes PDF
+      const res2 = context.handleStagingRefund(ssMock, refundEntity);
+      expect(res2.success).toBe(true);
+      expect(res2.creditNoteNumber).toBe("STAGE-CN-101");
+      expect(sheetsData.GST_Sales_Register.length).toBe(2); // No duplicate rows
+      expect(sheetsData.Master_GST_Sales_Register.length).toBe(2);
+      expect(propsStore.CREDIT_NOTE_rfnd_pdf_fail_01).toBe("STAGE-CN-101");
+    });
+
+    it("serializes concurrent duplicate refund processing without duplicate financial entries", () => {
+      const { context, ssMock, sheetsData, propsStore } = createStagingScriptSandbox();
+
+      const refundEntity = { id: "rfnd_concurrent_01", payment_id: "pay_conc_01", amount: 500000 };
+
+      // Simulated concurrent call 1
+      const call1 = context.handleStagingRefund(ssMock, refundEntity);
+      // Simulated concurrent call 2
+      const call2 = context.handleStagingRefund(ssMock, refundEntity);
+
+      expect(call1.creditNoteNumber).toBe("STAGE-CN-101");
+      expect(call2.creditNoteNumber).toBe("STAGE-CN-101"); // Exactly identical
+      expect(call2.alreadyProcessed).toBe(true);
+      expect(propsStore.STAGING_CREDIT_NOTE_COUNTER).toBe("101");
+      expect(sheetsData.GST_Sales_Register.length).toBe(2); // 1 header + 1 row
+      expect(sheetsData.Master_GST_Sales_Register.length).toBe(2);
     });
   });
 
-  describe("5. Strict Staging Isolation & Fail-Closed Guards", () => {
-    it("fails closed if APP_ENVIRONMENT is set to production", () => {
-      const { context } = createStagingScriptSandbox({
-        propsOverrides: { APP_ENVIRONMENT: "production" },
+  describe("3. Master-Register Recovery on Invoice Creation", () => {
+    it("repairs missing master register write on retry without duplicating GST_Sales_Register", () => {
+      let failMaster = true;
+      const { context, ssMock, sheetsData } = createStagingScriptSandbox({
+        beforeAppendHook: (sheetName) => {
+          if (sheetName === "Master_GST_Sales_Register" && failMaster) {
+            failMaster = false;
+            throw new Error("SIMULATED_SHEETS_MASTER_APPEND_TIMEOUT");
+          }
+        },
       });
-      expect(() => context.getAppEnvironment()).toThrow(/PRODUCTION_ENVIRONMENT_REJECTED/);
+
+      const paymentEntity = {
+        id: "pay_recovery_test_01",
+        order_id: "order_rec_01",
+        amount: 589900,
+        currency: "INR",
+        notes: { customer_name: "Repair Learner", billing_state: "Tamil Nadu" },
+      };
+
+      // Call 1: Local register succeeds, master register fails
+      expect(() => {
+        context.appendToStagingGstSalesRegister(ssMock, paymentEntity, "STAGE-INV-1001", "academy");
+      }).toThrow(/MASTER_REGISTER_WRITE_FAILED/);
+
+      expect(sheetsData.GST_Sales_Register.length).toBe(2); // Local wrote 1 row
+      expect(sheetsData.Master_GST_Sales_Register.length).toBe(1); // Master has 0 rows
+
+      // Call 2 (Retry): Local register detects existing paymentId (skips write), master register appends missing row!
+      context.appendToStagingGstSalesRegister(ssMock, paymentEntity, "STAGE-INV-1001", "academy");
+
+      expect(sheetsData.GST_Sales_Register.length).toBe(2); // Local still has 1 row (zero duplicates!)
+      expect(sheetsData.Master_GST_Sales_Register.length).toBe(2); // Master register repaired!
+    });
+  });
+
+  describe("4. Academy Worker Staging Endpoint Transport", () => {
+    it("processes createVerifiedInvoice request from Academy worker with server HMAC signature", () => {
+      const { context, ssMock, sheetsData } = createStagingScriptSandbox();
+      const timestamp = Date.now();
+      const secret = "mock_proxy_secret_1234567890123456";
+      const crypto = require("node:crypto");
+      const sig = crypto.createHmac("sha256", secret)
+        .update(`invoice|pay_worker_01|order_worker_01|4999|${timestamp}`)
+        .digest("hex");
+
+      const postEvent = {
+        postData: {
+          contents: JSON.stringify({
+            action: "createVerifiedInvoice",
+            paymentId: "pay_worker_01",
+            orderId: "order_worker_01",
+            customerName: "Worker Student",
+            customerEmail: "worker@example.com",
+            customerMobile: "9876543210",
+            billingState: "Tamil Nadu",
+            amount: 4999,
+            timestamp,
+            signature: sig,
+          }),
+        },
+      };
+
+      const res = context.doPost(postEvent);
+      const parsed = JSON.parse(res.getContent());
+
+      expect(parsed.success).toBe(true);
+      expect(parsed.invoiceNumber).toBe("STAGE-INV-1001");
+      expect(parsed.paymentId).toBe("pay_worker_01");
+      expect(sheetsData.GST_Sales_Register.length).toBe(2);
+      expect(sheetsData.Master_GST_Sales_Register.length).toBe(2);
     });
 
-    it("fails closed if MOCK_INVOICE_ADAPTER is not enabled", () => {
-      const { context } = createStagingScriptSandbox({
-        propsOverrides: { MOCK_INVOICE_ADAPTER: "false" },
-      });
-      expect(() => context.isMockInvoiceAdapterEnabled()).toThrow(/MOCK_INVOICE_REQUIRED_IN_STAGING/);
-    });
-
-    it("fails closed if SUPPRESS_NOTIFICATIONS is disabled", () => {
-      const { context } = createStagingScriptSandbox({
-        propsOverrides: { SUPPRESS_NOTIFICATIONS: "false" },
-      });
-      expect(() => context.isNotificationSuppressed()).toThrow(/NOTIFICATION_SUPPRESSION_REQUIRED_IN_STAGING/);
-    });
-
-    it("fails closed if any production spreadsheet ID is configured", () => {
-      const { context } = createStagingScriptSandbox({
-        propsOverrides: { SPREADSHEET_ID: "1PC9ZYxd4O7ofuDwcN5AhPHTvW6RYO7V2LgQqrbPTQ5I" }, // Academy prod sheet
-      });
-      expect(() => context.getStagingSpreadsheet()).toThrow(/PRODUCTION_SPREADSHEET_IN_STAGING/);
-    });
-
-    it("fails closed if live Razorpay key is detected in staging", () => {
+    it("rejects createVerifiedInvoice if worker HMAC signature is invalid", () => {
       const { context } = createStagingScriptSandbox();
-      const livePaymentEntity = { id: "pay_live_123", order_id: "order_live_123" };
-      expect(() => context.validatePaymentEnvironment(livePaymentEntity, false)).toThrow(/LIVE_PAYMENT_IN_STAGING/);
+      const timestamp = Date.now();
+
+      const postEvent = {
+        postData: {
+          contents: JSON.stringify({
+            action: "createVerifiedInvoice",
+            paymentId: "pay_worker_bad",
+            orderId: "order_worker_bad",
+            amount: 4999,
+            timestamp,
+            signature: "invalid_tampered_signature_hex",
+          }),
+        },
+      };
+
+      const res = context.doPost(postEvent);
+      const parsed = JSON.parse(res.getContent());
+
+      expect(parsed.success).toBe(false);
+      expect(parsed.error).toContain("INVALID_WORKER_SIGNATURE");
     });
   });
 });

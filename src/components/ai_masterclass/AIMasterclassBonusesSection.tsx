@@ -88,7 +88,7 @@ const AIMasterclassBonusesSection: React.FC = () => {
                             Masterclass Pass + ₹9,997 Bonuses = <span className="text-emerald-600">Just ₹99</span>
                         </h3>
                         <p className="text-sm text-slate-600 mb-6">
-                            Pick Wednesday Evening (6 PM – 9 PM) or Sunday Morning (10 AM – 1 PM). Instant access to bonuses upon enrollment.
+                            Pick Wednesday & Friday Evening (5:30 PM – 8:30 PM) or Sunday Morning (10:00 AM – 1:00 PM). Instant access to bonuses upon enrollment.
                         </p>
                         <button
                             onClick={openRegisterModal}

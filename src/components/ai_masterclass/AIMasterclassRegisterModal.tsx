@@ -5,7 +5,7 @@ import { useAIMasterclassRegisterModal } from "./AIMasterclassRegisterModalConte
 import { RazorpayOptions } from "@/types/razorpay";
 import { getMasterclassDateStrings } from "../../lib/masterclassDateUtils";
 import { countryCodes } from "../../lib/countryCodes";
-import { calculateGstBreakdown, isValidGstin, sanitizeTextInput, isAuthorizedTestEmail } from "../../lib/gstUtils";
+import { calculateInclusiveGstBreakdown, isValidGstin, sanitizeTextInput, isAuthorizedTestEmail } from "../../lib/gstUtils";
 import GstPriceBreakdown from "../common/GstPriceBreakdown";
 
 const RAZORPAY_KEY_ID = "rzp_live_T2CbVONQc6qrqj";
@@ -34,9 +34,9 @@ const AIMasterclassRegisterModal: React.FC = () => {
     const purchaseTrackedRef = useRef(false);
     const leadTrackedRef = useRef(false);
     const { isOpen, closeRegisterModal } = useAIMasterclassRegisterModal();
-    const { regularDate, orderedSlots, wednesdaySlot, sundaySlot, nextSession } = getMasterclassDateStrings();
-    const [preferredSlotId, setPreferredSlotId] = useState<"wednesday" | "sunday">(nextSession.id);
-    const selectedSlot = preferredSlotId === "sunday" ? sundaySlot : wednesdaySlot;
+    const { regularDate, orderedSlots, wednesdaySlot, fridaySlot, sundaySlot, nextSession } = getMasterclassDateStrings();
+    const [preferredSlotId, setPreferredSlotId] = useState<"wednesday" | "friday" | "sunday">(nextSession.id);
+    const selectedSlot = orderedSlots.find(s => s.id === preferredSlotId) || nextSession;
     const [form, setForm] = useState({ name: "", email: "", phone: "", profession: "", language: "Tamil", coupon: "WELCOME33", countryCode: "+91" });
     const [claimGst, setClaimGst] = useState(false);
     const [gstin, setGstin] = useState("");
@@ -49,8 +49,8 @@ const AIMasterclassRegisterModal: React.FC = () => {
     const [visible, setVisible] = useState(false);
     const [discountApplied, setDiscountApplied] = useState(false);
 
-    const baseSessionAmount = 99 * seatsCount;
-    const { gstAmount, totalAmount, totalInPaise } = calculateGstBreakdown(baseSessionAmount);
+    const inclusiveSessionPrice = 99 * seatsCount;
+    const { baseAmount: baseSessionAmount, gstAmount, totalAmount, totalInPaise } = calculateInclusiveGstBreakdown(inclusiveSessionPrice);
 
     // Country code search state
     const [countrySearch, setCountrySearch] = useState("");
@@ -355,7 +355,7 @@ const AIMasterclassRegisterModal: React.FC = () => {
                             <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
                                 Register <span className="text-blue-600">Now</span>
                             </h2>
-                            <p className="text-xs text-slate-500 mt-0.5">3-Hour Live Interactive Masterclass • Just ₹99 + 18% GST</p>
+                            <p className="text-xs text-slate-500 mt-0.5">3-Hour Live Interactive Masterclass • Just ₹99 (Incl. 18% GST)</p>
                             <div className="mt-2 inline-flex items-center gap-1.5 bg-blue-50 border border-blue-200 text-blue-700 px-3 py-1 rounded-full text-xs font-bold tracking-wide">
                                 <span>📅 Selected: {selectedSlot.fullLabel}</span>
                             </div>
@@ -368,7 +368,7 @@ const AIMasterclassRegisterModal: React.FC = () => {
                                     <span>Preferred Date & Session</span>
                                     <span className="text-[9px] text-blue-600 font-semibold uppercase">Required</span>
                                 </label>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                                     {orderedSlots.map((slot) => {
                                         const isSelected = preferredSlotId === slot.id;
                                         return (
@@ -387,7 +387,7 @@ const AIMasterclassRegisterModal: React.FC = () => {
                                                         <span className={`w-3.5 h-3.5 rounded-full border-2 flex items-center justify-center shrink-0 ${isSelected ? "border-emerald-600 bg-emerald-600" : "border-slate-300 bg-white"}`}>
                                                             {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
                                                         </span>
-                                                        <span>{slot.dayName} {slot.id === "wednesday" ? "Evening" : "Morning"}</span>
+                                                        <span>{slot.dayName} {slot.id === "sunday" ? "Morning" : "Evening"}</span>
                                                     </span>
                                                     {slot.id === nextSession.id && (
                                                         <span className="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-200">
@@ -525,7 +525,7 @@ const AIMasterclassRegisterModal: React.FC = () => {
                             </div>
 
                             <GstPriceBreakdown
-                                baseAmount={baseSessionAmount}
+                                baseAmount={inclusiveSessionPrice} inclusive={true}
                                 claimGst={claimGst}
                                 onClaimGstChange={setClaimGst}
                                 gstin={gstin}

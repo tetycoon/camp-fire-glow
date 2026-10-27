@@ -164,8 +164,8 @@ const AIMasterclassModulesSection: React.FC = () => {
                 {/* Bottom CTA Banner */}
                 <div className="text-center bg-slate-50 border border-slate-200 rounded-3xl p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div className="text-left">
-                        <h4 className="text-lg font-black text-slate-900">Get All 3 Modules For Just ₹99</h4>
-                        <p className="text-xs sm:text-sm text-slate-500">Pick Wednesday Evening or Sunday Morning at registration.</p>
+                        <h4 className="text-lg font-black text-slate-900">Get All 3 Modules For Just ₹99 (Incl. GST)</h4>
+                        <p className="text-xs sm:text-sm text-slate-500">Pick Wednesday Evening, Friday Evening, or Sunday Morning at registration.</p>
                     </div>
 
                     <button

@@ -33,7 +33,7 @@ const AIMasterclassStickyBar: React.FC = () => {
                                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-500 opacity-75"></span>
                                 <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-600"></span>
                             </span>
-                            <span className="text-[11px] font-black text-blue-700 uppercase tracking-wider">LIVE MASTERCLASS • WED 6-9 PM & SUN 10-1 PM</span>
+                            <span className="text-[11px] font-black text-blue-700 uppercase tracking-wider">LIVE MASTERCLASS • WED & FRI 5:30-8:30 PM | SUN 10-1 PM</span>
                         </div>
                         <p className="text-sm font-black text-slate-900 tracking-tight">Next Session: {nextSession.regularDate} • {nextSession.shortTime}</p>
                     </div>
@@ -56,7 +56,7 @@ const AIMasterclassStickyBar: React.FC = () => {
                     <div className="flex items-center gap-3">
                         <div className="hidden sm:flex flex-col items-end">
                             <span className="text-[10px] text-slate-400 line-through font-bold">₹999</span>
-                            <span className="text-lg font-black text-slate-900 leading-none">₹99 <span className="text-[10px] text-slate-500 font-bold">+ GST</span></span>
+                            <span className="text-lg font-black text-slate-900 leading-none">₹99 <span className="text-[10px] text-emerald-700 font-bold">(Incl. GST)</span></span>
                         </div>
 
                         <button
