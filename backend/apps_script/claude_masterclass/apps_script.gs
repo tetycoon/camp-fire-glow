@@ -1089,7 +1089,7 @@ function syncInvoiceWithFunnelsDone(customerName, customerEmail, customerPhone, 
 }
 
 function sendMasterclassEmail(email, name, amount, mode, paymentId, orderId, phone) {
-  const numAmount = parseInt(amount) || 589;
+  const numAmount = parseInt(amount) || 499;
   const isOffline = (mode && mode.toString().toLowerCase() === 'offline') || numAmount >= 4000;
   const dates = getUpcomingMasterclassDates(isOffline);
   const courseTitle = isOffline ? "Claude MasterClass 2026 (In-Person Workshop Chennai)" : "Claude MasterClass 2026 (Online Live Session)";
@@ -1331,7 +1331,7 @@ function saveVerifiedInvoiceRecord(paymentId, orderId, invoiceNumber, customerNa
     customerEmail: sanitizeCell(customerEmail || ""),
     customerPhone: sanitizeCell(customerPhone || ""),
     courseName: sanitizeCell(courseName || "Claude MasterClass 2026"),
-    totalAmountPaid: Number(totalAmountPaid) || 589
+    totalAmountPaid: Number(totalAmountPaid) || 499
   };
   try {
     const props = PropertiesService.getScriptProperties();
@@ -1408,7 +1408,7 @@ function getVerifiedInvoiceRecord(sheet, paymentId, orderId, token, userContact)
       const rowPayId = String(rows[i][9] || "").trim().replace(/^'/, "");
       const rowStatus = String(rows[i][7] || "").trim();
       if (rowOrdId === cleanOrdId && rowPayId === cleanPayId && (rowStatus === "✅ PAID" || rowStatus.indexOf("✅") !== -1)) {
-        const amt = Number(rows[i][6]) || 589;
+        const amt = Number(rows[i][6]) || 499;
         const courseTitle = amt >= 4000 ? "Claude MasterClass 2026 (In-Person Workshop Chennai)" : "Claude MasterClass 2026 (Online Live Session)";
         invRecord = {
           verified: false,
@@ -1462,7 +1462,7 @@ function createRazorpayOrder(data) {
   const keySecret = getScriptSecret(isIntl ? "RAZORPAY_KEY_SECRET_INTL" : "RAZORPAY_KEY_SECRET");
 
   const credentials = Utilities.base64Encode(keyId + ":" + keySecret);
-  const amount = parseInt(data.amount) || 589;
+  const amount = parseInt(data.amount) || 499;
   const mode = data.mode || (amount >= 4000 ? "OFFLINE" : "ONLINE");
 
   const options = {
@@ -1491,7 +1491,7 @@ function createRazorpayOrder(data) {
 }
 
 function getModeOfSessionDisplay(mode, amount) {
-  const numAmount = parseInt(amount) || 589;
+  const numAmount = parseInt(amount) || 499;
   const isOffline = (mode && mode.toString().toLowerCase() === 'offline') || numAmount >= 4000;
   return isOffline ? "Offline Session (In-Person Chennai)" : "Online Session (Live Online)";
 }
@@ -1507,7 +1507,7 @@ function saveToSheet(data, orderId) {
 
   sheet.appendRow([
     new Date(), sanitizeCell(data.name), sanitizeCell(data.email), "'" + String(data.phone || "").replace(/[^\d+\-\s]/g, ""), sanitizeCell(data.profession || "General"),
-    sessionModeDisplay, data.amount || 589, "INITIATED", orderId, "", "PENDING",
+    sessionModeDisplay, data.amount || 499, "INITIATED", orderId, "", "PENDING",
     "NO", "NO", "NO", "NO", "NO", "NO", "NO", "NO", (data.promoCode || "CLAUDE") + " | MODE: " + modeTag + " | CERT: " + certTag + " | " + rzpTag
   ]);
 }
@@ -2018,7 +2018,7 @@ function reconcileClaudeMasterclassRows() {
       const name = String(row[1] || "Learner").replace(/^'/, "");
       const email = String(row[2] || "").replace(/^'/, "");
       const phoneClean = row[3] ? row[3].toString().replace(/\D/g, "") : "";
-      const expectedAmountInr = Number(row[6]) || 589;
+      const expectedAmountInr = Number(row[6]) || 499;
       const isTestTx = isAuthorizedLiveTest(email, expectedAmountInr);
       const isOffline = (expectedAmountInr >= 4000) || String(row[5] || "").toLowerCase().includes("offline");
       const courseTitle = isOffline ? "Claude MasterClass 2026 (In-Person Workshop Chennai)" : "Claude MasterClass 2026 (Online Live Session)";
