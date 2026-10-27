@@ -120,12 +120,17 @@ export interface GstBreakdown {
  * rather than ₹99.15 from naive reverse division.
  */
 const TOTAL_TO_EXACT_BASE_MAP: Record<number, number> = {
+  99: 83.9,
   117: 99,
   471: 399,
+  499: 422.88,
   589: 499,
   943: 799,
+  999: 846.61,
   1179: 999,
+  1499: 1270.34,
   1769: 1499,
+  1999: 1694.07,
   2359: 1999,
   2949: 2499,
   2950: 2500,

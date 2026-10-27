@@ -10,7 +10,7 @@ import antonyPraveenPhoto from '../assets/antony_praveen.jpg';
 import onlineWebp from '../assets/online.webp';
 import offlineWebp from '../assets/offline.webp';
 import GstPriceBreakdown from '../components/common/GstPriceBreakdown';
-import { calculateGstBreakdown, isAuthorizedTestEmail, isValidEmail, isValidGstin, sanitizeTextInput } from '../lib/gstUtils';
+import { calculateGstBreakdown, calculateInclusiveGstBreakdown, isAuthorizedTestEmail, isValidEmail, isValidGstin, sanitizeTextInput } from '../lib/gstUtils';
 
 declare global {
   interface Window {
@@ -254,6 +254,8 @@ const ClaudeMasterclassPage: React.FC = () => {
   const [discountPercent, setDiscountPercent] = useState(10);
 
   const getBasePrice = (plan: number) => {
+    if (plan === 1999) return 2220;
+    if (plan === 1499) return 1665;
     if (plan === 999) return 1110;
     return 554;
   };
@@ -268,11 +270,12 @@ const ClaudeMasterclassPage: React.FC = () => {
 
   const getCalculatedBasePrice = () => {
     const passPrice = selectedPlan;
-    const certAddon = wantCertificate ? 1000 : 0;
+    // For ₹1,999 All-Access Pass, E-Certificate is already included free
+    const certAddon = (wantCertificate && selectedPlan !== 1999) ? 1000 : 0;
     return passPrice + certAddon;
   };
 
-  const gstBreakdown = calculateGstBreakdown(getCalculatedBasePrice());
+  const gstBreakdown = calculateInclusiveGstBreakdown(getCalculatedBasePrice());
 
   const getCalculatedPrice = () => {
     if (isAuthorizedTestEmail(formData.email)) return 1;
@@ -451,7 +454,7 @@ const ClaudeMasterclassPage: React.FC = () => {
     setActiveFaq(activeFaq === index ? null : index);
   };
 
-  const handleOpenModal = (plan: 499 | 999 = 499) => {
+  const handleOpenModal = (plan: number = 499) => {
     setSelectedPlan(plan);
     setPromoCodeInput('CLAUDE');
     setAppliedPromo('CLAUDE');
@@ -614,8 +617,14 @@ const ClaudeMasterclassPage: React.FC = () => {
         amount: finalPrice * 100,
         currency: "INR",
         name: "Claude Masterclass 2026",
-        description: selectedPlan === 999 
+        description: selectedPlan === 1999
+          ? "All-Access Mastery Pass (Incl. 18% GST)"
+          : selectedPlan === 1499
+          ? "VIP Pro Pass (Incl. 18% GST)"
+          : selectedPlan === 999 
           ? "Live + Recording Pass (Incl. 18% GST)" 
+          : selectedPlan === 4999
+          ? "In-Person Chennai Workshop Pass (Incl. 18% GST)"
           : "Standard Live Session Pass (Incl. 18% GST)",
         image: "https://course.techtycoon.in/images/tech_tycoon_logo.png",
         prefill: {
@@ -1255,85 +1264,183 @@ const ClaudeMasterclassPage: React.FC = () => {
             </div>
           </div>
         ) : (
-          <div className="grid md:grid-cols-2 gap-8 items-stretch">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
             {/* Card 1: Standard Pass ₹499 */}
-            <div className="bg-white border border-[#E6E2D9] rounded-2xl p-7 flex flex-col justify-between hover:border-[#C5C0B8] transition-all">
+            <div className="bg-white border border-[#E6E2D9] rounded-2xl p-6 flex flex-col justify-between hover:border-[#C5C0B8] transition-all shadow-sm">
               <div>
-                <span className="text-xs font-bold text-[#6E6B65] uppercase tracking-wider block mb-2">Standard Live Pass</span>
-                <div className="flex items-baseline gap-1.5 mb-3">
-                  <span className="text-4xl font-extrabold text-[#1F1E1C]">₹499</span>
+                <span className="text-[10px] font-bold text-[#6E6B65] uppercase tracking-wider block mb-2">Standard Live Pass</span>
+                <div className="flex items-baseline gap-1.5 mb-1">
+                  <span className="text-3xl font-extrabold text-[#1F1E1C]">₹499</span>
                   <span className="text-xs text-[#6E6B65]">INR</span>
                 </div>
-                <p className="text-xs text-[#524F4A] mb-6">Ideal for live interactive participation across both days.</p>
+                <div className="text-[11px] font-semibold text-emerald-600 mb-3">(Incl. 18% GST • Final Price: ₹499)</div>
+                <p className="text-xs text-[#524F4A] mb-5">Ideal for live interactive participation across both days.</p>
 
-                <ul className="space-y-3 mb-8 text-xs text-[#2C2A29]">
-                  <li className="flex items-center gap-2.5">
-                    <Check className="w-4 h-4 text-[#D85A30]" /> 2-Day Live Online Session (Every Saturday & Sunday)
+                <ul className="space-y-2.5 mb-6 text-xs text-[#2C2A29]">
+                  <li className="flex items-center gap-2">
+                    <Check className="w-3.5 h-3.5 text-[#D85A30] shrink-0" /> 2-Day Live Online Session
                   </li>
-                  <li className="flex items-center gap-2.5">
-                    <Check className="w-4 h-4 text-[#D85A30]" /> Tamil & English Instruction
+                  <li className="flex items-center gap-2">
+                    <Check className="w-3.5 h-3.5 text-[#D85A30] shrink-0" /> 6:00 PM – 9:00 PM IST (Both Days)
                   </li>
-                  <li className="flex items-center gap-2.5">
-                    <Check className="w-4 h-4 text-[#D85A30]" /> Direct Q&A with Antony Praveen
+                  <li className="flex items-center gap-2">
+                    <Check className="w-3.5 h-3.5 text-[#D85A30] shrink-0" /> Tamil & English Instruction
                   </li>
-                  <li className="flex items-center gap-2.5 text-[#A09C94] line-through">
-                    <X className="w-4 h-4 text-[#C5C0B8]" /> Recorded Video Access
+                  <li className="flex items-center gap-2">
+                    <Check className="w-3.5 h-3.5 text-[#D85A30] shrink-0" /> Direct Q&A with Antony Praveen
+                  </li>
+                  <li className="flex items-center gap-2 text-[#A09C94] line-through">
+                    <X className="w-3.5 h-3.5 text-[#C5C0B8] shrink-0" /> Recorded Video Access
+                  </li>
+                  <li className="flex items-center gap-2 text-[#A09C94] line-through">
+                    <X className="w-3.5 h-3.5 text-[#C5C0B8] shrink-0" /> Project Source Code & MCPs
+                  </li>
+                  <li className="flex items-center gap-2 text-[#A09C94] line-through">
+                    <X className="w-3.5 h-3.5 text-[#C5C0B8] shrink-0" /> Verified E-Certificate
                   </li>
                 </ul>
               </div>
 
               <button 
                 onClick={() => handleOpenModal(499)}
-                className="w-full bg-[#F7F4EE] hover:bg-[#EFECE6] text-[#1F1E1C] font-semibold py-3 px-5 rounded-xl border border-[#E6E2D9] transition-all text-xs"
+                className="w-full bg-[#F7F4EE] hover:bg-[#EFECE6] text-[#1F1E1C] font-semibold py-3 px-4 rounded-xl border border-[#E6E2D9] transition-all text-xs cursor-pointer"
               >
                 Select Live Pass @ ₹499
               </button>
             </div>
 
-            {/* Plan 2: ₹999 Recording Pass */}
-            <div className="bg-[#FAF8F5] border-2 border-[#D85A30] rounded-2xl p-6 sm:p-8 flex flex-col justify-between relative shadow-[0_10px_30px_rgba(216,90,48,0.08)]">
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#D85A30] text-white text-[10px] font-extrabold uppercase px-3 py-1 rounded-full tracking-wider shadow-sm flex items-center gap-1">
-                <Crown className="w-3 h-3" /> Most Recommended
-              </div>
+            {/* Card 2: ₹999 Recording Pass */}
+            <div className="bg-white border border-[#E6E2D9] rounded-2xl p-6 flex flex-col justify-between hover:border-[#D85A30]/50 transition-all shadow-sm relative">
+              <span className="absolute -top-3 right-4 bg-[#6B4FBB] text-white text-[9px] font-extrabold uppercase px-2.5 py-0.5 rounded-full tracking-wider shadow-sm">
+                Popular
+              </span>
 
               <div>
-                <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <h3 className="text-base font-bold text-[#1F1E1C]">Live + Recording Pass</h3>
-                    <p className="text-xs text-[#6E6B65]">Full live experience + permanent access</p>
-                  </div>
-                  <span className="bg-[#D85A30]/15 text-[#D85A30] text-[11px] font-bold px-2 py-0.5 rounded">
-                    Popular
-                  </span>
-                </div>
-
-                <div className="flex items-baseline gap-1 mb-2">
-                  <span className="text-3xl font-extrabold text-[#D85A30]">₹999</span>
+                <span className="text-[10px] font-bold text-[#6B4FBB] uppercase tracking-wider block mb-2">Live + Recording Pass</span>
+                <div className="flex items-baseline gap-1.5 mb-1">
+                  <span className="text-3xl font-extrabold text-[#1F1E1C]">₹999</span>
                   <span className="text-xs text-[#6E6B65]">INR</span>
                 </div>
-                <p className="text-xs text-[#524F4A] mb-6">Complete flexibility. Re-watch and build along anytime.</p>
+                <div className="text-[11px] font-semibold text-emerald-600 mb-3">(Incl. 18% GST • Final Price: ₹999)</div>
+                <p className="text-xs text-[#524F4A] mb-5">Full live experience + permanent recorded access.</p>
 
-                <ul className="space-y-3 mb-8 text-xs text-[#2C2A29]">
-                  <li className="flex items-center gap-2.5">
-                    <Check className="w-4 h-4 text-[#D85A30]" /> 2-Day Live Online Session (Every Saturday & Sunday)
+                <ul className="space-y-2.5 mb-6 text-xs text-[#2C2A29]">
+                  <li className="flex items-center gap-2">
+                    <Check className="w-3.5 h-3.5 text-[#D85A30] shrink-0" /> Everything in Standard Live Pass
                   </li>
-                  <li className="flex items-center gap-2.5">
-                    <Check className="w-4 h-4 text-[#D85A30]" /> Tamil & English Instruction
+                  <li className="flex items-center gap-2 font-bold text-[#6B4FBB]">
+                    <Check className="w-3.5 h-3.5 text-[#6B4FBB] shrink-0" /> Recorded Video Access of Both Days
                   </li>
-                  <li className="flex items-center gap-2.5">
-                    <Check className="w-4 h-4 text-[#D85A30]" /> Direct Q&A with Antony Praveen
+                  <li className="flex items-center gap-2">
+                    <Check className="w-3.5 h-3.5 text-[#D85A30] shrink-0" /> Re-watch & build along anytime
                   </li>
-                  <li className="flex items-center gap-2.5 font-bold text-[#D85A30]">
-                    <Check className="w-4 h-4 text-[#D85A30]" /> Recorded Video Access of Both Days Included
+                  <li className="flex items-center gap-2">
+                    <Check className="w-3.5 h-3.5 text-[#D85A30] shrink-0" /> Direct Q&A with Antony Praveen
+                  </li>
+                  <li className="flex items-center gap-2 text-[#A09C94] line-through">
+                    <X className="w-3.5 h-3.5 text-[#C5C0B8] shrink-0" /> Project Source Code & MCPs
+                  </li>
+                  <li className="flex items-center gap-2 text-[#A09C94] line-through">
+                    <X className="w-3.5 h-3.5 text-[#C5C0B8] shrink-0" /> Verified E-Certificate
                   </li>
                 </ul>
               </div>
 
               <button 
                 onClick={() => handleOpenModal(999)}
-                className="w-full bg-[#D85A30] hover:bg-[#C04E27] text-white font-bold py-3 px-5 rounded-xl transition-all text-xs shadow-md shadow-[#D85A30]/20 cursor-pointer"
+                className="w-full bg-[#6B4FBB] hover:bg-[#5A3EA8] text-white font-bold py-3 px-4 rounded-xl transition-all text-xs shadow-sm cursor-pointer"
               >
                 Select Recording Pass @ ₹999
+              </button>
+            </div>
+
+            {/* Card 3: ₹1,499 VIP Pro Pass */}
+            <div className="bg-[#FAF8F5] border-2 border-[#D85A30] rounded-2xl p-6 flex flex-col justify-between relative shadow-[0_10px_30px_rgba(216,90,48,0.12)]">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#D85A30] text-white text-[9px] font-extrabold uppercase px-3 py-0.5 rounded-full tracking-wider shadow-sm flex items-center gap-1">
+                <Crown className="w-3 h-3" /> Recommended
+              </div>
+
+              <div>
+                <span className="text-[10px] font-bold text-[#D85A30] uppercase tracking-wider block mb-2 mt-1">VIP Pro Pass</span>
+                <div className="flex items-baseline gap-1.5 mb-1">
+                  <span className="text-3xl font-extrabold text-[#D85A30]">₹1,499</span>
+                  <span className="text-xs text-[#6E6B65]">INR</span>
+                </div>
+                <div className="text-[11px] font-semibold text-emerald-600 mb-3">(Incl. 18% GST • Final Price: ₹1,499)</div>
+                <p className="text-xs text-[#524F4A] mb-5">Recordings + Full Code Repository & Claude Prompts.</p>
+
+                <ul className="space-y-2.5 mb-6 text-xs text-[#2C2A29]">
+                  <li className="flex items-center gap-2 font-semibold">
+                    <Check className="w-3.5 h-3.5 text-[#D85A30] shrink-0" /> Everything in ₹999 Recording Pass
+                  </li>
+                  <li className="flex items-center gap-2 font-bold text-[#D85A30]">
+                    <Check className="w-3.5 h-3.5 text-[#D85A30] shrink-0" /> Complete Project Source Code
+                  </li>
+                  <li className="flex items-center gap-2 font-bold text-[#D85A30]">
+                    <Check className="w-3.5 h-3.5 text-[#D85A30] shrink-0" /> 100+ Claude Prompts & Architecture
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-3.5 h-3.5 text-[#D85A30] shrink-0" /> Custom MCP Starter Kit & JSON Configs
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-3.5 h-3.5 text-[#D85A30] shrink-0" /> Private WhatsApp Community Access
+                  </li>
+                  <li className="flex items-center gap-2 text-[#A09C94] line-through">
+                    <X className="w-3.5 h-3.5 text-[#C5C0B8] shrink-0" /> Verified E-Certificate
+                  </li>
+                </ul>
+              </div>
+
+              <button 
+                onClick={() => handleOpenModal(1499)}
+                className="w-full bg-[#D85A30] hover:bg-[#C04E27] text-white font-bold py-3 px-4 rounded-xl transition-all text-xs shadow-md shadow-[#D85A30]/25 cursor-pointer"
+              >
+                Select VIP Pro @ ₹1,499
+              </button>
+            </div>
+
+            {/* Card 4: ₹1,999 All-Access Mastery Pass */}
+            <div className="bg-[#1F1E1C] text-white border-2 border-[#1F1E1C] rounded-2xl p-6 flex flex-col justify-between relative shadow-xl">
+              <div className="absolute -top-3 right-4 bg-amber-400 text-slate-900 text-[9px] font-black uppercase px-2.5 py-0.5 rounded-full tracking-wider shadow-sm flex items-center gap-1">
+                <Sparkles className="w-3 h-3 text-slate-900" /> Best Value
+              </div>
+
+              <div>
+                <span className="text-[10px] font-bold text-amber-300 uppercase tracking-wider block mb-2 mt-1">All-Access Mastery Pass</span>
+                <div className="flex items-baseline gap-1.5 mb-1">
+                  <span className="text-3xl font-extrabold text-white">₹1,999</span>
+                  <span className="text-xs text-white/60">INR</span>
+                </div>
+                <div className="text-[11px] font-semibold text-amber-300 mb-3">(Incl. 18% GST • Final Price: ₹1,999)</div>
+                <p className="text-xs text-white/70 mb-5">Complete VIP Package + Official E-Certificate + Direct Mentorship.</p>
+
+                <ul className="space-y-2.5 mb-6 text-xs text-white/90">
+                  <li className="flex items-center gap-2 font-semibold text-white">
+                    <Check className="w-3.5 h-3.5 text-amber-400 shrink-0" /> Everything in ₹1,499 VIP Pro Pass
+                  </li>
+                  <li className="flex items-center gap-2 font-bold text-amber-300 bg-white/10 p-1.5 rounded-lg border border-white/10">
+                    <Award className="w-3.5 h-3.5 text-amber-400 shrink-0" /> Verified E-Certificate Included (FREE)
+                  </li>
+                  <li className="flex items-center gap-2 font-semibold">
+                    <Check className="w-3.5 h-3.5 text-amber-400 shrink-0" /> Priority Doubt Clearance & Support
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-3.5 h-3.5 text-amber-400 shrink-0" /> Exclusive AI Automation Guide
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-3.5 h-3.5 text-amber-400 shrink-0" /> Lifetime Template Repository Access
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-3.5 h-3.5 text-amber-400 shrink-0" /> VIP 1-on-1 Q&A Slot Access
+                  </li>
+                </ul>
+              </div>
+
+              <button 
+                onClick={() => handleOpenModal(1999)}
+                className="w-full bg-white hover:bg-slate-100 text-[#1F1E1C] font-extrabold py-3 px-4 rounded-xl transition-all text-xs shadow-md cursor-pointer"
+              >
+                Select All-Access @ ₹1,999
               </button>
             </div>
           </div>
@@ -1383,8 +1490,8 @@ const ClaudeMasterclassPage: React.FC = () => {
                 a: "The entire session will be taught 100% in Tamil (தமிழ்) by Mr. Antony Praveen for clear, practical understanding."
               },
               {
-                q: "What is the difference between the ₹499 Live Pass and ₹999 Recording Pass?",
-                a: "The ₹499 pass grants live interactive participation across both days (Saturday & Sunday). The ₹999 Recording Pass includes everything in the ₹499 pass PLUS recorded video access of these 2 live classes."
+                q: "What is the difference between the ₹499, ₹999, ₹1,499, and ₹1,999 passes?",
+                a: "The ₹499 Standard Live Pass includes live interactive participation across both days. The ₹999 Live + Recording Pass includes everything in the standard pass PLUS lifetime recorded video access. The ₹1,499 VIP Pro Pass includes recordings PLUS complete project source code and 100+ production Claude prompts & MCP configs. The ₹1,999 All-Access Mastery Pass includes everything in VIP Pro PLUS an official verified E-Certificate (FREE), priority mentorship, and automation guide."
               },
               {
                 q: "How will I receive the session meeting link?",
@@ -1528,11 +1635,11 @@ const ClaudeMasterclassPage: React.FC = () => {
                       </div>
                     </div>
                   ) : (
-                    <>
+                    <div className="space-y-3">
                       {/* Standard Option ₹499 */}
                       <div 
                         onClick={() => setSelectedPlan(499)}
-                        className={`p-4 rounded-xl border-2 cursor-pointer transition-all flex gap-3.5 items-start ${
+                        className={`p-3.5 rounded-xl border-2 cursor-pointer transition-all flex gap-3.5 items-start ${
                           selectedPlan === 499 || selectedPlan === 399
                             ? 'border-[#D85A30] bg-[#F7F4EE]' 
                             : 'border-[#E6E2D9] bg-white hover:border-[#C5C0B8]'
@@ -1546,7 +1653,7 @@ const ClaudeMasterclassPage: React.FC = () => {
                         <div className="flex-1">
                           <div className="flex justify-between items-center mb-0.5">
                             <span className="font-bold text-[#1F1E1C] text-sm">Standard Live Pass</span>
-                            <span className="font-extrabold text-[#D85A30] text-base">₹499</span>
+                            <span className="font-extrabold text-[#D85A30] text-sm">₹499 <span className="text-[10px] text-emerald-600 font-semibold">(Incl. 18% GST)</span></span>
                           </div>
                           <p className="text-xs text-[#524F4A]">Live Zoom Session (No Video Recording Access).</p>
                         </div>
@@ -1555,27 +1662,75 @@ const ClaudeMasterclassPage: React.FC = () => {
                       {/* VIP Option ₹999 */}
                       <div 
                         onClick={() => setSelectedPlan(999)}
-                        className={`p-4 pt-5 rounded-xl border-2 cursor-pointer transition-all flex gap-3.5 items-start relative mt-2 ${
+                        className={`p-3.5 pt-4 rounded-xl border-2 cursor-pointer transition-all flex gap-3.5 items-start relative ${
                           selectedPlan === 999 
                             ? 'border-[#D85A30] bg-[#F7F4EE]' 
                             : 'border-[#E6E2D9] bg-white hover:border-[#C5C0B8]'
                         }`}
                       >
-                        <span className="absolute -top-2.5 right-4 bg-[#6B4FBB] text-white text-[9px] font-extrabold px-2.5 py-0.5 rounded uppercase tracking-wider shadow-sm z-10">Recommended</span>
+                        <span className="absolute -top-2.5 right-4 bg-[#6B4FBB] text-white text-[9px] font-extrabold px-2.5 py-0.5 rounded uppercase tracking-wider shadow-sm z-10">Popular</span>
                         <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center mt-1 transition-all ${
                           selectedPlan === 999 ? 'border-[#D85A30] bg-[#D85A30]' : 'border-[#C5C0B8]'
                         }`}>
                           {selectedPlan === 999 && <div className="w-1.5 h-1.5 rounded-full bg-white"></div>}
                         </div>
                         <div className="flex-1">
-                          <div className="flex justify-between items-center mb-1 gap-2">
+                          <div className="flex justify-between items-center mb-0.5 gap-2">
                             <span className="font-bold text-[#1F1E1C] text-sm">Live + Recording Pass</span>
-                            <span className="font-extrabold text-[#D85A30] text-base shrink-0">₹999</span>
+                            <span className="font-extrabold text-[#D85A30] text-sm shrink-0">₹999 <span className="text-[10px] text-emerald-600 font-semibold">(Incl. 18% GST)</span></span>
                           </div>
-                          <p className="text-xs text-[#6E6B65] mt-1">Live Zoom + <strong>Recorded Video Access of these 2 live classes</strong>.</p>
+                          <p className="text-xs text-[#6E6B65]">Live Zoom + <strong>Recorded Video Access of 2 live classes</strong>.</p>
                         </div>
                       </div>
-                    </>
+
+                      {/* VIP Pro Option ₹1,499 */}
+                      <div 
+                        onClick={() => setSelectedPlan(1499)}
+                        className={`p-3.5 pt-4 rounded-xl border-2 cursor-pointer transition-all flex gap-3.5 items-start relative ${
+                          selectedPlan === 1499 
+                            ? 'border-[#D85A30] bg-[#F7F4EE]' 
+                            : 'border-[#E6E2D9] bg-white hover:border-[#C5C0B8]'
+                        }`}
+                      >
+                        <span className="absolute -top-2.5 right-4 bg-[#D85A30] text-white text-[9px] font-extrabold px-2.5 py-0.5 rounded uppercase tracking-wider shadow-sm z-10">Recommended</span>
+                        <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center mt-1 transition-all ${
+                          selectedPlan === 1499 ? 'border-[#D85A30] bg-[#D85A30]' : 'border-[#C5C0B8]'
+                        }`}>
+                          {selectedPlan === 1499 && <div className="w-1.5 h-1.5 rounded-full bg-white"></div>}
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex justify-between items-center mb-0.5 gap-2">
+                            <span className="font-bold text-[#1F1E1C] text-sm">VIP Pro Pass</span>
+                            <span className="font-extrabold text-[#D85A30] text-sm shrink-0">₹1,499 <span className="text-[10px] text-emerald-600 font-semibold">(Incl. 18% GST)</span></span>
+                          </div>
+                          <p className="text-xs text-[#6E6B65]">Live + Recordings + <strong>Complete Project Code & 100+ MCP Prompts</strong>.</p>
+                        </div>
+                      </div>
+
+                      {/* All-Access Mastery Option ₹1,999 */}
+                      <div 
+                        onClick={() => setSelectedPlan(1999)}
+                        className={`p-3.5 pt-4 rounded-xl border-2 cursor-pointer transition-all flex gap-3.5 items-start relative ${
+                          selectedPlan === 1999 
+                            ? 'border-amber-500 bg-amber-50/60' 
+                            : 'border-[#E6E2D9] bg-white hover:border-[#C5C0B8]'
+                        }`}
+                      >
+                        <span className="absolute -top-2.5 right-4 bg-amber-500 text-slate-900 text-[9px] font-extrabold px-2.5 py-0.5 rounded uppercase tracking-wider shadow-sm z-10">Best Value • E-Cert Included</span>
+                        <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center mt-1 transition-all ${
+                          selectedPlan === 1999 ? 'border-amber-500 bg-amber-500' : 'border-[#C5C0B8]'
+                        }`}>
+                          {selectedPlan === 1999 && <div className="w-1.5 h-1.5 rounded-full bg-white"></div>}
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex justify-between items-center mb-0.5 gap-2">
+                            <span className="font-bold text-[#1F1E1C] text-sm">All-Access Mastery Pass</span>
+                            <span className="font-extrabold text-amber-600 text-sm shrink-0">₹1,999 <span className="text-[10px] text-emerald-600 font-semibold">(Incl. 18% GST)</span></span>
+                          </div>
+                          <p className="text-xs text-[#6E6B65]">VIP Pro + <strong>Verified E-Certificate (FREE)</strong> + Priority Mentorship.</p>
+                        </div>
+                      </div>
+                    </div>
                   )}
                 </div>
 
@@ -1621,28 +1776,50 @@ const ClaudeMasterclassPage: React.FC = () => {
                   </div>
 
                   {masterclassMode !== 'offline' && (
-                    <div className="mt-2 flex bg-[#F7F4EE] p-0.5 rounded-lg border border-[#E6E2D9] gap-1">
+                    <div className="mt-2 grid grid-cols-2 sm:grid-cols-4 bg-[#F7F4EE] p-0.5 rounded-lg border border-[#E6E2D9] gap-1">
                       <button
                         type="button"
                         onClick={() => setSelectedPlan(499)}
-                        className={`flex-1 py-1 px-2 rounded text-[10px] font-bold transition-all flex items-center justify-center gap-1 ${
+                        className={`py-1 px-1.5 rounded text-[9.5px] font-bold transition-all flex items-center justify-center gap-1 ${
                           selectedPlan === 499 || selectedPlan === 399
                             ? 'bg-white text-[#D85A30] shadow-sm border border-[#E6E2D9]'
                             : 'text-[#6E6B65] hover:text-[#1F1E1C]'
                         }`}
                       >
-                        <span>Standard Live</span>
+                        <span>Standard (₹499)</span>
                       </button>
                       <button
                         type="button"
                         onClick={() => setSelectedPlan(999)}
-                        className={`flex-1 py-1 px-2 rounded text-[10px] font-bold transition-all flex items-center justify-center gap-1 ${
+                        className={`py-1 px-1.5 rounded text-[9.5px] font-bold transition-all flex items-center justify-center gap-1 ${
                           selectedPlan === 999 
                             ? 'bg-white text-[#D85A30] shadow-sm border border-[#E6E2D9]'
                             : 'text-[#6E6B65] hover:text-[#1F1E1C]'
                         }`}
                       >
-                        <span>⭐ Live + Recording</span>
+                        <span>Live+Rec (₹999)</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setSelectedPlan(1499)}
+                        className={`py-1 px-1.5 rounded text-[9.5px] font-bold transition-all flex items-center justify-center gap-1 ${
+                          selectedPlan === 1499 
+                            ? 'bg-white text-[#D85A30] shadow-sm border border-[#E6E2D9]'
+                            : 'text-[#6E6B65] hover:text-[#1F1E1C]'
+                        }`}
+                      >
+                        <span>VIP Pro (₹1,499)</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setSelectedPlan(1999)}
+                        className={`py-1 px-1.5 rounded text-[9.5px] font-bold transition-all flex items-center justify-center gap-1 ${
+                          selectedPlan === 1999 
+                            ? 'bg-white text-amber-600 shadow-sm border border-amber-300'
+                            : 'text-[#6E6B65] hover:text-[#1F1E1C]'
+                        }`}
+                      >
+                        <span>All-Access (₹1,999)</span>
                       </button>
                     </div>
                   )}
@@ -1781,17 +1958,24 @@ const ClaudeMasterclassPage: React.FC = () => {
                     <label className="flex items-start gap-2 cursor-pointer select-none">
                       <input 
                         type="checkbox" 
-                        checked={wantCertificate}
+                        checked={selectedPlan === 1999 ? true : wantCertificate}
+                        disabled={selectedPlan === 1999}
                         onChange={(e) => setWantCertificate(e.target.checked)}
                         className="mt-0.5 w-3.5 h-3.5 accent-[#D85A30] rounded cursor-pointer"
                       />
                       <div>
                         <div className="font-bold text-[11px] text-[#1F1E1C] flex items-center gap-1.5">
                           <span>🎓 Official E-Certificate</span>
-                          <span className="bg-[#D85A30] text-white text-[8.5px] font-extrabold px-1.5 py-0.2 rounded">+ ₹1,000</span>
+                          {selectedPlan === 1999 ? (
+                            <span className="bg-emerald-600 text-white text-[8.5px] font-extrabold px-1.5 py-0.2 rounded">INCLUDED FREE</span>
+                          ) : (
+                            <span className="bg-[#D85A30] text-white text-[8.5px] font-extrabold px-1.5 py-0.2 rounded">+ ₹1,000</span>
+                          )}
                         </div>
                         <p className="text-[9.5px] text-[#524F4A] mt-0.5 leading-snug">
-                          Get an official verified E-Certificate upon masterclass completion to share on LinkedIn & Resume.
+                          {selectedPlan === 1999
+                            ? "Verified official E-Certificate is included at NO extra charge in the All-Access Mastery Pass!"
+                            : "Get an official verified E-Certificate upon masterclass completion to share on LinkedIn & Resume."}
                         </p>
                       </div>
                     </label>
@@ -1799,6 +1983,16 @@ const ClaudeMasterclassPage: React.FC = () => {
 
                   <GstPriceBreakdown
                     baseAmount={getCalculatedBasePrice()}
+                    inclusive={true}
+                    label={
+                      selectedPlan === 1999 
+                        ? "All-Access Mastery Pass" 
+                        : selectedPlan === 1499 
+                        ? "VIP Pro Pass" 
+                        : selectedPlan === 999 
+                        ? "Live + Recording Pass" 
+                        : "Standard Live Pass"
+                    }
                     claimGst={claimGst}
                     onClaimGstChange={(checked) => {
                       setClaimGst(checked);
@@ -1869,9 +2063,11 @@ const ClaudeMasterclassPage: React.FC = () => {
 
               <div>
                 <h4 className="font-bold text-[#1F1E1C] text-xs">2. Registration & Pass Types</h4>
-                <p className="mt-0.5"><strong>Standard Live Pass (₹499)</strong> includes live interactive Zoom participation across both days. Video recording access is excluded from the standard pass.</p>
-                <p className="mt-0.5"><strong>Live + Recording Pass (₹999)</strong> includes live participation PLUS recorded video access of these 2 live classes.</p>
-                <p className="mt-0.5"><strong>Official E-Certificate Add-on (+ ₹1,000)</strong> is an optional verified certificate issued upon completion of the masterclass.</p>
+                <p className="mt-0.5"><strong>Standard Live Pass (₹499 Incl. 18% GST)</strong> includes live interactive Zoom participation across both days. Video recording access is excluded.</p>
+                <p className="mt-0.5"><strong>Live + Recording Pass (₹999 Incl. 18% GST)</strong> includes live participation PLUS recorded video access of these 2 live classes.</p>
+                <p className="mt-0.5"><strong>VIP Pro Pass (₹1,499 Incl. 18% GST)</strong> includes live + recordings PLUS full project source code, custom MCP starter kits, and 100+ prompt templates.</p>
+                <p className="mt-0.5"><strong>All-Access Mastery Pass (₹1,999 Incl. 18% GST)</strong> includes everything in VIP Pro PLUS an official verified E-Certificate, priority mentorship, and AI automation guides.</p>
+                <p className="mt-0.5"><strong>Official E-Certificate Add-on (+ ₹1,000 Incl. 18% GST)</strong> is available for Standard, Live+Rec, and VIP Pro passes (included free in All-Access).</p>
               </div>
 
               <div>

@@ -548,12 +548,17 @@ function sanitizeCell(val) {
 }
 
 const TOTAL_TO_EXACT_BASE_MAP = {
+  99: 83.9,
   117: 99,
   471: 399,
+  499: 422.88,
   589: 499,
   943: 799,
+  999: 846.61,
   1179: 999,
+  1499: 1270.34,
   1769: 1499,
+  1999: 1694.07,
   2359: 1999,
   2949: 2499,
   2950: 2500,
@@ -1146,10 +1151,26 @@ function sendMasterclassEmail(email, name, amount, mode, paymentId, orderId, pho
     const dateVal = dates.dateText;
     const timeVal = dates.timeText;
     const venueVal = dates.venueText;
-    const isRecordingPass = numAmount === 999 || numAmount === 1179 || numAmount >= 1800;
-    const passType = isRecordingPass ? "Live + Recording Pass (Recorded Video Access)" : "Standard Live Session Pass";
+    const isAllAccess = numAmount === 1999 || numAmount === 2359 || numAmount >= 1950;
+    const isVipPro = !isAllAccess && (numAmount === 1499 || numAmount === 1769 || (numAmount >= 1450 && numAmount < 1950));
+    const isRecordingPass = !isAllAccess && !isVipPro && (numAmount === 999 || numAmount === 1179 || (numAmount >= 950 && numAmount < 1450));
+
+    let passType = "Standard Live Session Pass";
+    let perksHtml = "";
+
+    if (isAllAccess) {
+      passType = "All-Access Mastery Pass (Live + Recordings + Code + Verified E-Certificate)";
+      perksHtml = "<p style='color:#10b981;font-weight:bold;margin:6px 0;'>⭐ Lifetime Recorded Video Access Included ✅</p><p style='color:#6366f1;font-weight:bold;margin:6px 0;'>📦 Complete Prompt Library & GitHub Boilerplate Included ✅</p><p style='color:#f59e0b;font-weight:bold;margin:6px 0;'>🎓 Official Verified E-Certificate Included FREE ✅</p>";
+    } else if (isVipPro) {
+      passType = "VIP Pro Pass (Live + Recordings + Prompts & Starter Kit)";
+      perksHtml = "<p style='color:#10b981;font-weight:bold;margin:6px 0;'>⭐ Lifetime Recorded Video Access Included ✅</p><p style='color:#6366f1;font-weight:bold;margin:6px 0;'>📦 Complete Prompt Library & Starter Kit Included ✅</p>";
+    } else if (isRecordingPass) {
+      passType = "Live + Recording Pass (Recorded Video Access)";
+      perksHtml = "<p style='color:#10b981;font-weight:bold;margin:6px 0;'>⭐ Recorded Video Access Included ✅</p>";
+    }
+
     const waGroupLink = WHATSAPP_CONFIG.WA_GROUP_LINK_CLAUDE_ONLINE;
-    const recText = isRecordingPass ? "<p style='color:#10b981;font-weight:bold;margin:8px 0;'>⭐ Recorded Video Access Included ✅</p>" : "";
+    const recText = perksHtml;
     const subject = `🎉 Registration Confirmed & GST Invoice: Claude MasterClass Online (${dateVal})`;
 
     const htmlBody = `<!DOCTYPE html><html><body style="margin:0;padding:0;background-color:#0d0d12;font-family:sans-serif;color:#f0f0f5;">

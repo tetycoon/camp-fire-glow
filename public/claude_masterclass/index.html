@@ -850,7 +850,7 @@
             </div>
 
             <!-- ONLINE PRICING GRID -->
-            <div class="pricing-grid" id="pricing-grid-online">
+            <div class="pricing-grid" id="pricing-grid-online" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); max-width: 1200px; gap: 20px;">
                 
                 <!-- Standard Pass ₹499 -->
                 <div class="pricing-card">
@@ -859,13 +859,17 @@
                         <strong class="price-val">₹499</strong>
                         <span class="currency">INR</span>
                     </div>
+                    <div style="font-size: 11px; font-weight: 700; color: #10b981; margin-bottom: 8px;">(Incl. 18% GST • Final Price: ₹499)</div>
                     <p class="card-sub">Ideal for live interactive participation across both days.</p>
 
                     <ul class="feature-list">
-                        <li><i class="fa-solid fa-check text-terracotta"></i> <span id="pricing-online-date">2-Day Live Online Session (October 24 & 25)</span></li>
+                        <li><i class="fa-solid fa-check text-terracotta"></i> <span id="pricing-online-date">2-Day Live Online Session</span></li>
+                        <li><i class="fa-solid fa-check text-terracotta"></i> 6:00 PM – 9:00 PM IST (Both Days)</li>
                         <li><i class="fa-solid fa-check text-terracotta"></i> Tamil & English Instruction</li>
                         <li><i class="fa-solid fa-check text-terracotta"></i> Direct Q&A with Antony Praveen</li>
                         <li class="disabled"><i class="fa-solid fa-xmark"></i> Recorded Video Access</li>
+                        <li class="disabled"><i class="fa-solid fa-xmark"></i> Project Source Code & MCPs</li>
+                        <li class="disabled"><i class="fa-solid fa-xmark"></i> Official Verified E-Certificate</li>
                     </ul>
 
                     <button class="btn btn-secondary btn-block" onclick="openPaymentModal(499)">
@@ -875,21 +879,76 @@
 
                 <!-- Live + Recording Pass ₹999 -->
                 <div class="pricing-card card-recommended">
-                    <span class="badge-recommended">RECOMMENDED</span>
-                    <span class="card-type text-terracotta">LIVE + RECORDING PASS</span>
+                    <span class="badge-recommended" style="background-color: #6B4FBB;">POPULAR</span>
+                    <span class="card-type text-purple">LIVE + RECORDING PASS</span>
                     <div class="price-row">
                         <strong class="price-val">₹999</strong>
                         <span class="currency">INR</span>
                     </div>
+                    <div style="font-size: 11px; font-weight: 700; color: #10b981; margin-bottom: 8px;">(Incl. 18% GST • Final Price: ₹999)</div>
                     <p class="card-sub">Full package with recorded video access of these 2 live classes.</p>
 
                     <ul class="feature-list">
                         <li class="font-bold"><i class="fa-solid fa-check text-terracotta"></i> Everything in Standard Live Pass</li>
-                        <li class="highlight-item"><i class="fa-solid fa-star text-terracotta"></i> Recorded Video Access of 2-Day Live Classes</li>
+                        <li class="highlight-item" style="color: #6B4FBB;"><i class="fa-solid fa-star text-purple"></i> Recorded Video Access of 2-Day Live Classes</li>
+                        <li><i class="fa-solid fa-check text-terracotta"></i> Re-watch & practice anytime at your own pace</li>
+                        <li><i class="fa-solid fa-check text-terracotta"></i> Direct Q&A with Antony Praveen</li>
+                        <li class="disabled"><i class="fa-solid fa-xmark"></i> Project Source Code & MCPs</li>
+                        <li class="disabled"><i class="fa-solid fa-xmark"></i> Official Verified E-Certificate</li>
                     </ul>
 
-                    <button class="btn btn-primary btn-block" onclick="openPaymentModal(999)">
+                    <button class="btn btn-primary btn-block" onclick="openPaymentModal(999)" style="background-color: #6B4FBB; border-color: #6B4FBB;">
                         Select Recording Pass @ ₹999 <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <!-- VIP Pro Pass ₹1,499 -->
+                <div class="pricing-card card-recommended">
+                    <span class="badge-recommended" style="background-color: #D85A30;">RECOMMENDED</span>
+                    <span class="card-type text-terracotta">VIP PRO PASS</span>
+                    <div class="price-row">
+                        <strong class="price-val">₹1,499</strong>
+                        <span class="currency">INR</span>
+                    </div>
+                    <div style="font-size: 11px; font-weight: 700; color: #10b981; margin-bottom: 8px;">(Incl. 18% GST • Final Price: ₹1,499)</div>
+                    <p class="card-sub">Recordings + Full Code Repository & Claude Prompts.</p>
+
+                    <ul class="feature-list">
+                        <li class="font-bold"><i class="fa-solid fa-check text-terracotta"></i> Everything in Live + Recording Pass (₹999)</li>
+                        <li class="highlight-item"><i class="fa-solid fa-box-open text-terracotta"></i> Complete Project Source Code</li>
+                        <li class="highlight-item"><i class="fa-solid fa-terminal text-terracotta"></i> 100+ Claude Prompts & Architecture</li>
+                        <li><i class="fa-solid fa-check text-terracotta"></i> Custom MCP Starter Kit & JSON Configs</li>
+                        <li><i class="fa-solid fa-check text-terracotta"></i> Private WhatsApp Community Access</li>
+                        <li class="disabled"><i class="fa-solid fa-xmark"></i> Official Verified E-Certificate</li>
+                    </ul>
+
+                    <button class="btn btn-primary btn-block" onclick="openPaymentModal(1499)">
+                        Select VIP Pro @ ₹1,499 <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <!-- All-Access Mastery Pass ₹1,999 -->
+                <div class="pricing-card card-recommended" style="background: #1F1E1C; color: #FFFFFF; border-color: #1F1E1C;">
+                    <span class="badge-recommended" style="background-color: #f59e0b; color: #000;">BEST VALUE</span>
+                    <span class="card-type" style="color: #fcd34d;">ALL-ACCESS MASTERY PASS</span>
+                    <div class="price-row">
+                        <strong class="price-val" style="color: #FFFFFF;">₹1,999</strong>
+                        <span class="currency" style="color: #A09C94;">INR</span>
+                    </div>
+                    <div style="font-size: 11px; font-weight: 700; color: #fcd34d; margin-bottom: 8px;">(Incl. 18% GST • Final Price: ₹1,999)</div>
+                    <p class="card-sub" style="color: #C5C0B8;">Complete VIP Package + Official E-Certificate + Mentorship.</p>
+
+                    <ul class="feature-list" style="color: #E6E2D9;">
+                        <li class="font-bold"><i class="fa-solid fa-check" style="color: #f59e0b;"></i> Everything in VIP Pro Pass (₹1,499)</li>
+                        <li class="highlight-item" style="color: #fcd34d; background: rgba(255,255,255,0.08); padding: 4px 8px; border-radius: 6px;"><i class="fa-solid fa-certificate" style="color: #f59e0b;"></i> Verified E-Certificate Included (FREE)</li>
+                        <li><i class="fa-solid fa-check" style="color: #f59e0b;"></i> Priority Doubt Clearance & Support</li>
+                        <li><i class="fa-solid fa-check" style="color: #f59e0b;"></i> Exclusive AI Automation Guide</li>
+                        <li><i class="fa-solid fa-check" style="color: #f59e0b;"></i> Lifetime Template Repository Access</li>
+                        <li><i class="fa-solid fa-check" style="color: #f59e0b;"></i> VIP 1-on-1 Q&A Slot Access</li>
+                    </ul>
+
+                    <button class="btn btn-primary btn-block" onclick="openPaymentModal(1999)" style="background: #FFFFFF; color: #1F1E1C; border-color: #FFFFFF; font-weight: 800;">
+                        Select All-Access @ ₹1,999 <i class="fa-solid fa-arrow-right"></i>
                     </button>
                 </div>
 
@@ -945,11 +1004,11 @@
 
                 <div class="faq-item">
                     <button class="faq-question" onclick="toggleFaq(this)">
-                        <span>What is the difference between the ₹499 Live Pass and ₹999 Recording Pass?</span>
+                        <span>What is the difference between the ₹499, ₹999, ₹1,499, and ₹1,999 passes?</span>
                         <i class="fa-solid fa-chevron-down text-terracotta"></i>
                     </button>
                     <div class="faq-answer">
-                        The ₹499 pass grants live interactive participation on Saturday & Sunday (October 24 & 25, rolling every weekend). The ₹999 Recording Pass includes everything in the ₹499 pass PLUS recorded video access of these 2 live classes.
+                        The ₹499 Standard Live Pass includes interactive live session attendance across both days. The ₹999 Live + Recording Pass includes everything in the standard pass PLUS permanent recorded video access. The ₹1,499 VIP Pro Pass adds complete project source code, custom MCP starter kits, and 100+ prompt templates. The ₹1,999 All-Access Mastery Pass includes everything in VIP Pro PLUS an official verified E-Certificate (FREE), priority mentorship, and exclusive AI automation repositories.
                     </div>
                 </div>
 
@@ -1061,21 +1120,45 @@
                         <div class="opt-info">
                             <div class="opt-title-row">
                                 <strong>Standard Live Pass</strong>
-                                <span class="opt-price text-terracotta">₹499</span>
+                                <span class="opt-price text-terracotta">₹499 <small style="font-size: 10px; color: #10b981; font-weight: 600;">(Incl. 18% GST)</small></span>
                             </div>
                             <p>Live Online Session (No Video Recording Access).</p>
                         </div>
                     </div>
 
                     <div class="modal-option option-vip" id="opt-999" onclick="selectPass(999)">
-                        <span class="badge-opt-rec">RECOMMENDED</span>
+                        <span class="badge-opt-rec" style="background-color: #6B4FBB;">POPULAR</span>
                         <div class="opt-radio"><div class="radio-dot"></div></div>
                         <div class="opt-info">
                             <div class="opt-title-row">
                                 <strong>Live + Recording Pass</strong>
-                                <span class="opt-price text-terracotta">₹999</span>
+                                <span class="opt-price text-purple">₹999 <small style="font-size: 10px; color: #10b981; font-weight: 600;">(Incl. 18% GST)</small></span>
                             </div>
                             <p>Live Zoom + <strong>Recorded Video Access of these 2 live classes</strong>.</p>
+                        </div>
+                    </div>
+
+                    <div class="modal-option option-vip" id="opt-1499" onclick="selectPass(1499)">
+                        <span class="badge-opt-rec">RECOMMENDED</span>
+                        <div class="opt-radio"><div class="radio-dot"></div></div>
+                        <div class="opt-info">
+                            <div class="opt-title-row">
+                                <strong>VIP Pro Pass</strong>
+                                <span class="opt-price text-terracotta">₹1,499 <small style="font-size: 10px; color: #10b981; font-weight: 600;">(Incl. 18% GST)</small></span>
+                            </div>
+                            <p>Live + Recordings + <strong>Complete Project Code & 100+ MCP Prompts</strong>.</p>
+                        </div>
+                    </div>
+
+                    <div class="modal-option option-vip" id="opt-1999" onclick="selectPass(1999)" style="border-color: #f59e0b;">
+                        <span class="badge-opt-rec" style="background-color: #f59e0b; color: #000;">BEST VALUE • E-CERT INCLUDED</span>
+                        <div class="opt-radio"><div class="radio-dot"></div></div>
+                        <div class="opt-info">
+                            <div class="opt-title-row">
+                                <strong>All-Access Mastery Pass</strong>
+                                <span class="opt-price" style="color: #d97706;">₹1,999 <small style="font-size: 10px; color: #10b981; font-weight: 600;">(Incl. 18% GST)</small></span>
+                            </div>
+                            <p>VIP Pro + <strong>Verified E-Certificate (FREE)</strong> + Priority Mentorship.</p>
                         </div>
                     </div>
                 </div>
@@ -1118,12 +1201,18 @@
                     <div class="session-pill" id="modal-session-pill"><i class="fa-regular fa-calendar"></i> October 24 & 25, 2026 • 6:00 PM IST</div>
 
                     <!-- INTERACTIVE PASS SWITCHER TAB BAR INSIDE STEP 2 -->
-                    <div class="step2-pass-switcher" id="step2-pass-switcher" style="display: flex; background: #F7F4EE; padding: 2px; border-radius: 8px; border: 1px solid #E6E2D9; gap: 3px; margin-top: 6px;">
-                        <button type="button" id="tab-pass-499" onclick="selectPass(499)" style="flex: 1; padding: 4px 6px; border-radius: 6px; border: none; font-size: 10px; font-weight: 700; cursor: pointer; transition: all 0.2s; background: #ffffff; color: #D85A30; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
-                            Standard Live (₹499)
+                    <div class="step2-pass-switcher" id="step2-pass-switcher" style="display: grid; grid-template-columns: repeat(2, 1fr); background: #F7F4EE; padding: 2px; border-radius: 8px; border: 1px solid #E6E2D9; gap: 3px; margin-top: 6px;">
+                        <button type="button" id="tab-pass-499" onclick="selectPass(499)" style="padding: 4px 6px; border-radius: 6px; border: none; font-size: 10px; font-weight: 700; cursor: pointer; transition: all 0.2s; background: #ffffff; color: #D85A30; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+                            Standard (₹499)
                         </button>
-                        <button type="button" id="tab-pass-999" onclick="selectPass(999)" style="flex: 1; padding: 4px 6px; border-radius: 6px; border: none; font-size: 10px; font-weight: 700; cursor: pointer; transition: all 0.2s; background: transparent; color: #6E6B65;">
-                            ⭐ Live + Recording (₹999)
+                        <button type="button" id="tab-pass-999" onclick="selectPass(999)" style="padding: 4px 6px; border-radius: 6px; border: none; font-size: 10px; font-weight: 700; cursor: pointer; transition: all 0.2s; background: transparent; color: #6E6B65;">
+                            ⭐ Live+Rec (₹999)
+                        </button>
+                        <button type="button" id="tab-pass-1499" onclick="selectPass(1499)" style="padding: 4px 6px; border-radius: 6px; border: none; font-size: 10px; font-weight: 700; cursor: pointer; transition: all 0.2s; background: transparent; color: #6E6B65;">
+                            VIP Pro (₹1,499)
+                        </button>
+                        <button type="button" id="tab-pass-1999" onclick="selectPass(1999)" style="padding: 4px 6px; border-radius: 6px; border: none; font-size: 10px; font-weight: 700; cursor: pointer; transition: all 0.2s; background: transparent; color: #6E6B65;">
+                            All-Access (₹1,999)
                         </button>
                     </div>
                 </div>
@@ -1207,15 +1296,15 @@
                     <div class="gst-breakdown-card" style="background: #F7F4EE; border: 1px solid #E6E2D9; border-radius: 8px; padding: 5px 10px; margin-bottom: 4px; font-size: 10px;">
                         <div style="display: flex; justify-content: space-between; color: #524F4A; margin-bottom: 2px;">
                             <span>Base Session Fee:</span>
-                            <span id="gst-base-display" style="font-weight: 600; font-family: monospace;">₹499</span>
+                            <span id="gst-base-display" style="font-weight: 600; font-family: monospace;">₹422.88</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; color: #524F4A; margin-bottom: 2px;">
-                            <span>GST (18%):</span>
-                            <span id="gst-tax-display" style="font-weight: 600; font-family: monospace;">+ ₹90</span>
+                            <span>GST (18% Included):</span>
+                            <span id="gst-tax-display" style="font-weight: 600; font-family: monospace;">₹76.12 (Included)</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; color: #1F1E1C; font-weight: 800; padding-top: 3px; border-top: 1px solid #E6E2D9; font-size: 11px;">
                             <span>Total Payable (Incl. 18% GST):</span>
-                            <span id="gst-total-display" style="color: #D85A30; font-family: monospace;">₹589</span>
+                            <span id="gst-total-display" style="color: #D85A30; font-family: monospace;">₹499</span>
                         </div>
                     </div>
 
@@ -1227,7 +1316,7 @@
                     </div>
 
                     <button type="submit" class="btn btn-primary btn-block" id="pay-submit-btn" style="padding: 9px 14px; font-size: 12.5px; border-radius: 8px; margin-top: 2px;">
-                        Proceed to payment — <span id="btn-fee-display">₹589 (Incl. GST)</span>
+                        Proceed to payment — <span id="btn-fee-display">₹499 (Incl. GST)</span>
                     </button>
 
                     <div class="secured-footer" style="margin-top: 3px; font-size: 8.5px;">
@@ -1253,9 +1342,11 @@
                     <p style="margin-bottom: 8px;">The Claude MasterClass is a 2-Day Live Virtual Session taking place Every Saturday & Sunday (6:00 PM – 9:00 PM IST). Access details and session meeting links are provided via the official WhatsApp group upon registration.</p>
 
                     <h4 style="font-size: 13px; font-weight: 700; color: #1F1E1C; margin-top: 12px;">2. Registration & Pass Types</h4>
-                    <p style="margin-bottom: 8px;"><strong>Standard Live Pass (₹499)</strong> includes live interactive participation across both days. Video recording access is excluded from the standard pass.</p>
-                    <p style="margin-bottom: 8px;"><strong>Live + Recording Pass (₹999)</strong> includes live participation PLUS recorded video access of these 2 live classes.</p>
-                    <p style="margin-bottom: 8px;"><strong>Official E-Certificate Add-on (+ ₹1,000)</strong> is an optional verified certificate issued upon completion of the masterclass.</p>
+                    <p style="margin-bottom: 8px;"><strong>Standard Live Pass (₹499 Incl. 18% GST)</strong> includes live interactive Zoom participation across both days. Video recording access is excluded.</p>
+                    <p style="margin-bottom: 8px;"><strong>Live + Recording Pass (₹999 Incl. 18% GST)</strong> includes live participation PLUS permanent recorded video access of these 2 live classes.</p>
+                    <p style="margin-bottom: 8px;"><strong>VIP Pro Pass (₹1,499 Incl. 18% GST)</strong> includes live + recordings PLUS full project source code, custom MCP starter kits, and 100+ prompt templates.</p>
+                    <p style="margin-bottom: 8px;"><strong>All-Access Mastery Pass (₹1,999 Incl. 18% GST)</strong> includes everything in VIP Pro PLUS an official verified E-Certificate, priority mentorship, and AI automation guides.</p>
+                    <p style="margin-bottom: 8px;"><strong>Official E-Certificate Add-on (+ ₹1,000 Incl. 18% GST)</strong> is available for Standard, Live+Rec, and VIP Pro passes (included free in All-Access).</p>
 
                     <h4 style="font-size: 13px; font-weight: 700; color: #1F1E1C; margin-top: 12px;">3. Refund & Cancellation Policy</h4>
                     <p style="margin-bottom: 8px;">All registrations, pass purchases, and add-on payments are strictly non-refundable once processed. In the rare event of a session postponement by Tech Tycoon Digital Solution LLP, registered participants will be accommodated in the rescheduled live batch.</p>

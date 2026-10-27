@@ -159,6 +159,8 @@ let appliedPromo = "CLAUDE";
 let discountPercent = 10;
 
 function getBasePrice(plan) {
+    if (plan === 1999) return 2220;
+    if (plan === 1499) return 1665;
     if (plan === 999) return 1110;
     return 554;
 }
@@ -177,15 +179,16 @@ function sanitizeText(str, maxLen = 100) {
 }
 
 function getBaseSessionPrice() {
-    const passPrice = selectedPlan; // 499, 999, or 4999
-    const certAddon = wantCertificate ? 1000 : 0;
+    const passPrice = selectedPlan; // 499, 999, 1499, 1999, or 4999
+    // For ₹1,999 All-Access Pass, E-Certificate is already included free!
+    const certAddon = (wantCertificate && selectedPlan !== 1999) ? 1000 : 0;
     return passPrice + certAddon;
 }
 
 function getGstBreakdown() {
-    const baseAmount = getBaseSessionPrice();
-    const gstAmount = Math.round(baseAmount * GST_RATE);
-    const totalAmount = baseAmount + gstAmount;
+    const totalAmount = getBaseSessionPrice();
+    const baseAmount = Math.round((totalAmount / (1 + GST_RATE)) * 100) / 100;
+    const gstAmount = Math.round((totalAmount - baseAmount) * 100) / 100;
     return { baseAmount, gstAmount, totalAmount };
 }
 
@@ -219,12 +222,12 @@ function updatePricesUI() {
     const { baseAmount, gstAmount, totalAmount } = getGstBreakdown();
     const finalPrice = getFinalPrice();
     const selTotal = document.getElementById('selected-pass-total');
-    if (selTotal) selTotal.innerText = `₹${selectedPlan.toLocaleString('en-IN')} + 18% GST`;
+    if (selTotal) selTotal.innerText = `₹${selectedPlan.toLocaleString('en-IN')} (Incl. 18% GST)`;
     if (document.getElementById('form-fee-display')) document.getElementById('form-fee-display').innerText = `₹${finalPrice.toLocaleString('en-IN')} INR (Incl. 18% GST)`;
     if (document.getElementById('btn-fee-display')) document.getElementById('btn-fee-display').innerText = `₹${finalPrice.toLocaleString('en-IN')} (Incl. GST)`;
-    if (document.getElementById('back-pass-price')) document.getElementById('back-pass-price').innerText = `₹${baseAmount.toLocaleString('en-IN')} + GST`;
-    if (document.getElementById('gst-base-display')) document.getElementById('gst-base-display').innerText = `₹${baseAmount.toLocaleString('en-IN')}`;
-    if (document.getElementById('gst-tax-display')) document.getElementById('gst-tax-display').innerText = `+ ₹${gstAmount.toLocaleString('en-IN')}`;
+    if (document.getElementById('back-pass-price')) document.getElementById('back-pass-price').innerText = `₹${totalAmount.toLocaleString('en-IN')}`;
+    if (document.getElementById('gst-base-display')) document.getElementById('gst-base-display').innerText = `₹${baseAmount.toFixed(2)}`;
+    if (document.getElementById('gst-tax-display')) document.getElementById('gst-tax-display').innerText = `₹${gstAmount.toFixed(2)} (Included)`;
     if (document.getElementById('gst-total-display')) document.getElementById('gst-total-display').innerText = `₹${totalAmount.toLocaleString('en-IN')}`;
     const mobPrice = document.getElementById('mobile-pass-price');
     if (mobPrice) mobPrice.innerText = `₹${finalPrice.toLocaleString('en-IN')} INR`;
@@ -587,38 +590,50 @@ function selectPass(plan) {
     // Update Option Cards in Step 1
     if (document.getElementById('opt-499')) document.getElementById('opt-499').classList.toggle('selected', plan === 499 || plan === 399);
     if (document.getElementById('opt-999')) document.getElementById('opt-999').classList.toggle('selected', plan === 999);
+    if (document.getElementById('opt-1499')) document.getElementById('opt-1499').classList.toggle('selected', plan === 1499);
+    if (document.getElementById('opt-1999')) document.getElementById('opt-1999').classList.toggle('selected', plan === 1999);
     if (document.getElementById('opt-4999')) document.getElementById('opt-4999').classList.toggle('selected', plan === 4999);
 
     // Update Tab Switcher Buttons in Step 2
-    const tab499 = document.getElementById('tab-pass-499');
-    const tab999 = document.getElementById('tab-pass-999');
+    const tabs = {
+        499: document.getElementById('tab-pass-499'),
+        999: document.getElementById('tab-pass-999'),
+        1499: document.getElementById('tab-pass-1499'),
+        1999: document.getElementById('tab-pass-1999')
+    };
     const step2Switcher = document.getElementById('step2-pass-switcher');
 
     if (step2Switcher) {
         if (currentMasterclassMode === 'offline' || plan === 4999) {
             step2Switcher.style.display = 'none';
         } else {
-            step2Switcher.style.display = 'flex';
+            step2Switcher.style.display = 'grid';
         }
     }
 
-    if (tab499 && tab999) {
-        if (plan === 999) {
-            tab499.style.background = 'transparent';
-            tab499.style.color = '#6E6B65';
-            tab499.style.boxShadow = 'none';
-
-            tab999.style.background = '#D85A30';
-            tab999.style.color = '#ffffff';
-            tab999.style.boxShadow = '0 2px 6px rgba(216,90,48,0.3)';
+    Object.keys(tabs).forEach(k => {
+        const t = tabs[k];
+        if (!t) return;
+        const isSelected = Number(k) === plan || (Number(k) === 499 && plan === 399);
+        if (isSelected) {
+            t.style.background = '#ffffff';
+            t.style.color = plan === 1999 ? '#d97706' : '#D85A30';
+            t.style.boxShadow = '0 1px 3px rgba(0,0,0,0.08)';
         } else {
-            tab499.style.background = '#ffffff';
-            tab499.style.color = '#D85A30';
-            tab499.style.boxShadow = '0 1px 3px rgba(0,0,0,0.08)';
+            t.style.background = 'transparent';
+            t.style.color = '#6E6B65';
+            t.style.boxShadow = 'none';
+        }
+    });
 
-            tab999.style.background = 'transparent';
-            tab999.style.color = '#6E6B65';
-            tab999.style.boxShadow = 'none';
+    // Certificate checkbox handling for ₹1,999 All-Access Pass
+    const certCb = document.getElementById('want-certificate');
+    if (certCb) {
+        if (plan === 1999) {
+            certCb.checked = true;
+            certCb.disabled = true;
+        } else {
+            certCb.disabled = false;
         }
     }
 
@@ -633,10 +648,18 @@ function selectPass(plan) {
             passNote.style.display = 'block';
             passNote.innerHTML = '⚠️ Live session only (No recorded access in ₹499 pass)';
             passNote.style.color = '#D85A30';
-        } else {
+        } else if (plan === 999) {
             passNote.style.display = 'block';
             passNote.innerHTML = '⭐ Includes recorded video access of these 2 live classes!';
             passNote.style.color = '#6B4FBB';
+        } else if (plan === 1499) {
+            passNote.style.display = 'block';
+            passNote.innerHTML = '🚀 Includes Live + Recordings + Complete Code & MCP Starter Kit!';
+            passNote.style.color = '#D85A30';
+        } else if (plan === 1999) {
+            passNote.style.display = 'block';
+            passNote.innerHTML = '👑 Complete All-Access: Recordings + Code + Verified E-Certificate Included!';
+            passNote.style.color = '#d97706';
         }
     }
 
@@ -748,8 +771,14 @@ async function handleFormSubmit(e) {
             currency: "INR",
             order_id: orderId,
             name: "Claude Masterclass 2026",
-            description: selectedPlan === 999 
+            description: selectedPlan === 1999
+                ? "All-Access Mastery Pass (Incl. 18% GST)"
+                : selectedPlan === 1499
+                ? "VIP Pro Pass (Incl. 18% GST)"
+                : selectedPlan === 999 
                 ? "Live + Recording Pass (Incl. 18% GST)" 
+                : selectedPlan === 4999
+                ? "Offline Masterclass Pass (Incl. 18% GST)"
                 : "Standard Live Session Pass (Incl. 18% GST)",
             image: "https://course.techtycoon.in/images/tech_tycoon_logo.png",
             prefill: {
