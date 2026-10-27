@@ -95,12 +95,12 @@ const ProfessionalRegistrationForm: React.FC = () => {
   } | null>(null);
 
   // Pricing Calculation matching /ai_bgm:
-  // Domestic (+91): ₹6,499 Total Payable (Inclusive of 18% GST)
-  // International: ₹8,499 Total Payable (Inclusive of 18% GST & ₹2,000 server maintenance cost)
+  // Domestic (+91): ₹6,449 Total Payable (Inclusive of 18% GST)
+  // International: ₹8,449 Total Payable (Inclusive of 18% GST & ₹2,000 server maintenance cost)
   const isInternational = selectedCountry.iso !== "IN" && selectedCountry.code !== "+91";
   const standardPrice = isInternational ? 13999 : 9999;
   const isVipApplied = appliedCoupon.toUpperCase() === "AMIABLE" || appliedCoupon.toUpperCase() === "TECHTYCOON";
-  const finalPrice = isInternational ? 8499 : 6499;
+  const finalPrice = isInternational ? 8449 : 6449;
   const discountAmount = standardPrice - finalPrice;
   const gstBreakdown = calculateInclusiveGstBreakdown(finalPrice);
 
@@ -310,8 +310,8 @@ const ProfessionalRegistrationForm: React.FC = () => {
         currency: "INR",
         name: "Tech Tycoon Digital Solutions",
         description: isInternational
-          ? `Advance AI for Professionals (₹8,499 Incl. 18% GST & ₹2,000 Server Maintenance) ${appliedCoupon ? `(Coupon: ${appliedCoupon})` : ""}`
-          : `Advance AI for Professionals (₹6,499 Incl. 18% GST) ${appliedCoupon ? `(Coupon: ${appliedCoupon})` : ""}`,
+          ? `Advance AI for Professionals (₹8,449 Incl. 18% GST & ₹2,000 Server Maintenance) ${appliedCoupon ? `(Coupon: ${appliedCoupon})` : ""}`
+          : `Advance AI for Professionals (₹6,449 Incl. 18% GST) ${appliedCoupon ? `(Coupon: ${appliedCoupon})` : ""}`,
         prefill: {
           name: sanitizedName,
           email: sanitizedEmail,

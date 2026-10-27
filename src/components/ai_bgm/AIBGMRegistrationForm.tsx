@@ -68,7 +68,7 @@ const AIBGMRegistrationForm: React.FC = () => {
   const [isCountryDropdownOpen, setIsCountryDropdownOpen] = useState(false);
 
   // Secret Coupon Code State
-  // Rule: Pricing is 6499 (India) / 8499 (Foreigners with 2000 server maintenance) inclusive of tax
+  // Rule: Pricing is 6449 (India) / 8449 (Foreigners with 2000 server maintenance) inclusive of tax
   const [couponInput, setCouponInput] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState("");
   const [couponStatus, setCouponStatus] = useState<{
@@ -103,10 +103,10 @@ const AIBGMRegistrationForm: React.FC = () => {
   const isCouponValid = appliedCoupon.trim().toUpperCase() === "AMIABLE" || appliedCoupon.trim().toUpperCase() === "TECHTYCOON";
 
   // Dynamic Pricing Logic:
-  // Domestic (+91): ₹6,499 Total Payable (Inclusive of 18% GST)
-  // Foreigners (!=+91): ₹8,499 Total Payable (Inclusive of 18% GST & ₹2,000 server maintenance cost)
+  // Domestic (+91): ₹6,449 Total Payable (Inclusive of 18% GST)
+  // Foreigners (!=+91): ₹8,449 Total Payable (Inclusive of 18% GST & ₹2,000 server maintenance cost)
   const standardPrice = isInternational ? 13999 : 9999;
-  const discountedPrice = isInternational ? 8499 : 6499;
+  const discountedPrice = isInternational ? 8449 : 6449;
   const savings = standardPrice - discountedPrice;
   const gstBreakdown = calculateInclusiveGstBreakdown(discountedPrice);
 
@@ -293,8 +293,8 @@ const AIBGMRegistrationForm: React.FC = () => {
         currency: "INR",
         name: "Tech Tycoon Digital Solutions",
         description: isInternational
-          ? `AI-BGM Course Enrollment (₹8,499 Incl. 18% GST & ₹2,000 Server Maintenance) ${appliedCoupon ? `(Coupon: ${appliedCoupon})` : ""}`
-          : `AI-BGM Course Enrollment (₹6,499 Incl. 18% GST) ${appliedCoupon ? `(Coupon: ${appliedCoupon})` : ""}`,
+          ? `AI-BGM Course Enrollment (₹8,449 Incl. 18% GST & ₹2,000 Server Maintenance) ${appliedCoupon ? `(Coupon: ${appliedCoupon})` : ""}`
+          : `AI-BGM Course Enrollment (₹6,449 Incl. 18% GST) ${appliedCoupon ? `(Coupon: ${appliedCoupon})` : ""}`,
         prefill: {
           name: formData.name.trim(),
           email: formData.email.trim(),

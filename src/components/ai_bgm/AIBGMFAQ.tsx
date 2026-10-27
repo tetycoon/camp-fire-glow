@@ -25,7 +25,7 @@ const faqs: FAQItem[] = [
   },
   {
     q: "What is the course investment and pricing breakdown?",
-    a: "Tuition is ₹6,499 (inclusive of 18% GST) for Indian participants (+91), and ₹8,499 for international participants (inclusive of all applicable taxes and ₹2,000 international server maintenance). If you have an institutional voucher code, you can enter it in the checkout form to apply eligible grants."
+    a: "Tuition is ₹6,449 (inclusive of 18% GST) for Indian participants (+91), and ₹8,449 for international participants (inclusive of all applicable taxes and ₹2,000 international server maintenance). If you have an institutional voucher code, you can enter it in the checkout form to apply eligible grants."
   },
   {
     q: "Do I need technical or coding experience to enroll?",
