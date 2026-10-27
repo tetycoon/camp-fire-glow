@@ -317,7 +317,7 @@ function saveVerifiedInvoiceRecord(record) {
     email: record.email || "",
     phone: record.phone || "",
     course: record.course || "Advance AI-Business Generative Model (AI-BGM)",
-    amount: Number(record.amount) || 5899,
+    amount: Number(record.amount) || 6449,
     paidAt: record.paidAt || Utilities.formatDate(new Date(), "Asia/Kolkata", "dd MMM yyyy, hh:mm a")
   });
   props.setProperty("VERIFIED_INV_" + record.paymentId, payload);
@@ -402,7 +402,7 @@ function getVerifiedInvoiceRecord(sheet, paymentId, orderId, token, userContact)
             customerEmail: String(data[i][2] || ""),
             customerPhone: String(data[i][3] || ""),
             courseName: "Advance AI-Business Generative Model (AI-BGM)",
-            totalAmountPaid: Number(data[i][5]) || 5899,
+            totalAmountPaid: Number(data[i][5]) || 6449,
             paidAt: String(data[i][0] || "")
           };
           break;
@@ -575,8 +575,8 @@ function createOrderAndLogRow(sheet, data) {
   const phone = sanitizeCell(data.phone || "");
   const profession = sanitizeCell(data.profession || "Business Owner / Professional");
   const emailLower = email.toLowerCase().trim();
-  const rawAmt = parseInt(data.amount) || 5899;
-  const amount = (TEST_EMAILS.indexOf(emailLower) !== -1 && rawAmt === 1) ? 1 : (rawAmt < 3500 ? 5899 : rawAmt);
+  const rawAmt = parseInt(data.amount) || 6449;
+  const amount = (TEST_EMAILS.indexOf(emailLower) !== -1 && rawAmt === 1) ? 1 : (rawAmt < 3500 ? 6449 : rawAmt);
   const isIntl = data.isInternational || false;
   const dateTimeStr = Utilities.formatDate(new Date(), "Asia/Kolkata", "yyyy-MM-dd HH:mm:ss");
 
@@ -598,8 +598,8 @@ function createOrderAndLogRow(sheet, data) {
       profession: profession,
       course: "Advance AI-Business Generative Model",
       coupon: data.coupon || data.promoCode || "",
-      base_amount: data.baseAmount || 4999,
-      gst_amount: data.gstAmount || 900
+      base_amount: data.baseAmount || 5465.25,
+      gst_amount: data.gstAmount || 983.75
     }
   };
 
@@ -656,7 +656,9 @@ const TOTAL_TO_EXACT_BASE_MAP = {
   3539: 2999,
   4130: 3500,
   5899: 4999,
+  6449: 5465.25,
   8259: 6999,
+  8449: 7160.17,
   11799: 9999,
   17699: 14999
 };
