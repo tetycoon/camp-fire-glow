@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 import { countryCodes, CountryCode } from "../../lib/countryCodes";
 import GstPriceBreakdown from "../common/GstPriceBreakdown";
-import { InvoicePrintParams, calculateGstBreakdown, isAuthorizedTestEmail, isValidEmail, isValidGstin, openPrintableGstInvoice, registerVerifiedInvoiceRecord, sanitizeTextInput } from "../../lib/gstUtils";
+import { InvoicePrintParams, calculateGstBreakdown, calculateInclusiveGstBreakdown, isAuthorizedTestEmail, isValidEmail, isValidGstin, openPrintableGstInvoice, registerVerifiedInvoiceRecord, sanitizeTextInput } from "../../lib/gstUtils";
 
 declare global {
   interface Window {
@@ -129,17 +129,15 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
     : cleanPhone.length >= 7 && cleanPhone.length <= 15;
 
   const isInternational = selectedCountry.code !== "+91";
-  const isCouponValid = appliedCoupon.trim().toUpperCase() === "AMIABLE";
+  const isCouponValid = appliedCoupon.trim().toUpperCase() === "AMIABLE" || appliedCoupon.trim().toUpperCase() === "TECHTYCOON";
 
   // Dynamic Pricing:
-  // Domestic (+91): Standard = 9999, AMIABLE = 4999
-  // Foreigners (!=+91): Standard = 13999, AMIABLE = 6999
+  // Domestic (+91): ₹6,499 Total Payable (Inclusive of 18% GST)
+  // Foreigners (!=+91): ₹8,499 Total Payable (Inclusive of 18% GST & ₹2,000 server maintenance cost)
   const standardPrice = isInternational ? 13999 : 9999;
-  const discountedPrice = isCouponValid 
-    ? (isInternational ? 6999 : 4999) 
-    : standardPrice;
-  const savings = standardPrice - discountedPrice;
-  const gstBreakdown = calculateGstBreakdown(discountedPrice);
+  const finalPrice = isInternational ? 8499 : 6499;
+  const savings = standardPrice - finalPrice;
+  const gstBreakdown = calculateInclusiveGstBreakdown(finalPrice);
 
   const filteredCountries = countryCodes.filter(
     (c) =>
@@ -173,25 +171,24 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
       setIsPriceRevealed(true);
       setCouponStatus({
         type: "idle",
-        message: "Standard tuition tier unlocked. Enter coupon 'AMIABLE' for 50% discount."
+        message: "Executive cohort tuition tier unlocked."
       });
       return;
     }
 
-    if (code === "AMIABLE") {
-      setAppliedCoupon("AMIABLE");
+    if (code === "AMIABLE" || code === "TECHTYCOON" || code === "VIP" || code === "PRO2026") {
+      setAppliedCoupon(code);
       setIsPriceRevealed(true);
-      const discountAmount = isInternational ? 7000 : 5000;
       setCouponStatus({
         type: "success",
-        message: `🎉 Secret VIP Voucher 'AMIABLE' Applied! You saved ₹${discountAmount.toLocaleString()} (50% Off)!`
+        message: `🎉 VIP Voucher '${code}' Applied! Executive cohort subsidy unlocked: ₹${finalPrice.toLocaleString("en-IN")} (All taxes incl.)!`
       });
     } else {
       setAppliedCoupon("");
       setIsPriceRevealed(true);
       setCouponStatus({
         type: "error",
-        message: "Invalid coupon code. Enter 'AMIABLE' for 50% discount."
+        message: "Invalid or expired voucher code."
       });
     }
   };
@@ -235,18 +232,17 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
 
     if (!isPriceRevealed) {
       const code = couponInput.trim().toUpperCase();
-      if (code === "AMIABLE") {
-        setAppliedCoupon("AMIABLE");
-        const discountAmount = isInternational ? 7000 : 5000;
+      if (code === "AMIABLE" || code === "TECHTYCOON" || code === "VIP" || code === "PRO2026") {
+        setAppliedCoupon(code);
         setCouponStatus({
           type: "success",
-          message: `🎉 Secret VIP Voucher 'AMIABLE' Applied! You saved ₹${discountAmount.toLocaleString()} (50% Off)!`
+          message: `🎉 VIP Voucher '${code}' Applied! Executive cohort subsidy unlocked: ₹${finalPrice.toLocaleString("en-IN")} (All taxes incl.)!`
         });
       } else if (code) {
         setAppliedCoupon("");
         setCouponStatus({
           type: "error",
-          message: "Invalid coupon code. Enter 'AMIABLE' for 50% discount."
+          message: "Invalid or expired voucher code."
         });
       }
       setIsPriceRevealed(true);
@@ -348,7 +344,9 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
         amount: amountInPaise,
         currency: "INR",
         name: "Tech Tycoon Digital Solutions",
-        description: `AI-BGM Course Enrollment (Incl. 18% GST) ${appliedCoupon ? `(Coupon: ${appliedCoupon})` : ""}`,
+        description: isInternational 
+          ? `AI-BGM Course Enrollment (₹8,499 Incl. 18% GST & ₹2,000 Server Maintenance) ${appliedCoupon ? `(Coupon: ${appliedCoupon})` : ""}`
+          : `AI-BGM Course Enrollment (₹6,499 Incl. 18% GST) ${appliedCoupon ? `(Coupon: ${appliedCoupon})` : ""}`,
         prefill: {
           name: sanitizedName,
           email: sanitizedEmail,
@@ -716,10 +714,10 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
               <div>
                 <div className="flex items-center justify-between mb-1">
                   <label className="block text-[11px] sm:text-xs font-bold text-slate-700">
-                    Secret Voucher / Coupon Code
+                    Voucher / Coupon Code
                   </label>
-                  <span className="text-[10px] text-amber-700 font-bold">
-                    💡 Tip: Enter <strong>AMIABLE</strong> for 50% off
+                  <span className="text-[10px] text-slate-500 font-medium">
+                    (Optional)
                   </span>
                 </div>
                 <div className="flex gap-2">
@@ -727,7 +725,7 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
                     <Tag className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                     <input
                       type="text"
-                      placeholder="e.g. AMIABLE"
+                      placeholder="Enter coupon code"
                       value={couponInput}
                       onChange={(e) => setCouponInput(e.target.value)}
                       className="w-full pl-8 sm:pl-9 pr-3 py-2 sm:py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 text-xs sm:text-sm font-mono uppercase tracking-wider focus:outline-none focus:bg-white focus:border-blue-600 focus:ring-1 focus:ring-blue-600"
@@ -769,7 +767,7 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
                     <div className="flex items-center justify-between text-xs">
                       <span className="font-bold text-emerald-700 flex items-center gap-1 text-[11px] sm:text-xs">
                         <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                        {isCouponValid ? "50% VIP Grant Unlocked" : "Standard Tier Active"}
+                        Executive Cohort Subsidy Unlocked
                       </span>
                       <span className="text-[10px] sm:text-[11px] text-slate-500 font-medium">
                         {isInternational ? "International Participant" : "Domestic (+91)"}
@@ -778,25 +776,26 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
 
                     <div className="flex items-baseline justify-between pt-1 border-t border-blue-100">
                       <div>
-                        <div className="text-[10px] sm:text-[11px] text-slate-500">Base Course Fee (+ 18% GST)</div>
+                        <div className="text-[10px] sm:text-[11px] text-slate-500 font-medium">Total Course Fee (Inclusive of 18% GST)</div>
                         <div className="flex items-baseline gap-1.5 sm:gap-2">
                           <span className="text-2xl sm:text-3xl font-black text-slate-900">
-                            ₹{discountedPrice.toLocaleString("en-IN")}
+                            ₹{finalPrice.toLocaleString("en-IN")}
                           </span>
-                          <span className="text-xs font-bold text-slate-500">+ 18% GST</span>
-                          {isCouponValid && (
-                            <span className="text-xs sm:text-sm font-bold text-slate-400 line-through">
-                              ₹{standardPrice.toLocaleString("en-IN")}
-                            </span>
-                          )}
+                          <span className="text-xs font-bold text-emerald-700">(All Taxes Incl.)</span>
+                          <span className="text-xs sm:text-sm font-bold text-slate-400 line-through">
+                            ₹{standardPrice.toLocaleString("en-IN")}
+                          </span>
                         </div>
+                        {isInternational && (
+                          <div className="text-[10px] sm:text-[11px] text-indigo-700 font-semibold mt-0.5">
+                            * Includes ₹2,000 International Server Maintenance Cost
+                          </div>
+                        )}
                       </div>
 
-                      {isCouponValid && (
-                        <div className="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg bg-emerald-100 text-emerald-800 text-[11px] sm:text-xs font-bold border border-emerald-200">
-                          Save ₹{savings.toLocaleString("en-IN")}
-                        </div>
-                      )}
+                      <div className="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg bg-emerald-100 text-emerald-800 text-[11px] sm:text-xs font-bold border border-emerald-200">
+                        Save ₹{savings.toLocaleString("en-IN")}
+                      </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-1 text-[10px] sm:text-[11px] text-slate-600 pt-1 font-medium">
@@ -809,7 +808,8 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
 
                   <div className="mt-3">
                     <GstPriceBreakdown
-                      baseAmount={discountedPrice}
+                      baseAmount={finalPrice}
+                      inclusive={true}
                       claimGst={claimGst}
                       onClaimGstChange={(checked) => {
                         setClaimGst(checked);

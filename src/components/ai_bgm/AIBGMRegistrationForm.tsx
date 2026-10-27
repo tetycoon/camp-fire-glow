@@ -23,6 +23,7 @@ import {
   HelpCircle
 } from "lucide-react";
 import { countryCodes, CountryCode } from "../../lib/countryCodes";
+import { calculateInclusiveGstBreakdown } from "../../lib/gstUtils";
 
 declare global {
   interface Window {
@@ -67,7 +68,7 @@ const AIBGMRegistrationForm: React.FC = () => {
   const [isCountryDropdownOpen, setIsCountryDropdownOpen] = useState(false);
 
   // Secret Coupon Code State
-  // Rule: Coupon "AMIABLE" gives 4999 (from 9999) for India, and 6999 (from 13999) for Foreigners
+  // Rule: Pricing is 6499 (India) / 8499 (Foreigners with 2000 server maintenance) inclusive of tax
   const [couponInput, setCouponInput] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState("");
   const [couponStatus, setCouponStatus] = useState<{
@@ -99,16 +100,15 @@ const AIBGMRegistrationForm: React.FC = () => {
     : cleanPhone.length >= 7 && cleanPhone.length <= 15;
 
   const isInternational = selectedCountry.code !== "+91";
-  const isCouponValid = appliedCoupon.trim().toUpperCase() === "AMIABLE";
+  const isCouponValid = appliedCoupon.trim().toUpperCase() === "AMIABLE" || appliedCoupon.trim().toUpperCase() === "TECHTYCOON";
 
   // Dynamic Pricing Logic:
-  // Domestic (+91): Standard = 9999, with AMIABLE = 4999
-  // Foreigners (!=+91): Standard = 13999, with AMIABLE = 6999
+  // Domestic (+91): ₹6,499 Total Payable (Inclusive of 18% GST)
+  // Foreigners (!=+91): ₹8,499 Total Payable (Inclusive of 18% GST & ₹2,000 server maintenance cost)
   const standardPrice = isInternational ? 13999 : 9999;
-  const discountedPrice = isCouponValid 
-    ? (isInternational ? 6999 : 4999) 
-    : standardPrice;
+  const discountedPrice = isInternational ? 8499 : 6499;
   const savings = standardPrice - discountedPrice;
+  const gstBreakdown = calculateInclusiveGstBreakdown(discountedPrice);
 
   // Filter countries for dropdown
   const filteredCountries = countryCodes.filter(
@@ -145,25 +145,24 @@ const AIBGMRegistrationForm: React.FC = () => {
       setIsPriceRevealed(true);
       setCouponStatus({
         type: "idle",
-        message: "Standard tuition tier unlocked. Enter coupon 'AMIABLE' for 50% secret discount."
+        message: "Executive cohort tuition tier unlocked."
       });
       return;
     }
 
-    if (code === "AMIABLE") {
-      setAppliedCoupon("AMIABLE");
+    if (code === "AMIABLE" || code === "TECHTYCOON" || code === "VIP" || code === "PRO2026") {
+      setAppliedCoupon(code);
       setIsPriceRevealed(true);
-      const discountAmount = isInternational ? 7000 : 5000;
       setCouponStatus({
         type: "success",
-        message: `🎉 Secret VIP Voucher 'AMIABLE' Applied! You saved ₹${discountAmount.toLocaleString()} (50% Off)!`
+        message: `🎉 VIP Voucher '${code}' Applied! Executive cohort subsidy unlocked: ₹${discountedPrice.toLocaleString("en-IN")} (All taxes incl.)!`
       });
     } else {
       setAppliedCoupon("");
       setIsPriceRevealed(true);
       setCouponStatus({
         type: "error",
-        message: "Invalid coupon code. Valid code is 'AMIABLE' for 50% discount."
+        message: "Invalid or expired voucher code."
       });
     }
   };
@@ -293,7 +292,9 @@ const AIBGMRegistrationForm: React.FC = () => {
         amount: amountInPaise,
         currency: "INR",
         name: "Tech Tycoon Digital Solutions",
-        description: `AI-BGM Course Enrollment ${appliedCoupon ? `(Coupon: ${appliedCoupon})` : ""}`,
+        description: isInternational
+          ? `AI-BGM Course Enrollment (₹8,499 Incl. 18% GST & ₹2,000 Server Maintenance) ${appliedCoupon ? `(Coupon: ${appliedCoupon})` : ""}`
+          : `AI-BGM Course Enrollment (₹6,499 Incl. 18% GST) ${appliedCoupon ? `(Coupon: ${appliedCoupon})` : ""}`,
         prefill: {
           name: formData.name.trim(),
           email: formData.email.trim(),
@@ -661,10 +662,10 @@ const AIBGMRegistrationForm: React.FC = () => {
                 <div>
                   <div className="flex items-center justify-between mb-1.5">
                     <label className="block text-xs font-bold text-slate-300">
-                      Secret Coupon Code
+                      Voucher / Coupon Code
                     </label>
-                    <span className="text-[11px] text-amber-300 font-medium">
-                      💡 Tip: Use voucher code <strong>AMIABLE</strong> for 50% off
+                    <span className="text-[11px] text-slate-400 font-medium">
+                      (Optional)
                     </span>
                   </div>
 
@@ -673,7 +674,7 @@ const AIBGMRegistrationForm: React.FC = () => {
                       <Tag className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
                       <input
                         type="text"
-                        placeholder="Enter coupon (e.g. AMIABLE)"
+                        placeholder="Enter coupon code"
                         value={couponInput}
                         onChange={(e) => {
                           setCouponInput(e.target.value);
@@ -749,7 +750,7 @@ const AIBGMRegistrationForm: React.FC = () => {
                       <div className="flex items-center gap-2">
                         <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
                         <span className="text-xs font-black uppercase tracking-wider text-emerald-400">
-                          {isCouponValid ? "50% VIP Grant Unlocked" : "Standard Tier Active"}
+                          Executive Cohort Subsidy Unlocked
                         </span>
                       </div>
                       <span className="text-[11px] font-bold text-slate-400">
@@ -761,28 +762,30 @@ const AIBGMRegistrationForm: React.FC = () => {
                     <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-3 pt-2 border-t border-slate-800">
                       <div>
                         <div className="text-xs text-slate-400 mb-0.5">
-                          {isCouponValid 
-                            ? "Special Offer Price (Coupon Applied)" 
-                            : "Standard Course Tuition"}
+                          Total Course Fee (Inclusive of 18% GST)
                         </div>
                         <div className="flex items-baseline gap-3">
                           <span className="text-3xl sm:text-5xl font-black text-white tracking-tight">
                             ₹{discountedPrice.toLocaleString()}
                           </span>
-                          {isCouponValid && (
-                            <span className="text-lg sm:text-xl font-bold text-slate-500 line-through">
-                              ₹{standardPrice.toLocaleString()}
-                            </span>
-                          )}
+                          <span className="text-xs font-bold text-emerald-400">
+                            (All Taxes Incl.)
+                          </span>
+                          <span className="text-lg sm:text-xl font-bold text-slate-500 line-through">
+                            ₹{standardPrice.toLocaleString()}
+                          </span>
                         </div>
+                        {isInternational && (
+                          <div className="text-xs text-amber-300 font-medium mt-1">
+                            * Includes ₹2,000 international server maintenance cost
+                          </div>
+                        )}
                       </div>
 
-                      {isCouponValid && (
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-bold">
-                          <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-                          <span>Instant Savings: ₹{savings.toLocaleString()}</span>
-                        </div>
-                      )}
+                      <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-bold">
+                        <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                        <span>Instant Savings: ₹{savings.toLocaleString()}</span>
+                      </div>
                     </div>
 
                     {/* Inclusions checklist */}
@@ -836,7 +839,7 @@ const AIBGMRegistrationForm: React.FC = () => {
                   ) : (
                     <>
                       <Zap className="w-5 h-5 text-amber-300" />
-                      <span>Proceed to Payment — ₹{discountedPrice.toLocaleString()}</span>
+                      <span>Proceed to Payment — ₹{discountedPrice.toLocaleString()} (All Incl.)</span>
                       <ArrowRight className="w-5 h-5 text-indigo-200" />
                     </>
                   )}

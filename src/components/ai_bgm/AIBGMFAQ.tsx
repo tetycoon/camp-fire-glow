@@ -20,12 +20,12 @@ const faqs: FAQItem[] = [
     a: "You get over 20+ hours of structured video lessons, downloadable templates, and execution blueprints. You receive Lifetime Access with zero subscription fees and zero renewal costs."
   },
   {
-    q: "Why was the price hidden on the landing page?",
-    a: "We protect our VIP cohort pricing so that genuine learners receive maximum scholarship value. Entering your mobile number and secret coupon code 'AMIABLE' unlocks our 50% discount grant."
+    q: "Why is pricing unlocked after entering phone verification?",
+    a: "We protect our VIP cohort pricing so that verified learners receive the correct regional pricing tier and applicable institutional subsidies."
   },
   {
-    q: "What is the pricing breakdown with the 'AMIABLE' coupon?",
-    a: "For Indian participants (+91), the standard price of ₹9,999 drops to ₹4,999 (saving ₹5,000). For international participants, the standard price of ₹13,999 drops to ₹6,999 (saving ₹7,000)."
+    q: "What is the course investment and pricing breakdown?",
+    a: "Tuition is ₹6,499 (inclusive of 18% GST) for Indian participants (+91), and ₹8,499 for international participants (inclusive of all applicable taxes and ₹2,000 international server maintenance). If you have an institutional voucher code, you can enter it in the checkout form to apply eligible grants."
   },
   {
     q: "Do I need technical or coding experience to enroll?",

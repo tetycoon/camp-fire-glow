@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 import { countryCodes, CountryCode } from "../../lib/countryCodes";
 import GstPriceBreakdown from "../common/GstPriceBreakdown";
-import { InvoicePrintParams, calculateGstBreakdown, isAuthorizedTestEmail, isValidEmail, isValidGstin, openPrintableGstInvoice, registerVerifiedInvoiceRecord, sanitizeTextInput } from "../../lib/gstUtils";
+import { InvoicePrintParams, calculateGstBreakdown, calculateInclusiveGstBreakdown, isAuthorizedTestEmail, isValidEmail, isValidGstin, openPrintableGstInvoice, registerVerifiedInvoiceRecord, sanitizeTextInput } from "../../lib/gstUtils";
 
 declare global {
   interface Window {
@@ -95,14 +95,14 @@ const ProfessionalRegistrationForm: React.FC = () => {
   } | null>(null);
 
   // Pricing Calculation matching /ai_bgm:
-  // Domestic (+91): Standard = 9999, with AMIABLE = 4999 (Save 5000)
-  // International: Standard = 13999, with AMIABLE = 6999 (Save 7000)
+  // Domestic (+91): ₹6,499 Total Payable (Inclusive of 18% GST)
+  // International: ₹8,499 Total Payable (Inclusive of 18% GST & ₹2,000 server maintenance cost)
   const isInternational = selectedCountry.iso !== "IN" && selectedCountry.code !== "+91";
   const standardPrice = isInternational ? 13999 : 9999;
   const isVipApplied = appliedCoupon.toUpperCase() === "AMIABLE" || appliedCoupon.toUpperCase() === "TECHTYCOON";
-  const finalPrice = isVipApplied ? (isInternational ? 6999 : 4999) : standardPrice;
+  const finalPrice = isInternational ? 8499 : 6499;
   const discountAmount = standardPrice - finalPrice;
-  const gstBreakdown = calculateGstBreakdown(finalPrice);
+  const gstBreakdown = calculateInclusiveGstBreakdown(finalPrice);
 
   // Phone validation
   const cleanPhone = formData.phone.replace(/\D/g, "");
@@ -144,20 +144,18 @@ const ProfessionalRegistrationForm: React.FC = () => {
     if (!code) {
       setAppliedCoupon("");
       setIsPriceRevealed(true);
-      setCouponSuccess(`Standard corporate tuition unlocked (₹${standardPrice.toLocaleString("en-IN")} + 18% GST). Enter coupon 'AMIABLE' for 50% VIP discount.`);
+      setCouponSuccess(`Standard corporate tuition unlocked: ₹${finalPrice.toLocaleString("en-IN")} (All taxes incl.).`);
       return;
     }
 
     if (code === "AMIABLE" || code === "TECHTYCOON" || code === "VIP" || code === "PRO2026") {
-      setAppliedCoupon("AMIABLE");
+      setAppliedCoupon(code);
       setIsPriceRevealed(true);
-      const targetVipPrice = isInternational ? 6999 : 4999;
-      const saved = standardPrice - targetVipPrice;
-      setCouponSuccess(`🎉 Secret VIP Voucher 'AMIABLE' Applied! You saved ₹${saved.toLocaleString("en-IN")} (50% Off)! Base Fee: ₹${targetVipPrice.toLocaleString("en-IN")} (+ 18% GST)`);
+      setCouponSuccess(`🎉 VIP Voucher '${code}' Applied! Executive cohort subsidy unlocked: Save ₹${discountAmount.toLocaleString("en-IN")}! Final Fee: ₹${finalPrice.toLocaleString("en-IN")} (All taxes incl.)`);
     } else {
       setAppliedCoupon("");
       setIsPriceRevealed(true);
-      setCouponError("Invalid coupon code. Valid code is 'AMIABLE' for 50% VIP discount.");
+      setCouponError("Invalid or expired voucher code.");
     }
   };
 
@@ -311,7 +309,9 @@ const ProfessionalRegistrationForm: React.FC = () => {
         amount: amountInPaise,
         currency: "INR",
         name: "Tech Tycoon Digital Solutions",
-        description: `Advance AI for Professionals (Incl. 18% GST) ${appliedCoupon ? `(Coupon: ${appliedCoupon})` : ""}`,
+        description: isInternational
+          ? `Advance AI for Professionals (₹8,499 Incl. 18% GST & ₹2,000 Server Maintenance) ${appliedCoupon ? `(Coupon: ${appliedCoupon})` : ""}`
+          : `Advance AI for Professionals (₹6,499 Incl. 18% GST) ${appliedCoupon ? `(Coupon: ${appliedCoupon})` : ""}`,
         prefill: {
           name: sanitizedName,
           email: sanitizedEmail,
@@ -654,7 +654,7 @@ const ProfessionalRegistrationForm: React.FC = () => {
                     setCouponSuccess("");
                   }
                 }}
-                placeholder="Enter coupon code (e.g. AMIABLE)"
+                placeholder="Enter coupon code (optional)"
                 className="w-full pl-9 pr-3.5 py-2 sm:py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500 text-xs sm:text-sm uppercase font-mono tracking-wider"
               />
             </div>
@@ -688,26 +688,32 @@ const ProfessionalRegistrationForm: React.FC = () => {
             <div className="p-3 sm:p-3.5 rounded-xl bg-gradient-to-r from-indigo-50/90 via-blue-50/60 to-white border border-indigo-200 text-left flex items-center justify-between">
               <div>
                 <div className="flex items-center gap-1.5 text-xs text-slate-600">
-                  <span>Base Tuition: <span className="line-through font-mono">₹{standardPrice.toLocaleString("en-IN")}</span></span>
-                  {isVipApplied && (
-                    <span className="font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded text-[10px] uppercase tracking-wide">
-                      Save ₹{discountAmount.toLocaleString("en-IN")} ({appliedCoupon})
-                    </span>
-                  )}
+                  <span>Total Tuition: <span className="line-through font-mono">₹{standardPrice.toLocaleString("en-IN")}</span></span>
+                  <span className="font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded text-[10px] uppercase tracking-wide">
+                    Save ₹{discountAmount.toLocaleString("en-IN")}
+                  </span>
                 </div>
-                <div className="text-[11px] text-slate-500 font-medium mt-0.5">
-                  {isInternational ? "International Participant (+ 18% GST)" : "Domestic (+91) Participant (+ 18% GST)"}
+                <div className="text-[11px] font-medium mt-0.5">
+                  {isInternational ? (
+                    <span className="text-indigo-700 font-semibold">* International (Includes ₹2,000 Server Maintenance & 18% GST)</span>
+                  ) : (
+                    <span className="text-slate-500 font-medium">Domestic (+91) Participant (Inclusive of 18% GST)</span>
+                  )}
                 </div>
               </div>
               <div className="text-right">
                 <span className="text-lg sm:text-xl text-indigo-700 font-mono font-black">
-                  ₹{finalPrice.toLocaleString("en-IN")} + GST
+                  ₹{finalPrice.toLocaleString("en-IN")}
+                </span>
+                <span className="block text-[10px] text-emerald-700 font-bold">
+                  (Incl. 18% GST)
                 </span>
               </div>
             </div>
 
             <GstPriceBreakdown
               baseAmount={finalPrice}
+              inclusive={true}
               claimGst={claimGst}
               onClaimGstChange={(checked) => {
                 setClaimGst(checked);
