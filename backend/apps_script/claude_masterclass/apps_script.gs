@@ -251,8 +251,8 @@ const FUNNELSDONE_CONFIG = {
   COMPANY_LOGO: "https://assets.cdn.filesafe.space/uUUUKRH7EP2A0oJBv4Zb/media/6accab95bbad531ac8a6b1af.png",
   COMPANY_PHONE: "7558133039",
   COMPANY_WEBSITE: "https://www.techtycoon.in/",
-  ADDRESS_LINE1: "No. 3/59B, 1st Floor, 3rd Street, Ragava Nagar",
-  CITY: "Moovarasampet, Chennai",
+  ADDRESS_LINE1: "No. 31, Ramalinga Nagar",
+  CITY: "Madipakkam, Chennai",
   STATE: "TAMILNADU",
   POSTAL_CODE: "600091"
 };
@@ -714,7 +714,7 @@ function generateOurGstInvoicePdfBlob(customerName, customerEmail, customerPhone
     <table class="header"><tr>
       <td>
         <h2 style="margin:0 0 4px 0;font-size:15px;">${FUNNELSDONE_CONFIG.COMPANY_NAME}</h2>
-        <div style="color:#475569;line-height:1.4;">No. 3/59B, 1st Floor, 3rd Street, Ragava Nagar, Moovarasampet, Chennai-600091<br/>State: Tamil Nadu (Code: 33) | Mobile: +91 ${FUNNELSDONE_CONFIG.COMPANY_PHONE} | Web: ${FUNNELSDONE_CONFIG.COMPANY_WEBSITE}</div>
+        <div style="color:#475569;line-height:1.4;">No. 31, Ramalinga Nagar, Madipakkam, Chennai, Tamil Nadu - 600091<br/>State: Tamil Nadu (Code: 33) | Mobile: +91 ${FUNNELSDONE_CONFIG.COMPANY_PHONE} | Web: ${FUNNELSDONE_CONFIG.COMPANY_WEBSITE}</div>
         <div style="margin-top:6px;">
           <span class="badge">GSTIN: ${FUNNELSDONE_CONFIG.COMPANY_GSTIN}</span>
           <span class="pan">PAN: AAZFT9667P</span>
@@ -1140,7 +1140,7 @@ function sendMasterclassEmail(email, name, amount, mode, paymentId, orderId, pho
       <p>📍 <strong>${venueVal}</strong></p>
       <p>📅 <strong>${dateVal}</strong> | 🕒 <strong>${timeVal}</strong></p>
       <a href="${waGroupLink}" style="display:inline-block;background:#da7756;color:#fff;padding:14px 28px;border-radius:50px;text-decoration:none;font-weight:bold;margin-top:16px;">📱 Join In-Person WhatsApp Community</a>
-      <p style="color:#94a3b8;font-size:11px;margin-top:24px;">© 2026 ${FUNNELSDONE_CONFIG.COMPANY_NAME} (GSTIN: ${FUNNELSDONE_CONFIG.COMPANY_GSTIN})<br/>No. 3/59B, 1st Floor, 3rd Street, Ragava Nagar, Moovarasampet, Chennai-600091</p>
+      <p style="color:#94a3b8;font-size:11px;margin-top:24px;">© 2026 ${FUNNELSDONE_CONFIG.COMPANY_NAME} (GSTIN: ${FUNNELSDONE_CONFIG.COMPANY_GSTIN})<br/>No. 31, Ramalinga Nagar, Madipakkam, Chennai, Tamil Nadu - 600091</p>
     </div></body></html>`;
 
     const emailOptions = { to: email, subject: subject, htmlBody: htmlBody, name: "Tech Tycoon", replyTo: "techtycoondigitalsolutions@gmail.com" };
@@ -1182,7 +1182,7 @@ function sendMasterclassEmail(email, name, amount, mode, paymentId, orderId, pho
       <p>📍 <strong>${venueVal}</strong></p>
       <p>📅 <strong>${dateVal}</strong> | 🕒 <strong>${timeVal}</strong></p>
       <a href="${waGroupLink}" style="display:inline-block;background:#da7756;color:#fff;padding:14px 28px;border-radius:50px;text-decoration:none;font-weight:bold;margin-top:16px;">📱 Join Online WhatsApp Community</a>
-      <p style="color:#94a3b8;font-size:11px;margin-top:24px;">© 2026 ${FUNNELSDONE_CONFIG.COMPANY_NAME} (GSTIN: ${FUNNELSDONE_CONFIG.COMPANY_GSTIN})<br/>No. 3/59B, 1st Floor, 3rd Street, Ragava Nagar, Moovarasampet, Chennai-600091</p>
+      <p style="color:#94a3b8;font-size:11px;margin-top:24px;">© 2026 ${FUNNELSDONE_CONFIG.COMPANY_NAME} (GSTIN: ${FUNNELSDONE_CONFIG.COMPANY_GSTIN})<br/>No. 31, Ramalinga Nagar, Madipakkam, Chennai, Tamil Nadu - 600091</p>
     </div></body></html>`;
 
     const emailOptions = { to: email, subject: subject, htmlBody: htmlBody, name: "Tech Tycoon", replyTo: "techtycoondigitalsolutions@gmail.com" };
