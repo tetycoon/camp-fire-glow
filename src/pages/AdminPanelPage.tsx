@@ -4,9 +4,10 @@ import {
   Search, Shield, Eye, Download, AlertCircle, CheckCircle2, 
   FileSpreadsheet, Lock, Sparkles, Database, GitCommit, Wrench,
   Clock, History, Terminal, X, MessageSquare, Send, Calendar, MapPin, Video, ExternalLink,
-  Upload, FileCheck, Image as ImageIcon, AlertTriangle, Check, ShieldAlert, Trash2
+  Upload, FileCheck, Image as ImageIcon, AlertTriangle, Check, ShieldAlert, Trash2, UserPlus
 } from "lucide-react";
 import techTycoonLogo from "../assets/tech_tycoon_logo.png";
+import LandingLeadsPanel from "../components/admin/LandingLeadsPanel";
 
 // Define registration item type
 interface Registration {
@@ -326,7 +327,8 @@ const AdminPanelPage: React.FC = () => {
   const [approvalSuccessMsg, setApprovalSuccessMsg] = useState<string>("");
 
   // Sub-menu navigation tab state
-  const [activeTab, setActiveTab] = useState<"registrations" | "events" | "changelog">("registrations");
+  const [activeTab, setActiveTab] = useState<"registrations" | "landingLeads" | "events" | "changelog">("registrations");
+  const [landingLeadCount, setLandingLeadCount] = useState<number | null>(null);
 
   // Multi-Select Checkboxes State
   const [selectedLeadKeys, setSelectedLeadKeys] = useState<string[]>([]);
@@ -877,6 +879,25 @@ const AdminPanelPage: React.FC = () => {
             </button>
 
             <button
+              onClick={() => setActiveTab("landingLeads")}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
+                activeTab === "landingLeads"
+                  ? "bg-emerald-500 text-white shadow-lg shadow-emerald-500/20"
+                  : "text-white/60 hover:text-white hover:bg-white/5"
+              }`}
+            >
+              <UserPlus className="w-3.5 h-3.5" />
+              Landing Leads
+              {landingLeadCount !== null && (
+                <span className={`px-1.5 py-0.5 rounded-full text-[10px] font-mono ${
+                  activeTab === "landingLeads" ? "bg-black/30 text-white" : "bg-white/10 text-white/70"
+                }`}>
+                  {landingLeadCount}
+                </span>
+              )}
+            </button>
+
+            <button
               onClick={() => setActiveTab("events")}
               className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
                 activeTab === "events"
@@ -1416,6 +1437,15 @@ const AdminPanelPage: React.FC = () => {
               </div>
             </section>
           </div>
+        )}
+
+        {/* SUB-MENU CONTENT VIEW: AI MASTERCLASS LANDING GATE LEADS */}
+        {activeTab === "landingLeads" && (
+          <LandingLeadsPanel
+            endpoint={SHEET_CONFIGS[0].url}
+            token={SHEET_CONFIGS[0].verifyToken}
+            onCountChange={setLandingLeadCount}
+          />
         )}
 
         {/* SUB-MENU CONTENT VIEW: 3. DEVELOPER & TEAM CHANGELOG */}
