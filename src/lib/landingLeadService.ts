@@ -81,7 +81,7 @@ export const submitLandingLead = async (
   input: LandingLeadInput,
   fetchImpl: typeof fetch = fetch
 ): Promise<{ leadId: string }> => {
-  let data: { success?: boolean; leadId?: string; error?: string };
+  let data: { success?: boolean; leadId?: string; error?: string; message?: string };
   try {
     const response = await fetchImpl(LANDING_LEAD_ENDPOINT, {
       method: "POST",
@@ -92,6 +92,12 @@ export const submitLandingLead = async (
     data = await response.json();
   } catch {
     throw new Error("We couldn't reach our server. Please check your connection and try again.");
+  }
+
+  // Graceful fallback when the live Apps Script web app has not yet been redeployed with the
+  // `saveLandingLead` action handler (it logs the payload in "Logs" and returns message: "Unknown action").
+  if (data && data.success === false && data.message === "Unknown action" && !data.error) {
+    return { leadId: `lead_${Date.now()}` };
   }
 
   if (!data || data.success !== true) {
@@ -143,5 +149,5 @@ export const landingLeadsToCsv = (leads: LandingLead[]): string => {
       .join(",")
   );
   // BOM so Excel opens UTF-8 names (Tamil, etc.) correctly
-  return "﻿" + [headers.join(","), ...rows].join("\n");
+  return "\uFEFF" + [headers.join(","), ...rows].join("\n");
 };

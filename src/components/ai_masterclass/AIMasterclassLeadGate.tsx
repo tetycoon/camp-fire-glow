@@ -85,10 +85,10 @@ const AIMasterclassLeadGate: React.FC<AIMasterclassLeadGateProps> = ({ submitLea
                 aria-modal="true"
                 aria-labelledby="lead-gate-title"
                 aria-describedby="lead-gate-desc"
-                className="relative w-full sm:max-w-md max-h-[96vh] overflow-y-auto rounded-t-2xl sm:rounded-2xl bg-gradient-to-b from-[#0f172a] via-[#090d16] to-[#020617] border border-white/15 shadow-2xl shadow-black/80 animate-in fade-in slide-in-from-bottom-4 duration-300"
+                className="relative w-full sm:max-w-md overflow-hidden rounded-t-2xl sm:rounded-2xl bg-gradient-to-b from-[#0f172a] via-[#090d16] to-[#020617] border border-white/15 shadow-2xl shadow-black/80 animate-in fade-in slide-in-from-bottom-4 duration-300"
             >
                 {/* Corporate gradient accent top bar */}
-                <div className="h-1.5 w-full bg-gradient-to-r from-blue-600 via-indigo-500 to-blue-400 sticky top-0 z-10" />
+                <div className="h-1.5 w-full bg-gradient-to-r from-blue-600 via-indigo-500 to-blue-400" />
                 <div className="absolute -top-24 -right-24 w-64 h-64 bg-blue-500/15 rounded-full blur-3xl pointer-events-none" />
                 <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-indigo-500/15 rounded-full blur-3xl pointer-events-none" />
 
