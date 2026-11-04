@@ -14,6 +14,7 @@ import { AIMasterclassRegisterModalProvider } from "./AIMasterclassRegisterModal
 import AIMasterclassWhatsApp from "./AIMasterclassWhatsApp";
 import SocialProofToast from "../common/SocialProofToast";
 import AIMasterclassStickyBar from "./AIMasterclassStickyBar";
+import AIMasterclassLeadGate from "./AIMasterclassLeadGate";
 
 const AIMasterclassPage: React.FC = () => {
     useEffect(() => {
@@ -42,6 +43,7 @@ const AIMasterclassPage: React.FC = () => {
                 <AIMasterclassWhatsApp />
                 <SocialProofToast />
                 <AIMasterclassStickyBar />
+                <AIMasterclassLeadGate />
             </div>
         </AIMasterclassRegisterModalProvider>
     );

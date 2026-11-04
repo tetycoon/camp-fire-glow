@@ -5,6 +5,8 @@
 
 const SHEET_NAME_REG = "Sheet1";
 const SHEET_NAME_LOGS = "Logs";
+const SHEET_NAME_LANDING_LEADS = "Landing_Leads";
+const LANDING_LEAD_HEADERS = ["Timestamp", "Lead ID", "Full Name", "Phone", "Email", "Page URL", "UTM Source", "UTM Medium", "UTM Campaign", "GCLID", "FBCLID", "User Agent"];
 const EXPECTED_PRODUCT_KEY = "ai_masterclass";
 
 function getScriptSecret(key) {
@@ -359,6 +361,14 @@ function doGet(e) {
     return createJsonResponse({ success: true, registrations: list });
   }
 
+  // Dashboard Landing Gate Leads Fetching
+  if (params.action === 'getLandingLeads') {
+    if (!verifyToken || params.token !== verifyToken) {
+      return createJsonResponse({ success: false, error: "Unauthorized access token" });
+    }
+    return createJsonResponse({ success: true, leads: getLandingLeads() });
+  }
+
   return ContentService.createTextOutput("OK");
 }
 
@@ -371,6 +381,12 @@ function doPost(e) {
 
   try {
     const body = JSON.parse(rawData);
+
+    // Landing gate leads must be handled before the generic name/email/phone branch,
+    // which would otherwise create a Razorpay order for a lead that supplied an email.
+    if (body.action === "saveLandingLead") {
+      return createJsonResponse(saveLandingLead(body));
+    }
 
     if (body.action === "getVerifiedInvoice") {
       const ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -1505,6 +1521,109 @@ function saveToSheet(data, orderId) {
     sanitizeCell(data.sessionTime || ""),
     sanitizeCell(data.preferredSlot || "")
   ]);
+}
+
+// ------------------------------------------------------------
+// LANDING GATE LEADS (popup shown before the AI Masterclass landing page)
+// ------------------------------------------------------------
+function getLandingLeadsSheet(ss) {
+  let sheet = ss.getSheetByName(SHEET_NAME_LANDING_LEADS);
+  if (!sheet) {
+    sheet = ss.insertSheet(SHEET_NAME_LANDING_LEADS);
+  }
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(LANDING_LEAD_HEADERS);
+    sheet.setFrozenRows(1);
+  }
+  return sheet;
+}
+
+function validateLandingLead(data) {
+  const name = String(data.name || "").replace(/\s+/g, " ").trim();
+  const phone = String(data.phone || "").replace(/[^\d+]/g, "");
+  const email = String(data.email || "").trim().toLowerCase();
+  const phoneDigits = phone.replace(/\D/g, "");
+
+  if (name.length < 2 || name.length > 100) {
+    return { valid: false, error: "Please enter your full name." };
+  }
+  if (phoneDigits.length < 7 || phoneDigits.length > 15) {
+    return { valid: false, error: "Please enter a valid phone number." };
+  }
+  if (email && (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email))) {
+    return { valid: false, error: "Please enter a valid email address." };
+  }
+  return { valid: true, name: name, phone: phone, email: email };
+}
+
+function saveLandingLead(data) {
+  // Honeypot field: real visitors never see or fill it
+  if (data.website) {
+    writeToLogs("LANDING_LEAD_BOT_REJECT", "Honeypot field filled");
+    return { success: false, error: "Submission rejected." };
+  }
+
+  const check = validateLandingLead(data);
+  if (!check.valid) {
+    return { success: false, error: check.error };
+  }
+
+  const lock = LockService.getScriptLock();
+  try {
+    lock.waitLock(10000);
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const sheet = getLandingLeadsSheet(ss);
+    const utm = data.utm || {};
+    const leadId = "lead_" + Utilities.getUuid().replace(/-/g, "").substring(0, 16);
+    sheet.appendRow([
+      new Date(),
+      leadId,
+      sanitizeCell(check.name),
+      "'" + check.phone,
+      sanitizeCell(check.email),
+      sanitizeCell(String(data.pageUrl || "").substring(0, 500)),
+      sanitizeCell(String(utm.utm_source || "").substring(0, 100)),
+      sanitizeCell(String(utm.utm_medium || "").substring(0, 100)),
+      sanitizeCell(String(utm.utm_campaign || "").substring(0, 150)),
+      sanitizeCell(String(utm.gclid || "").substring(0, 200)),
+      sanitizeCell(String(utm.fbclid || "").substring(0, 200)),
+      sanitizeCell(String(data.userAgent || "").substring(0, 300))
+    ]);
+    SpreadsheetApp.flush();
+    return { success: true, leadId: leadId };
+  } catch (err) {
+    writeToLogs("LANDING_LEAD_ERROR", err.message);
+    return { success: false, error: "Could not save your details. Please try again." };
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function getLandingLeads() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName(SHEET_NAME_LANDING_LEADS);
+  if (!sheet) return [];
+  const values = sheet.getDataRange().getValues();
+  const list = [];
+  for (let i = 1; i < values.length; i++) {
+    const row = values[i];
+    list.push({
+      timestamp: row[0] instanceof Date ? row[0].toISOString() : row[0],
+      leadId: row[1],
+      name: row[2],
+      phone: String(row[3] || "").replace(/^'/, ""),
+      email: row[4],
+      pageUrl: row[5],
+      utmSource: row[6],
+      utmMedium: row[7],
+      utmCampaign: row[8],
+      gclid: row[9],
+      fbclid: row[10],
+      userAgent: row[11]
+    });
+  }
+  list.reverse();
+  return list;
 }
 
 function processVerifiedMasterclassPayment(orderId, paymentId, isInternational, clientSuppliedAmount, extraData) {
