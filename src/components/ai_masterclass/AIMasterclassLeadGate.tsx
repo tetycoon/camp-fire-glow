@@ -123,7 +123,7 @@ const AIMasterclassLeadGate: React.FC<AIMasterclassLeadGateProps> = ({ submitLea
                                 Submit your enquiry details to instantly claim the special <strong className="text-brandGreen font-bold">₹99 price</strong> (Original price <span className="line-through text-slate-400">₹999</span>) and reserve your live seat.
                             </p>
 
-                            {/* Simple Form */}
+                            {/* Simple Form (Name & Phone Only) */}
                             <form onSubmit={handleSubmit} noValidate className="space-y-3.5">
                                 <div className="space-y-1">
                                     <label htmlFor="lead-name" className="text-xs font-bold text-slate-200 flex justify-between">
@@ -178,27 +178,6 @@ const AIMasterclassLeadGate: React.FC<AIMasterclassLeadGateProps> = ({ submitLea
                                         />
                                     </div>
                                     {errors.phone && <p id="lead-phone-error" className="text-xs text-red-300">{errors.phone}</p>}
-                                </div>
-
-                                <div className="space-y-1">
-                                    <label htmlFor="lead-email" className="text-xs font-bold text-slate-200 flex justify-between">
-                                        Email Address <span className="text-slate-400 font-medium">Optional</span>
-                                    </label>
-                                    <input
-                                        id="lead-email"
-                                        name="email"
-                                        type="email"
-                                        inputMode="email"
-                                        autoComplete="email"
-                                        maxLength={254}
-                                        value={form.email}
-                                        onChange={e => updateField("email", e.target.value)}
-                                        placeholder="you@example.com"
-                                        aria-invalid={Boolean(errors.email)}
-                                        aria-describedby={errors.email ? "lead-email-error" : undefined}
-                                        className={inputClass(Boolean(errors.email))}
-                                    />
-                                    {errors.email && <p id="lead-email-error" className="text-xs text-red-300">{errors.email}</p>}
                                 </div>
 
                                 {/* Honeypot: hidden from people, bots tend to fill it */}
