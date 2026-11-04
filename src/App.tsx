@@ -105,6 +105,12 @@ const App = () => (
           <Route path="/ai-masterclass/" element={<AIMasterclassPage />} />
           <Route path="/ai_masterclass" element={<AIMasterclassPage />} />
           <Route path="/ai_masterclass/" element={<AIMasterclassPage />} />
+          <Route path="/ai-masterclass2" element={<AIMasterclass2Page />} />
+          <Route path="/ai-masterclass2/" element={<AIMasterclass2Page />} />
+          <Route path="/ai_masterclass2" element={<AIMasterclass2Page />} />
+          <Route path="/ai_masterclass2/" element={<AIMasterclass2Page />} />
+          <Route path="/ai_masterclass2/:slug" element={<AIMasterclass2Page />} />
+          <Route path="/ai-masterclass2/:slug" element={<AIMasterclass2Page />} />
           <Route path="/claude_masterclass" element={<ClaudeMasterclassPage />} />
           <Route path="/claude_masterclass/" element={<ClaudeMasterclassPage />} />
           <Route path="/claude_masterclass/online" element={<ClaudeMasterclassPage />} />
@@ -121,6 +127,8 @@ const App = () => (
           <Route path="/ai_masterclass/thank-you" element={<ThankYou />} />
           <Route path="/ai_masterclass/thankyou" element={<ThankYou />} />
           <Route path="/ai_masterclass/webinar-access" element={<WebinarAccess />} />
+          <Route path="/ai_masterclass/:slug" element={<AIMasterclassPage />} />
+          <Route path="/ai-masterclass/:slug" element={<AIMasterclassPage />} />
           
           <Route path="/advanced_masterclass" element={<AdvancedMasterclassRedirect />} />
           <Route path="/advanced_masterclass/" element={<AdvancedMasterclassRedirect />} />
