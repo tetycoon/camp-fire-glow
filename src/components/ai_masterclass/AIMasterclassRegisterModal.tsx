@@ -48,6 +48,14 @@ const AIMasterclassRegisterModal: React.FC = () => {
     const [paymentId, setPaymentId] = useState<string>("");
     const [visible, setVisible] = useState(false);
     const [discountApplied, setDiscountApplied] = useState(false);
+    const [affiliateId, setAffiliateId] = useState<string>("");
+
+    useEffect(() => {
+        const id = sessionStorage.getItem("ai_affiliate_id") || localStorage.getItem("ai_affiliate_id") || "";
+        if (id) {
+            setAffiliateId(id);
+        }
+    }, [isOpen]);
 
     const inclusiveSessionPrice = 99 * seatsCount;
     const { baseAmount: baseSessionAmount, gstAmount, totalAmount, totalInPaise } = calculateInclusiveGstBreakdown(inclusiveSessionPrice);
@@ -159,6 +167,8 @@ const AIMasterclassRegisterModal: React.FC = () => {
                 body: JSON.stringify({
                     userType: sanitizeTextInput(form.profession || "Professional", 60),
                     pageUrl,
+                    affiliateId: affiliateId || "",
+                    leadSource: affiliateId ? `Affiliate (${affiliateId})` : "Direct",
                     name: safeName + (seatsCount > 1 ? ` (+ ${seatsCount - 1} Seats)` : ""),
                     email: safeEmail,
                     phone: `${form.countryCode}${form.phone.replace(/\D/g, "")}`,
@@ -204,6 +214,7 @@ const AIMasterclassRegisterModal: React.FC = () => {
                     sessionTime: selectedSlot.timeSlot,
                     gstin: safeGstin || "N/A",
                     company: safeCompany || "N/A",
+                    affiliateId: affiliateId || "N/A",
                 },
                 theme: {
                     color: "#10b981",
@@ -239,7 +250,9 @@ const AIMasterclassRegisterModal: React.FC = () => {
                                 gstAmount: isTestEmail ? 0 : gstAmount,
                                 amount: isTestEmail ? 1 : totalAmount,
                                 companyName: safeCompany,
-                                gstin: safeGstin
+                                gstin: safeGstin,
+                                affiliateId: affiliateId || "",
+                                leadSource: affiliateId ? `Affiliate (${affiliateId})` : "Direct"
                             })
                         });
                         const verifyData = await verifyRes.json();
@@ -263,18 +276,39 @@ const AIMasterclassRegisterModal: React.FC = () => {
                             }).catch(() => {});
                         }
 
-                        // Track Meta Pixel Purchase event (exactly once upon confirmed payment)
+                        // Track Purchase event (exactly once upon confirmed payment)
                         const actualPaidAmount = Number(verifyData.amount) || (isTestEmail ? 1 : totalAmount);
-                        if (!purchaseTrackedRef.current && typeof (window as any).fbq === 'function') {
+                        if (!purchaseTrackedRef.current) {
                             purchaseTrackedRef.current = true;
                             try {
                                 sessionStorage.setItem(`purchase_tracked_${paymentId}`, "true");
                             } catch (_) {}
-                            (window as any).fbq('track', 'Purchase', {
-                                content_name: 'AI Secrets Revealed Masterclass',
-                                currency: 'INR',
-                                value: actualPaidAmount
-                            });
+
+                            // Meta Pixel Purchase
+                            if (typeof (window as any).fbq === 'function') {
+                                (window as any).fbq('track', 'Purchase', {
+                                    content_name: 'AI Secrets Revealed Masterclass',
+                                    currency: 'INR',
+                                    value: actualPaidAmount
+                                });
+                            }
+
+                            // Google Analytics 4 Purchase
+                            if (typeof (window as any).gtag === 'function') {
+                                (window as any).gtag('event', 'purchase', {
+                                    transaction_id: paymentId,
+                                    value: actualPaidAmount,
+                                    currency: 'INR',
+                                    items: [
+                                        {
+                                            item_id: 'ai-masterclass',
+                                            item_name: 'AI Secrets Revealed Masterclass',
+                                            price: actualPaidAmount,
+                                            quantity: seatsCount || 1
+                                        }
+                                    ]
+                                });
+                            }
                         }
 
                         closeRegisterModal();
@@ -358,6 +392,13 @@ const AIMasterclassRegisterModal: React.FC = () => {
                             <p className="text-xs text-slate-500 mt-0.5">3-Hour Live Interactive Masterclass • Just ₹99 (Incl. 18% GST)</p>
                             <div className="mt-2 inline-flex items-center gap-1.5 bg-blue-50 border border-blue-200 text-blue-700 px-3 py-1 rounded-full text-xs font-bold tracking-wide">
                                 <span>📅 Selected: {selectedSlot.fullLabel}</span>
+                            </div>
+                            {affiliateId && (
+                                <div className="mt-1.5 inline-flex items-center gap-1 bg-emerald-50 border border-emerald-200 text-emerald-700 px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wide">
+                                    <span>🏷️ Referral Code: #{affiliateId} Applied</span>
+                                </div>
+                            )}
+                            <div className="hidden">
                             </div>
                         </div>
 
@@ -556,9 +597,9 @@ const AIMasterclassRegisterModal: React.FC = () => {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black text-sm py-3 px-4 rounded-xl tracking-wide flex items-center justify-center gap-2 transform active:scale-[0.98] transition-all shadow-lg shadow-emerald-600/20 cursor-pointer disabled:opacity-70"
+                                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-md shadow-blue-600/20 cursor-pointer disabled:opacity-70"
                             >
-                                {loading ? <Loader2 className="animate-spin w-4 h-4" /> : `PROCEED TO PAYMENT — ₹${totalAmount} (INCL. 18% GST)`}
+                                {loading ? <Loader2 className="animate-spin w-4 h-4" /> : `Proceed to Payment — ₹${totalAmount} (Incl. 18% GST)`}
                             </button>
 
                             <div className="flex items-center justify-center gap-1.5 text-[10px] text-slate-500 font-bold uppercase tracking-wider pb-1">

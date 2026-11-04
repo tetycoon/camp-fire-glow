@@ -4,25 +4,25 @@ import { useAIMasterclassRegisterModal } from "./AIMasterclassRegisterModalConte
 
 const bonuses = [
     {
-        icon: <FileText className="w-7 h-7 text-blue-600" />,
-        title: "Bonus #1: 500+ Master ChatGPT Prompts Vault",
+        icon: <FileText className="w-6 h-6 text-blue-600" />,
+        title: "Resource #1: 500+ Enterprise AI Prompts Library",
         value: "₹2,999 Value",
-        desc: "Ready-to-use copy-paste prompts for lead generation, content creation, sales emails, and customer proposals.",
-        tag: "FREE TODAY"
+        desc: "Structured, copy-paste prompt frameworks for executive communication, sales outreach, proposals, and marketing.",
+        tag: "INCLUDED"
     },
     {
-        icon: <Share2 className="w-7 h-7 text-purple-600" />,
-        title: "Bonus #2: 30-Day AI Social Content Calendar",
+        icon: <Share2 className="w-6 h-6 text-blue-600" />,
+        title: "Resource #2: 30-Day AI Content & Campaign Matrix",
         value: "₹3,999 Value",
-        desc: "Never run out of content ideas. Generate a full month of engaging social media posts in under 30 minutes.",
-        tag: "FREE TODAY"
+        desc: "A systematic calendar and prompt matrix to generate a full month of corporate social media and brand content.",
+        tag: "INCLUDED"
     },
     {
-        icon: <Users className="w-7 h-7 text-emerald-600" />,
-        title: "Bonus #3: Private VIP WhatsApp Mastermind Community",
+        icon: <Users className="w-6 h-6 text-blue-600" />,
+        title: "Resource #3: Executive AI Network & Updates Access",
         value: "₹2,999 Value",
-        desc: "Get lifetime access to our exclusive community for networking, live updates, tool recommendations, and direct Q&A.",
-        tag: "FREE TODAY"
+        desc: "Ongoing access to our professional learning network for AI tool updates, implementation support, and live Q&A.",
+        tag: "INCLUDED"
     }
 ];
 
@@ -30,72 +30,72 @@ const AIMasterclassBonusesSection: React.FC = () => {
     const { openRegisterModal } = useAIMasterclassRegisterModal();
 
     return (
-        <section id="bonuses" className="py-20 sm:py-24 px-4 bg-slate-50/70 border-t border-slate-200/90 relative">
+        <section id="bonuses" className="py-20 sm:py-24 px-4 bg-white border-t border-slate-200/90 relative">
             <div className="max-w-6xl mx-auto">
                 <div className="text-center mb-16">
-                    <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-amber-50 border border-amber-200 rounded-full text-xs font-black text-amber-800 tracking-wider uppercase mb-4">
-                        <Gift className="w-3.5 h-3.5 text-amber-600" />
-                        <span>EXCLUSIVE REGISTRATION BONUSES</span>
+                    <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-slate-100 border border-slate-200 rounded-md text-[11px] font-bold text-slate-700 tracking-widest uppercase mb-4">
+                        <Gift className="w-3.5 h-3.5 text-blue-600" />
+                        <span>Executive Resource Suite</span>
                     </div>
                     <h2 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight mb-4">
-                        Register Today & Get <span className="text-blue-600">₹9,997 Worth Bonuses</span> Absolutely FREE
+                        Complimentary <span className="text-blue-600">₹9,997 Resource Toolkit</span> Included
                     </h2>
                     <p className="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
-                        These premium resources are included at no extra cost when you secure your seat for just ₹99 today.
+                        Every registered delegate receives our complete implementation toolkit at no additional charge upon enrollment.
                     </p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 mb-12">
                     {bonuses.map((b, i) => (
-                        <div 
-                            key={i} 
-                            className="bg-white border border-slate-200 rounded-3xl p-7 flex flex-col justify-between hover:border-blue-400 hover:shadow-xl transition-all duration-300 shadow-md group"
+                        <div
+                            key={i}
+                            className="bg-slate-50/70 border border-slate-200/90 rounded-2xl p-7 flex flex-col justify-between hover:bg-white hover:border-blue-300 hover:shadow-lg transition-all duration-300 shadow-2xs group"
                         >
                             <div>
                                 <div className="flex items-center justify-between mb-5">
-                                    <div className="w-14 h-14 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                    <div className="w-12 h-12 rounded-xl bg-white border border-slate-200 flex items-center justify-center shadow-2xs">
                                         {b.icon}
                                     </div>
                                     <div className="text-right">
-                                        <span className="text-xs font-bold text-slate-400 line-through block">{b.value}</span>
-                                        <span className="inline-block px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-[10px] font-black tracking-wider uppercase">
+                                        <span className="text-xs font-semibold text-slate-400 line-through block">{b.value}</span>
+                                        <span className="inline-block px-2.5 py-0.5 rounded-md bg-blue-50 border border-blue-200 text-blue-700 text-[10px] font-bold tracking-wider uppercase mt-0.5">
                                             {b.tag}
                                         </span>
                                     </div>
                                 </div>
-                                <h3 className="text-lg sm:text-xl font-black text-slate-900 mb-2.5 group-hover:text-blue-600 transition-colors">
+                                <h3 className="text-lg sm:text-xl font-bold text-slate-900 mb-2.5 group-hover:text-blue-600 transition-colors">
                                     {b.title}
                                 </h3>
-                                <p className="text-slate-600 text-xs sm:text-sm leading-relaxed font-medium mb-6">
+                                <p className="text-slate-600 text-xs sm:text-sm leading-relaxed mb-6">
                                     {b.desc}
                                 </p>
                             </div>
-                            <div className="flex items-center gap-2 text-xs font-bold text-emerald-700 pt-4 border-t border-slate-100">
-                                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                                <span>Included Free With Your ₹99 Ticket</span>
+                            <div className="flex items-center gap-2 text-xs font-bold text-slate-700 pt-4 border-t border-slate-200/80">
+                                <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0" />
+                                <span>Included With Delegate Pass</span>
                             </div>
                         </div>
                     ))}
                 </div>
 
                 {/* Total Value Banner */}
-                <div className="bg-white rounded-3xl p-8 sm:p-10 border-2 border-slate-900 text-center relative overflow-hidden shadow-2xl">
+                <div className="bg-slate-900 rounded-2xl p-8 sm:p-10 border border-slate-800 text-center relative overflow-hidden shadow-xl">
                     <div className="max-w-3xl mx-auto">
-                        <span className="inline-block px-3.5 py-1 rounded-full bg-blue-50 text-[11px] font-black text-blue-700 tracking-wider uppercase mb-3 border border-blue-200">
-                            SPECIAL VALUE STACK
+                        <span className="inline-block px-3.5 py-1 rounded-md bg-blue-500/15 text-[11px] font-bold text-blue-300 tracking-widest uppercase mb-3 border border-blue-400/25">
+                            COMPLETE DELEGATE PACKAGE
                         </span>
-                        <h3 className="text-2xl sm:text-4xl font-black text-slate-900 mb-3">
-                            Masterclass Pass + ₹9,997 Bonuses = <span className="text-emerald-600">Just ₹99</span>
+                        <h3 className="text-2xl sm:text-4xl font-black text-white mb-3 tracking-tight">
+                            Live 3-Hour Workshop + ₹9,997 Toolkit = <span className="text-blue-400">₹99</span>
                         </h3>
-                        <p className="text-sm text-slate-600 mb-6">
-                            Pick Wednesday & Friday Evening (5:30 PM – 8:30 PM) or Sunday Morning (10:00 AM – 1:00 PM). Instant access to bonuses upon enrollment.
+                        <p className="text-sm text-slate-300 mb-6">
+                            Select Wednesday & Friday Evening (5:30 PM – 8:30 PM) or Sunday Morning (10:00 AM – 1:00 PM). Official GST tax invoice provided upon registration.
                         </p>
                         <button
                             onClick={openRegisterModal}
-                            className="bg-brandGreen hover:bg-[#a3c77e] text-slate-900 font-black text-base px-8 py-4 rounded-xl border border-[#95c06b] shadow-lg hover:scale-105 transition-all cursor-pointer inline-flex items-center gap-2"
+                            className="bg-blue-600 hover:bg-blue-500 text-white font-bold text-base px-8 py-4 rounded-xl shadow-lg shadow-blue-600/25 transition-all cursor-pointer inline-flex items-center gap-2"
                         >
-                            <span>CLAIM ALL BONUSES & JOIN FOR ₹99</span>
-                            <ArrowRight className="w-4 h-4 text-slate-900" />
+                            <span>Enroll & Claim Resource Suite — ₹99</span>
+                            <ArrowRight className="w-4 h-4 text-white" />
                         </button>
                     </div>
                 </div>
