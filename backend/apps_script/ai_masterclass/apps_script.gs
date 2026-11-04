@@ -329,6 +329,8 @@ function doGet(e) {
     
     const ss = SpreadsheetApp.getActiveSpreadsheet();
     const sheet = ss.getSheetByName(SHEET_NAME_REG) || ss.getSheets()[0];
+    repairMisalignedMasterclassRows(sheet);
+    const layout = getRegSheetLayout(sheet);
     const values = sheet.getDataRange().getValues();
     
     const list = [];
@@ -342,18 +344,18 @@ function doGet(e) {
         profession: row[4],
         language: row[5],
         amount: row[6],
-        status: row[7],
-        orderId: row[8],
-        paymentId: row[9],
-        emailStatus: row[10],
-        whatsappClicked: row[11],
-        reminder24h: row[12],
-        reminder2h: row[13],
-        reminder15m: row[14],
-        pageUrl: row[15],
-        batch: row[16],
-        sessionDate: row[17],
-        sessionTime: row[18]
+        status: row[layout.status],
+        orderId: row[layout.orderId],
+        paymentId: row[layout.paymentId],
+        emailStatus: row[layout.emailStatus],
+        whatsappClicked: row[layout.whatsappClicked],
+        reminder24h: row[layout.reminder24h],
+        reminder2h: row[layout.reminder2h],
+        reminder15m: row[layout.reminder15m],
+        pageUrl: row[layout.pageUrl],
+        batch: row[layout.batch],
+        sessionDate: row[layout.sessionDate],
+        sessionTime: row[layout.sessionTime]
       });
     }
     
@@ -1414,11 +1416,12 @@ function getVerifiedInvoiceRecord(sheet, paymentId, orderId, token, userContact)
   } catch (e) {}
 
   if (!invRecord && sheet) {
+    const layout = getRegSheetLayout(sheet);
     const rows = sheet.getDataRange().getValues();
     for (let i = rows.length - 1; i >= 1; i--) {
-      const rowOrdId = String(rows[i][8] || "").trim();
-      const rowPayId = String(rows[i][9] || "").trim().replace(/^'/, "");
-      const rowStatus = String(rows[i][7] || "").trim();
+      const rowOrdId = String(rows[i][layout.orderId] || rows[i][8] || "").trim();
+      const rowPayId = String(rows[i][layout.paymentId] || rows[i][9] || "").trim().replace(/^'/, "");
+      const rowStatus = String(rows[i][layout.status] || rows[i][7] || "").trim();
       if (rowOrdId === cleanOrdId && rowPayId === cleanPayId && (rowStatus === "✅ PAID" || rowStatus.indexOf("✅") !== -1)) {
         const amt = Number(rows[i][6]) || 117;
         const courseTitle = amt >= 4000 ? "UPSCALE: 1-Day Offline AI Mastery Workshop (Chennai)" : "AI Secrets Revealed Masterclass";
@@ -1495,32 +1498,158 @@ function createRazorpayOrder(data) {
   return JSON.parse(resText).id;
 }
 
+function getRegSheetLayout(sheet) {
+  const layout = {
+    status: 7,
+    batch: 8,
+    sessionDate: 9,
+    orderId: 10,
+    paymentId: 11,
+    emailStatus: 12,
+    whatsappClicked: 13,
+    reminder24h: 14,
+    reminder2h: 15,
+    reminder15m: 16,
+    pageUrl: 17,
+    sessionTime: 18,
+    preferredSlot: 19,
+    isCustomOrder: true
+  };
+  if (!sheet || typeof sheet.getDataRange !== "function") return layout;
+  try {
+    const rows = sheet.getDataRange().getValues();
+    if (!rows || rows.length === 0) {
+      return {
+        status: 7, orderId: 8, paymentId: 9, emailStatus: 10, whatsappClicked: 11,
+        reminder24h: 12, reminder2h: 13, reminder15m: 14, pageUrl: 15,
+        batch: 16, sessionDate: 17, sessionTime: 18, preferredSlot: 19,
+        isCustomOrder: false
+      };
+    }
+    const header = rows[0].map(function(c) { return String(c || "").trim().toLowerCase(); });
+    const statusIdx = header.indexOf("status") !== -1 ? header.indexOf("status") : header.indexOf("payment status");
+    const batchIdx = header.indexOf("batch");
+    const sessionDateIdx = header.indexOf("sessiondate") !== -1 ? header.indexOf("sessiondate") : header.indexOf("session date");
+    const orderIdx = header.indexOf("order id") !== -1 ? header.indexOf("order id") : header.indexOf("orderid");
+    const payIdx = header.indexOf("invoice number") !== -1 ? header.indexOf("invoice number") : (header.indexOf("payment id") !== -1 ? header.indexOf("payment id") : (header.indexOf("transaction id") !== -1 ? header.indexOf("transaction id") : header.indexOf("paymentid")));
+
+    // Legacy / unit test layout where Order ID is at index 8 and batch is not in columns H..J
+    if (orderIdx === 8 && (batchIdx === -1 || batchIdx >= 15)) {
+      return {
+        status: 7, orderId: 8, paymentId: 9, emailStatus: 10, whatsappClicked: 11,
+        reminder24h: 12, reminder2h: 13, reminder15m: 14, pageUrl: 15,
+        batch: 16, sessionDate: 17, sessionTime: 18, preferredSlot: 19,
+        isCustomOrder: false
+      };
+    }
+
+    if (statusIdx >= 7 && statusIdx <= 9) layout.status = statusIdx;
+    if (batchIdx >= 7 && batchIdx <= 9) layout.batch = batchIdx;
+    if (sessionDateIdx >= 7 && sessionDateIdx <= 9) layout.sessionDate = sessionDateIdx;
+    if (orderIdx >= 9 && orderIdx <= 12) layout.orderId = orderIdx;
+    if (payIdx >= 10 && payIdx <= 13) layout.paymentId = payIdx;
+  } catch (e) {}
+  return layout;
+}
+
+function buildRegSheetRow(layout, fields) {
+  const row = new Array(20).fill("");
+  row[0] = fields.timestamp;
+  row[1] = fields.name;
+  row[2] = fields.email;
+  row[3] = fields.phone;
+  row[4] = fields.profession;
+  row[5] = fields.language;
+  row[6] = fields.amount;
+  row[layout.status] = fields.status;
+  row[layout.batch] = fields.batch;
+  row[layout.sessionDate] = fields.sessionDate;
+  row[layout.orderId] = fields.orderId;
+  row[layout.paymentId] = fields.paymentId;
+  row[layout.emailStatus] = fields.emailStatus;
+  row[layout.whatsappClicked] = fields.whatsappClicked;
+  row[layout.reminder24h] = fields.reminder24h;
+  row[layout.reminder2h] = fields.reminder2h;
+  row[layout.reminder15m] = fields.reminder15m;
+  row[layout.pageUrl] = fields.pageUrl;
+  row[layout.sessionTime] = fields.sessionTime;
+  row[layout.preferredSlot] = fields.preferredSlot;
+  return row;
+}
+
+function repairMisalignedMasterclassRows(sheet) {
+  if (!sheet || typeof sheet.getDataRange !== "function" || typeof sheet.getRange !== "function") return 0;
+  const layout = getRegSheetLayout(sheet);
+  if (!layout.isCustomOrder) return 0;
+  let repaired = 0;
+  try {
+    const rows = sheet.getDataRange().getValues();
+    for (let i = 1; i < rows.length; i++) {
+      const r = rows[i];
+      const colI = String(r[8] || "").trim();
+      // Detect rows where order_... was written into Col I (index 8) instead of Col K (index 10)
+      if (colI.indexOf("order_") === 0) {
+        const fixedRow = buildRegSheetRow(layout, {
+          timestamp: r[0],
+          name: r[1],
+          email: r[2],
+          phone: r[3],
+          profession: r[4],
+          language: r[5],
+          amount: r[6],
+          status: r[7],
+          orderId: r[8],
+          paymentId: r[9],
+          emailStatus: r[10],
+          whatsappClicked: r[11],
+          reminder24h: r[12],
+          reminder2h: r[13],
+          reminder15m: r[14],
+          pageUrl: r[15],
+          batch: r[16] || "",
+          sessionDate: r[17] || "",
+          sessionTime: r[18] || "",
+          preferredSlot: r[19] || ""
+        });
+        const range = sheet.getRange(i + 1, 1, 1, fixedRow.length);
+        if (range && typeof range.setValues === "function") {
+          range.setValues([fixedRow]);
+        }
+        repaired++;
+      }
+    }
+  } catch (e) {}
+  return repaired;
+}
+
 function saveToSheet(data, orderId) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   let sheet = ss.getSheetByName(SHEET_NAME_REG) || ss.getSheets()[0];
+  repairMisalignedMasterclassRows(sheet);
+  const layout = getRegSheetLayout(sheet);
   const validAmount = validateMasterclassAmount(data);
-  sheet.appendRow([
-    new Date(),
-    sanitizeCell(data.name),
-    sanitizeCell(data.email),
-    "'" + String(data.phone || "").replace(/[^\d+\-\s]/g, ""),
-    sanitizeCell(data.userType || "Professional"),
-    sanitizeCell(data.modeOfSession || data.language || "Online Session (Live)"),
-    validAmount,
-    "INITIATED",
-    orderId,
-    "",
-    "WAITING",
-    "NO",
-    "NO",
-    "NO",
-    "NO",
-    sanitizeCell(data.pageUrl || ""),
-    sanitizeCell(data.batch || ""),
-    sanitizeCell(data.sessionDate || ""),
-    sanitizeCell(data.sessionTime || ""),
-    sanitizeCell(data.preferredSlot || "")
-  ]);
+  sheet.appendRow(buildRegSheetRow(layout, {
+    timestamp: new Date(),
+    name: sanitizeCell(data.name),
+    email: sanitizeCell(data.email),
+    phone: "'" + String(data.phone || "").replace(/[^\d+\-\s]/g, ""),
+    profession: sanitizeCell(data.userType || "Professional"),
+    language: sanitizeCell(data.modeOfSession || data.language || "Online Session (Live)"),
+    amount: validAmount,
+    status: "INITIATED",
+    batch: sanitizeCell(data.batch || ""),
+    sessionDate: sanitizeCell(data.sessionDate || ""),
+    orderId: orderId,
+    paymentId: "",
+    emailStatus: "WAITING",
+    whatsappClicked: "NO",
+    reminder24h: "NO",
+    reminder2h: "NO",
+    reminder15m: "NO",
+    pageUrl: sanitizeCell(data.pageUrl || ""),
+    sessionTime: sanitizeCell(data.sessionTime || ""),
+    preferredSlot: sanitizeCell(data.preferredSlot || "")
+  }));
 }
 
 // ------------------------------------------------------------
@@ -1663,12 +1792,14 @@ function processVerifiedMasterclassPayment(orderId, paymentId, isInternational, 
     const ss = SpreadsheetApp.getActiveSpreadsheet();
     assertSpreadsheetIsolation(ss);
     const sheet = ss.getSheetByName(SHEET_NAME_REG) || ss.getSheets()[0];
-    const rows = sheet.getDataRange().getValues();
+    repairMisalignedMasterclassRows(sheet);
+    const layout = getRegSheetLayout(sheet);
+    let rows = sheet.getDataRange().getValues();
 
     let targetRowIndex = -1;
     for (let i = 1; i < rows.length; i++) {
-      const rowPayId = String(rows[i][9] || "").trim().replace(/^'/, "");
-      const rowStatus = String(rows[i][7] || "").trim();
+      const rowPayId = String(rows[i][layout.paymentId] || rows[i][9] || "").trim().replace(/^'/, "");
+      const rowStatus = String(rows[i][layout.status] || rows[i][7] || "").trim();
       if (rowPayId && rowPayId === cleanPaymentId) {
         if (rowStatus === "✅ PAID" || rowStatus.indexOf("PAID") !== -1 || rowStatus.indexOf("TEST_VERIFIED") !== -1) {
           const existingInv = props ? props.getProperty("VERIFIED_INV_" + cleanPaymentId) : null;
@@ -1689,7 +1820,7 @@ function processVerifiedMasterclassPayment(orderId, paymentId, isInternational, 
           break;
         }
       }
-      if (String(rows[i][8] || "").trim() === cleanOrderId) {
+      if (String(rows[i][layout.orderId] || rows[i][8] || "").trim() === cleanOrderId) {
         targetRowIndex = i;
       }
     }
@@ -1699,7 +1830,7 @@ function processVerifiedMasterclassPayment(orderId, paymentId, isInternational, 
       const cleanEmail = String(extraData.email).trim().toLowerCase();
       for (let i = rows.length - 1; i >= 1; i--) {
         const rowEmail = String(rows[i][2] || "").trim().toLowerCase();
-        const rowStatus = String(rows[i][7] || "").trim();
+        const rowStatus = String(rows[i][layout.status] || rows[i][7] || "").trim();
         if (rowEmail === cleanEmail && (rowStatus === "INITIATED" || rowStatus.indexOf("RECONCILIATION") !== -1 || rowStatus === "WAITING")) {
           targetRowIndex = i;
           break;
@@ -1709,27 +1840,35 @@ function processVerifiedMasterclassPayment(orderId, paymentId, isInternational, 
 
     if (targetRowIndex === -1) {
       writeToLogs("ORDER_AUTO_RECOVER", "Order ID not found in sheet for order " + cleanOrderId + ". Creating new paid customer row.");
-      sheet.appendRow([
-        new Date(),
-        sanitizeCell((extraData && extraData.name) || "Learner"),
-        sanitizeCell((extraData && extraData.email) || ""),
-        "'" + String((extraData && extraData.phone) || "").replace(/[^\d+\-\s]/g, ""),
-        "Professional",
-        "Online Session (Live)",
-        clientSuppliedAmount || 117,
-        "INITIATED",
-        cleanOrderId,
-        "",
-        "WAITING",
-        "NO", "NO", "NO", "NO", "", "", "", "", ""
-      ]);
+      sheet.appendRow(buildRegSheetRow(layout, {
+        timestamp: new Date(),
+        name: sanitizeCell((extraData && extraData.name) || "Learner"),
+        email: sanitizeCell((extraData && extraData.email) || ""),
+        phone: "'" + String((extraData && extraData.phone) || "").replace(/[^\d+\-\s]/g, ""),
+        profession: "Professional",
+        language: "Online Session (Live)",
+        amount: clientSuppliedAmount || 117,
+        status: "INITIATED",
+        batch: sanitizeCell((extraData && extraData.batch) || ""),
+        sessionDate: sanitizeCell((extraData && extraData.sessionDate) || ""),
+        orderId: cleanOrderId,
+        paymentId: "",
+        emailStatus: "WAITING",
+        whatsappClicked: "NO",
+        reminder24h: "NO",
+        reminder2h: "NO",
+        reminder15m: "NO",
+        pageUrl: "",
+        sessionTime: sanitizeCell((extraData && extraData.sessionTime) || ""),
+        preferredSlot: sanitizeCell((extraData && extraData.preferredSlot) || "")
+      }));
       SpreadsheetApp.flush();
       targetRowIndex = sheet.getLastRow() - 1;
       rows = sheet.getDataRange().getValues();
     }
 
     const row = rows[targetRowIndex];
-    if (String(row[7] || "").trim() === "✅ PAID") {
+    if (String(row[layout.status] || row[7] || "").trim() === "✅ PAID") {
       const existingInv = props ? props.getProperty("VERIFIED_INV_" + cleanPaymentId) : null;
       const parsedInv = existingInv ? JSON.parse(existingInv) : null;
       const invoiceToken = issueInvoiceToken(cleanPaymentId, cleanOrderId);
@@ -1758,8 +1897,8 @@ function processVerifiedMasterclassPayment(orderId, paymentId, isInternational, 
 
     const name = String(row[1] || (extraData && extraData.name) || "Learner").replace(/^'/, "");
     const email = String(row[2] || (extraData && extraData.email) || "").replace(/^'/, "");
-    const sessionDate = (extraData && extraData.sessionDate) || row[17] || "";
-    const sessionTime = (extraData && extraData.sessionTime) || row[18] || "";
+    const sessionDate = (extraData && extraData.sessionDate) || row[layout.sessionDate] || row[17] || "";
+    const sessionTime = (extraData && extraData.sessionTime) || row[layout.sessionTime] || row[18] || "";
     const phoneClean = row[3] ? row[3].toString().replace(/\D/g, '') : "";
     const modeOrLang = row[5] || (extraData && (extraData.language || extraData.modeOfSession)) || "";
 
@@ -1783,9 +1922,9 @@ function processVerifiedMasterclassPayment(orderId, paymentId, isInternational, 
       }
 
       if (!emailResult.invoiceNumber && emailResult.uncertain) {
-        sheet.getRange(targetRowIndex + 1, 8).setValue("PENDING_RECONCILIATION");
-        sheet.getRange(targetRowIndex + 1, 10).setValue(sanitizeCell(cleanPaymentId));
-        sheet.getRange(targetRowIndex + 1, 11).setValue("WAITING_INVOICE");
+        sheet.getRange(targetRowIndex + 1, layout.status + 1).setValue("PENDING_RECONCILIATION");
+        sheet.getRange(targetRowIndex + 1, layout.paymentId + 1).setValue(sanitizeCell(cleanPaymentId));
+        sheet.getRange(targetRowIndex + 1, layout.emailStatus + 1).setValue("WAITING_INVOICE");
         SpreadsheetApp.flush();
         return {
           success: false,
@@ -1811,9 +1950,9 @@ function processVerifiedMasterclassPayment(orderId, paymentId, isInternational, 
 
     // Persist status in sheet
     const isTestTx = isAuthorizedLiveTest(email, expectedAmountInr);
-    sheet.getRange(targetRowIndex + 1, 8).setValue(isTestTx ? "✅ TEST_VERIFIED (₹1)" : "✅ PAID");
-    sheet.getRange(targetRowIndex + 1, 10).setValue(sanitizeCell(cleanPaymentId));
-    sheet.getRange(targetRowIndex + 1, 11).setValue(isTestTx ? "TEST_SUPPRESSED" : "SENT ✅");
+    sheet.getRange(targetRowIndex + 1, layout.status + 1).setValue(isTestTx ? "✅ TEST_VERIFIED (₹1)" : "✅ PAID");
+    sheet.getRange(targetRowIndex + 1, layout.paymentId + 1).setValue(sanitizeCell(cleanPaymentId));
+    sheet.getRange(targetRowIndex + 1, layout.emailStatus + 1).setValue(isTestTx ? "TEST_SUPPRESSED" : "SENT ✅");
     SpreadsheetApp.flush();
 
     if (props) {
@@ -2135,10 +2274,11 @@ function createJsonResponse(data) {
 function markWhatsappClicked(orderId) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const sheet = ss.getSheetByName(SHEET_NAME_REG) || ss.getSheets()[0];
+  const layout = getRegSheetLayout(sheet);
   const data = sheet.getDataRange().getValues();
   for (let i = 1; i < data.length; i++) {
-    if (data[i][8] === orderId) {
-      sheet.getRange(i + 1, 12).setValue("CHATTED ✅");
+    if (data[i][layout.orderId] === orderId || data[i][8] === orderId) {
+      sheet.getRange(i + 1, layout.whatsappClicked + 1).setValue("CHATTED ✅");
       break;
     }
   }
@@ -2303,16 +2443,18 @@ function reconcileAiMasterclassRows() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   assertSpreadsheetIsolation(ss);
   const sheet = ss.getSheetByName(SHEET_NAME_REG) || ss.getSheets()[0];
+  repairMisalignedMasterclassRows(sheet);
+  const layout = getRegSheetLayout(sheet);
   const rows = sheet.getDataRange().getValues();
   const props = PropertiesService.getScriptProperties();
   let resolvedCount = 0;
 
   for (let i = 1; i < rows.length; i++) {
     const row = rows[i];
-    const status = String(row[7] || "").trim();
-    const orderId = String(row[8] || "").trim();
-    const payId = String(row[9] || "").trim().replace(/^'/, "");
-    const emailStatus = String(row[10] || "").trim();
+    const status = String(row[layout.status] || row[7] || "").trim();
+    const orderId = String(row[layout.orderId] || row[8] || "").trim();
+    const payId = String(row[layout.paymentId] || row[9] || "").trim().replace(/^'/, "");
+    const emailStatus = String(row[layout.emailStatus] || row[10] || "").trim();
 
     const isStuck = status === "PENDING_RECONCILIATION" || 
                     status === "RECONCILIATION" || 
@@ -2327,13 +2469,13 @@ function reconcileAiMasterclassRows() {
       const isTestTx = isAuthorizedLiveTest(email, expectedAmountInr);
       const isUpscaleOffline = (expectedAmountInr >= 4000) || String(row[5] || "").toLowerCase().includes("offline") || String(row[5] || "").toLowerCase().includes("chennai");
       const defaultTime = getUpcomingWebinarTime();
-      const sessionDate = row[17] || (isUpscaleOffline ? "October 2nd week 2026 (Sunday)" : defaultTime.toDateString());
-      const sessionTime = row[18] || (isUpscaleOffline ? "9:00 AM – 5:30 PM IST" : "6:00 PM IST");
+      const sessionDate = row[layout.sessionDate] || row[17] || (isUpscaleOffline ? "October 2nd week 2026 (Sunday)" : defaultTime.toDateString());
+      const sessionTime = row[layout.sessionTime] || row[18] || (isUpscaleOffline ? "9:00 AM – 5:30 PM IST" : "6:00 PM IST");
       const courseTitle = isUpscaleOffline ? "UPSCALE: 1-Day Offline AI Mastery Workshop (Chennai)" : "AI Secrets Revealed Masterclass";
 
       // 1. Mark as PAID in Sheet1
-      sheet.getRange(i + 1, 8).setValue(isTestTx ? "✅ TEST_VERIFIED (₹1)" : "✅ PAID");
-      sheet.getRange(i + 1, 10).setValue(sanitizeCell(payId));
+      sheet.getRange(i + 1, layout.status + 1).setValue(isTestTx ? "✅ TEST_VERIFIED (₹1)" : "✅ PAID");
+      sheet.getRange(i + 1, layout.paymentId + 1).setValue(sanitizeCell(payId));
 
       // 2. Generate PDF and send confirmation email if not yet sent
       if (email && emailStatus !== "SENT ✅") {
@@ -2415,13 +2557,13 @@ function reconcileAiMasterclassRows() {
 
             triggerWhatsAppCampaign(name, email, phoneClean);
             createCalendarInvite(email, name, sessionDate, sessionTime);
-            sheet.getRange(i + 1, 11).setValue("SENT ✅");
+            sheet.getRange(i + 1, layout.emailStatus + 1).setValue("SENT ✅");
           } else {
-            sheet.getRange(i + 1, 11).setValue(isTestTx ? "TEST_SUPPRESSED" : "SENT ✅");
+            sheet.getRange(i + 1, layout.emailStatus + 1).setValue(isTestTx ? "TEST_SUPPRESSED" : "SENT ✅");
           }
         } catch (mailErr) {
           writeToLogs("RECONCILE_MAIL_ERROR", "Failed to send email to " + email + ": " + mailErr.message);
-          sheet.getRange(i + 1, 11).setValue("SENT ✅");
+          sheet.getRange(i + 1, layout.emailStatus + 1).setValue("SENT ✅");
         }
       }
 
