@@ -24,6 +24,7 @@ const AIMasterclassLeadGate: React.FC<AIMasterclassLeadGateProps> = ({ submitLea
     const [submitError, setSubmitError] = useState("");
     const [status, setStatus] = useState<"idle" | "saving" | "success">("idle");
     const nameRef = useRef<HTMLInputElement>(null);
+    const leadTrackedRef = useRef(false);
 
     // Lock background scroll while the gate is visible
     useEffect(() => {
@@ -59,6 +60,28 @@ const AIMasterclassLeadGate: React.FC<AIMasterclassLeadGateProps> = ({ submitLea
         try {
             const { leadId } = await submitLead(form);
             markLeadGateCompleted(leadId);
+
+            // Fire Meta Pixel 'Lead' website event upon successful enquiry form submission
+            if (!leadTrackedRef.current && typeof window.fbq === "function") {
+                leadTrackedRef.current = true;
+                window.fbq("track", "Lead", {
+                    content_name: "AI Secrets Revealed Masterclass",
+                    content_category: "Landing Page Enquiry Popup",
+                    currency: "INR",
+                    value: 99,
+                });
+            }
+
+            // Fire GA4 'generate_lead' event if gtag is available
+            if (typeof (window as unknown as { gtag?: (...args: unknown[]) => void }).gtag === "function") {
+                (window as unknown as { gtag: (...args: unknown[]) => void }).gtag("event", "generate_lead", {
+                    event_category: "Lead Form",
+                    event_label: "AI Masterclass Landing Popup",
+                    currency: "INR",
+                    value: 99,
+                });
+            }
+
             setStatus("success");
             setTimeout(() => {
                 setOpen(false);
