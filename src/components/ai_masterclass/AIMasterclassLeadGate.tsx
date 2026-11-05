@@ -61,25 +61,35 @@ const AIMasterclassLeadGate: React.FC<AIMasterclassLeadGateProps> = ({ submitLea
             const { leadId } = await submitLead(form);
             markLeadGateCompleted(leadId);
 
-            // Fire Meta Pixel 'Lead' website event upon successful enquiry form submission
-            if (!leadTrackedRef.current && typeof window.fbq === "function") {
+            // Fire Meta Pixel 'Lead' and GA4 'generate_lead' events upon successful enquiry form submission
+            if (!leadTrackedRef.current) {
                 leadTrackedRef.current = true;
-                window.fbq("track", "Lead", {
-                    content_name: "AI Secrets Revealed Masterclass",
-                    content_category: "Landing Page Enquiry Popup",
-                    currency: "INR",
-                    value: 99,
-                });
-            }
+                try {
+                    if (typeof window.fbq === "function") {
+                        window.fbq(
+                            "track",
+                            "Lead",
+                            {
+                                content_name: "AI Secrets Revealed Masterclass",
+                                content_category: "Landing Page Enquiry Popup",
+                            },
+                            leadId ? { eventID: leadId } : undefined
+                        );
+                    }
+                } catch (metaErr) {
+                    console.warn("Meta Pixel Lead event dispatch failed:", metaErr);
+                }
 
-            // Fire GA4 'generate_lead' event if gtag is available
-            if (typeof (window as unknown as { gtag?: (...args: unknown[]) => void }).gtag === "function") {
-                (window as unknown as { gtag: (...args: unknown[]) => void }).gtag("event", "generate_lead", {
-                    event_category: "Lead Form",
-                    event_label: "AI Masterclass Landing Popup",
-                    currency: "INR",
-                    value: 99,
-                });
+                try {
+                    if (typeof window.gtag === "function") {
+                        window.gtag("event", "generate_lead", {
+                            event_category: "Lead Form",
+                            event_label: "AI Masterclass Landing Popup",
+                        });
+                    }
+                } catch (gaErr) {
+                    console.warn("GA4 generate_lead event dispatch failed:", gaErr);
+                }
             }
 
             setStatus("success");

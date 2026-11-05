@@ -251,4 +251,128 @@ describe("Landing lead gate — popup", () => {
     render(<AIMasterclassLeadGate submitLead={vi.fn()} />);
     expect(screen.queryByRole("dialog")).toBeNull();
   });
+
+  describe("Meta Pixel Lead and GA4 generate_lead tracking", () => {
+    let fbqMock: ReturnType<typeof vi.fn>;
+    let gtagMock: ReturnType<typeof vi.fn>;
+
+    beforeEach(() => {
+      fbqMock = vi.fn();
+      gtagMock = vi.fn();
+      window.fbq = fbqMock;
+      window.gtag = gtagMock;
+    });
+
+    afterEach(() => {
+      delete window.fbq;
+      delete window.gtag;
+    });
+
+    it("fires Meta Lead and GA4 generate_lead only after successful enquiry form submission", async () => {
+      const submitLead = vi.fn().mockResolvedValue({ leadId: "lead_test123" });
+      render(<AIMasterclassLeadGate submitLead={submitLead} />);
+
+      fireEvent.change(screen.getByLabelText(/full name/i), { target: { value: "Selva Kumar" } });
+      fireEvent.change(screen.getByLabelText(/phone number/i), { target: { value: "9876543210" } });
+      fireEvent.click(screen.getByRole("button", { name: /continue to masterclass/i }));
+
+      await screen.findByText(/taking you to the masterclass/i);
+
+      expect(fbqMock).toHaveBeenCalledTimes(1);
+      expect(fbqMock).toHaveBeenCalledWith(
+        "track",
+        "Lead",
+        {
+          content_name: "AI Secrets Revealed Masterclass",
+          content_category: "Landing Page Enquiry Popup",
+        },
+        { eventID: "lead_test123" }
+      );
+
+      // Verify no monetary value or currency is attached to Lead
+      const metaLeadPayload = fbqMock.mock.calls[0][2];
+      expect(metaLeadPayload.value).toBeUndefined();
+      expect(metaLeadPayload.currency).toBeUndefined();
+
+      // Verify no PII is leaked into Meta event payload
+      expect(metaLeadPayload.name).toBeUndefined();
+      expect(metaLeadPayload.phone).toBeUndefined();
+      expect(metaLeadPayload.email).toBeUndefined();
+
+      // Verify GA4 generate_lead
+      expect(gtagMock).toHaveBeenCalledTimes(1);
+      expect(gtagMock).toHaveBeenCalledWith("event", "generate_lead", {
+        event_category: "Lead Form",
+        event_label: "AI Masterclass Landing Popup",
+      });
+      const gaPayload = gtagMock.mock.calls[0][2];
+      expect(gaPayload.value).toBeUndefined();
+      expect(gaPayload.currency).toBeUndefined();
+    });
+
+    it("does not fire Lead or generate_lead when form validation fails", () => {
+      const submitLead = vi.fn();
+      render(<AIMasterclassLeadGate submitLead={submitLead} />);
+
+      fireEvent.click(screen.getByRole("button", { name: /continue to masterclass/i }));
+
+      expect(screen.getByText("Full name is required.")).toBeTruthy();
+      expect(fbqMock).not.toHaveBeenCalled();
+      expect(gtagMock).not.toHaveBeenCalled();
+    });
+
+    it("does not fire Lead or generate_lead when server submission fails", async () => {
+      const submitLead = vi.fn().mockRejectedValue(new Error("Server submission error"));
+      render(<AIMasterclassLeadGate submitLead={submitLead} />);
+
+      fireEvent.change(screen.getByLabelText(/full name/i), { target: { value: "Selva Kumar" } });
+      fireEvent.change(screen.getByLabelText(/phone number/i), { target: { value: "9876543210" } });
+      await act(async () => {
+        fireEvent.click(screen.getByRole("button", { name: /continue to masterclass/i }));
+      });
+
+      expect(await screen.findByRole("alert")).toBeTruthy();
+      expect(fbqMock).not.toHaveBeenCalled();
+      expect(gtagMock).not.toHaveBeenCalled();
+    });
+
+    it("prevents duplicate Lead events on rapid double-clicks or retries", async () => {
+      const submitLead = vi.fn().mockResolvedValue({ leadId: "lead_dup123" });
+      render(<AIMasterclassLeadGate submitLead={submitLead} />);
+
+      fireEvent.change(screen.getByLabelText(/full name/i), { target: { value: "Selva Kumar" } });
+      fireEvent.change(screen.getByLabelText(/phone number/i), { target: { value: "9876543210" } });
+
+      // Capture form button and simulate rapid clicks
+      const submitButton = screen.getByRole("button", { name: /continue to masterclass/i });
+      fireEvent.click(submitButton);
+      fireEvent.click(submitButton);
+
+      await screen.findByText(/taking you to the masterclass/i);
+
+      expect(submitLead).toHaveBeenCalledTimes(1);
+      expect(fbqMock).toHaveBeenCalledTimes(1);
+      expect(gtagMock).toHaveBeenCalledTimes(1);
+    });
+
+    it("gracefully succeeds even if fbq or gtag throws an exception", async () => {
+      window.fbq = vi.fn().mockImplementation(() => {
+        throw new Error("Meta Pixel blocked by client");
+      });
+      window.gtag = vi.fn().mockImplementation(() => {
+        throw new Error("Gtag blocked by client");
+      });
+
+      const submitLead = vi.fn().mockResolvedValue({ leadId: "lead_safe" });
+      render(<AIMasterclassLeadGate submitLead={submitLead} />);
+
+      fireEvent.change(screen.getByLabelText(/full name/i), { target: { value: "Selva Kumar" } });
+      fireEvent.change(screen.getByLabelText(/phone number/i), { target: { value: "9876543210" } });
+      fireEvent.click(screen.getByRole("button", { name: /continue to masterclass/i }));
+
+      // Form should still successfully advance despite tracking exceptions
+      await screen.findByText(/taking you to the masterclass/i);
+      expect(hasCompletedLeadGate()).toBe(true);
+    });
+  });
 });
