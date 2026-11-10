@@ -1,5 +1,5 @@
 import React from "react";
-import { CheckCircle2, ShieldCheck, Zap, Laptop, Utensils, Award, BookOpen } from "lucide-react";
+import { CheckCircle2, ShieldCheck, Zap, Laptop, Utensils, Award, BookOpen, Tag, ArrowRight } from "lucide-react";
 import { useUpscaleRegisterModal } from "./UpscaleRegisterModalContext";
 
 const inclusions = [
@@ -50,44 +50,58 @@ const UpscalePricing: React.FC = () => {
                                 <span className="bg-white/10 backdrop-blur-md text-white/60 text-[8px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest leading-none">Limited VIP Pass</span>
                             </div>
                             
-                            <div className="mb-12">
-                                <div className="text-slate-400 font-bold uppercase text-[10px] tracking-[0.3em] mb-4">FULL ENROLLMENT</div>
-                                <div className="flex items-baseline gap-4 mb-2">
+                            <div className="mb-8">
+                                <div className="text-slate-400 font-bold uppercase text-[10px] tracking-[0.3em] mb-3">FULL ENROLLMENT</div>
+                                <div className="flex items-baseline gap-3 mb-2">
                                     <span className="text-2xl text-slate-500 line-through font-bold">₹9,999</span>
-                                    <span className="text-6xl lg:text-7xl font-black tracking-tighter bg-gradient-to-br from-white to-slate-400 bg-clip-text text-transparent">₹6,499</span>
+                                    <span className="text-6xl lg:text-7xl font-black tracking-tighter bg-gradient-to-br from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">₹6,499</span>
                                     <span className="text-slate-400 font-bold text-sm tracking-widest uppercase">/ PERSON</span>
                                 </div>
-                                <div className="inline-block bg-emerald-500/20 text-emerald-300 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest mb-2">Special Pass — 1-Day Full Access (Total Payable: ₹6,499 Flat)</div>
-                                <div className="text-emerald-400 font-black text-[11px] uppercase tracking-[0.2em] flex items-center gap-2">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                                    All-Inclusive Fee • Includes Lunch, High Tea & F&B Expenses
+                                <div className="text-emerald-400 font-bold text-xs flex items-center gap-2 mb-4">
+                                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                                    Includes Full Course, Physical Workbook, Executive Lunch & High Tea
+                                </div>
+
+                                {/* Coupon Code Promo Banner */}
+                                <div className="bg-gradient-to-r from-blue-950/80 via-slate-900 to-slate-900 border border-blue-500/30 rounded-2xl p-3.5 flex items-center justify-between gap-3 shadow-inner">
+                                    <div className="flex items-center gap-2.5">
+                                        <div className="w-8 h-8 rounded-xl bg-blue-500/20 border border-blue-400/30 flex items-center justify-center text-blue-400 shrink-0">
+                                            <Tag className="w-4 h-4" />
+                                        </div>
+                                        <div>
+                                            <div className="text-xs font-bold text-white flex items-center gap-1.5 flex-wrap">
+                                                Use Coupon Code <span className="font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/30 font-extrabold tracking-wider">RMDAMIABLE</span>
+                                            </div>
+                                            <div className="text-[11px] text-slate-400">Unlock special <strong className="text-emerald-300">₹4,999</strong> pass at checkout</div>
+                                        </div>
+                                    </div>
+                                    <span className="text-[11px] font-black text-emerald-300 bg-emerald-500/20 border border-emerald-500/40 px-2.5 py-1 rounded-xl shrink-0">
+                                        SAVE ₹1,500
+                                    </span>
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8 mb-14">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-6 mb-10 pt-4 border-t border-white/10">
                                 {inclusions.map((item, i) => (
-                                    <div key={i} className="flex items-center gap-4 group/item">
-                                        <div className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center text-emerald-400 group-hover/item:bg-emerald-400 group-hover/item:text-slate-900 transition-all">
+                                    <div key={i} className="flex items-center gap-3 group/item">
+                                        <div className="w-7 h-7 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 group-hover/item:bg-emerald-500 group-hover/item:text-slate-950 transition-all shrink-0">
                                             {item.icon}
                                         </div>
-                                        <span className="text-slate-300 font-bold text-xs uppercase tracking-widest group-hover/item:text-white transition-colors">{item.text}</span>
+                                        <span className="text-slate-200 font-semibold text-xs tracking-wide group-hover/item:text-white transition-colors">{item.text}</span>
                                     </div>
                                 ))}
                             </div>
 
                             <button 
                                 onClick={openRegisterModal}
-                                className="relative overflow-hidden w-full bg-blue-600 hover:bg-blue-700 text-white py-6 rounded-[24px] font-black text-xl shadow-2xl shadow-blue-600/30 transition-all hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-4 group"
+                                className="relative overflow-hidden w-full bg-gradient-to-r from-blue-600 via-blue-500 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white py-5 rounded-2xl font-black text-lg shadow-2xl shadow-blue-600/40 transition-all hover:scale-[1.01] active:scale-95 flex items-center justify-center gap-3 group cursor-pointer"
                             >
-                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-shimmer"></div>
-                                <span className="relative z-10">RESERVE MY SEAT</span>
-                                <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center relative z-10 transition-transform group-hover:rotate-12">
-                                    <Zap className="w-4 h-4 fill-current" />
-                                </div>
+                                <span className="relative z-10 tracking-wider">RESERVE MY SEAT NOW</span>
+                                <ArrowRight className="w-5 h-5 relative z-10 group-hover:translate-x-1.5 transition-transform" />
                             </button>
 
-                            <p className="text-center mt-8 text-[10px] font-bold text-slate-500 uppercase tracking-[0.3em]">
-                                🔒 Secure Payment Gateway by Razorpay
+                            <p className="text-center mt-6 text-[10px] font-bold text-slate-400 uppercase tracking-[0.25em] flex items-center justify-center gap-2">
+                                <ShieldCheck className="w-3.5 h-3.5 text-blue-400" /> Razorpay 256-Bit SSL Encrypted Checkout
                             </p>
                         </div>
 

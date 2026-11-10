@@ -56,13 +56,13 @@ const UpscaleWhy: React.FC = () => {
 
                     <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6">
                         {perks.map((perk, i) => (
-                            <div key={i} className="bg-white p-8 rounded-[40px] border border-slate-100 transition-all hover:border-blue-200 hover:shadow-[0_32px_80px_rgba(59,130,246,0.08)] group relative overflow-hidden">
-                                <div className="absolute -top-10 -right-10 w-32 h-32 bg-blue-50/50 rounded-full blur-[40px] opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-                                <div className="w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 mb-6 group-hover:bg-gradient-to-br group-hover:from-blue-600 group-hover:to-indigo-600 group-hover:text-white group-hover:shadow-xl group-hover:shadow-blue-500/20 transition-all duration-500">
+                            <div key={i} className="bg-white p-7 sm:p-8 rounded-[36px] border border-slate-200/80 transition-all duration-500 hover:border-blue-400 hover:shadow-[0_25px_60px_-15px_rgba(37,99,235,0.12)] hover:-translate-y-1 group relative overflow-hidden">
+                                <div className="absolute -top-10 -right-10 w-32 h-32 bg-blue-100/40 rounded-full blur-[40px] opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                                <div className="w-14 h-14 rounded-2xl bg-blue-50/80 border border-blue-100 flex items-center justify-center text-blue-600 mb-6 group-hover:bg-gradient-to-br group-hover:from-blue-600 group-hover:to-indigo-600 group-hover:text-white group-hover:shadow-xl group-hover:shadow-blue-500/25 transition-all duration-500">
                                     {React.cloneElement(perk.icon as React.ReactElement, { className: "w-6 h-6" })}
                                 </div>
-                                <h3 className="text-xl font-black text-slate-900 mb-3 tracking-tight group-hover:text-blue-700 transition-colors">{perk.title}</h3>
-                                <p className="text-sm text-slate-500 font-medium leading-relaxed">{perk.desc}</p>
+                                <h3 className="text-xl font-black text-slate-900 mb-2.5 tracking-tight group-hover:text-blue-700 transition-colors">{perk.title}</h3>
+                                <p className="text-sm text-slate-600 font-medium leading-relaxed">{perk.desc}</p>
                             </div>
                         ))}
                     </div>

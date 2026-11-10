@@ -92,18 +92,23 @@ const UpscaleBMC: React.FC = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {blocks.map((block, i) => (
-                        <div key={i} className="group p-8 rounded-[40px] border border-slate-100 bg-white hover:border-blue-200 hover:shadow-[0_40px_100px_rgba(59,130,246,0.08)] transition-all duration-700 flex flex-col items-start text-left relative overflow-hidden h-full">
-                            <div className="absolute -top-10 -right-10 w-32 h-32 bg-blue-50/50 rounded-full blur-[40px] opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-                            <div className="w-16 h-16 rounded-[24px] bg-slate-50 flex items-center justify-center mb-6 group-hover:bg-gradient-to-br group-hover:from-blue-600 group-hover:to-indigo-600 group-hover:text-white transition-all duration-500 shadow-sm group-hover:shadow-xl group-hover:shadow-blue-500/20 group-hover:rotate-6">
-                                {React.cloneElement(block.icon as React.ReactElement, { className: "w-7 h-7" })}
+                        <div key={i} className="group p-8 rounded-[36px] border border-slate-200/80 bg-white hover:border-blue-400 hover:shadow-[0_30px_70px_-15px_rgba(37,99,235,0.12)] hover:-translate-y-1 transition-all duration-500 flex flex-col items-start text-left relative overflow-hidden h-full">
+                            {/* Card Accent Number */}
+                            <div className="absolute top-6 right-6 font-mono text-2xl font-black text-slate-100 group-hover:text-blue-100 transition-colors select-none">
+                                {`0${i + 1}`}
                             </div>
-                            <div className="text-[11px] font-black text-blue-600 uppercase tracking-[0.3em] mb-3">
+                            <div className="absolute -top-10 -right-10 w-32 h-32 bg-blue-100/40 rounded-full blur-[40px] opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                            
+                            <div className="w-14 h-14 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center mb-6 group-hover:bg-gradient-to-br group-hover:from-blue-600 group-hover:to-indigo-600 group-hover:text-white transition-all duration-500 shadow-sm group-hover:shadow-xl group-hover:shadow-blue-500/20 group-hover:rotate-6">
+                                {React.cloneElement(block.icon as React.ReactElement, { className: "w-6 h-6" })}
+                            </div>
+                            <div className="text-[10px] font-black text-blue-600 uppercase tracking-[0.25em] mb-2">
                                 {block.subtitle}
                             </div>
-                            <h3 className="text-2xl font-black text-slate-900 mb-3 tracking-tight group-hover:text-blue-700 transition-colors">
+                            <h3 className="text-xl font-black text-slate-900 mb-2.5 tracking-tight group-hover:text-blue-700 transition-colors">
                                 {block.title}
                             </h3>
-                            <p className="text-slate-500 font-semibold leading-relaxed text-base mb-2 flex-grow">
+                            <p className="text-slate-600 font-medium leading-relaxed text-sm mb-2 flex-grow">
                                 {block.desc}
                             </p>
                         </div>

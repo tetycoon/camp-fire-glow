@@ -53,17 +53,19 @@ const UpscaleStickyBar: React.FC = () => {
                     {/* CTA Button */}
                     <button 
                         onClick={openRegisterModal}
-                        className="relative overflow-hidden bg-slate-950 text-white px-6 sm:px-8 py-3 sm:py-3.5 rounded-2xl font-black text-sm transition-all shadow-xl shadow-slate-950/20 hover:shadow-blue-500/30 hover:-translate-y-0.5 active:scale-95 flex items-center justify-center gap-3 group"
+                        className="relative overflow-hidden bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 text-white px-6 sm:px-8 py-3 sm:py-3.5 rounded-2xl font-black text-sm transition-all shadow-xl shadow-blue-600/25 hover:shadow-2xl hover:shadow-blue-600/35 hover:-translate-y-0.5 active:scale-95 flex items-center justify-center gap-2.5 group cursor-pointer"
                     >
-                        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 via-transparent to-indigo-600/20 -translate-x-full group-hover:animate-shimmer"></div>
                         <span className="relative z-10 uppercase tracking-wide">Reserve Seat</span>
                         <ArrowRight className="w-4 h-4 relative z-10 group-hover:translate-x-1 transition-transform" />
                     </button>
 
                     {/* Price */}
                     <div className="flex flex-col font-black border-l-2 border-slate-200 pl-6">
-                        <div className="text-xl text-slate-950 tracking-tighter">₹6,499</div>
-                        <div className="text-[7px] text-slate-400 uppercase tracking-[0.15em] mt-0.5 whitespace-nowrap">Includes Lunch & Networking • No GST</div>
+                        <div className="flex items-baseline gap-1.5">
+                            <span className="text-xl text-slate-950 tracking-tight">₹6,499</span>
+                            <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">₹4,999 w/ code</span>
+                        </div>
+                        <div className="text-[9px] text-slate-500 font-bold uppercase tracking-wider mt-0.5 whitespace-nowrap">Includes Lunch & High Tea</div>
                     </div>
                 </div>
             </div>

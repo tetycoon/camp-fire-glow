@@ -51,25 +51,29 @@ const UpscaleAudience: React.FC = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {personas.map((p, i) => (
-                        <div key={i} className="group relative p-8 rounded-[32px] border border-slate-100 bg-white hover:border-blue-200 hover:shadow-[0_32px_80px_rgba(59,130,246,0.08)] transition-all duration-500 overflow-hidden">
-                            <div className="absolute -top-8 -right-8 w-24 h-24 bg-blue-50/50 rounded-full blur-[30px] opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        <div key={i} className="group relative p-7 sm:p-8 rounded-[32px] border border-slate-200/80 bg-white hover:border-blue-400 hover:shadow-[0_30px_70px_-15px_rgba(37,99,235,0.12)] hover:-translate-y-1 transition-all duration-500 overflow-hidden">
+                            <div className="absolute -top-8 -right-8 w-28 h-28 bg-blue-100/40 rounded-full blur-[30px] opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                             
-                            <div className="flex items-start gap-6">
-                                <div className="w-16 h-16 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 shrink-0 group-hover:bg-gradient-to-br group-hover:from-blue-600 group-hover:to-indigo-600 group-hover:text-white group-hover:shadow-xl group-hover:shadow-blue-500/20 transition-all duration-500">
-                                    {React.cloneElement(p.icon as React.ReactElement, { className: "w-7 h-7" })}
+                            <div className="flex flex-col sm:flex-row items-start gap-5 sm:gap-6">
+                                <div className="w-14 h-14 rounded-2xl bg-blue-50/80 border border-blue-100 flex items-center justify-center text-blue-600 shrink-0 group-hover:bg-gradient-to-br group-hover:from-blue-600 group-hover:to-indigo-600 group-hover:text-white group-hover:shadow-xl group-hover:shadow-blue-500/25 transition-all duration-500">
+                                    {React.cloneElement(p.icon as React.ReactElement, { className: "w-6 h-6" })}
                                 </div>
                                 <div className="flex-1">
-                                    <div className="flex items-center gap-3 mb-3">
+                                    <div className="flex items-center gap-3 mb-3 flex-wrap">
                                         <h3 className="text-xl font-black text-slate-900 group-hover:text-blue-700 transition-colors">{p.title}</h3>
-                                        <span className="text-[8px] font-black text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full uppercase tracking-widest">{p.tag}</span>
+                                        <span className="text-[9px] font-black text-blue-700 bg-blue-50 border border-blue-200/60 px-2.5 py-0.5 rounded-full uppercase tracking-wider">{p.tag}</span>
                                     </div>
-                                    <div className="mb-4">
-                                        <div className="text-[10px] font-black text-red-400 uppercase tracking-widest mb-1">THE PROBLEM</div>
-                                        <p className="text-sm text-slate-500 font-medium leading-relaxed">{p.pain}</p>
+                                    <div className="mb-3.5 bg-rose-50/60 border border-rose-100 rounded-xl p-3">
+                                        <div className="text-[9px] font-black text-rose-600 uppercase tracking-widest mb-0.5 flex items-center gap-1.5">
+                                            <span className="w-1.5 h-1.5 rounded-full bg-rose-500"></span> THE BOTTLENECK
+                                        </div>
+                                        <p className="text-xs sm:text-sm text-slate-600 font-medium leading-relaxed">{p.pain}</p>
                                     </div>
-                                    <div>
-                                        <div className="text-[10px] font-black text-emerald-500 uppercase tracking-widest mb-1">AFTER THIS WORKSHOP</div>
-                                        <p className="text-sm text-slate-700 font-bold leading-relaxed">{p.outcome}</p>
+                                    <div className="bg-emerald-50/60 border border-emerald-100 rounded-xl p-3">
+                                        <div className="text-[9px] font-black text-emerald-700 uppercase tracking-widest mb-0.5 flex items-center gap-1.5">
+                                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> THE WORKSHOP OUTCOME
+                                        </div>
+                                        <p className="text-xs sm:text-sm text-slate-800 font-bold leading-relaxed">{p.outcome}</p>
                                     </div>
                                 </div>
                             </div>
