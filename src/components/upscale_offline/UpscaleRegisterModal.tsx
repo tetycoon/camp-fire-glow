@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import { CheckCircle2, Loader2, ShieldCheck, X, Laptop, Utensils, MapPin, Search, FileText } from "lucide-react";
+import { CheckCircle2, Loader2, ShieldCheck, X, Laptop, Utensils, MapPin, Search, FileText, Tag, Check } from "lucide-react";
 import { useUpscaleRegisterModal } from "./UpscaleRegisterModalContext";
 import { RazorpayOptions } from "@/types/razorpay";
 import { countryCodes } from "../../lib/countryCodes";
@@ -45,7 +45,41 @@ const UpscaleRegisterModal: React.FC = () => {
     const [companyName, setCompanyName] = useState("");
     const [gstError, setGstError] = useState("");
 
-    const baseTotal = 6499 * seatsCount;
+    // Coupon Code State: "RMDAMIABLE" drops price to ₹4,999
+    const [couponInput, setCouponInput] = useState("");
+    const [appliedCoupon, setAppliedCoupon] = useState("");
+    const [couponError, setCouponError] = useState("");
+    const [couponSuccess, setCouponSuccess] = useState("");
+
+    const isCouponValid = appliedCoupon.trim().toUpperCase() === "RMDAMIABLE";
+    const currentPrice = isCouponValid ? 4999 : 6499;
+    const baseTotal = currentPrice * seatsCount;
+
+    const handleApplyCoupon = (e?: React.MouseEvent | React.FormEvent) => {
+        if (e && typeof e.preventDefault === "function") e.preventDefault();
+        setCouponError("");
+        setCouponSuccess("");
+        const cleaned = couponInput.trim().toUpperCase();
+        if (!cleaned) {
+            setCouponError("Please enter a coupon code.");
+            return;
+        }
+        if (cleaned === "RMDAMIABLE") {
+            setAppliedCoupon("RMDAMIABLE");
+            setCouponSuccess("✓ Coupon 'RMDAMIABLE' applied! ₹1,500 discount unlocked.");
+            setCouponError("");
+        } else {
+            setAppliedCoupon("");
+            setCouponError("Invalid coupon code.");
+        }
+    };
+
+    const handleRemoveCoupon = () => {
+        setAppliedCoupon("");
+        setCouponInput("");
+        setCouponSuccess("");
+        setCouponError("");
+    };
 
     // Country code search state
     const [countrySearch, setCountrySearch] = useState("");
@@ -147,7 +181,8 @@ const UpscaleRegisterModal: React.FC = () => {
             paymentSuccess: false,
             companyName: sanitizedCompany,
             gstin: sanitizedGstin,
-            seats: seatsCount
+            seats: seatsCount,
+            coupon: isCouponValid ? "RMDAMIABLE" : ""
         };
 
         try {
@@ -170,16 +205,17 @@ const UpscaleRegisterModal: React.FC = () => {
                 amount: finalAmount,
                 currency: "INR",
                 name: "Tech Tycoon",
-                description: `UPSCALE: 1-Day AI Mastery Chennai (${seatsCount} ${seatsCount === 1 ? "Seat" : "Seats"})`,
+                description: `UPSCALE: 1-Day AI Mastery Chennai ${isCouponValid ? "(Coupon: RMDAMIABLE)" : ""}`,
                 prefill: {
                     name: sanitizedName,
                     email: sanitizedEmail,
                     contact: `${form.countryCode}${form.phone}`,
                 },
                 notes: {
-                    batch: "OFFLINE_CHENNAI_AUG09",
-                    base_amount: String(gstBreakdown.baseAmount),
-                    gst_amount: String(gstBreakdown.gstAmount),
+                    batch: "OFFLINE_CHENNAI_DEC06",
+                    base_amount: String(finalPayableInr),
+                    gst_amount: "0",
+                    coupon: isCouponValid ? "RMDAMIABLE" : "NONE",
                     gstin: sanitizedGstin || "N/A",
                     company_name: sanitizedCompany || "N/A",
                 },
@@ -218,6 +254,7 @@ const UpscaleRegisterModal: React.FC = () => {
                                 amount: finalPayableInr,
                                 companyName: sanitizedCompany,
                                 gstin: sanitizedGstin,
+                                coupon: isCouponValid ? "RMDAMIABLE" : ""
                             })
                         });
                         const verifyData = await verifyRes.json();
@@ -350,10 +387,17 @@ const UpscaleRegisterModal: React.FC = () => {
                                 <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
                                     Register <span className="text-blue-600">Now.</span>
                                 </h2>
-                                <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mt-0.5">
-                                    <span className="line-through text-slate-300 mr-1.5">₹9,999</span>
-                                    <span className="text-slate-900 font-extrabold">₹6,499</span>
-                                    <span className="text-emerald-700 ml-1.5 bg-emerald-50 px-2 py-0.5 rounded text-[10px]">No GST Added</span>
+                                <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mt-0.5 flex items-center gap-2 flex-wrap">
+                                    <span className="line-through text-slate-300">₹9,999</span>
+                                    {isCouponValid ? (
+                                        <>
+                                            <span className="line-through text-slate-400">₹6,499</span>
+                                            <span className="text-emerald-600 font-extrabold text-base">₹4,999</span>
+                                            <span className="text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded text-[10px] font-extrabold">RMDAMIABLE Applied (-₹1,500)</span>
+                                        </>
+                                    ) : (
+                                        <span className="text-slate-900 font-extrabold text-sm sm:text-base">₹6,499</span>
+                                    )}
                                 </p>
                             </div>
 
@@ -454,6 +498,66 @@ const UpscaleRegisterModal: React.FC = () => {
                                             onChange={e => setForm({...form, phone: e.target.value.replace(/\D/g, '')})}
                                         />
                                     </div>
+                                </div>
+
+                                {/* Coupon Code Section */}
+                                <div className="space-y-1">
+                                    <div className="flex items-center justify-between px-0.5">
+                                        <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider flex items-center gap-1">
+                                            <Tag className="w-3 h-3 text-blue-600" /> Have a Coupon Code?
+                                        </label>
+                                        {isCouponValid && (
+                                            <span className="text-[10px] font-bold text-emerald-600 flex items-center gap-1">
+                                                <Check className="w-3 h-3" /> ₹1,500 OFF Applied
+                                            </span>
+                                        )}
+                                    </div>
+                                    <div className="flex gap-2">
+                                        <input 
+                                            type="text" 
+                                            placeholder="Enter Coupon Code" 
+                                            disabled={isCouponValid}
+                                            value={couponInput}
+                                            onChange={e => {
+                                                setCouponInput(e.target.value.toUpperCase());
+                                                if (couponError) setCouponError("");
+                                            }}
+                                            onKeyDown={e => {
+                                                if (e.key === "Enter") {
+                                                    e.preventDefault();
+                                                    handleApplyCoupon(e);
+                                                }
+                                            }}
+                                            className="flex-1 bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2 text-xs sm:text-sm font-semibold tracking-wider text-slate-900 uppercase placeholder:normal-case placeholder:font-normal placeholder:tracking-normal placeholder:text-slate-400 outline-none focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-100 disabled:text-slate-500 transition-all"
+                                        />
+                                        {isCouponValid ? (
+                                            <button
+                                                type="button"
+                                                onClick={handleRemoveCoupon}
+                                                className="bg-slate-200 hover:bg-slate-300 text-slate-700 px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer"
+                                            >
+                                                Remove
+                                            </button>
+                                        ) : (
+                                            <button
+                                                type="button"
+                                                onClick={handleApplyCoupon}
+                                                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-sm shadow-blue-500/20 active:scale-95 cursor-pointer"
+                                            >
+                                                Apply
+                                            </button>
+                                        )}
+                                    </div>
+                                    {couponSuccess && (
+                                        <p className="text-[11px] font-semibold text-emerald-600 px-1 pt-0.5 animate-in fade-in">
+                                            {couponSuccess}
+                                        </p>
+                                    )}
+                                    {couponError && (
+                                        <p className="text-[11px] font-semibold text-red-500 px-1 pt-0.5 animate-in fade-in">
+                                            {couponError}
+                                        </p>
+                                    )}
                                 </div>
 
                                 <div className="flex items-start gap-2 px-0.5">

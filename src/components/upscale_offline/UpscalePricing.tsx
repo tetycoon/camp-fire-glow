@@ -55,7 +55,7 @@ const UpscalePricing: React.FC = () => {
                                 <div className="flex items-baseline gap-4 mb-2">
                                     <span className="text-2xl text-slate-500 line-through font-bold">₹9,999</span>
                                     <span className="text-6xl lg:text-7xl font-black tracking-tighter bg-gradient-to-br from-white to-slate-400 bg-clip-text text-transparent">₹6,499</span>
-                                    <span className="text-slate-400 font-bold text-sm tracking-widest uppercase">/ PERSON (NO GST ADDED)</span>
+                                    <span className="text-slate-400 font-bold text-sm tracking-widest uppercase">/ PERSON</span>
                                 </div>
                                 <div className="inline-block bg-emerald-500/20 text-emerald-300 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest mb-2">Special Pass — 1-Day Full Access (Total Payable: ₹6,499 Flat)</div>
                                 <div className="text-emerald-400 font-black text-[11px] uppercase tracking-[0.2em] flex items-center gap-2">

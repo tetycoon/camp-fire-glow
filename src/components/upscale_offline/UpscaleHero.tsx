@@ -139,7 +139,7 @@ const UpscaleHero: React.FC = () => {
                             <span className="text-sm text-slate-400 line-through">₹9,999</span>
                             <span className="text-2xl text-slate-950 tracking-tighter">₹6,499</span>
                         </div>
-                        <div className="text-[7.5px] text-slate-400 uppercase tracking-[0.2em] mt-0.5 whitespace-nowrap">Includes Lunch & Networking • No GST Added</div>
+                        <div className="text-[7.5px] text-slate-400 uppercase tracking-[0.2em] mt-0.5 whitespace-nowrap">Includes Lunch & Networking</div>
                     </div>
                 </div>
             </div>
