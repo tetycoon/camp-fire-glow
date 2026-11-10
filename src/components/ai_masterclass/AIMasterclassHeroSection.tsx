@@ -23,38 +23,38 @@ const AIMasterclassHeroSection: React.FC = () => {
     ];
 
     return (
-        <section className="relative min-h-[calc(100vh-70px)] flex flex-col justify-between px-4 pt-24 pb-12 bg-slate-50 overflow-hidden">
+        <section className="relative min-h-[calc(100vh-70px)] flex flex-col justify-between px-4 pt-24 pb-12 bg-gradient-to-b from-slate-50 via-white to-slate-50 overflow-hidden">
             {/* Background Image Layer */}
             <div
-                className="absolute inset-0 bg-cover bg-center pointer-events-none transform scale-105 opacity-35"
+                className="absolute inset-0 bg-cover bg-center pointer-events-none transform scale-105 opacity-25"
                 style={{
                     backgroundImage: `url(${heroBg})`,
-                    filter: "saturate(0.9)"
+                    filter: "saturate(0.85)"
                 }}
             />
 
             {/* Clean Corporate Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-b from-white/95 via-white/90 to-slate-50/95 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-b from-white/95 via-white/85 to-slate-50/95 pointer-events-none" />
 
-            {/* Subtle Architectural Grid Pattern */}
+            {/* Subtle High-Tech Architectural Grid */}
             <div
-                className="absolute inset-0 pointer-events-none opacity-[0.03]"
+                className="absolute inset-0 pointer-events-none opacity-[0.035]"
                 style={{
                     backgroundImage: `radial-gradient(circle at 1px 1px, #0f172a 1px, transparent 0)`,
-                    backgroundSize: '28px 28px'
+                    backgroundSize: '24px 24px'
                 }}
             />
 
-            {/* Executive Royal Blue & Indigo Ambient Glows */}
-            <div className="absolute top-12 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
-            <div className="absolute top-20 right-10 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
+            {/* Executive Ambient Glows */}
+            <div className="absolute top-10 left-1/4 w-[500px] h-[500px] bg-gradient-to-br from-blue-500/10 to-indigo-500/5 rounded-full blur-3xl pointer-events-none animate-pulse duration-[8000ms]" />
+            <div className="absolute top-32 right-10 w-[450px] h-[450px] bg-gradient-to-bl from-indigo-500/10 to-blue-600/5 rounded-full blur-3xl pointer-events-none" />
 
             <div className="relative z-10 max-w-7xl mx-auto w-full my-auto">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
                     {/* Left Column: Core Value Proposition */}
                     <div className="lg:col-span-7 flex flex-col items-start text-left">
                         {/* Executive Program Badge */}
-                        <div className="inline-flex items-center gap-2.5 mb-5 px-4 py-1.5 rounded-full bg-slate-900 text-white shadow-sm">
+                        <div className="inline-flex items-center gap-2.5 mb-5 px-4 py-1.5 rounded-full bg-slate-900/95 text-white shadow-md shadow-slate-900/10 border border-slate-800/80 backdrop-blur-md">
                             <span className="relative flex h-2 w-2">
                                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
                                 <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-400"></span>
@@ -65,8 +65,8 @@ const AIMasterclassHeroSection: React.FC = () => {
                         </div>
 
                         {/* Corporate Headline */}
-                        <h1 className="text-3xl sm:text-5xl lg:text-[3.4rem] font-black leading-[1.12] text-slate-900 mb-4 tracking-tight">
-                            AI Secrets <span className="text-blue-600">Revealed</span> <br className="hidden sm:block" />
+                        <h1 className="text-3xl sm:text-5xl lg:text-[3.5rem] font-black leading-[1.12] text-slate-900 mb-4 tracking-tight">
+                            AI Secrets <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 bg-clip-text text-transparent">Revealed</span> <br className="hidden sm:block" />
                             For Business Productivity
                         </h1>
 
@@ -80,7 +80,7 @@ const AIMasterclassHeroSection: React.FC = () => {
                             {benefitPills.map((pill, i) => {
                                 const Icon = pill.icon;
                                 return (
-                                    <span key={i} className="text-xs font-semibold text-slate-700 bg-white border border-slate-200/90 shadow-xs px-3.5 py-2 rounded-lg flex items-center gap-2">
+                                    <span key={i} className="text-xs font-semibold text-slate-700 bg-white/90 backdrop-blur-xs border border-slate-200/90 shadow-2xs hover:shadow-xs hover:border-blue-400/50 hover:-translate-y-0.5 transition-all px-3.5 py-2 rounded-lg flex items-center gap-2">
                                         <Icon className="w-3.5 h-3.5 text-blue-600 shrink-0" />
                                         <span>{pill.label}</span>
                                     </span>
@@ -89,7 +89,7 @@ const AIMasterclassHeroSection: React.FC = () => {
                         </div>
 
                         {/* Executive Rating & Social Proof */}
-                        <div className="flex flex-wrap items-center gap-3 mb-7 bg-white border border-slate-200/90 rounded-xl px-4 py-3 shadow-xs">
+                        <div className="flex flex-wrap items-center gap-3 mb-7 bg-white/95 backdrop-blur-sm border border-slate-200/90 rounded-xl px-4 py-3 shadow-xs">
                             <div className="flex gap-0.5">
                                 {[...Array(5)].map((_, i) => (
                                     <svg key={i} className="w-4 h-4 text-amber-400 fill-amber-400" viewBox="0 0 20 20">
@@ -107,7 +107,7 @@ const AIMasterclassHeroSection: React.FC = () => {
                         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
                             <button
                                 onClick={openRegisterModal}
-                                className="bg-blue-600 hover:bg-blue-700 text-white text-base sm:text-lg font-bold px-8 py-4 rounded-xl flex items-center justify-center gap-3 transition-all shadow-lg shadow-blue-600/25 hover:shadow-xl cursor-pointer"
+                                className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-base sm:text-lg font-bold px-8 py-4 rounded-xl flex items-center justify-center gap-3 transition-all shadow-lg shadow-blue-600/30 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
                             >
                                 <span>Register for Masterclass — ₹99</span>
                                 <span className="text-blue-200 line-through text-sm font-semibold">₹999</span>
@@ -116,7 +116,7 @@ const AIMasterclassHeroSection: React.FC = () => {
 
                             <button
                                 onClick={() => scrollTo("modules")}
-                                className="bg-white hover:bg-slate-50 text-slate-700 text-sm font-bold px-6 py-4 rounded-xl border border-slate-300 hover:border-slate-400 flex items-center justify-center gap-2 transition-colors cursor-pointer"
+                                className="bg-white hover:bg-slate-50 text-slate-700 text-sm font-bold px-6 py-4 rounded-xl border border-slate-300 hover:border-slate-400 flex items-center justify-center gap-2 transition-all shadow-2xs hover:shadow-xs cursor-pointer"
                             >
                                 <span>View Executive Syllabus</span>
                                 <ArrowRight className="w-4 h-4 text-slate-500" />
@@ -130,7 +130,7 @@ const AIMasterclassHeroSection: React.FC = () => {
 
                     {/* Right Column: Interactive Live Batch Selector Card */}
                     <div className="lg:col-span-5 flex justify-center lg:justify-end">
-                        <div className="w-full max-w-[430px] bg-white rounded-2xl p-6 sm:p-7 border border-slate-200/90 shadow-xl relative overflow-hidden">
+                        <div className="w-full max-w-[430px] bg-white/95 backdrop-blur-md rounded-2xl p-6 sm:p-7 border border-slate-200/90 shadow-[0_20px_50px_rgba(15,23,42,0.08)] hover:shadow-[0_25px_60px_rgba(15,23,42,0.12)] transition-all duration-300 relative overflow-hidden">
                             {/* Corporate Royal Blue top accent */}
                             <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-slate-900 via-blue-600 to-indigo-600" />
 
@@ -139,8 +139,8 @@ const AIMasterclassHeroSection: React.FC = () => {
                                     <Building2 className="w-3.5 h-3.5 text-blue-600" />
                                     EXECUTIVE DELEGATE PASS
                                 </span>
-                                <span className="inline-flex items-center gap-1.5 bg-blue-50 text-blue-700 border border-blue-200 px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-blue-600"></span> Subsidized Seat
+                                <span className="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200/80 px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Subsidized Seat
                                 </span>
                             </div>
 
@@ -160,8 +160,8 @@ const AIMasterclassHeroSection: React.FC = () => {
                                                 onClick={() => setSelectedSlotId(slot.id)}
                                                 className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer relative ${
                                                     isSelected
-                                                        ? "bg-blue-50/70 border-2 border-blue-600 shadow-xs"
-                                                        : "bg-slate-50 hover:bg-slate-100 border-slate-200 text-slate-600"
+                                                        ? "bg-blue-50/80 border-2 border-blue-600 shadow-sm"
+                                                        : "bg-slate-50/80 hover:bg-slate-100/90 border-slate-200 text-slate-600"
                                                 }`}
                                             >
                                                 <div className="text-[11px] font-bold text-slate-900 flex items-center justify-between gap-1">
@@ -229,11 +229,9 @@ const AIMasterclassHeroSection: React.FC = () => {
 
                             {/* Ticket Price & Direct CTA */}
                             <div className="pt-2 border-t border-slate-100">
-                                
-
                                 <button
                                     onClick={openRegisterModal}
-                                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 shadow-md shadow-blue-600/20 hover:shadow-lg transition-all cursor-pointer"
+                                    className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-sm py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 shadow-md shadow-blue-600/25 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer"
                                 >
                                     <span>Enroll for {activeSlot.dayName} Batch — ₹99</span>
                                     <ArrowRight className="w-4 h-4 text-white" />

@@ -8,15 +8,18 @@ const AIMasterclassPricingSection: React.FC = () => {
     const { nextSession } = getMasterclassDateStrings();
 
     return (
-        <section id="pricing" className="py-20 sm:py-24 px-4 bg-slate-50/70 border-t border-slate-200/90 relative">
-            <div className="max-w-6xl mx-auto">
+        <section id="pricing" className="py-20 sm:py-24 px-4 bg-gradient-to-b from-slate-50/70 via-white to-slate-50/70 border-t border-slate-200/90 relative overflow-hidden">
+            {/* Ambient Background Glow */}
+            <div className="absolute top-1/4 right-1/4 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
+
+            <div className="max-w-6xl mx-auto relative z-10">
                 <div className="text-center mb-14 sm:mb-16">
                     <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-white border border-slate-200 rounded-md text-[11px] font-bold text-blue-700 tracking-widest uppercase shadow-2xs mb-4">
                         <Zap className="w-3.5 h-3.5 text-blue-600" />
                         <span>Program Fee & Enrollment Options</span>
                     </div>
                     <h2 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight mb-4">
-                        Choose Your Masterclass Pass
+                        Choose Your <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 bg-clip-text text-transparent">Masterclass Pass</span>
                     </h2>
                     <p className="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
                         Select the 3-hour live online session for ₹99, or upgrade to the complete package for ₹499 to include our comprehensive resource toolkit.
@@ -25,7 +28,7 @@ const AIMasterclassPricingSection: React.FC = () => {
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch max-w-5xl mx-auto">
                     {/* OPTION 1: ₹99 Standard Live Pass */}
-                    <div className="bg-white rounded-2xl border border-slate-200/90 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden relative">
+                    <div className="bg-white rounded-2xl border border-slate-200/90 shadow-[0_10px_30px_rgba(15,23,42,0.04)] hover:shadow-[0_20px_45px_rgba(15,23,42,0.08)] hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between overflow-hidden relative">
                         <div className="p-7 sm:p-9 flex-1 flex flex-col">
                             <div className="flex items-center justify-between mb-4">
                                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-slate-100 border border-slate-200 text-slate-700 text-[11px] font-bold uppercase tracking-wider">
@@ -80,7 +83,7 @@ const AIMasterclassPricingSection: React.FC = () => {
                         <div className="p-7 sm:p-9 pt-0">
                             <button
                                 onClick={() => openRegisterModal()}
-                                className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-base py-4 px-6 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 cursor-pointer mb-3"
+                                className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-base py-4 px-6 rounded-xl transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 cursor-pointer mb-3"
                             >
                                 <span>Enroll for Live Session — ₹99</span>
                                 <ArrowRight className="w-4 h-4 text-white" />
@@ -92,9 +95,9 @@ const AIMasterclassPricingSection: React.FC = () => {
                     </div>
 
                     {/* OPTION 2: ₹499 Complete Live Session + Resource Toolkit Pass */}
-                    <div className="bg-slate-900 text-white rounded-2xl border-2 border-blue-500 shadow-2xl hover:shadow-blue-500/10 transition-all duration-300 flex flex-col justify-between overflow-hidden relative">
+                    <div className="bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 text-white rounded-2xl border-2 border-blue-500 shadow-[0_0_50px_-10px_rgba(59,130,246,0.3)] hover:shadow-[0_0_60px_-5px_rgba(59,130,246,0.4)] hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between overflow-hidden relative">
                         {/* Most Popular Badge */}
-                        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-center py-2 px-4 text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2">
+                        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-center py-2.5 px-4 text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2 shadow-xs">
                             <Sparkles className="w-3.5 h-3.5 fill-white text-white" />
                             <span>RECOMMENDED • COMPLETE DELEGATE PACKAGE</span>
                         </div>
@@ -165,7 +168,7 @@ const AIMasterclassPricingSection: React.FC = () => {
                         <div className="p-7 sm:p-9 pt-0">
                             <button
                                 onClick={() => openRegisterModal({ includePdfMaterial: true })}
-                                className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold text-base py-4 px-6 rounded-xl transition-all shadow-lg shadow-blue-600/30 hover:shadow-xl flex items-center justify-center gap-2 cursor-pointer mb-3"
+                                className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-base py-4 px-6 rounded-xl transition-all shadow-lg shadow-blue-600/35 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 cursor-pointer mb-3"
                             >
                                 <span>Enroll with Resource Toolkit — ₹499</span>
                                 <ArrowRight className="w-4 h-4 text-white" />

@@ -23,7 +23,7 @@ const AIMasterclassStickyBar: React.FC = () => {
     if (!isVisible) return null;
 
     return (
-        <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-slate-200/90 px-4 py-3 shadow-[0_-8px_30px_rgba(15,23,42,0.08)] transition-all duration-300 animate-in slide-in-from-bottom-5">
+        <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-t border-slate-200/90 px-4 py-3 shadow-[0_-10px_35px_rgba(15,23,42,0.08)] transition-all duration-300 animate-in slide-in-from-bottom-5">
             <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
                 {/* Left Side Info */}
                 <div className="hidden md:flex items-center gap-6">
@@ -61,7 +61,7 @@ const AIMasterclassStickyBar: React.FC = () => {
 
                         <button
                             onClick={openRegisterModal}
-                            className="bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-bold px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl shadow-md shadow-blue-600/20 hover:shadow-lg transition-all flex items-center gap-2 cursor-pointer whitespace-nowrap"
+                            className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-xs sm:text-sm font-bold px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl shadow-md shadow-blue-600/25 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center gap-2 cursor-pointer whitespace-nowrap"
                         >
                             <span>Enroll Now — ₹99</span>
                             <ArrowRight className="w-3.5 h-3.5 text-white" />

@@ -24,14 +24,14 @@ const AIMasterclassNavbar: React.FC = () => {
         <nav
             className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
                 scrolled
-                    ? "bg-white/95 shadow-sm border-b border-slate-200/90 backdrop-blur-md py-1"
-                    : "bg-white/90 border-b border-slate-200/60 backdrop-blur-sm py-2"
+                    ? "bg-white/90 shadow-md shadow-slate-900/5 border-b border-slate-200/80 backdrop-blur-md py-1.5"
+                    : "bg-white/80 border-b border-slate-200/50 backdrop-blur-sm py-2.5"
             }`}
         >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-14 sm:h-16">
                     <a href="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity" title="TECH TYCOON DIGITAL SOLUTION LLP">
-                        <img src="/logo.png" alt="TECH TYCOON DIGITAL SOLUTION LLP" className="w-9 h-9 sm:w-10 sm:h-10 rounded-full border border-slate-200 shadow-xs shrink-0" />
+                        <img src="/logo.png" alt="TECH TYCOON DIGITAL SOLUTION LLP" className="w-9 h-9 sm:w-10 sm:h-10 rounded-full border border-slate-200 shadow-2xs shrink-0" />
                         <div className="flex flex-col text-left leading-none">
                             <span className="text-sm sm:text-base font-black tracking-tight text-slate-900">TECH TYCOON</span>
                             <span className="text-[9px] sm:text-[10px] font-bold tracking-widest text-slate-500 uppercase mt-0.5">DIGITAL SOLUTION LLP</span>
@@ -40,19 +40,19 @@ const AIMasterclassNavbar: React.FC = () => {
 
                     {/* Desktop Navigation Links */}
                     <div className="hidden lg:flex items-center gap-7 text-xs font-semibold text-slate-600 uppercase tracking-wider">
-                        <button onClick={() => scrollTo("about")} className="hover:text-blue-600 transition-colors cursor-pointer">
+                        <button onClick={() => scrollTo("about")} className="hover:text-blue-600 transition-colors cursor-pointer py-1">
                             Overview
                         </button>
-                        <button onClick={() => scrollTo("modules")} className="hover:text-blue-600 transition-colors cursor-pointer">
+                        <button onClick={() => scrollTo("modules")} className="hover:text-blue-600 transition-colors cursor-pointer py-1">
                             Curriculum
                         </button>
-                        <button onClick={() => scrollTo("trainer")} className="hover:text-blue-600 transition-colors cursor-pointer">
+                        <button onClick={() => scrollTo("trainer")} className="hover:text-blue-600 transition-colors cursor-pointer py-1">
                             Lead Trainer
                         </button>
-                        <button onClick={() => scrollTo("pricing")} className="hover:text-blue-600 transition-colors cursor-pointer">
+                        <button onClick={() => scrollTo("pricing")} className="hover:text-blue-600 transition-colors cursor-pointer py-1">
                             Registration Fee
                         </button>
-                        <button onClick={() => scrollTo("faq")} className="hover:text-blue-600 transition-colors cursor-pointer">
+                        <button onClick={() => scrollTo("faq")} className="hover:text-blue-600 transition-colors cursor-pointer py-1">
                             FAQ
                         </button>
                     </div>
@@ -61,14 +61,14 @@ const AIMasterclassNavbar: React.FC = () => {
                     <div className="hidden md:flex items-center gap-3">
                         <a
                             href="/"
-                            className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200/80 border border-slate-200/80 px-3.5 py-2 rounded-lg transition-colors"
+                            className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 bg-slate-100/90 hover:bg-slate-200/90 border border-slate-200/80 px-3.5 py-2 rounded-lg transition-all"
                         >
                             <Building2 className="w-3.5 h-3.5 text-slate-500" />
                             <span>Corporate Hub</span>
                         </a>
                         <button
                             onClick={openRegisterModal}
-                            className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-bold px-5 py-2.5 rounded-xl transition-all duration-200 shadow-sm shadow-blue-600/20 hover:shadow-md cursor-pointer"
+                            className="flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-xs sm:text-sm font-bold px-5 py-2.5 rounded-xl transition-all duration-200 shadow-md shadow-blue-600/25 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
                         >
                             <span>Enroll for ₹99</span>
                             <ArrowRight className="w-3.5 h-3.5 text-white" />
@@ -79,7 +79,7 @@ const AIMasterclassNavbar: React.FC = () => {
                     <div className="flex items-center gap-2 md:hidden">
                         <button
                             onClick={openRegisterModal}
-                            className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-3.5 py-2 rounded-lg shadow-sm"
+                            className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs font-bold px-3.5 py-2 rounded-lg shadow-sm"
                         >
                             Enroll — ₹99
                         </button>

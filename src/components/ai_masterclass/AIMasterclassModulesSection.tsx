@@ -60,15 +60,18 @@ const AIMasterclassModulesSection: React.FC = () => {
     const { openRegisterModal } = useAIMasterclassRegisterModal();
 
     return (
-        <section id="modules" className="py-20 sm:py-24 px-4 bg-slate-50/70 relative">
-            <div className="max-w-6xl mx-auto">
+        <section id="modules" className="py-20 sm:py-24 px-4 bg-gradient-to-b from-slate-50/80 via-white to-slate-50/80 relative overflow-hidden">
+            {/* Background ambient lighting */}
+            <div className="absolute top-1/3 left-10 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
+
+            <div className="max-w-6xl mx-auto relative z-10">
                 <div className="text-center mb-16">
                     <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-white rounded-md text-[11px] font-bold uppercase tracking-widest text-blue-700 border border-slate-200 shadow-2xs mb-4">
                         <BookOpen className="w-3.5 h-3.5 text-blue-600" />
                         <span>Executive Syllabus & Modules</span>
                     </div>
                     <h2 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight mb-4">
-                        Structured <span className="text-blue-600">3-Hour Live Curriculum</span>
+                        Structured <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 bg-clip-text text-transparent">3-Hour Live Curriculum</span>
                     </h2>
                     <p className="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
                         Focused on practical implementation. Every module includes live workflow demonstrations, enterprise tools, and downloadable templates.
@@ -80,14 +83,14 @@ const AIMasterclassModulesSection: React.FC = () => {
                     {modules.map((m) => (
                         <div
                             key={m.id}
-                            className="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-8 hover:border-blue-300 hover:shadow-lg transition-all duration-300 shadow-xs"
+                            className="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-8 hover:border-blue-400/40 shadow-[0_10px_30px_rgba(15,23,42,0.03)] hover:shadow-[0_20px_40px_rgba(15,23,42,0.08)] hover:-translate-y-0.5 transition-all duration-300"
                         >
                             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
                                 {/* Left: Number & Header */}
                                 <div className="lg:col-span-4 flex flex-col justify-between h-full">
                                     <div>
                                         <div className="flex items-center gap-2.5 mb-3">
-                                            <span className="text-[11px] font-bold text-white bg-slate-900 px-3 py-1 rounded-md uppercase tracking-wider">
+                                            <span className="text-[11px] font-bold text-white bg-slate-900 px-3 py-1 rounded-md uppercase tracking-wider shadow-2xs">
                                                 {m.label}
                                             </span>
                                             <span className="text-xs font-semibold text-slate-500 flex items-center gap-1">
@@ -120,7 +123,7 @@ const AIMasterclassModulesSection: React.FC = () => {
                                 </div>
 
                                 {/* Right: Key Topics & Practical Deliverable */}
-                                <div className="lg:col-span-8 bg-slate-50/70 border border-slate-200/80 rounded-xl p-5 sm:p-6 flex flex-col justify-between h-full">
+                                <div className="lg:col-span-8 bg-slate-50/80 border border-slate-200/80 rounded-xl p-5 sm:p-6 flex flex-col justify-between h-full">
                                     <div>
                                         <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-3">
                                             Key Implementation Topics:
@@ -138,8 +141,8 @@ const AIMasterclassModulesSection: React.FC = () => {
                                     </div>
 
                                     {/* Deliverable Badge */}
-                                    <div className="bg-white border border-blue-200 rounded-xl p-3.5 flex items-center gap-3 shadow-2xs">
-                                        <div className="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center shrink-0 font-bold text-xs">
+                                    <div className="bg-white border border-blue-200/80 rounded-xl p-3.5 flex items-center gap-3 shadow-2xs">
+                                        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600 text-white flex items-center justify-center shrink-0 font-bold text-xs shadow-xs">
                                             ✓
                                         </div>
                                         <div>
@@ -161,7 +164,7 @@ const AIMasterclassModulesSection: React.FC = () => {
                 <div className="text-center">
                     <button
                         onClick={openRegisterModal}
-                        className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm sm:text-base px-8 py-4 rounded-xl shadow-lg shadow-blue-600/20 hover:shadow-xl transition-all inline-flex items-center gap-2 cursor-pointer"
+                        className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-sm sm:text-base px-8 py-4 rounded-xl shadow-lg shadow-blue-600/25 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 transition-all inline-flex items-center gap-2 cursor-pointer"
                     >
                         <span>Enroll in the Full 3-Hour Program — ₹99</span>
                         <ArrowRight className="w-4 h-4 text-white" />

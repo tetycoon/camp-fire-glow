@@ -143,15 +143,17 @@ const TestimonialCarousel: React.FC = () => {
   const closeModal = () => setSelected(null);
 
   return (
-    <section className="py-20 sm:py-24 px-4 bg-slate-50/70 border-t border-slate-200/80 relative">
-      <div className="max-w-7xl mx-auto">
+    <section className="py-20 sm:py-24 px-4 bg-gradient-to-b from-white via-slate-50/70 to-white border-t border-slate-200/80 relative overflow-hidden">
+      <div className="absolute top-1/2 right-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto relative z-10">
         <div className="text-center mb-14">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-white rounded-md text-[11px] font-bold uppercase tracking-widest text-blue-700 border border-slate-200 shadow-2xs mb-4">
             <Users className="w-3.5 h-3.5 text-blue-600" />
             <span>Verified Delegate Feedback</span>
           </div>
           <h2 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight mb-4">
-            Trusted By <span className="text-blue-600">Business Leaders & Professionals</span>
+            Trusted By <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 bg-clip-text text-transparent">Business Leaders & Professionals</span>
           </h2>
           <p className="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
             Hear directly from founders, consultants, and corporate executives who have implemented our AI systems.
@@ -170,7 +172,7 @@ const TestimonialCarousel: React.FC = () => {
           {writtenReviews.map((rev, idx) => (
             <div
               key={idx}
-              className="bg-white border border-slate-200/90 rounded-2xl p-6 shadow-xs flex flex-col justify-between"
+              className="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-7 shadow-[0_10px_30px_rgba(15,23,42,0.04)] hover:shadow-[0_20px_40px_rgba(15,23,42,0.08)] hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
             >
               <div>
                 <div className="flex items-center gap-1 text-amber-400 mb-3">

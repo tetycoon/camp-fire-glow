@@ -27,35 +27,35 @@ const AIMasterclassTrainerSection: React.FC = () => {
                         <span>Program Lead & Faculty</span>
                     </div>
                     <h2 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight mb-4">
-                        Led By An <span className="text-blue-600">Industry AI Practitioner</span>
+                        Led By An <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 bg-clip-text text-transparent">Industry AI Practitioner</span>
                     </h2>
                     <p className="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
                         Learn the exact production-tested AI workflows used daily to advise corporate leadership teams and scale digital operations.
                     </p>
                 </div>
 
-                <div className="bg-slate-50/70 rounded-2xl p-7 sm:p-10 lg:p-12 border border-slate-200/90 shadow-lg">
+                <div className="bg-gradient-to-b from-white via-slate-50/80 to-slate-50 rounded-2xl p-7 sm:p-10 lg:p-12 border border-slate-200/90 shadow-[0_20px_50px_rgba(15,23,42,0.06)]">
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
                         {/* Left Side: Trainer Photo & Badges */}
                         <div className="lg:col-span-5 flex flex-col items-center">
                             <div className="relative">
                                 {/* Corporate accent glow ring */}
-                                <div className="absolute -inset-2 bg-gradient-to-tr from-slate-900 via-blue-600 to-indigo-500 rounded-2xl opacity-20 blur-lg" />
+                                <div className="absolute -inset-3 bg-gradient-to-tr from-slate-900 via-blue-600 to-indigo-500 rounded-2xl opacity-20 blur-xl pointer-events-none" />
 
                                 <img
                                     src={trainerImg}
                                     alt="Antony Praveen - AI Lead Trainer"
-                                    className="relative z-10 w-64 h-64 sm:w-80 sm:h-80 rounded-2xl object-cover shadow-xl border-2 border-white"
+                                    className="relative z-10 w-64 h-64 sm:w-80 sm:h-80 rounded-2xl object-cover shadow-2xl border-2 border-white"
                                 />
 
                                 {/* Verified Trainer Pill */}
-                                <div className="absolute top-4 left-4 z-20 bg-slate-900/95 backdrop-blur-md border border-slate-700 text-white rounded-md px-3 py-1 flex items-center gap-1.5 shadow-md">
+                                <div className="absolute top-4 left-4 z-20 bg-slate-900/95 backdrop-blur-md border border-slate-700/80 text-white rounded-md px-3 py-1 flex items-center gap-1.5 shadow-md">
                                     <ShieldCheck className="w-3.5 h-3.5 text-blue-400" />
                                     <span className="text-[10px] font-bold uppercase tracking-wider text-white">Lead Faculty</span>
                                 </div>
 
                                 {/* Floating Rating Badge */}
-                                <div className="absolute -bottom-5 -right-3 sm:-right-5 z-20 bg-white border border-slate-200 text-slate-900 rounded-xl px-4 py-3 text-center shadow-lg">
+                                <div className="absolute -bottom-5 -right-3 sm:-right-5 z-20 bg-white/95 backdrop-blur-sm border border-slate-200 text-slate-900 rounded-xl px-4 py-3 text-center shadow-xl">
                                     <div className="flex items-center justify-center gap-0.5 text-amber-500 mb-0.5">
                                         {[...Array(5)].map((_, i) => (
                                             <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
