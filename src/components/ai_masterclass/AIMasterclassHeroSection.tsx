@@ -221,7 +221,7 @@ const AIMasterclassHeroSection: React.FC = () => {
                                         <Video className="w-4 h-4" />
                                     </div>
                                     <div>
-                                        <div className="text-sm font-bold text-slate-900">Live Online via Zoom</div>
+                                        <div className="text-sm font-bold text-slate-900">Live Online</div>
                                         <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Joining Credentials Sent via WhatsApp & Email</div>
                                     </div>
                                 </div>
@@ -229,18 +229,7 @@ const AIMasterclassHeroSection: React.FC = () => {
 
                             {/* Ticket Price & Direct CTA */}
                             <div className="pt-2 border-t border-slate-100">
-                                <div className="flex items-center justify-between mb-3.5">
-                                    <div>
-                                        <div className="flex items-baseline gap-2">
-                                            <span className="text-3xl font-black text-slate-900 leading-none">₹99</span>
-                                            <span className="text-sm font-semibold text-slate-400 line-through">₹999</span>
-                                        </div>
-                                        <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wide">Inclusive of 18% GST • GST Invoice Provided</span>
-                                    </div>
-                                    <span className="text-[11px] font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-md">
-                                        90% Corporate Subsidy
-                                    </span>
-                                </div>
+                                
 
                                 <button
                                     onClick={openRegisterModal}

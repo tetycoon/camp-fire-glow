@@ -54,7 +54,6 @@ const AIMasterclassFooter: React.FC = () => {
                             <li><a href="#about" className="hover:text-white transition-colors">Executive Overview</a></li>
                             <li><a href="#modules" className="hover:text-white transition-colors">Curriculum & Modules</a></li>
                             <li><a href="#trainer" className="hover:text-white transition-colors">Lead Faculty</a></li>
-                            <li><a href="#bonuses" className="hover:text-white transition-colors">Resource Toolkit</a></li>
                             <li><a href="#pricing" className="hover:text-white transition-colors">Program Fee & Schedule</a></li>
                             <li><a href="#faq" className="hover:text-white transition-colors">FAQ</a></li>
                         </ul>

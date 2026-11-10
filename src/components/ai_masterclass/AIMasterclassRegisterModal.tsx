@@ -7,6 +7,7 @@ import { getMasterclassDateStrings } from "../../lib/masterclassDateUtils";
 import { countryCodes } from "../../lib/countryCodes";
 import { calculateInclusiveGstBreakdown, isValidGstin, sanitizeTextInput, isAuthorizedTestEmail } from "../../lib/gstUtils";
 import GstPriceBreakdown from "../common/GstPriceBreakdown";
+import antonyImg from "@/assets/antony_full.jpg";
 
 const RAZORPAY_KEY_ID = "rzp_live_T2CbVONQc6qrqj";
 const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycby0fX7tjbOciJbg0Mw1SRMhlazBe4FG1Ko-f5mIFCW6Y7zGKHGZjdUZQKXclfye1FzegA/exec";
@@ -33,7 +34,7 @@ const AIMasterclassRegisterModal: React.FC = () => {
     const navigate = useNavigate();
     const purchaseTrackedRef = useRef(false);
     const leadTrackedRef = useRef(false);
-    const { isOpen, closeRegisterModal } = useAIMasterclassRegisterModal();
+    const { isOpen, initialIncludePdfMaterial, closeRegisterModal } = useAIMasterclassRegisterModal();
     const { regularDate, orderedSlots, wednesdaySlot, fridaySlot, sundaySlot, nextSession } = getMasterclassDateStrings();
     const [preferredSlotId, setPreferredSlotId] = useState<"wednesday" | "friday" | "sunday">(nextSession.id);
     const selectedSlot = orderedSlots.find(s => s.id === preferredSlotId) || nextSession;
@@ -49,6 +50,7 @@ const AIMasterclassRegisterModal: React.FC = () => {
     const [visible, setVisible] = useState(false);
     const [discountApplied, setDiscountApplied] = useState(false);
     const [affiliateId, setAffiliateId] = useState<string>("");
+    const [includePdfMaterial, setIncludePdfMaterial] = useState(false);
 
     useEffect(() => {
         const id = sessionStorage.getItem("ai_affiliate_id") || localStorage.getItem("ai_affiliate_id") || "";
@@ -57,7 +59,9 @@ const AIMasterclassRegisterModal: React.FC = () => {
         }
     }, [isOpen]);
 
-    const inclusiveSessionPrice = 99 * seatsCount;
+    const basePricePerSeat = 99;
+    const pdfMaterialPrice = 400; // Add-on: ₹400 for PDF material, total ₹499
+    const inclusiveSessionPrice = (basePricePerSeat + (includePdfMaterial ? pdfMaterialPrice : 0)) * seatsCount;
     const { baseAmount: baseSessionAmount, gstAmount, totalAmount, totalInPaise } = calculateInclusiveGstBreakdown(inclusiveSessionPrice);
 
     // Country code search state
@@ -90,6 +94,7 @@ const AIMasterclassRegisterModal: React.FC = () => {
 
     useEffect(() => {
         if (isOpen) {
+            setIncludePdfMaterial(initialIncludePdfMaterial);
             requestAnimationFrame(() => setVisible(true));
             document.body.style.overflow = "hidden";
         } else {
@@ -97,7 +102,7 @@ const AIMasterclassRegisterModal: React.FC = () => {
             document.body.style.overflow = "";
         }
         return () => { document.body.style.overflow = ""; };
-    }, [isOpen]);
+    }, [isOpen, initialIncludePdfMaterial]);
 
     const handleClose = () => {
         setVisible(false);
@@ -110,6 +115,7 @@ const AIMasterclassRegisterModal: React.FC = () => {
                 setCompanyName("");
                 setDiscountApplied(false);
                 setPreferredSlotId(nextSession.id);
+                setIncludePdfMaterial(false);
             }
         }, 300);
     };
@@ -174,8 +180,10 @@ const AIMasterclassRegisterModal: React.FC = () => {
                     phone: `${form.countryCode}${form.phone.replace(/\D/g, "")}`,
                     countryCode: form.countryCode,
                     language: form.language,
-                    batch: `Masterclass 2026 (${selectedSlot.timingLabel})`,
+                    batch: `Masterclass 2026 (${selectedSlot.timingLabel})` + (includePdfMaterial ? " + Session Material (PDF)" : ""),
                     preferredSlot: selectedSlot.fullLabel,
+                    hasPdfMaterial: includePdfMaterial ? "YES" : "NO",
+                    course: includePdfMaterial ? "AI Secrets Revealed Masterclass + Session Material (PDF)" : "AI Secrets Revealed Masterclass",
                     baseAmount: isTestEmail ? 1 : baseSessionAmount,
                     gstAmount: isTestEmail ? 0 : gstAmount,
                     amount: isTestEmail ? 1 : totalAmount,
@@ -201,13 +209,16 @@ const AIMasterclassRegisterModal: React.FC = () => {
                 amount: finalAmount,
                 currency: "INR",
                 name: "TECH TYCOON DIGITAL SOLUTION LLP",
-                description: `AI Marketing Masterclass — ${selectedSlot.timingLabel} on ${selectedSlot.dateString} (${seatsCount} Seats, Incl. 18% GST)`,
+                description: `${includePdfMaterial ? "AI Secrets Revealed + Session Material (PDF)" : "AI Secrets Revealed Masterclass"} — ${selectedSlot.timingLabel} on ${selectedSlot.dateString} (${seatsCount} Seats, Incl. 18% GST)`,
                 prefill: {
                     name: safeName,
                     email: safeEmail,
                     contact: `${form.countryCode}${form.phone.replace(/\D/g, "")}`,
                 },
                 notes: {
+                    product_key: "ai_masterclass",
+                    course: includePdfMaterial ? "AI Secrets Revealed Masterclass + Session Material (PDF)" : "AI Secrets Revealed Masterclass",
+                                        hasPdfMaterial: includePdfMaterial ? "YES" : "NO",
                     batch: `Masterclass: ${form.profession} (${form.language})`,
                     preferredSlot: selectedSlot.fullLabel,
                     sessionDate: selectedSlot.regularDate,
@@ -252,7 +263,9 @@ const AIMasterclassRegisterModal: React.FC = () => {
                                 companyName: safeCompany,
                                 gstin: safeGstin,
                                 affiliateId: affiliateId || "",
-                                leadSource: affiliateId ? `Affiliate (${affiliateId})` : "Direct"
+                                leadSource: affiliateId ? `Affiliate (${affiliateId})` : "Direct",
+                                hasPdfMaterial: includePdfMaterial ? "YES" : "NO",
+                                course: includePdfMaterial ? "AI Secrets Revealed Masterclass + Session Material (PDF)" : "AI Secrets Revealed Masterclass"
                             })
                         });
                         const verifyData = await verifyRes.json();
@@ -332,7 +345,13 @@ const AIMasterclassRegisterModal: React.FC = () => {
                                 token,
                                 invoice: verifyData.invoice,
                                 backendUrl: GOOGLE_SHEET_URL,
-                                alreadyTrackedPurchase: true
+                                alreadyTrackedPurchase: true,
+                                name: safeName,
+                                email: safeEmail,
+                                phone: `${form.countryCode}${form.phone.replace(/\D/g, "")}`,
+                                course: includePdfMaterial ? "AI Secrets Revealed Masterclass + Session Material (PDF)" : "AI Secrets Revealed Masterclass",
+                                amount: totalAmount,
+                                hasPdfMaterial: includePdfMaterial ? "YES" : "NO"
                             }
                         });
                     } catch {
@@ -390,6 +409,8 @@ const AIMasterclassRegisterModal: React.FC = () => {
                                 Register <span className="text-blue-600">Now</span>
                             </h2>
                             <p className="text-xs text-slate-500 mt-0.5">3-Hour Live Interactive Masterclass • Just ₹99 (Incl. 18% GST)</p>
+                            
+                            
                             <div className="mt-2 inline-flex items-center gap-1.5 bg-blue-50 border border-blue-200 text-blue-700 px-3 py-1 rounded-full text-xs font-bold tracking-wide">
                                 <span>📅 Selected: {selectedSlot.fullLabel}</span>
                             </div>
@@ -546,36 +567,44 @@ const AIMasterclassRegisterModal: React.FC = () => {
                                 </div>
                             </div>
 
-                            <div className="space-y-1">
-                                <label className="text-[10px] font-bold text-slate-700 uppercase tracking-wider ml-0.5">Current Profession</label>
-                                <select
-                                    required
-                                    value={form.profession}
-                                    onChange={e => setForm({ ...form, profession: e.target.value })}
-                                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm text-slate-900 focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none appearance-none cursor-pointer"
-                                >
-                                    <option value="" className="text-slate-500">Select your profession...</option>
-                                    <option value="Trainer / Coach">Trainer / Coach</option>
-                                    <option value="Entrepreneur">Entrepreneur</option>
-                                    <option value="Business Owner">Business Owner</option>
-                                    <option value="Educator">Educator</option>
-                                    <option value="IT Professional">IT Professional</option>
-                                    <option value="Student">Student</option>
-                                    <option value="Other">Other</option>
-                                </select>
+                            {/* Add-on Order Bump: Masterclass Session Material (PDF) */}
+                            <div
+                                onClick={() => setIncludePdfMaterial(!includePdfMaterial)}
+                                className={`p-3 sm:p-3.5 rounded-xl border transition-all cursor-pointer select-none text-left ${
+                                    includePdfMaterial
+                                        ? "bg-blue-50/90 border-2 border-blue-600 shadow-xs"
+                                        : "bg-slate-50 hover:bg-slate-100/80 border-slate-200"
+                                }`}
+                            >
+                                <div className="flex items-start gap-2.5">
+                                    <input
+                                        type="checkbox"
+                                        id="pdf-material-opt-in"
+                                        checked={includePdfMaterial}
+                                        onChange={(e) => setIncludePdfMaterial(e.target.checked)}
+                                        onClick={(e) => e.stopPropagation()}
+                                        className="mt-1 w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 accent-blue-600 cursor-pointer"
+                                    />
+                                    <div className="flex-1 min-w-0">
+                                        <div className="flex items-center justify-between gap-1.5 flex-wrap">
+                                            <label
+                                                htmlFor="pdf-material-opt-in"
+                                                className="text-xs sm:text-sm font-bold text-slate-900 cursor-pointer flex items-center gap-1.5"
+                                            >
+                                                <span>📑 Add Session Material (PDF)</span>
+                                            </label>
+                                            <span className="text-[10px] font-black text-blue-700 bg-blue-100/90 border border-blue-200 px-2 py-0.5 rounded-md">
+                                                Total ₹499
+                                            </span>
+                                        </div>
+                                        <p className="text-[11px] text-slate-600 mt-1 leading-relaxed">
+                                            Get complete live session training material, frameworks & structured AI workflows in downloadable high-res PDF format. Sent directly to your registered email.
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
 
-                            <GstPriceBreakdown
-                                baseAmount={inclusiveSessionPrice} inclusive={true}
-                                claimGst={claimGst}
-                                onClaimGstChange={setClaimGst}
-                                gstin={gstin}
-                                onGstinChange={setGstin}
-                                companyName={companyName}
-                                onCompanyNameChange={setCompanyName}
-                                theme="light"
-                                label="Masterclass Seat Fee"
-                            />
+                            
 
                             <div className="text-[11px] text-amber-800 bg-amber-50 border border-amber-200/80 rounded-lg py-1 px-2.5 text-center font-medium">
                                 ⚠️ Note: We do not provide recorded sessions. Live attendance is required.

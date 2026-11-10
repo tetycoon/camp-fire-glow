@@ -49,9 +49,6 @@ const AIMasterclassNavbar: React.FC = () => {
                         <button onClick={() => scrollTo("trainer")} className="hover:text-blue-600 transition-colors cursor-pointer">
                             Lead Trainer
                         </button>
-                        <button onClick={() => scrollTo("bonuses")} className="hover:text-blue-600 transition-colors cursor-pointer">
-                            Resources
-                        </button>
                         <button onClick={() => scrollTo("pricing")} className="hover:text-blue-600 transition-colors cursor-pointer">
                             Registration Fee
                         </button>
@@ -109,9 +106,6 @@ const AIMasterclassNavbar: React.FC = () => {
                         </button>
                         <button onClick={() => scrollTo("trainer")} className="text-left py-2.5 border-b border-slate-100">
                             Lead Instructor
-                        </button>
-                        <button onClick={() => scrollTo("bonuses")} className="text-left py-2.5 border-b border-slate-100">
-                            Executive Resource Suite
                         </button>
                         <button onClick={() => scrollTo("pricing")} className="text-left py-2.5 border-b border-slate-100">
                             Fee & Schedule

@@ -108,7 +108,7 @@ const AIMasterclassTrainerSection: React.FC = () => {
                                     Antony Praveen
                                 </h3>
                                 <p className="text-sm font-bold text-slate-500 mb-5 uppercase tracking-wide">
-                                    Founder, TECH TYCOON DIGITAL SOLUTION LLP
+                                    AI ENGINEER
                                 </p>
 
                                 {/* Executive Quote Card */}
