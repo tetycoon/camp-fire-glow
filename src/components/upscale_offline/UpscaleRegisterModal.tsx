@@ -426,138 +426,139 @@ const UpscaleRegisterModal: React.FC = () => {
                                             onChange={e => setForm({...form, email: e.target.value})}
                                         />
                                     </div>
-                                </div>
 
-                                <div className="space-y-1">
-                                    <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider px-0.5">WhatsApp Number</label>
-                                    <div className="flex gap-2">
-                                        {/* Searchable Country Code Picker */}
-                                        <div className="relative shrink-0" ref={countryDropdownRef} style={{ width: '110px' }}>
-                                            <button
-                                                type="button"
-                                                onClick={() => {
-                                                    setShowCountryDropdown(!showCountryDropdown);
-                                                    setCountrySearch("");
-                                                    setTimeout(() => countryInputRef.current?.focus(), 50);
-                                                }}
-                                                className="w-full bg-slate-50 border border-slate-300 rounded-xl px-2 py-2 text-sm text-slate-900 outline-none focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all cursor-pointer flex items-center justify-center gap-1"
-                                            >
-                                                <span className="text-base leading-none">{selectedCountry.flag}</span>
-                                                <span className="font-bold text-xs">{selectedCountry.code}</span>
-                                                <svg className="w-3 h-3 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
-                                            </button>
+                                    {/* WhatsApp Number (Row 2, Col 1) */}
+                                    <div className="space-y-1">
+                                        <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider px-0.5">WhatsApp Number</label>
+                                        <div className="flex gap-2">
+                                            {/* Searchable Country Code Picker */}
+                                            <div className="relative shrink-0" ref={countryDropdownRef} style={{ width: '105px' }}>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        setShowCountryDropdown(!showCountryDropdown);
+                                                        setCountrySearch("");
+                                                        setTimeout(() => countryInputRef.current?.focus(), 50);
+                                                    }}
+                                                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-2 py-2 text-sm text-slate-900 outline-none focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all cursor-pointer flex items-center justify-center gap-1"
+                                                >
+                                                    <span className="text-base leading-none">{selectedCountry.flag}</span>
+                                                    <span className="font-bold text-xs">{selectedCountry.code}</span>
+                                                    <svg className="w-3 h-3 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                                                </button>
 
-                                            {showCountryDropdown && (
-                                                <div className="absolute top-full left-0 mt-1 w-64 max-h-56 rounded-xl bg-white border border-slate-200 shadow-2xl z-50 overflow-hidden flex flex-col">
-                                                    <div className="p-2 border-b border-slate-100 flex items-center gap-2 bg-slate-50">
-                                                        <Search className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                                                        <input
-                                                            ref={countryInputRef}
-                                                            type="text"
-                                                            value={countrySearch}
-                                                            onChange={e => setCountrySearch(e.target.value)}
-                                                            placeholder="Search..."
-                                                            className="w-full bg-transparent text-xs text-slate-900 placeholder:text-slate-400 outline-none"
-                                                            autoComplete="off"
-                                                        />
+                                                {showCountryDropdown && (
+                                                    <div className="absolute top-full left-0 mt-1 w-64 max-h-56 rounded-xl bg-white border border-slate-200 shadow-2xl z-50 overflow-hidden flex flex-col">
+                                                        <div className="p-2 border-b border-slate-100 flex items-center gap-2 bg-slate-50">
+                                                            <Search className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                                                            <input
+                                                                ref={countryInputRef}
+                                                                type="text"
+                                                                value={countrySearch}
+                                                                onChange={e => setCountrySearch(e.target.value)}
+                                                                placeholder="Search..."
+                                                                className="w-full bg-transparent text-xs text-slate-900 placeholder:text-slate-400 outline-none"
+                                                                autoComplete="off"
+                                                            />
+                                                        </div>
+                                                        <div className="overflow-y-auto flex-1 max-h-44">
+                                                            {filteredCountries.length === 0 ? (
+                                                                <div className="px-3 py-2 text-xs text-slate-400 text-center">No results</div>
+                                                            ) : (
+                                                                filteredCountries.map((c, idx) => (
+                                                                    <button
+                                                                        key={`${c.iso}-${idx}`}
+                                                                        type="button"
+                                                                        onClick={() => {
+                                                                            setSelectedCountry(c);
+                                                                            setForm({ ...form, countryCode: c.code });
+                                                                            setShowCountryDropdown(false);
+                                                                            setCountrySearch("");
+                                                                        }}
+                                                                        className={`w-full flex items-center gap-2 px-3 py-1.5 text-xs hover:bg-blue-50 transition-colors text-left ${
+                                                                            selectedCountry.iso === c.iso && selectedCountry.code === c.code ? 'bg-blue-50 text-blue-600 font-bold' : 'text-slate-700'
+                                                                        }`}
+                                                                    >
+                                                                        <span className="text-sm leading-none w-5 text-center">{c.flag}</span>
+                                                                        <span className="flex-1 truncate">{c.name}</span>
+                                                                        <span className="text-[10px] text-slate-400 font-mono">{c.code}</span>
+                                                                    </button>
+                                                                ))
+                                                            )}
+                                                        </div>
                                                     </div>
-                                                    <div className="overflow-y-auto flex-1 max-h-44">
-                                                        {filteredCountries.length === 0 ? (
-                                                            <div className="px-3 py-2 text-xs text-slate-400 text-center">No results</div>
-                                                        ) : (
-                                                            filteredCountries.map((c, idx) => (
-                                                                <button
-                                                                    key={`${c.iso}-${idx}`}
-                                                                    type="button"
-                                                                    onClick={() => {
-                                                                        setSelectedCountry(c);
-                                                                        setForm({ ...form, countryCode: c.code });
-                                                                        setShowCountryDropdown(false);
-                                                                        setCountrySearch("");
-                                                                    }}
-                                                                    className={`w-full flex items-center gap-2 px-3 py-1.5 text-xs hover:bg-blue-50 transition-colors text-left ${
-                                                                        selectedCountry.iso === c.iso && selectedCountry.code === c.code ? 'bg-blue-50 text-blue-600 font-bold' : 'text-slate-700'
-                                                                    }`}
-                                                                >
-                                                                    <span className="text-sm leading-none w-5 text-center">{c.flag}</span>
-                                                                    <span className="flex-1 truncate">{c.name}</span>
-                                                                    <span className="text-[10px] text-slate-400 font-mono">{c.code}</span>
-                                                                </button>
-                                                            ))
-                                                        )}
-                                                    </div>
-                                                </div>
+                                                )}
+                                            </div>
+                                            <input 
+                                                required 
+                                                type="tel" 
+                                                placeholder="Mobile Number" 
+                                                className="flex-1 min-w-0 bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm text-slate-900 outline-none focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all"
+                                                value={form.phone}
+                                                onChange={e => setForm({...form, phone: e.target.value.replace(/\D/g, '')})}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* Coupon Code Section (Row 2, Col 2) */}
+                                    <div className="space-y-1">
+                                        <div className="flex items-center justify-between px-0.5">
+                                            <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider flex items-center gap-1">
+                                                <Tag className="w-3 h-3 text-blue-600" /> Coupon Code
+                                            </label>
+                                            {isCouponValid && (
+                                                <span className="text-[10px] font-bold text-emerald-600 flex items-center gap-1">
+                                                    <Check className="w-3 h-3" /> ₹1,500 OFF
+                                                </span>
                                             )}
                                         </div>
-                                        <input 
-                                            required 
-                                            type="tel" 
-                                            placeholder="Mobile Number" 
-                                            className="flex-1 min-w-0 bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm text-slate-900 outline-none focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all"
-                                            value={form.phone}
-                                            onChange={e => setForm({...form, phone: e.target.value.replace(/\D/g, '')})}
-                                        />
-                                    </div>
-                                </div>
-
-                                {/* Coupon Code Section */}
-                                <div className="space-y-1">
-                                    <div className="flex items-center justify-between px-0.5">
-                                        <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider flex items-center gap-1">
-                                            <Tag className="w-3 h-3 text-blue-600" /> Have a Coupon Code?
-                                        </label>
-                                        {isCouponValid && (
-                                            <span className="text-[10px] font-bold text-emerald-600 flex items-center gap-1">
-                                                <Check className="w-3 h-3" /> ₹1,500 OFF Applied
-                                            </span>
+                                        <div className="flex gap-2">
+                                            <input 
+                                                type="text" 
+                                                placeholder="e.g. RMDAMIABLE" 
+                                                disabled={isCouponValid}
+                                                value={couponInput}
+                                                onChange={e => {
+                                                    setCouponInput(e.target.value.toUpperCase());
+                                                    if (couponError) setCouponError("");
+                                                }}
+                                                onKeyDown={e => {
+                                                    if (e.key === "Enter") {
+                                                        e.preventDefault();
+                                                        handleApplyCoupon(e);
+                                                    }
+                                                }}
+                                                className="flex-1 min-w-0 bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs sm:text-sm font-semibold tracking-wider text-slate-900 uppercase placeholder:normal-case placeholder:font-normal placeholder:tracking-normal placeholder:text-slate-400 outline-none focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-100 disabled:text-slate-500 transition-all"
+                                            />
+                                            {isCouponValid ? (
+                                                <button
+                                                    type="button"
+                                                    onClick={handleRemoveCoupon}
+                                                    className="bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer shrink-0"
+                                                >
+                                                    Remove
+                                                </button>
+                                            ) : (
+                                                <button
+                                                    type="button"
+                                                    onClick={handleApplyCoupon}
+                                                    className="bg-blue-600 hover:bg-blue-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold transition-all shadow-sm shadow-blue-500/20 active:scale-95 cursor-pointer shrink-0"
+                                                >
+                                                    Apply
+                                                </button>
+                                            )}
+                                        </div>
+                                        {couponSuccess && (
+                                            <p className="text-[10px] font-semibold text-emerald-600 px-1 pt-0.5 truncate">
+                                                {couponSuccess}
+                                            </p>
+                                        )}
+                                        {couponError && (
+                                            <p className="text-[10px] font-semibold text-red-500 px-1 pt-0.5 truncate">
+                                                {couponError}
+                                            </p>
                                         )}
                                     </div>
-                                    <div className="flex gap-2">
-                                        <input 
-                                            type="text" 
-                                            placeholder="Enter Coupon Code" 
-                                            disabled={isCouponValid}
-                                            value={couponInput}
-                                            onChange={e => {
-                                                setCouponInput(e.target.value.toUpperCase());
-                                                if (couponError) setCouponError("");
-                                            }}
-                                            onKeyDown={e => {
-                                                if (e.key === "Enter") {
-                                                    e.preventDefault();
-                                                    handleApplyCoupon(e);
-                                                }
-                                            }}
-                                            className="flex-1 bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2 text-xs sm:text-sm font-semibold tracking-wider text-slate-900 uppercase placeholder:normal-case placeholder:font-normal placeholder:tracking-normal placeholder:text-slate-400 outline-none focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-100 disabled:text-slate-500 transition-all"
-                                        />
-                                        {isCouponValid ? (
-                                            <button
-                                                type="button"
-                                                onClick={handleRemoveCoupon}
-                                                className="bg-slate-200 hover:bg-slate-300 text-slate-700 px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer"
-                                            >
-                                                Remove
-                                            </button>
-                                        ) : (
-                                            <button
-                                                type="button"
-                                                onClick={handleApplyCoupon}
-                                                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-sm shadow-blue-500/20 active:scale-95 cursor-pointer"
-                                            >
-                                                Apply
-                                            </button>
-                                        )}
-                                    </div>
-                                    {couponSuccess && (
-                                        <p className="text-[11px] font-semibold text-emerald-600 px-1 pt-0.5 animate-in fade-in">
-                                            {couponSuccess}
-                                        </p>
-                                    )}
-                                    {couponError && (
-                                        <p className="text-[11px] font-semibold text-red-500 px-1 pt-0.5 animate-in fade-in">
-                                            {couponError}
-                                        </p>
-                                    )}
                                 </div>
 
                                 <div className="flex items-start gap-2 px-0.5">
