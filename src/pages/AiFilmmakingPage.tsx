@@ -31,6 +31,7 @@ import aiProductCommercial from '../assets/ai_product_commercial.jpg';
 import aiPixarCharacter from '../assets/ai_pixar_character.jpg';
 import aiBrandIdent from '../assets/ai_brand_ident.jpg';
 import heroAiFilmmakingStudio from '../assets/hero_ai_filmmaking_studio.jpg';
+import AiFilmmakingLeadGate from '../components/ai_filmmaking/AiFilmmakingLeadGate';
 import event1 from '../assets/event-1.jpg';
 import event2 from '../assets/event-2.jpg';
 import event3 from '../assets/event-3.jpg';
@@ -1016,6 +1017,9 @@ const AiFilmmakingPage: React.FC = () => {
   // ============================================================================
   return (
     <div className="min-h-screen bg-[#040711] text-white selection:bg-blue-600 selection:text-white overflow-x-hidden font-sans pb-20">
+      {/* Lead Capture Popup Modal for Meta Ads & Campaigns */}
+      <AiFilmmakingLeadGate />
+
       {/* CSS Keyframes for 3D Perspective Grid */}
       <style>{`
         @keyframes gridMove3D {
