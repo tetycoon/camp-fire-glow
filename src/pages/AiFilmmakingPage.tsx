@@ -1624,47 +1624,6 @@ const AiFilmmakingPage: React.FC = () => {
       </section>
 
       {/* ====================================================================
-          SECTION 5: REAL WORKSHOP & TRAINING PHOTO GALLERY
-      ==================================================================== */}
-      <section className="py-14 sm:py-24 relative border-t border-white/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
-            <span className="px-3.5 py-1.5 rounded-full bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 text-[11px] sm:text-xs font-bold uppercase tracking-widest">
-              Real Impact • 10,000+ Learners Trained Across India
-            </span>
-            <h2 className="text-2xl sm:text-4xl font-black mt-3 sm:mt-4 mb-3">
-              Glimpses from Our Live AI Workshops &amp; Corporate Sessions
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
-            {workshopPhotos.map((photo, idx) => (
-              <div
-                key={idx}
-                className="group relative aspect-[16/10] rounded-xl sm:rounded-2xl overflow-hidden border border-white/15 bg-slate-900 shadow-lg"
-              >
-                <img
-                  src={photo.src}
-                  alt={photo.title}
-                  loading="lazy"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent" />
-                <div className="absolute bottom-2.5 left-2.5 right-2.5 sm:bottom-4 sm:left-4 sm:right-4 text-left">
-                  <span className="inline-block px-2 py-0.5 rounded bg-blue-600/90 text-white text-[9px] sm:text-[10px] font-bold uppercase tracking-wider mb-1">
-                    {photo.tag}
-                  </span>
-                  <p className="text-[11px] sm:text-sm font-bold text-white leading-snug line-clamp-1">
-                    {photo.title}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ====================================================================
           SECTION 6: PRICING & OPTIONAL +₹400 SESSION PDF & MATERIAL BUNDLE
       ==================================================================== */}
       <section id="pricing" className="py-14 sm:py-24 bg-[#060a18] border-t border-white/10 relative">

@@ -114,6 +114,7 @@ if (fs.existsSync(claudeSrcDir)) {
 
 
 
+
 // Inject developer cinematic layer right before </head> (after Vite's main CSS) into filmmaking routes & root SPA fallback
 const filmmakingHtmlTargets = [
   path.join('dist', 'index.html'),
@@ -123,7 +124,7 @@ const filmmakingHtmlTargets = [
   path.join('dist', 'ai_video_generation', 'index.html'),
   path.join('dist', 'ai-video-generation', 'index.html')
 ];
-const cfxTags = '  <link rel="stylesheet" href="/ai_filmmaking/fx/cinematic.css?v=3" />\n  <script defer src="/ai_filmmaking/fx/cinematic.js?v=3"></script>\n</head>';
+const cfxTags = '  <link rel="stylesheet" href="/ai_filmmaking/fx/cinematic.css?v=6" />\n  <script defer src="/ai_filmmaking/fx/cinematic.js?v=6"></script>\n</head>';
 filmmakingHtmlTargets.forEach(htmlPath => {
   if (fs.existsSync(htmlPath)) {
     let html = fs.readFileSync(htmlPath, 'utf8');
