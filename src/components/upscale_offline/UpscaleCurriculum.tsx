@@ -31,12 +31,6 @@ const schedule = [
         title: "AI Video Creation Mastery",
         desc: "Mastering consistent AI avatars and high-end video production to dominate your industry's visual space.",
         type: "session"
-    },
-    {
-        time: "05:15 PM",
-        title: "Certification & Strategy",
-        desc: "Awarding physical certificates and a final deep-dive Q&A session for personalized roadmaps.",
-        type: "session"
     }
 ];
 

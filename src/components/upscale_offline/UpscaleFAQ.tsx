@@ -12,7 +12,7 @@ const faqs = [
     },
     {
         q: "What's included in the ₹6,499 fee?",
-        a: "Everything: Full-day workshop (9:00 AM – 5:30 PM), printed practical workbook, executive networking lunch, morning and evening tea/coffee, post-event WhatsApp support group, and a participation certificate with no additional GST added."
+        a: "Everything: Full-day workshop (9:00 AM – 5:30 PM), printed practical workbook, executive networking lunch, morning and evening tea/coffee, and post-event WhatsApp support group."
     },
     {
         q: "Is there a refund policy?",
