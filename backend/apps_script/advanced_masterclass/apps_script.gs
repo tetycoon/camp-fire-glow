@@ -206,7 +206,7 @@ const WHATSAPP_CONFIG = {
   PHONE_NUMBER: "917010340494", 
   WA_GROUP_LINK: "https://chat.whatsapp.com/LABV7lxs19RAlwqHzlsgRw", // AI Secrets Revealed Community Group
   WA_COMMUNITY_LINK: "https://chat.whatsapp.com/EpsuzpxGz6F98ml2GUBejC", // WhatsApp Community
-  WA_GROUP_LINK_CLAUDE_ONLINE: "https://chat.whatsapp.com/HfVfYc6ea7iEHAMFjOb4WS", // Claude Online Group
+  WA_GROUP_LINK_CLAUDE_ONLINE: "https://chat.whatsapp.com/GgMP8b9Z5HIKn5duwqgnwU", // Claude Online Group
   WA_GROUP_LINK_CLAUDE_OFFLINE: "https://chat.whatsapp.com/DMp2tRRhjwN1fziYujeQhb", // Claude Offline Group
   POSTER_URL: "https://aitycoon.in/images/AI_Secrets_Revealed_Banner.jpg" 
 };
@@ -396,6 +396,34 @@ function doPost(e) {
 // ------------------------------------------------------------
 // 3. WHATSAPP & EMAIL LOGIC (ALL WORKSHOPS)
 // ------------------------------------------------------------
+
+function getUpcomingClaudeWeekend() {
+  const now = new Date();
+  const minSat = new Date(2026, 10, 14, 17, 30, 0); // Baseline minimum Saturday: November 14, 2026
+  const day = now.getDay();
+  let daysUntilSat = (6 - day + 7) % 7;
+  // Saturday 6:00 PM (18:00) IST cutoff: automatically rolls over to next week's Saturday & Sunday
+  if (day === 6 && now.getHours() >= 18) {
+    daysUntilSat = 7;
+  } else if (day === 0) {
+    daysUntilSat = 6;
+  }
+  let nextSat = new Date(now.getFullYear(), now.getMonth(), now.getDate() + daysUntilSat, 17, 30, 0);
+  if (nextSat.getTime() < minSat.getTime()) {
+    nextSat = minSat;
+  }
+  const nextSun = new Date(nextSat.getFullYear(), nextSat.getMonth(), nextSat.getDate() + 1, 17, 30, 0);
+  const fullMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  const satM = fullMonths[nextSat.getMonth()];
+  const sunM = fullMonths[nextSun.getMonth()];
+  const satDay = nextSat.getDate();
+  const sunDay = nextSun.getDate();
+  const year = nextSat.getFullYear();
+  const isSameMonth = satM === sunM;
+  const dateRange = isSameMonth ? (satM + " " + satDay + " & " + sunDay + ", " + year) : (satM + " " + satDay + " & " + sunM + " " + sunDay + ", " + year);
+  return dateRange + " (Saturday & Sunday)";
+}
+
 function handleWhatsAppIncoming(body) {
   const message = body.entry?.[0]?.changes?.[0]?.value?.messages?.[0];
   if (!message || !message.text?.body) return;
@@ -438,7 +466,7 @@ function handleWhatsAppIncoming(body) {
       let welcomeMsg = "Welcome! 🎉 Your registration is confirmed for the Claude MasterClass (Online Live Session).\n\n";
       welcomeMsg += `📍 Platform: Online Live Classroom\n`;
       welcomeMsg += `📅 Date: August 22nd & 23rd, 2026 (Sat & Sun)\n`;
-      welcomeMsg += `🕒 Time: 6:00 PM – 9:00 PM IST\n\n`;
+      welcomeMsg += `🕒 Time: 5:30 PM – 8:30 PM IST\n\n`;
       welcomeMsg += "Please join our exclusive Online WhatsApp Community below to receive session links:\n" + WHATSAPP_CONFIG.WA_GROUP_LINK_CLAUDE_ONLINE;
       
       sendWhatsAppText(phone, welcomeMsg);
@@ -482,6 +510,7 @@ function sanitizeCell(val) {
 const TOTAL_TO_EXACT_BASE_MAP = {
   117: 99,
   471: 399,
+  500: 500,
   589: 499,
   943: 799,
   1179: 999,
@@ -491,6 +520,7 @@ const TOTAL_TO_EXACT_BASE_MAP = {
   2950: 2500,
   3539: 2999,
   4130: 3500,
+  4999: 4999,
   5899: 4999,
   8259: 6999,
   11799: 9999,
