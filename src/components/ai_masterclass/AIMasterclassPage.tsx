@@ -6,7 +6,6 @@ import AIMasterclassWhySection from "./AIMasterclassWhySection";
 import AIMasterclassModulesSection from "./AIMasterclassModulesSection";
 import AIMasterclassTrainerSection from "./AIMasterclassTrainerSection";
 import TestimonialCarousel from "./TestimonialCarousel";
-import AIMasterclassBonusesSection from "./AIMasterclassBonusesSection";
 import AIMasterclassPricingSection from "./AIMasterclassPricingSection";
 import AIMasterclassFAQSection from "./AIMasterclassFAQSection";
 import AIMasterclassFooter from "./AIMasterclassFooter";
@@ -88,7 +87,6 @@ const AIMasterclassPage: React.FC<AIMasterclassPageProps> = ({ showLeadGate = tr
                 <AIMasterclassModulesSection />
                 <AIMasterclassTrainerSection />
                 <TestimonialCarousel />
-                <AIMasterclassBonusesSection />
                 <AIMasterclassPricingSection />
                 <AIMasterclassFAQSection />
                 <AIMasterclassFooter />

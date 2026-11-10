@@ -180,10 +180,10 @@ const AIMasterclassRegisterModal: React.FC = () => {
                     phone: `${form.countryCode}${form.phone.replace(/\D/g, "")}`,
                     countryCode: form.countryCode,
                     language: form.language,
-                    batch: `Masterclass 2026 (${selectedSlot.timingLabel})` + (includePdfMaterial ? " + Session Material (PDF)" : ""),
+                    batch: `Masterclass 2026 (${selectedSlot.timingLabel})` + (includePdfMaterial ? " + Resource Toolkit (₹499)" : ""),
                     preferredSlot: selectedSlot.fullLabel,
                     hasPdfMaterial: includePdfMaterial ? "YES" : "NO",
-                    course: includePdfMaterial ? "AI Secrets Revealed Masterclass + Session Material (PDF)" : "AI Secrets Revealed Masterclass",
+                    course: includePdfMaterial ? "AI Secrets Revealed Masterclass + Resource Toolkit" : "AI Secrets Revealed Masterclass",
                     baseAmount: isTestEmail ? 1 : baseSessionAmount,
                     gstAmount: isTestEmail ? 0 : gstAmount,
                     amount: isTestEmail ? 1 : totalAmount,
@@ -591,14 +591,14 @@ const AIMasterclassRegisterModal: React.FC = () => {
                                                 htmlFor="pdf-material-opt-in"
                                                 className="text-xs sm:text-sm font-bold text-slate-900 cursor-pointer flex items-center gap-1.5"
                                             >
-                                                <span>📑 Add Session Material (PDF)</span>
+                                                <span>📑 Add Resource Toolkit & Session Material</span>
                                             </label>
                                             <span className="text-[10px] font-black text-blue-700 bg-blue-100/90 border border-blue-200 px-2 py-0.5 rounded-md">
                                                 Total ₹499
                                             </span>
                                         </div>
                                         <p className="text-[11px] text-slate-600 mt-1 leading-relaxed">
-                                            Get complete live session training material, frameworks & structured AI workflows in downloadable high-res PDF format. Sent directly to your registered email.
+                                            Includes: <strong>1. Session PDF Material</strong>, <strong>2. 10+ AI Tool Kit</strong>, <strong>3. Multiple AI Agents Link</strong>, and <strong>4. 10+ Secret AI Websites</strong>. Delivered directly to your registered email & WhatsApp.
                                         </p>
                                     </div>
                                 </div>
