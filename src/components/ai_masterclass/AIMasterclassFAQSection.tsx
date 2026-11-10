@@ -36,17 +36,18 @@ const faqs = [
 
 const AIMasterclassFAQSection: React.FC = () => {
     return (
-        <section id="faq" className="py-24 px-4 bg-white border-t border-slate-100">
-            <div className="max-w-4xl mx-auto">
+        <section id="faq" className="py-24 sm:py-28 px-4 bg-[#080b17] border-t border-white/[0.06] relative overflow-hidden">
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-indigo-600/10 rounded-full blur-[130px] pointer-events-none" />
+            <div className="max-w-4xl mx-auto relative">
                 <div className="text-center mb-16">
-                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 rounded-full text-xs font-bold text-slate-700 shadow-sm border border-slate-200 mb-6">
-                        <HelpCircle className="w-4 h-4 text-blue-600" />
+                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-500/10 rounded-full text-xs font-bold text-indigo-200 border border-indigo-400/20 mb-6">
+                        <HelpCircle className="w-4 h-4 text-sky-400" />
                         FREQUENTLY ASKED QUESTIONS
                     </div>
-                    <h2 className="text-4xl sm:text-5xl font-black text-slate-900 mb-6 tracking-tight">
-                        Got <span className="text-blue-600">Questions?</span> We've Got Answers
+                    <h2 className="text-4xl sm:text-5xl font-black text-white mb-6 tracking-tight">
+                        Got <span className="bg-gradient-to-r from-sky-300 via-indigo-300 to-violet-300 bg-clip-text text-transparent">Questions?</span> We've Got Answers
                     </h2>
-                    <p className="text-slate-600 text-lg font-medium max-w-xl mx-auto">
+                    <p className="text-slate-400 text-lg font-medium max-w-xl mx-auto">
                         Everything you need to know about the AI Secrets Revealed Live Masterclass.
                     </p>
                 </div>
@@ -54,12 +55,12 @@ const AIMasterclassFAQSection: React.FC = () => {
                 <div className="space-y-4">
                     <Accordion type="single" collapsible className="w-full space-y-4">
                         {faqs.map((faq, i) => (
-                            <AccordionItem key={i} value={`faq-${i}`} className="border border-slate-200 bg-slate-50/50 rounded-2xl px-6 sm:px-8 data-[state=open]:bg-white data-[state=open]:border-blue-200 data-[state=open]:shadow-xl transition-all duration-300">
+                            <AccordionItem key={i} value={`faq-${i}`} className="border border-white/10 bg-white/[0.03] rounded-2xl px-6 sm:px-8 hover:border-white/20 data-[state=open]:bg-white/[0.05] data-[state=open]:border-indigo-400/40 data-[state=open]:shadow-[0_24px_60px_-30px_rgba(99,102,241,0.7)] transition-all duration-300 [&_svg]:text-sky-300">
                                 <AccordionTrigger className="hover:no-underline py-6 text-left">
-                                    <span className="text-lg sm:text-xl font-black text-slate-900 tracking-tight">{faq.q}</span>
+                                    <span className="text-lg sm:text-xl font-black text-white tracking-tight">{faq.q}</span>
                                 </AccordionTrigger>
                                 <AccordionContent className="pb-8 pt-2">
-                                    <p className="text-slate-600 text-base sm:text-lg leading-relaxed font-medium">
+                                    <p className="text-slate-400 text-base sm:text-lg leading-relaxed font-medium">
                                         {faq.a}
                                     </p>
                                 </AccordionContent>

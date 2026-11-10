@@ -95,7 +95,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ t, openModal }) => {
 
   return (
     <div
-      className="relative w-[320px] sm:w-[350px] h-[200px] flex-shrink-0 rounded-2xl overflow-hidden cursor-pointer snap-start bg-slate-900 border border-slate-200/90 shadow-md hover:shadow-xl hover:scale-[1.01] transition-all duration-300 group"
+      className="relative w-[320px] sm:w-[350px] h-[200px] flex-shrink-0 rounded-2xl overflow-hidden cursor-pointer snap-start bg-slate-900 border border-white/10 hover:border-indigo-400/50 shadow-lg shadow-black/40 hover:shadow-[0_20px_50px_-20px_rgba(99,102,241,0.7)] hover:scale-[1.01] transition-all duration-300 group"
       onClick={() => openModal(t.videoUrl)}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -113,7 +113,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ t, openModal }) => {
 
       {/* Play Icon */}
       <div className={`absolute inset-0 flex items-center justify-center transition-all duration-300 pointer-events-none ${isPlaying ? 'opacity-0 scale-75' : 'opacity-100 scale-100'}`}>
-        <div className="w-13 h-13 bg-blue-600 text-white rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform p-3.5">
+        <div className="w-13 h-13 bg-gradient-to-br from-indigo-500 to-sky-500 text-white rounded-full flex items-center justify-center shadow-lg shadow-indigo-500/50 ring-4 ring-white/10 group-hover:scale-110 transition-transform p-3.5">
           <Play className="w-5 h-5 fill-current ml-0.5" />
         </div>
       </div>
@@ -124,7 +124,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ t, openModal }) => {
           <span className="text-white font-bold text-sm tracking-wide block">
             {t.name}
           </span>
-          <span className="text-[11px] text-blue-300 font-semibold block">
+          <span className="text-[11px] text-sky-300 font-semibold block">
             {t.role}
           </span>
         </div>
@@ -143,17 +143,18 @@ const TestimonialCarousel: React.FC = () => {
   const closeModal = () => setSelected(null);
 
   return (
-    <section className="py-20 sm:py-24 px-4 bg-slate-50/70 border-t border-slate-200/80 relative">
-      <div className="max-w-7xl mx-auto">
+    <section className="py-20 sm:py-28 px-4 bg-[#05070f] border-t border-white/[0.06] relative overflow-hidden">
+      <div className="absolute -top-20 right-1/4 w-[600px] h-[400px] bg-violet-600/10 rounded-full blur-[140px] pointer-events-none" />
+      <div className="max-w-7xl mx-auto relative">
         <div className="text-center mb-14">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-white rounded-md text-[11px] font-bold uppercase tracking-widest text-blue-700 border border-slate-200 shadow-2xs mb-4">
-            <Users className="w-3.5 h-3.5 text-blue-600" />
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-indigo-500/10 rounded-full text-[11px] font-bold uppercase tracking-widest text-indigo-200 border border-indigo-400/20 mb-4">
+            <Users className="w-3.5 h-3.5 text-sky-400" />
             <span>Verified Delegate Feedback</span>
           </div>
-          <h2 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight mb-4">
-            Trusted By <span className="text-blue-600">Business Leaders & Professionals</span>
+          <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight mb-4">
+            Trusted By <span className="bg-gradient-to-r from-sky-300 via-indigo-300 to-violet-300 bg-clip-text text-transparent">Business Leaders & Professionals</span>
           </h2>
-          <p className="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed">
             Hear directly from founders, consultants, and corporate executives who have implemented our AI systems.
           </p>
         </div>
@@ -170,7 +171,7 @@ const TestimonialCarousel: React.FC = () => {
           {writtenReviews.map((rev, idx) => (
             <div
               key={idx}
-              className="bg-white border border-slate-200/90 rounded-2xl p-6 shadow-xs flex flex-col justify-between"
+              className="bg-white/[0.03] backdrop-blur-sm border border-white/10 hover:border-indigo-400/40 hover:-translate-y-1 transition-all duration-300 rounded-2xl p-6 flex flex-col justify-between"
             >
               <div>
                 <div className="flex items-center gap-1 text-amber-400 mb-3">
@@ -178,15 +179,15 @@ const TestimonialCarousel: React.FC = () => {
                     <Star key={i} className="w-4 h-4 fill-amber-400" />
                   ))}
                 </div>
-                <p className="text-xs sm:text-sm text-slate-700 leading-relaxed mb-4">
+                <p className="text-xs sm:text-sm text-slate-300 leading-relaxed mb-4">
                   "{rev.quote}"
                 </p>
               </div>
 
-              <div className="flex items-center gap-2.5 pt-3 border-t border-slate-100">
-                <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0" />
+              <div className="flex items-center gap-2.5 pt-3 border-t border-white/[0.08]">
+                <CheckCircle2 className="w-4 h-4 text-sky-400 shrink-0" />
                 <div>
-                  <span className="text-xs font-bold text-slate-900 block">{rev.name}</span>
+                  <span className="text-xs font-bold text-white block">{rev.name}</span>
                   <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block">{rev.role}</span>
                 </div>
               </div>

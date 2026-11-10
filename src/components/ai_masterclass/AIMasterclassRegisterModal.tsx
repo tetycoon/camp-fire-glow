@@ -361,15 +361,15 @@ const AIMasterclassRegisterModal: React.FC = () => {
     return (
         <div
             className={`fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 overflow-y-auto transition-all duration-300 ${visible ? "opacity-100" : "opacity-0"}`}
-            style={{ backdropFilter: "blur(6px)", background: "rgba(15, 23, 42, 0.65)" }}
+            style={{ backdropFilter: "blur(10px)", background: "rgba(2, 4, 12, 0.78)" }}
             onClick={handleBackdropClick}
         >
             <div
-                className={`relative w-full max-w-lg my-auto rounded-2xl sm:rounded-3xl p-5 sm:p-6 bg-white border border-slate-200 shadow-2xl transition-all duration-300 max-h-[92vh] flex flex-col ${visible ? "scale-100 translate-y-0" : "scale-95 translate-y-2"}`}
+                className={`relative w-full max-w-lg my-auto rounded-2xl sm:rounded-3xl p-5 sm:p-6 bg-gradient-to-b from-[#0d1226] via-[#080b17] to-[#05070f] border border-indigo-400/25 shadow-[0_40px_120px_-30px_rgba(99,102,241,0.6)] transition-all duration-300 max-h-[92vh] flex flex-col ${visible ? "scale-100 translate-y-0" : "scale-95 translate-y-2"}`}
             >
                 <button
                     onClick={handleClose}
-                    className="absolute top-3.5 right-3.5 text-slate-400 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-full p-1.5 transition-colors z-20 cursor-pointer"
+                    className="absolute top-3.5 right-3.5 text-slate-400 hover:text-white bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 rounded-full p-1.5 transition-colors z-20 cursor-pointer"
                     aria-label="Close"
                 >
                     <X className="w-4 h-4" />
@@ -377,24 +377,24 @@ const AIMasterclassRegisterModal: React.FC = () => {
 
                 {submitted ? (
                     <div className="text-center py-6">
-                        <CheckCircle2 className="w-14 h-14 text-emerald-600 mx-auto mb-4" />
-                        <h3 className="text-2xl font-black text-slate-900 mb-2">Enrolled Successfully!</h3>
-                        <p className="text-slate-600 text-sm mb-4">Welcome to the AI Secrets Revealed Masterclass. See you soon!</p>
-                        <div className="bg-slate-100 border border-slate-200 text-slate-700 text-xs px-4 py-2 rounded-full mb-6 inline-block font-mono">Payment ID: {paymentId}</div>
-                        <button onClick={handleClose} className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl transition-colors cursor-pointer">CLOSE</button>
+                        <CheckCircle2 className="w-14 h-14 text-emerald-400 mx-auto mb-4" />
+                        <h3 className="text-2xl font-black text-white mb-2">Enrolled Successfully!</h3>
+                        <p className="text-slate-400 text-sm mb-4">Welcome to the AI Secrets Revealed Masterclass. See you soon!</p>
+                        <div className="bg-white/[0.05] border border-white/10 text-slate-300 text-xs px-4 py-2 rounded-full mb-6 inline-block font-mono">Payment ID: {paymentId}</div>
+                        <button onClick={handleClose} className="w-full bg-gradient-to-r from-indigo-500 via-blue-500 to-sky-500 hover:brightness-110 text-white font-bold py-3 rounded-xl transition-all cursor-pointer">CLOSE</button>
                     </div>
                 ) : (
                     <div className="overflow-y-auto pr-1 -mr-1 flex-1">
                         <div className="text-center mb-3">
-                            <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-                                Register <span className="text-blue-600">Now</span>
+                            <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+                                Register <span className="bg-gradient-to-r from-sky-300 via-indigo-300 to-violet-300 bg-clip-text text-transparent">Now</span>
                             </h2>
-                            <p className="text-xs text-slate-500 mt-0.5">3-Hour Live Interactive Masterclass • Just ₹99 (Incl. 18% GST)</p>
-                            <div className="mt-2 inline-flex items-center gap-1.5 bg-blue-50 border border-blue-200 text-blue-700 px-3 py-1 rounded-full text-xs font-bold tracking-wide">
+                            <p className="text-xs text-slate-400 mt-0.5">3-Hour Live Interactive Masterclass • Just ₹99 (Incl. 18% GST)</p>
+                            <div className="mt-2 inline-flex items-center gap-1.5 bg-indigo-500/10 border border-indigo-400/25 text-indigo-200 px-3 py-1 rounded-full text-xs font-bold tracking-wide">
                                 <span>📅 Selected: {selectedSlot.fullLabel}</span>
                             </div>
                             {affiliateId && (
-                                <div className="mt-1.5 inline-flex items-center gap-1 bg-emerald-50 border border-emerald-200 text-emerald-700 px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wide">
+                                <div className="mt-1.5 inline-flex items-center gap-1 bg-emerald-400/10 border border-emerald-300/25 text-emerald-300 px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wide">
                                     <span>🏷️ Referral Code: #{affiliateId} Applied</span>
                                 </div>
                             )}
@@ -405,9 +405,9 @@ const AIMasterclassRegisterModal: React.FC = () => {
                         <form onSubmit={handleSubmit} className="space-y-3">
                             {/* Preferred Date & Session Selection */}
                             <div className="space-y-1">
-                                <label className="text-[10px] font-bold text-slate-700 uppercase tracking-wider ml-0.5 flex items-center justify-between">
+                                <label className="text-[10px] font-bold text-slate-300 uppercase tracking-wider ml-0.5 flex items-center justify-between">
                                     <span>Preferred Date & Session</span>
-                                    <span className="text-[9px] text-blue-600 font-semibold uppercase">Required</span>
+                                    <span className="text-[9px] text-sky-300 font-semibold uppercase">Required</span>
                                 </label>
                                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                                     {orderedSlots.map((slot) => {
@@ -419,24 +419,24 @@ const AIMasterclassRegisterModal: React.FC = () => {
                                                 onClick={() => setPreferredSlotId(slot.id)}
                                                 className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer relative flex flex-col justify-between ${
                                                     isSelected
-                                                        ? "bg-emerald-50/90 border-2 border-emerald-600 text-slate-900 shadow-sm"
-                                                        : "bg-slate-50 hover:bg-slate-100 border-slate-200 text-slate-600"
+                                                        ? "bg-indigo-500/15 border-2 border-indigo-400 text-white shadow-[0_0_24px_-8px_rgba(99,102,241,0.8)]"
+                                                        : "bg-white/[0.03] hover:bg-white/[0.06] border-white/10 text-slate-400"
                                                 }`}
                                             >
                                                 <div className="flex items-center justify-between mb-0.5">
-                                                    <span className="text-xs font-black flex items-center gap-1.5 text-slate-900">
-                                                        <span className={`w-3.5 h-3.5 rounded-full border-2 flex items-center justify-center shrink-0 ${isSelected ? "border-emerald-600 bg-emerald-600" : "border-slate-300 bg-white"}`}>
+                                                    <span className="text-xs font-black flex items-center gap-1.5 text-white">
+                                                        <span className={`w-3.5 h-3.5 rounded-full border-2 flex items-center justify-center shrink-0 ${isSelected ? "border-indigo-400 bg-indigo-500" : "border-slate-500 bg-transparent"}`}>
                                                             {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
                                                         </span>
                                                         <span>{slot.dayName} {slot.id === "sunday" ? "Morning" : "Evening"}</span>
                                                     </span>
                                                     {slot.id === nextSession.id && (
-                                                        <span className="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-200">
+                                                        <span className="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded bg-sky-400/15 text-sky-200 border border-sky-300/25">
                                                             Next Up
                                                         </span>
                                                     )}
                                                 </div>
-                                                <div className="text-[11px] font-bold text-emerald-700 ml-5">{slot.timeSlot}</div>
+                                                <div className="text-[11px] font-bold text-sky-300 ml-5">{slot.timeSlot}</div>
                                                 <div className="text-[11px] text-slate-500 font-medium ml-5">{slot.dateString}</div>
                                             </button>
                                         );
@@ -445,18 +445,18 @@ const AIMasterclassRegisterModal: React.FC = () => {
                             </div>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                                 <div className="space-y-1">
-                                    <label className="text-[10px] font-bold text-slate-700 uppercase tracking-wider ml-0.5">Full Name</label>
+                                    <label className="text-[10px] font-bold text-slate-300 uppercase tracking-wider ml-0.5">Full Name</label>
                                     <input
                                         required
                                         value={form.name}
                                         onChange={e => setForm({ ...form, name: e.target.value })}
                                         placeholder="Enter your name"
                                         autoComplete="name"
-                                        className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition-all"
+                                        className="w-full bg-white/[0.05] border border-white/15 rounded-xl px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:bg-white/[0.08] focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/25 outline-none transition-all"
                                     />
                                 </div>
                                 <div className="space-y-1">
-                                    <label className="text-[10px] font-bold text-slate-700 uppercase tracking-wider ml-0.5">Email Address</label>
+                                    <label className="text-[10px] font-bold text-slate-300 uppercase tracking-wider ml-0.5">Email Address</label>
                                     <input
                                         required
                                         type="email"
@@ -464,13 +464,13 @@ const AIMasterclassRegisterModal: React.FC = () => {
                                         onChange={e => setForm({ ...form, email: e.target.value })}
                                         placeholder="email@example.com"
                                         autoComplete="email"
-                                        className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition-all"
+                                        className="w-full bg-white/[0.05] border border-white/15 rounded-xl px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:bg-white/[0.08] focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/25 outline-none transition-all"
                                     />
                                 </div>
                             </div>
 
                             <div className="space-y-1">
-                                <label className="text-[10px] font-bold text-slate-700 uppercase tracking-wider ml-0.5">WhatsApp Number</label>
+                                <label className="text-[10px] font-bold text-slate-300 uppercase tracking-wider ml-0.5">WhatsApp Number</label>
                                 <div className="flex gap-2">
                                     {/* Searchable Country Code Picker */}
                                     <div className="relative shrink-0" ref={countryDropdownRef} style={{ width: '110px' }}>
@@ -481,32 +481,32 @@ const AIMasterclassRegisterModal: React.FC = () => {
                                                 setCountrySearch("");
                                                 setTimeout(() => countryInputRef.current?.focus(), 50);
                                             }}
-                                            className="w-full bg-slate-50 border border-slate-300 rounded-xl px-2 py-2 text-sm text-slate-900 hover:bg-slate-100 focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition-all cursor-pointer flex items-center justify-center gap-1.5"
+                                            className="w-full bg-white/[0.05] border border-white/15 rounded-xl px-2 py-2 text-sm text-white hover:bg-white/[0.08] focus:bg-white/[0.08] focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/25 outline-none transition-all cursor-pointer flex items-center justify-center gap-1.5"
                                         >
                                             <span className="text-base leading-none">{selectedCountry.flag}</span>
                                             <span className="font-semibold text-xs">{selectedCountry.code}</span>
-                                            <svg className="w-3 h-3 text-slate-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                                            <svg className="w-3 h-3 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
                                         </button>
 
                                         {showCountryDropdown && (
-                                            <div className="absolute top-full left-0 mt-1 w-72 max-h-60 rounded-xl border border-slate-200 bg-white shadow-2xl z-50 overflow-hidden flex flex-col">
+                                            <div className="absolute top-full left-0 mt-1 w-72 max-h-60 rounded-xl border border-white/15 bg-[#0b0f1f] shadow-2xl shadow-black/60 z-50 overflow-hidden flex flex-col">
                                                 {/* Search input */}
-                                                <div className="p-2 border-b border-slate-100 flex items-center gap-2 bg-slate-50">
-                                                    <Search className="w-4 h-4 text-slate-400 shrink-0" />
+                                                <div className="p-2 border-b border-white/10 flex items-center gap-2 bg-white/[0.03]">
+                                                    <Search className="w-4 h-4 text-slate-500 shrink-0" />
                                                     <input
                                                         ref={countryInputRef}
                                                         type="text"
                                                         value={countrySearch}
                                                         onChange={e => setCountrySearch(e.target.value)}
                                                         placeholder="Search country or code..."
-                                                        className="w-full bg-transparent text-sm text-slate-900 placeholder:text-slate-400 outline-none"
+                                                        className="w-full bg-transparent text-sm text-white placeholder:text-slate-500 outline-none"
                                                         autoComplete="off"
                                                     />
                                                 </div>
                                                 {/* Results list */}
-                                                <div className="overflow-y-auto flex-1 max-h-48 divide-y divide-slate-100">
+                                                <div className="overflow-y-auto flex-1 max-h-48 divide-y divide-white/[0.06]">
                                                     {filteredCountries.length === 0 ? (
-                                                        <div className="px-4 py-3 text-xs text-slate-400 text-center">No results found</div>
+                                                        <div className="px-4 py-3 text-xs text-slate-500 text-center">No results found</div>
                                                     ) : (
                                                         filteredCountries.map((c, idx) => (
                                                             <button
@@ -518,13 +518,13 @@ const AIMasterclassRegisterModal: React.FC = () => {
                                                                     setShowCountryDropdown(false);
                                                                     setCountrySearch("");
                                                                 }}
-                                                                className={`w-full flex items-center gap-2.5 px-3 py-2 text-xs hover:bg-slate-50 transition-colors text-left ${
-                                                                    selectedCountry.iso === c.iso && selectedCountry.code === c.code ? 'bg-blue-50 text-blue-700 font-bold' : 'text-slate-700'
+                                                                className={`w-full flex items-center gap-2.5 px-3 py-2 text-xs hover:bg-white/[0.06] transition-colors text-left ${
+                                                                    selectedCountry.iso === c.iso && selectedCountry.code === c.code ? 'bg-indigo-500/15 text-indigo-200 font-bold' : 'text-slate-300'
                                                                 }`}
                                                             >
                                                                 <span className="text-sm leading-none w-5 text-center">{c.flag}</span>
                                                                 <span className="flex-1 truncate">{c.name}</span>
-                                                                <span className="text-xs text-slate-400 font-mono">{c.code}</span>
+                                                                <span className="text-xs text-slate-500 font-mono">{c.code}</span>
                                                             </button>
                                                         ))
                                                     )}
@@ -541,18 +541,18 @@ const AIMasterclassRegisterModal: React.FC = () => {
                                         autoComplete="tel"
                                         pattern="[0-9]{6,15}"
                                         title="Please enter a valid phone number"
-                                        className="flex-1 bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition-all"
+                                        className="flex-1 bg-white/[0.05] border border-white/15 rounded-xl px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:bg-white/[0.08] focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/25 outline-none transition-all"
                                     />
                                 </div>
                             </div>
 
                             <div className="space-y-1">
-                                <label className="text-[10px] font-bold text-slate-700 uppercase tracking-wider ml-0.5">Current Profession</label>
+                                <label className="text-[10px] font-bold text-slate-300 uppercase tracking-wider ml-0.5">Current Profession</label>
                                 <select
                                     required
                                     value={form.profession}
                                     onChange={e => setForm({ ...form, profession: e.target.value })}
-                                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm text-slate-900 focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none appearance-none cursor-pointer"
+                                    className="w-full bg-white/[0.05] border border-white/15 rounded-xl px-3 py-2 text-sm text-white focus:bg-white/[0.08] focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/25 outline-none appearance-none cursor-pointer [&>option]:text-slate-900"
                                 >
                                     <option value="" className="text-slate-500">Select your profession...</option>
                                     <option value="Trainer / Coach">Trainer / Coach</option>
@@ -573,11 +573,11 @@ const AIMasterclassRegisterModal: React.FC = () => {
                                 onGstinChange={setGstin}
                                 companyName={companyName}
                                 onCompanyNameChange={setCompanyName}
-                                theme="light"
+                                theme="dark"
                                 label="Masterclass Seat Fee"
                             />
 
-                            <div className="text-[11px] text-amber-800 bg-amber-50 border border-amber-200/80 rounded-lg py-1 px-2.5 text-center font-medium">
+                            <div className="text-[11px] text-amber-200 bg-amber-400/10 border border-amber-300/25 rounded-lg py-1 px-2.5 text-center font-medium">
                                 ⚠️ Note: We do not provide recorded sessions. Live attendance is required.
                             </div>
 
@@ -587,9 +587,9 @@ const AIMasterclassRegisterModal: React.FC = () => {
                                     required 
                                     id="wa-opt-in"
                                     defaultChecked
-                                    className="mt-0.5 w-3.5 h-3.5 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+                                    className="mt-0.5 w-3.5 h-3.5 rounded border-slate-500 accent-indigo-500 focus:ring-indigo-500"
                                 />
-                                <label htmlFor="wa-opt-in" className="text-[11px] text-slate-600 leading-tight">
+                                <label htmlFor="wa-opt-in" className="text-[11px] text-slate-400 leading-tight">
                                     I agree to receive workshop link, updates and reminders on WhatsApp.
                                 </label>
                             </div>
@@ -597,13 +597,13 @@ const AIMasterclassRegisterModal: React.FC = () => {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-md shadow-blue-600/20 cursor-pointer disabled:opacity-70"
+                                className="w-full bg-gradient-to-r from-indigo-500 via-blue-500 to-sky-500 hover:brightness-110 text-white font-bold text-sm py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-[0_12px_36px_-10px_rgba(99,102,241,0.85)] ring-1 ring-white/15 cursor-pointer disabled:opacity-70"
                             >
                                 {loading ? <Loader2 className="animate-spin w-4 h-4" /> : `Proceed to Payment — ₹${totalAmount} (Incl. 18% GST)`}
                             </button>
 
                             <div className="flex items-center justify-center gap-1.5 text-[10px] text-slate-500 font-bold uppercase tracking-wider pb-1">
-                                <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" /> Secured by Razorpay • 256-Bit SSL Encryption
+                                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> Secured by Razorpay • 256-Bit SSL Encryption
                             </div>
                         </form>
                     </div>

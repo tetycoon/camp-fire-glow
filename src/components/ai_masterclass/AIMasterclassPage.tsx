@@ -81,7 +81,7 @@ const AIMasterclassPage: React.FC<AIMasterclassPageProps> = ({ showLeadGate = tr
     return (
         <AIMasterclassRegisterModalProvider>
             <AIMasterclassUrlTrigger />
-            <div className="min-h-screen bg-white text-slate-900 font-sans overflow-x-hidden relative pb-16">
+            <div className="min-h-screen bg-[#05070f] text-slate-100 font-sans overflow-x-hidden relative pb-16 selection:bg-indigo-500/40 selection:text-white">
                 <AIMasterclassNavbar />
                 <AIMasterclassHeroSection />
                 <AIMasterclassWhySection />

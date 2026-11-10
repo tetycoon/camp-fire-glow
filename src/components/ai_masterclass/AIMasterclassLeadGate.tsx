@@ -105,7 +105,7 @@ const AIMasterclassLeadGate: React.FC<AIMasterclassLeadGateProps> = ({ submitLea
 
     const inputClass = (hasError: boolean) =>
         `w-full bg-white/[0.06] border rounded-xl px-3.5 py-3 text-[15px] text-white placeholder:text-slate-400 outline-none transition-all focus:bg-white/[0.09] focus:ring-2 ${
-            hasError ? "border-red-400/70 focus:ring-red-400/25" : "border-white/15 focus:border-blue-500 focus:ring-blue-500/25"
+            hasError ? "border-red-400/70 focus:ring-red-400/25" : "border-white/15 focus:border-indigo-400 focus:ring-indigo-500/25"
         }`;
 
     return (
@@ -118,10 +118,10 @@ const AIMasterclassLeadGate: React.FC<AIMasterclassLeadGateProps> = ({ submitLea
                 aria-modal="true"
                 aria-labelledby="lead-gate-title"
                 aria-describedby="lead-gate-desc"
-                className="relative w-full sm:max-w-md overflow-hidden rounded-t-2xl sm:rounded-2xl bg-gradient-to-b from-[#0f172a] via-[#090d16] to-[#020617] border border-white/15 shadow-2xl shadow-black/80 animate-in fade-in slide-in-from-bottom-4 duration-300"
+                className="relative w-full sm:max-w-md overflow-hidden rounded-t-2xl sm:rounded-2xl bg-gradient-to-b from-[#0d1226] via-[#080b17] to-[#05070f] border border-indigo-400/25 shadow-[0_40px_120px_-30px_rgba(99,102,241,0.6)] animate-in fade-in slide-in-from-bottom-4 duration-300"
             >
                 {/* Corporate gradient accent top bar */}
-                <div className="h-1.5 w-full bg-gradient-to-r from-blue-600 via-indigo-500 to-blue-400" />
+                <div className="h-1 w-full bg-gradient-to-r from-indigo-500 via-sky-400 to-violet-500" />
                 <div className="absolute -top-24 -right-24 w-64 h-64 bg-blue-500/15 rounded-full blur-3xl pointer-events-none" />
                 <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-indigo-500/15 rounded-full blur-3xl pointer-events-none" />
 
@@ -150,7 +150,7 @@ const AIMasterclassLeadGate: React.FC<AIMasterclassLeadGateProps> = ({ submitLea
 
                             {/* Simple, High-Impact Headline */}
                             <h2 id="lead-gate-title" className="text-2xl sm:text-[26px] font-black text-white tracking-tight leading-tight">
-                                Unlock the <span className="text-blue-400">₹99 Masterclass</span> Offer
+                                Unlock the <span className="bg-gradient-to-r from-amber-200 to-amber-400 bg-clip-text text-transparent">₹99 Masterclass</span> Offer
                             </h2>
                             <p id="lead-gate-desc" className="text-xs sm:text-sm text-slate-300 mt-1.5 mb-5 leading-relaxed">
                                 Submit your enquiry details to instantly claim the special <strong className="text-white font-bold">₹99 delegate pass</strong> (Original price <span className="line-through text-slate-400">₹999</span>) and reserve your live seat.
@@ -235,7 +235,7 @@ const AIMasterclassLeadGate: React.FC<AIMasterclassLeadGateProps> = ({ submitLea
                                 <button
                                     type="submit"
                                     disabled={status === "saving"}
-                                    className="w-full mt-1 inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-bold text-[15px] py-3.5 px-4 rounded-xl shadow-lg shadow-blue-600/25 transition-all disabled:opacity-70 disabled:cursor-wait cursor-pointer"
+                                    className="w-full mt-1 inline-flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-500 via-blue-500 to-sky-500 hover:brightness-110 text-white font-bold text-[15px] py-3.5 px-4 rounded-xl shadow-[0_12px_36px_-10px_rgba(99,102,241,0.85)] ring-1 ring-white/15 transition-all disabled:opacity-70 disabled:cursor-wait cursor-pointer"
                                 >
                                     {status === "saving" ? (
                                         <>

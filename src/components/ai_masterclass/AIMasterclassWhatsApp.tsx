@@ -40,16 +40,16 @@ const AIMasterclassWhatsApp: React.FC = () => {
         <div className="fixed bottom-24 right-5 z-40 flex items-end gap-3 flex-col sm:flex-row">
             {/* Tooltip / Message Bubble */}
             {tooltipVisible && (
-                <div className="animate-in fade-in slide-in-from-bottom-4 sm:slide-in-from-left-4 bg-white rounded-2xl shadow-2xl border border-emerald-100 px-4 py-3 max-w-[220px] relative mb-2 sm:mb-0">
+                <div className="animate-in fade-in slide-in-from-bottom-4 sm:slide-in-from-left-4 bg-[#0a0e1c]/95 backdrop-blur-xl rounded-2xl shadow-2xl shadow-black/50 border border-emerald-400/25 px-4 py-3 max-w-[220px] relative mb-2 sm:mb-0">
                     <button
                         onClick={() => setTooltipVisible(false)}
-                        className="absolute -top-2 -right-2 w-5 h-5 bg-slate-100 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-900 transition-colors"
+                        className="absolute -top-2 -right-2 w-5 h-5 bg-slate-800 border border-white/10 rounded-full flex items-center justify-center text-slate-400 hover:text-white transition-colors"
                     >
                         <X className="w-3 h-3" />
                     </button>
-                    <p className="text-xs font-bold text-slate-700 leading-tight">
+                    <p className="text-xs font-bold text-slate-200 leading-tight">
                         Got questions? <br />
-                        <span className="text-emerald-600 font-black">Chat with our team! 🟢</span>
+                        <span className="text-emerald-400 font-black">Chat with our team! 🟢</span>
                     </p>
                 </div>
             )}
