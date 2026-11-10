@@ -1,0 +1,521 @@
+/* ==========================================================================
+   Tech Tycoon – AI Filmmaking cinematic layer
+   Visual-only enhancement for /ai_filmmaking. Every rule is scoped to
+   html.cfx, which cinematic.js sets only on the filmmaking routes.
+   It never changes text, links, form fields or click handlers.
+   ========================================================================== */
+
+html.cfx {
+  --cfx-blue: 56, 189, 248;
+  --cfx-electric: 37, 99, 235;
+  --cfx-violet: 139, 92, 246;
+  --cfx-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --cfx-progress: 0;
+}
+
+/* ---------- Hero: cinematic video background ---------- */
+
+html.cfx .cfx-hero-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  animation: cfx-fade-in 1.8s var(--cfx-ease) both;
+}
+
+/* media is anchored to the top edge of the hero so the top of the frame is never cropped */
+html.cfx .cfx-hero-depth {
+  position: absolute;
+  inset: 0 -3% -3%;
+  will-change: transform;
+}
+
+html.cfx .cfx-hero-media {
+  position: absolute;
+  inset: 0;
+  background: #040711 center top / cover no-repeat;
+  transform-origin: 50% 0;
+  animation: cfx-camera 26s ease-in-out infinite alternate;
+}
+
+html.cfx .cfx-hero-media video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 62% 0%;
+  opacity: 0;
+  transition: opacity 1.6s var(--cfx-ease);
+}
+
+html.cfx .cfx-hero-media video.cfx-on { opacity: 0.8; }
+
+html.cfx .cfx-particles {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  mix-blend-mode: screen;
+}
+
+/* readability shade: strong behind the copy, fades into the next section */
+html.cfx .cfx-hero-shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(4, 7, 17, 0.85) 0%, rgba(4, 7, 17, 0.15) 18%, rgba(4, 7, 17, 0) 55%, rgba(6, 10, 24, 0.9) 88%, #060a18 100%),
+    linear-gradient(90deg, rgba(4, 7, 17, 0.9) 0%, rgba(4, 7, 17, 0.68) 36%, rgba(4, 7, 17, 0.22) 66%, rgba(4, 7, 17, 0.4) 100%);
+}
+
+html.cfx .cfx-hero-sweep {
+  position: absolute;
+  inset: -20% -10%;
+  background: linear-gradient(105deg, transparent 40%, rgba(var(--cfx-blue), 0.07) 47%, rgba(var(--cfx-violet), 0.09) 50%, transparent 58%) no-repeat;
+  background-size: 220% 100%;
+  animation: cfx-sweep 11s ease-in-out infinite;
+}
+
+/* hero intro: pure CSS so nothing flashes or stays hidden if JS is late */
+html.cfx #root > div.min-h-screen > section:first-of-type > div.max-w-7xl > div.grid > div:first-child > * {
+  animation: cfx-rise 1s var(--cfx-ease) both;
+}
+html.cfx #root > div.min-h-screen > section:first-of-type > div.max-w-7xl > div.grid > div:first-child > :nth-child(1) { animation-delay: 0.15s; }
+html.cfx #root > div.min-h-screen > section:first-of-type > div.max-w-7xl > div.grid > div:first-child > :nth-child(2) { animation-delay: 0.27s; }
+html.cfx #root > div.min-h-screen > section:first-of-type > div.max-w-7xl > div.grid > div:first-child > :nth-child(3) { animation-delay: 0.39s; }
+html.cfx #root > div.min-h-screen > section:first-of-type > div.max-w-7xl > div.grid > div:first-child > :nth-child(4) { animation-delay: 0.5s; }
+html.cfx #root > div.min-h-screen > section:first-of-type > div.max-w-7xl > div.grid > div:first-child > :nth-child(5) { animation-delay: 0.6s; }
+html.cfx #root > div.min-h-screen > section:first-of-type > div.max-w-7xl > div.grid > div:first-child > :nth-child(n+6) { animation-delay: 0.7s; }
+
+html.cfx #root > div.min-h-screen > section:first-of-type > div.max-w-7xl > div.grid > div:nth-child(2) {
+  animation: cfx-deck 1.4s var(--cfx-ease) 0.35s both;
+}
+
+/* ---------- Header: glow line + scroll progress ---------- */
+
+html.cfx #root > div.min-h-screen > header::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(var(--cfx-blue), 0.9), rgba(var(--cfx-violet), 0.9), transparent) no-repeat;
+  background-size: 35% 100%;
+  animation: cfx-beam 7s linear infinite;
+  pointer-events: none;
+}
+
+html.cfx #root > div.min-h-screen > header::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 2px;
+  background: linear-gradient(90deg, rgb(var(--cfx-electric)), rgb(var(--cfx-blue)), rgb(var(--cfx-violet)));
+  transform: scaleX(var(--cfx-progress));
+  transform-origin: 0 50%;
+  pointer-events: none;
+}
+
+/* ---------- Section transitions ---------- */
+
+html.cfx [data-cfx-sect] { position: relative; }
+
+html.cfx [data-cfx-sect][data-cfx-glow] {
+  background-image:
+    radial-gradient(42% 38% at calc(18% + var(--cfx-shift, 0) * 10%) 20%, rgba(var(--cfx-electric), 0.1), transparent 70%),
+    radial-gradient(38% 34% at calc(84% - var(--cfx-shift, 0) * 10%) 78%, rgba(var(--cfx-violet), 0.09), transparent 70%);
+}
+
+html.cfx [data-cfx-sect]::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -1px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(var(--cfx-blue), 0.95), rgba(var(--cfx-violet), 0.95), transparent) no-repeat;
+  background-size: 40% 100%;
+  background-position: -60% 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+html.cfx [data-cfx-sect][data-cfx-in]::before {
+  animation: cfx-section-beam 1.8s var(--cfx-ease) both;
+}
+
+/* ---------- Cards: glowing borders + light spotlight ---------- */
+
+html.cfx [data-cfx-card] { --mx: 50%; --my: 50%; }
+
+html.cfx [data-cfx-card]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(from var(--cfx-angle, 0deg), rgba(var(--cfx-blue), 0.9), rgba(var(--cfx-violet), 0.9), rgba(var(--cfx-electric), 0.25), rgba(var(--cfx-blue), 0.9));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  opacity: 0;
+  transition: opacity 0.5s var(--cfx-ease);
+  pointer-events: none;
+  z-index: 2;
+}
+
+html.cfx [data-cfx-card]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(420px circle at var(--mx) var(--my), rgba(var(--cfx-blue), 0.11), transparent 45%);
+  mix-blend-mode: screen;
+  opacity: 0;
+  transition: opacity 0.5s var(--cfx-ease);
+  pointer-events: none;
+  z-index: 2;
+}
+
+html.cfx [data-cfx-card]:hover::after,
+html.cfx [data-cfx-card]:focus-within::after { opacity: 1; animation: cfx-spin 6s linear infinite; }
+html.cfx [data-cfx-card]:hover::before { opacity: 1; }
+
+/* existing cards that are not positioned need a containing block for the ring */
+html.cfx [data-cfx-card="static"] { position: relative; }
+
+@property --cfx-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+/* stat chips lift slightly on hover */
+html.cfx [data-cfx-lift] {
+  transition: translate 0.4s var(--cfx-ease), border-color 0.4s, background-color 0.4s;
+}
+html.cfx [data-cfx-lift]:hover { translate: 0 -3px; border-color: rgba(var(--cfx-blue), 0.45); }
+
+/* ---------- Images as cinematic objects ---------- */
+
+html.cfx [data-cfx-tilt] { will-change: transform; }
+
+html.cfx [data-cfx-float] {
+  animation: cfx-float 5.5s ease-in-out infinite;
+  animation-delay: calc(var(--cfx-i, 0) * -1.4s);
+}
+
+html.cfx [data-cfx-photo] {
+  animation: cfx-float 7s ease-in-out infinite;
+  box-shadow: 0 0 40px rgba(37, 99, 235, 0.35), 0 30px 60px -25px rgba(var(--cfx-violet), 0.55);
+}
+
+html.cfx [data-cfx-thumb] { transition: translate 0.45s var(--cfx-ease), box-shadow 0.45s; }
+html.cfx [data-cfx-thumb]:hover {
+  translate: 0 -4px;
+  box-shadow: 0 14px 28px -12px rgba(var(--cfx-blue), 0.55);
+}
+html.cfx [data-cfx-thumb] img { transition: scale 0.6s var(--cfx-ease); }
+html.cfx [data-cfx-thumb]:hover img { scale: 1.08; }
+
+/* parallax images are scaled a touch so scroll movement never shows an edge */
+html.cfx [data-cfx-parallax] { scale: 1.12; translate: 0 var(--cfx-py, 0%); }
+
+/* ---------- CTA buttons ---------- */
+
+html.cfx [data-cfx-cta] {
+  position: relative;
+  transition: translate 0.35s var(--cfx-ease), box-shadow 0.35s var(--cfx-ease), filter 0.35s;
+}
+html.cfx [data-cfx-cta]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(110deg, transparent 38%, rgba(255, 255, 255, 0.32) 50%, transparent 62%) no-repeat;
+  background-size: 260% 100%;
+  background-position: 130% 0;
+  animation: cfx-shine 5s ease-in-out infinite;
+  pointer-events: none;
+}
+html.cfx [data-cfx-cta]:hover {
+  translate: 0 -2px;
+  box-shadow: 0 0 0 1px rgba(var(--cfx-blue), 0.35), 0 12px 34px -8px rgba(var(--cfx-electric), 0.75), 0 0 46px -10px rgba(var(--cfx-violet), 0.7);
+}
+html.cfx [data-cfx-cta]:active { translate: 0 0; filter: brightness(0.95); }
+html.cfx [data-cfx-cta]:focus-visible {
+  outline: 2px solid rgb(var(--cfx-blue));
+  outline-offset: 3px;
+}
+
+/* ---------- Form inputs (focus states only; fields are untouched) ---------- */
+
+html.cfx #root input:not([type="checkbox"]):not([type="radio"]),
+html.cfx #root select,
+html.cfx #root textarea {
+  transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s;
+}
+html.cfx #root input:not([type="checkbox"]):not([type="radio"]):focus,
+html.cfx #root select:focus,
+html.cfx #root textarea:focus {
+  border-color: rgba(var(--cfx-blue), 0.85);
+  box-shadow: 0 0 0 3px rgba(var(--cfx-blue), 0.18), 0 0 24px -6px rgba(var(--cfx-violet), 0.6);
+  outline: none;
+}
+
+/* ---------- Keyframes ---------- */
+
+@keyframes cfx-fade-in { from { opacity: 0; } to { opacity: 1; } }
+
+@keyframes cfx-camera {
+  0% { transform: scale(1.04) translate3d(0, 0, 0); }
+  50% { transform: scale(1.1) translate3d(-1.2%, 0, 0); }
+  100% { transform: scale(1.14) translate3d(1%, 0, 0); }
+}
+
+@keyframes cfx-sweep {
+  0%, 15% { background-position: 120% 0; }
+  70%, 100% { background-position: -40% 0; }
+}
+
+@keyframes cfx-rise {
+  from { opacity: 0; transform: translate3d(0, 28px, 0); filter: blur(6px); }
+  to { opacity: 1; transform: none; filter: none; }
+}
+
+@keyframes cfx-deck {
+  from { opacity: 0; transform: perspective(1400px) translate3d(60px, 20px, 0) rotateY(-14deg) scale(0.94); filter: blur(4px); }
+  to { opacity: 1; transform: none; filter: none; }
+}
+
+@keyframes cfx-beam {
+  from { background-position: -40% 0; }
+  to { background-position: 140% 0; }
+}
+
+@keyframes cfx-section-beam {
+  0% { opacity: 0; background-position: -60% 0; }
+  20% { opacity: 1; }
+  100% { opacity: 0.35; background-position: 160% 0; }
+}
+
+@keyframes cfx-spin { to { --cfx-angle: 360deg; } }
+
+@keyframes cfx-float {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -6px; }
+}
+
+@keyframes cfx-shine {
+  0%, 55% { background-position: 130% 0; }
+  85%, 100% { background-position: -30% 0; }
+}
+
+/* ---------- Responsive intensity ---------- */
+
+@media (max-width: 1023px) {
+  html.cfx .cfx-hero-shade {
+    background:
+      linear-gradient(180deg, rgba(4, 7, 17, 0.88) 0%, rgba(4, 7, 17, 0.62) 30%, rgba(4, 7, 17, 0.72) 70%, #060a18 100%);
+  }
+  html.cfx .cfx-hero-media video { object-position: 50% 0%; }
+  html.cfx .cfx-hero-media video.cfx-on { opacity: 0.7; }
+}
+
+@media (max-width: 767px) {
+  html.cfx .cfx-hero-sweep { display: none; }
+  html.cfx [data-cfx-parallax] { scale: 1; translate: none; }
+}
+
+/* ---------- Reduced motion: keep styling, drop movement ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  html.cfx .cfx-hero-bg,
+  html.cfx .cfx-hero-media,
+  html.cfx .cfx-hero-sweep,
+  html.cfx #root > div.min-h-screen > header::after,
+  html.cfx [data-cfx-float],
+  html.cfx [data-cfx-photo],
+  html.cfx [data-cfx-cta]::after,
+  html.cfx #root > div.min-h-screen > section:first-of-type > div.max-w-7xl > div.grid > div > * ,
+  html.cfx #root > div.min-h-screen > section:first-of-type > div.max-w-7xl > div.grid > div:nth-child(2) {
+    animation: none !important;
+  }
+  html.cfx [data-cfx-card]:hover::after { animation: none; }
+  html.cfx [data-cfx-sect][data-cfx-in]::before { animation: none; }
+  html.cfx [data-cfx-parallax] { scale: 1; translate: none; }
+  html.cfx [data-cfx-cta]:hover,
+  html.cfx [data-cfx-thumb]:hover,
+  html.cfx [data-cfx-lift]:hover { translate: none; }
+}
+
+/* ==========================================================================
+   Light corporate theme (html.cfx-light)
+   Matches the AI Masterclass page: white / slate-50 surfaces, slate-900
+   headings, slate-600 body copy, solid blue-600 actions, white cards with
+   slate-200 borders, dark slate-950 footer. Remaps the page's own Tailwind
+   colour classes; media players, photos, blue buttons, the footer and
+   fullscreen overlays are excluded so their white-on-image text stays intact.
+   ========================================================================== */
+
+html.cfx-light body { background: #ffffff; }
+
+/* --- surfaces --- */
+html.cfx-light #root > div.min-h-screen.bg-\[\#040711\] { background-color: #ffffff; color: #0f172a; }
+html.cfx-light #root > div.min-h-screen > section:first-of-type { background-color: #f8fafc; }
+html.cfx-light #root .bg-\[\#060a18\] { background-color: #f8fafc; }
+html.cfx-light #root :is(section, footer).border-white\/10 { border-color: #e2e8f0; }
+html.cfx-light #root footer.bg-\[\#03050c\] { background-color: #020617; }
+
+html.cfx-light #root > div.min-h-screen > header.bg-slate-950\/95 {
+  background-color: rgba(255, 255, 255, 0.95);
+  border-color: #e2e8f0;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+html.cfx-light #root > div.min-h-screen > header img {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+}
+html.cfx-light #root > div.min-h-screen > div.fixed.bottom-0.bg-slate-950\/95 {
+  background-color: rgba(255, 255, 255, 0.95);
+  border-color: #e2e8f0;
+  box-shadow: 0 -8px 30px rgba(15, 23, 42, 0.08);
+}
+
+html.cfx-light #root :is(.bg-slate-900, .bg-slate-900\/90, .bg-slate-900\/80, .bg-slate-950, .bg-white\/10):not([data-cfx-keep], [data-cfx-keep] *, .fixed.inset-0, .fixed.inset-0 *, .bg-blue-600 *, .from-blue-600 *, .from-amber-400 *) { background-color: #ffffff; }
+html.cfx-light #root :is(.bg-white\/5, .bg-black\/60, .bg-black\/75):not([data-cfx-keep], [data-cfx-keep] *, .fixed.inset-0, .fixed.inset-0 *, .bg-blue-600 *, .from-blue-600 *, .from-amber-400 *) { background-color: #f8fafc; }
+html.cfx-light #root :is(.bg-blue-950\/80, .bg-blue-500\/15, .bg-blue-500\/20, .bg-blue-600\/20, .bg-cyan-500\/15, .bg-cyan-500\/20):not([data-cfx-keep], [data-cfx-keep] *, .fixed.inset-0, .fixed.inset-0 *) { background-color: #eff6ff; }
+html.cfx-light #root .bg-blue-600\/25:not([data-cfx-keep], [data-cfx-keep] *) { background-color: #dbeafe; }
+html.cfx-light #root :is(.bg-amber-500\/15, .bg-amber-500\/20):not([data-cfx-keep], [data-cfx-keep] *) { background-color: #fffbeb; }
+html.cfx-light #root .hover\:bg-amber-500\/25:hover:not([data-cfx-keep], [data-cfx-keep] *) { background-color: #fef3c7; }
+html.cfx-light #root :is(.bg-emerald-500\/15, .bg-emerald-500\/20):not([data-cfx-keep], [data-cfx-keep] *) { background-color: #ecfdf5; }
+html.cfx-light #root .hover\:bg-white\/20:hover:not([data-cfx-keep], [data-cfx-keep] *, .fixed.inset-0 *) { background-color: #f1f5f9; }
+
+/* dark gradient panels (hero deck, pipeline stage, featured pricing card) become white cards */
+html.cfx-light #root :is(.bg-gradient-to-b.from-slate-900\/95, .bg-gradient-to-br.from-slate-900, .bg-gradient-to-b.from-blue-950\/80):not([data-cfx-keep] *) {
+  background-image: none;
+  background-color: #ffffff;
+}
+
+/* hero 3D grid fades into slate-50 instead of midnight */
+html.cfx-light #root .from-\[\#040711\] { --tw-gradient-from: #f8fafc var(--tw-gradient-from-position); --tw-gradient-to: rgb(248 250 252 / 0) var(--tw-gradient-to-position); }
+html.cfx-light #root .to-\[\#040711\] { --tw-gradient-to: #f8fafc var(--tw-gradient-to-position); }
+html.cfx-light #root .cyber-grid-3d { opacity: 0.35; }
+/* fade the grid strip in from transparent so it doesn't draw a seam across the light hero */
+html.cfx-light #root > div.min-h-screen > section:first-of-type > div:has(> .cyber-grid-3d) {
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 55%);
+  mask-image: linear-gradient(to bottom, transparent, #000 55%);
+}
+html.cfx-light #root .cyber-grid-3d + div { display: none; }
+
+/* hero eyebrow becomes the masterclass's dark slate pill */
+html.cfx-light #root > div.min-h-screen > section:first-of-type > div.max-w-7xl > div.grid > div:first-child > :first-child {
+  background-color: #0f172a;
+  border-color: #0f172a;
+  color: #f1f5f9;
+}
+html.cfx-light #root > div.min-h-screen > section:first-of-type > div.max-w-7xl > div.grid > div:first-child > :first-child * { color: inherit; }
+html.cfx-light #root > div.min-h-screen > section:first-of-type > div.max-w-7xl > div.grid > div:first-child > :first-child svg { color: #60a5fa; }
+
+/* headline accents use the masterclass blue */
+html.cfx-light #root h2 .text-emerald-400 { color: #2563eb; }
+html.cfx-light #root > div.min-h-screen > section:first-of-type > .rounded-full.blur-3xl { opacity: 0.6; }
+
+/* --- primary actions: solid blue-600 like the masterclass --- */
+html.cfx-light #root .bg-gradient-to-r.from-blue-600,
+html.cfx-light #root .bg-gradient-to-br.from-blue-600 {
+  background-image: none;
+  background-color: #2563eb;
+}
+html.cfx-light #root button.bg-gradient-to-r.from-blue-600 {
+  box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.25), 0 4px 6px -4px rgba(37, 99, 235, 0.25);
+}
+html.cfx-light #root button.bg-gradient-to-r.from-blue-600:hover,
+html.cfx-light #root button.bg-blue-600:hover { background-color: #1d4ed8; }
+
+/* --- typography --- */
+html.cfx-light #root :is(h1, h2) { letter-spacing: -0.025em; }
+
+html.cfx-light #root .bg-clip-text.text-transparent:not([data-cfx-keep] *) {
+  background-image: none;
+  color: #2563eb;
+}
+
+html.cfx-light #root .text-white:not([data-cfx-keep], [data-cfx-keep] *, .fixed.inset-0, .fixed.inset-0 *, .bg-blue-600, .bg-blue-600 *, .from-blue-600, .from-blue-600 *, .from-amber-400, .from-amber-400 *) { color: #0f172a; }
+html.cfx-light #root :is(.text-slate-200, .text-white\/70):not([data-cfx-keep], [data-cfx-keep] *, .fixed.inset-0 *, .bg-blue-600 *, .from-blue-600 *) { color: #334155; }
+html.cfx-light #root :is(.text-slate-300, .text-slate-400):not([data-cfx-keep], [data-cfx-keep] *, .fixed.inset-0 *, .bg-blue-600 *, .from-blue-600 *) { color: #475569; }
+html.cfx-light #root .text-slate-500:not([data-cfx-keep], [data-cfx-keep] *) { color: #64748b; }
+html.cfx-light #root :is(.text-blue-200, .text-blue-200\/80, .text-cyan-200\/90):not([data-cfx-keep], [data-cfx-keep] *, .bg-blue-600 *, .from-blue-600 *) { color: #1d4ed8; }
+html.cfx-light #root :is(.text-blue-300, .text-blue-400, .text-cyan-300, .text-cyan-400):not([data-cfx-keep], [data-cfx-keep] *, .bg-blue-600 *, .from-blue-600 *) { color: #2563eb; }
+html.cfx-light #root :is(.text-amber-200, .text-amber-300):not([data-cfx-keep], [data-cfx-keep] *, .from-amber-400 *) { color: #b45309; }
+html.cfx-light #root .text-amber-400:not([data-cfx-keep], [data-cfx-keep] *, .from-amber-400 *) { color: #d97706; }
+html.cfx-light #root :is(.text-emerald-300, .text-emerald-400):not([data-cfx-keep], [data-cfx-keep] *) { color: #059669; }
+html.cfx-light #root .hover\:text-white:hover:not([data-cfx-keep], [data-cfx-keep] *, .fixed.inset-0 *, .bg-blue-600, .bg-blue-600 *, .from-blue-600, .from-blue-600 *) { color: #0f172a; }
+html.cfx-light #root .hover\:text-cyan-300:hover:not([data-cfx-keep], [data-cfx-keep] *) { color: #1d4ed8; }
+
+/* --- borders --- */
+html.cfx-light #root :is(.border-white\/5, .border-white\/10, .border-white\/15):not([data-cfx-keep], [data-cfx-keep] *, .fixed.inset-0 *) { border-color: #e2e8f0; }
+html.cfx-light #root .border-white\/20:not([data-cfx-keep], [data-cfx-keep] *, .fixed.inset-0 *) { border-color: #cbd5e1; }
+html.cfx-light #root :is(.border-blue-500\/25, .border-blue-500\/30, .border-blue-500\/40, .border-blue-400\/30, .border-blue-400\/35, .border-blue-400\/40, .border-blue-400\/50, .border-cyan-400\/40, .border-cyan-500\/30):not([data-cfx-keep], [data-cfx-keep] *) { border-color: #bfdbfe; }
+html.cfx-light #root :is(.border-blue-400, .border-blue-400\/60, .border-cyan-400):not([data-cfx-keep], [data-cfx-keep] *) { border-color: #2563eb; }
+html.cfx-light #root :is(.border-amber-400\/30, .border-amber-400\/40):not([data-cfx-keep], [data-cfx-keep] *) { border-color: #fcd34d; }
+html.cfx-light #root :is(.border-emerald-500\/30, .border-emerald-500\/40):not([data-cfx-keep], [data-cfx-keep] *) { border-color: #a7f3d0; }
+html.cfx-light #root :is(.hover\:border-blue-400\/60, .hover\:border-blue-500\/40):hover:not([data-cfx-keep], [data-cfx-keep] *) { border-color: #93c5fd; }
+html.cfx-light #root .hover\:border-amber-500\/40:hover:not([data-cfx-keep], [data-cfx-keep] *) { border-color: #f59e0b; }
+
+/* --- shadows: soft neutral elevation instead of neon glow --- */
+html.cfx-light #root [class*="shadow-[0_0_"]:not([data-cfx-keep], [data-cfx-keep] *, button.from-blue-600) {
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+}
+html.cfx-light #root [data-cfx-card]:not([data-cfx-keep] *) {
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+}
+html.cfx-light #root [data-cfx-card]:not([data-cfx-keep] *):hover {
+  box-shadow: 0 12px 28px -8px rgba(15, 23, 42, 0.14) !important;
+}
+
+/* --- cinematic layer, toned for a light page --- */
+html.cfx-light .cfx-particles,
+html.cfx-light .cfx-hero-sweep,
+html.cfx-light #root > div.min-h-screen > header::after { display: none; }
+
+html.cfx-light .cfx-hero-media { background-color: #f8fafc; }
+html.cfx-light .cfx-hero-media video.cfx-on { opacity: 0.4; filter: saturate(0.85); }
+html.cfx-light .cfx-hero-shade {
+  background: linear-gradient(180deg, rgba(248, 250, 252, 0.94) 0%, rgba(255, 255, 255, 0.82) 45%, rgba(248, 250, 252, 0.96) 90%, #f8fafc 100%);
+}
+
+html.cfx-light #root > div.min-h-screen > header::before { background: #2563eb; }
+
+html.cfx-light [data-cfx-sect]::before,
+html.cfx-light [data-cfx-sect][data-cfx-glow] { background-image: none; }
+html.cfx-light [data-cfx-sect][data-cfx-in]::before { animation: none; opacity: 0; }
+
+html.cfx-light [data-cfx-card]::before { display: none; }
+html.cfx-light [data-cfx-card]::after {
+  padding: 1.5px;
+  background: #93c5fd;
+}
+html.cfx-light [data-cfx-card]:hover::after,
+html.cfx-light [data-cfx-card]:focus-within::after { animation: none; }
+
+html.cfx-light [data-cfx-photo] { box-shadow: 0 20px 40px -18px rgba(15, 23, 42, 0.35); }
+html.cfx-light [data-cfx-thumb]:hover { box-shadow: 0 10px 22px -10px rgba(37, 99, 235, 0.35); }
+html.cfx-light [data-cfx-lift]:hover { border-color: #93c5fd; }
+
+html.cfx-light [data-cfx-cta]::after {
+  background: linear-gradient(110deg, transparent 40%, rgba(255, 255, 255, 0.22) 50%, transparent 60%) no-repeat;
+  background-size: 260% 100%;
+}
+html.cfx-light [data-cfx-cta]:hover { box-shadow: 0 14px 24px -8px rgba(37, 99, 235, 0.4); }
+
+html.cfx-light #root input:not([type="checkbox"]):not([type="radio"]):focus,
+html.cfx-light #root select:focus,
+html.cfx-light #root textarea:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
