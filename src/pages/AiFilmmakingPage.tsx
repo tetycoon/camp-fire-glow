@@ -1082,37 +1082,27 @@ const AiFilmmakingPage: React.FC = () => {
       ==================================================================== */}
       <section
         data-cfx-keep="true"
-        className="relative min-h-[580px] sm:min-h-[660px] lg:min-h-[720px] flex items-center justify-center pt-12 pb-16 sm:pt-20 sm:pb-28 overflow-hidden bg-[#04060e] text-white"
+        className="relative min-h-[620px] sm:min-h-[720px] lg:min-h-[820px] flex items-center justify-center pt-12 pb-16 sm:pt-20 sm:pb-28 overflow-hidden bg-[#04060e] text-white"
       >
-        {/* Cinematic AI World Creation & Superhero Background Image */}
+        {/* 100% FULLY VISIBLE AI Superhero & Multiverse Background Image */}
         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
           <img
             src={heroAiFilmmakingStudio}
             alt="AI Video Generation & AI World Creation with Superhero"
-            className="w-full h-full object-cover object-center lg:object-[80%_center] filter brightness-[0.88] contrast-[1.12]"
+            className="w-full h-full object-cover object-center"
           />
-          {/* Atmospheric Cinematic Gradients: deep dark on left for text, clear on right to showcase the superhero & AI world */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#04060e] via-[#04060e]/85 to-transparent sm:via-[#04060e]/70" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#04060e] via-transparent to-[#04060e]/70" />
-          <div className="absolute inset-0 bg-blue-950/15 mix-blend-screen" />
         </div>
 
-        {/* 3D Perspective Horizon Floor Grid */}
-        <div className="absolute inset-x-0 bottom-0 h-48 sm:h-64 overflow-hidden pointer-events-none opacity-40">
-          <div className="w-[200%] -left-1/2 h-[400px] relative cyber-grid-3d" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#04060e] via-transparent to-transparent" />
-        </div>
-
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10 text-center lg:text-left w-full">
-          <div className="max-w-3xl">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 relative z-10 text-center lg:text-left w-full">
+          <div className="max-w-2xl bg-slate-950/45 sm:bg-slate-950/40 p-6 sm:p-8 rounded-3xl backdrop-blur-md border border-white/15 shadow-[0_8px_32px_rgba(0,0,0,0.6)]">
             {/* Eyebrow Badge */}
-            <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-1.5 rounded-full bg-blue-500/20 border border-blue-400/40 text-blue-200 text-[11px] sm:text-xs font-bold mb-4 sm:mb-6 shadow-[0_0_30px_rgba(37,99,235,0.3)] backdrop-blur-md">
+            <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-1.5 rounded-full bg-blue-500/25 border border-blue-400/40 text-blue-200 text-[11px] sm:text-xs font-bold mb-4 sm:mb-6 shadow-[0_0_30px_rgba(37,99,235,0.3)]">
               <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
               <span>3-HOURS BASIC &amp; FOUNDATION LIVE WEBINAR</span>
             </div>
 
             {/* Main Headline */}
-            <h1 className="text-3xl sm:text-5xl xl:text-[3.75rem] font-black tracking-tight leading-[1.12] mb-4 sm:mb-6 text-white drop-shadow-[0_4px_16px_rgba(0,0,0,0.8)]">
+            <h1 className="text-3xl sm:text-5xl xl:text-[3.5rem] font-black tracking-tight leading-[1.12] mb-4 sm:mb-6 text-white drop-shadow-[0_4px_16px_rgba(0,0,0,0.8)]">
               Master{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-300 to-indigo-300">
                 AI Filmmaking
@@ -1125,7 +1115,7 @@ const AiFilmmakingPage: React.FC = () => {
             </h1>
 
             {/* Subtitle Copy */}
-            <p className="text-sm sm:text-lg text-slate-200 leading-relaxed mb-8 max-w-2xl mx-auto lg:mx-0 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
+            <p className="text-sm sm:text-base text-slate-200 leading-relaxed mb-6 max-w-xl mx-auto lg:mx-0 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
               Go from complete beginner to directing studio-quality{' '}
               <strong className="text-cyan-300">3D AI Logo Animations</strong>, hyper-realistic{' '}
               <strong className="text-blue-300">Talking AI Avatars</strong>, and breathtaking{' '}
@@ -1136,7 +1126,7 @@ const AiFilmmakingPage: React.FC = () => {
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 justify-center lg:justify-start">
               <button
                 onClick={() => openCheckout(false)}
-                className="w-full sm:w-auto group relative inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-black text-base sm:text-lg shadow-[0_0_40px_rgba(37,99,235,0.6)] transition-all cursor-pointer"
+                className="w-full sm:w-auto group relative inline-flex items-center justify-center gap-2.5 px-7 py-3.5 sm:py-4 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-black text-sm sm:text-base shadow-[0_0_35px_rgba(37,99,235,0.6)] transition-all cursor-pointer"
               >
                 <span>Reserve Sunday Seat for ₹99</span>
                 <span className="line-through text-xs text-white/70 font-normal">₹1,999</span>
@@ -1145,7 +1135,7 @@ const AiFilmmakingPage: React.FC = () => {
 
               <button
                 onClick={() => openCheckout(true)}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-4 rounded-2xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/50 text-amber-200 font-bold text-xs sm:text-sm backdrop-blur-md transition-all cursor-pointer shadow-[0_0_20px_rgba(245,158,11,0.2)]"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3.5 sm:py-4 rounded-2xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/50 text-amber-200 font-bold text-xs sm:text-sm backdrop-blur-md transition-all cursor-pointer shadow-[0_0_20px_rgba(245,158,11,0.2)]"
               >
                 <FileText className="w-4 h-4 text-amber-400 shrink-0" />
                 <span>+ ₹400 Session PDF &amp; Material Option</span>
@@ -1153,7 +1143,7 @@ const AiFilmmakingPage: React.FC = () => {
             </div>
 
             {/* Trust Badges */}
-            <div className="mt-5 sm:mt-6 flex flex-wrap items-center justify-center lg:justify-start gap-4 text-xs text-slate-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+            <div className="mt-5 flex flex-wrap items-center justify-center lg:justify-start gap-3 sm:gap-4 text-xs text-slate-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
               <span className="inline-flex items-center gap-1.5 font-medium">
                 <ShieldCheck className="w-4 h-4 text-emerald-400" /> GST Tax Invoice Included
               </span>
