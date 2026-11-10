@@ -42,6 +42,10 @@ const spaRoutes = [
   'claude-masterclass/offline',
   'claude_masterclass/thank-you',
   'claude_masterclass/thankyou',
+  'ai_filmmaking',
+  'ai-filmmaking',
+  'ai_video_generation',
+  'ai-video-generation',
   'ai_bgm',
   'aibgm',
   'ai-bgm',
@@ -85,6 +89,49 @@ spaRoutes.forEach(route => {
     fs.mkdirSync(destDir, { recursive: true });
     fs.copyFileSync(src, dest);
     console.log(`✓ Verified dedicated static page: ${dest}`);
+  }
+});
+
+// CRITICAL FIX: Ensure claude-masterclass (hyphenated route) is a 100% mirror of claude_masterclass
+const claudeSrcDir = path.join('public', 'claude_masterclass');
+const claudeHyphenDestDir = path.join('dist', 'claude-masterclass');
+if (fs.existsSync(claudeSrcDir)) {
+  fs.cpSync(claudeSrcDir, claudeHyphenDestDir, { recursive: true });
+  console.log('✓ Synchronized claude-masterclass (hyphenated) with dedicated static assets');
+  
+  // Also sync online and offline subdirectories
+  ['online', 'offline'].forEach(sub => {
+    const hyphenSubDir = path.join('dist', 'claude-masterclass', sub);
+    const underscoreSubDir = path.join('dist', 'claude_masterclass', sub);
+    fs.mkdirSync(hyphenSubDir, { recursive: true });
+    fs.mkdirSync(underscoreSubDir, { recursive: true });
+    fs.copyFileSync(path.join(claudeSrcDir, 'index.html'), path.join(hyphenSubDir, 'index.html'));
+    fs.copyFileSync(path.join(claudeSrcDir, 'index.html'), path.join(underscoreSubDir, 'index.html'));
+  });
+  console.log('✓ Synchronized all online/offline sub-routes with dedicated static HTML');
+}
+
+
+
+// Inject developer cinematic layer right before </head> (after Vite's main CSS) into filmmaking routes & root SPA fallback
+const filmmakingHtmlTargets = [
+  path.join('dist', 'index.html'),
+  path.join('dist', '404.html'),
+  path.join('dist', 'ai_filmmaking', 'index.html'),
+  path.join('dist', 'ai-filmmaking', 'index.html'),
+  path.join('dist', 'ai_video_generation', 'index.html'),
+  path.join('dist', 'ai-video-generation', 'index.html')
+];
+const cfxTags = '  <link rel="stylesheet" href="/ai_filmmaking/fx/cinematic.css?v=3" />\n  <script defer src="/ai_filmmaking/fx/cinematic.js?v=3"></script>\n</head>';
+filmmakingHtmlTargets.forEach(htmlPath => {
+  if (fs.existsSync(htmlPath)) {
+    let html = fs.readFileSync(htmlPath, 'utf8');
+    // Remove any earlier placement before <script type="module"
+    html = html.replace(/\s*<link rel="stylesheet" href="\/ai_filmmaking\/fx\/cinematic\.css[^"]*" \/>/g, '');
+    html = html.replace(/\s*<script defer src="\/ai_filmmaking\/fx\/cinematic\.js[^"]*"><\/script>/g, '');
+    html = html.replace('</head>', cfxTags);
+    fs.writeFileSync(htmlPath, html);
+    console.log('✓ Injected developer cinematic layer (after main CSS) into ' + htmlPath);
   }
 });
 

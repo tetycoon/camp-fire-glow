@@ -53,6 +53,7 @@ import AcademyPreRegisterPage from "./pages/AcademyPreRegisterPage";
 import AIBGMPage from "./pages/AIBGMPage";
 import ProfessionalPage from "./pages/ProfessionalPage";
 import ConsultingPage from "./pages/ConsultingPage";
+import AiFilmmakingPage from "./pages/AiFilmmakingPage";
 
 const DynamicRootPage = () => {
   const host = typeof window !== "undefined" ? window.location.hostname.toLowerCase() : "";
@@ -161,6 +162,14 @@ const App = () => (
           <Route path="/webinar" element={<WebinarAccess />} />
           <Route path="/watch" element={<WatchRoom />} />
           <Route path="/webinar-watch" element={<WatchRoom />} />
+          <Route path="/ai_filmmaking" element={<AiFilmmakingPage />} />
+          <Route path="/ai_filmmaking/" element={<AiFilmmakingPage />} />
+          <Route path="/ai-filmmaking" element={<AiFilmmakingPage />} />
+          <Route path="/ai-filmmaking/" element={<AiFilmmakingPage />} />
+          <Route path="/ai_video_generation" element={<AiFilmmakingPage />} />
+          <Route path="/ai_video_generation/" element={<AiFilmmakingPage />} />
+          <Route path="/ai-video-generation" element={<AiFilmmakingPage />} />
+          <Route path="/ai-video-generation/" element={<AiFilmmakingPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
