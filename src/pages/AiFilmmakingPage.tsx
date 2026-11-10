@@ -1190,47 +1190,6 @@ const AiFilmmakingPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Schedule & Countdown Box (Mobile-Optimized) */}
-              <div className="rounded-2xl bg-slate-900/90 border border-white/15 p-3.5 sm:p-4 mb-6 backdrop-blur-xl">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3.5">
-                  <div className="flex items-center gap-3 text-left">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-500 flex items-center justify-center shrink-0 shadow-lg shadow-blue-500/30">
-                      <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-                    </div>
-                    <div>
-                      <p className="text-[10px] sm:text-xs uppercase tracking-widest text-cyan-400 font-bold">
-                        Every Sunday Morning • Live Batch
-                      </p>
-                      <p className="text-xs sm:text-base font-extrabold text-white">
-                        {sessionInfo.formattedDate} • 10:00 AM – 1:00 PM IST
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Live Countdown */}
-                  <div className="grid grid-cols-4 gap-1.5 sm:flex sm:items-center sm:gap-2">
-                    {[
-                      { label: 'Days', val: timeLeft.days },
-                      { label: 'Hrs', val: timeLeft.hours },
-                      { label: 'Min', val: timeLeft.minutes },
-                      { label: 'Sec', val: timeLeft.seconds }
-                    ].map((item, idx) => (
-                      <div
-                        key={idx}
-                        className="px-2 py-1.5 rounded-xl bg-black/60 border border-blue-500/30 text-center min-w-[52px]"
-                      >
-                        <span className="block text-sm sm:text-lg font-black font-mono text-white leading-none">
-                          {String(item.val).padStart(2, '0')}
-                        </span>
-                        <span className="block text-[9px] uppercase tracking-wider text-slate-400 mt-0.5">
-                          {item.label}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
               {/* CTA Buttons */}
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 justify-center lg:justify-start">
                 <button
