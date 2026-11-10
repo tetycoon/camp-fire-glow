@@ -593,9 +593,14 @@ const AIMasterclassRegisterModal: React.FC = () => {
                                             >
                                                 <span>📑 I want resource toolkit worth of ₹ 10,000</span>
                                             </label>
-                                            <span className="text-[10px] font-black text-blue-700 bg-blue-100/90 border border-blue-200 px-2 py-0.5 rounded-md">
-                                                Total ₹499
-                                            </span>
+                                            <div className="flex flex-col items-end shrink-0">
+                                                <span className="text-[10px] font-black text-blue-700 bg-blue-100/90 border border-blue-200 px-2 py-0.5 rounded-md">
+                                                    Total ₹499
+                                                </span>
+                                                <span className="text-[10px] font-bold text-slate-400 line-through mt-0.5">
+                                                    ₹10,000
+                                                </span>
+                                            </div>
                                         </div>
                                         <ul className="mt-2 space-y-1 text-[11px] text-slate-700 font-medium">
                                             <li className="flex items-center gap-1.5">

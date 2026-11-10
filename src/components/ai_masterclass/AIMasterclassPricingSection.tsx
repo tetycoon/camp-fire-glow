@@ -115,7 +115,7 @@ const AIMasterclassPricingSection: React.FC = () => {
                             </p>
 
                             <div className="flex items-baseline gap-2.5 mb-1">
-                                <span className="text-2xl text-slate-500 line-through font-semibold">₹4,999</span>
+                                <span className="text-2xl text-slate-500 line-through font-semibold">₹10,000</span>
                                 <span className="text-5xl font-black text-white leading-none">₹499</span>
                             </div>
                             <p className="text-xs font-semibold text-blue-400 mb-6">
