@@ -69,22 +69,6 @@ const AIMasterclassPricingSection: React.FC = () => {
                                         <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
                                         <span><strong>3-Hours Live Interactive Training</strong> (Wed, Fri or Sun)</span>
                                     </li>
-                                    <li className="flex items-start gap-2.5">
-                                        <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                                        <span><strong>Live Interactive Q&A</strong> with Antony Praveen</span>
-                                    </li>
-                                    <li className="flex items-start gap-2.5">
-                                        <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                                        <span><strong>Bilingual Delivery</strong> in Tamil & English</span>
-                                    </li>
-                                    <li className="flex items-start gap-2.5">
-                                        <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                                        <span><strong>Official Certificate of Participation</strong></span>
-                                    </li>
-                                    <li className="flex items-start gap-2.5">
-                                        <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                                        <span><strong>WhatsApp VIP Community</strong> Session Access & Updates</span>
-                                    </li>
                                     <li className="flex items-start gap-2.5 text-slate-400">
                                         <XCircle className="w-4 h-4 text-slate-300 shrink-0 mt-0.5" />
                                         <span>Resource Toolkit (PDFs, Toolkits & Agents) — <em>Not Included</em></span>
