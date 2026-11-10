@@ -26,7 +26,7 @@ const testimonials = [
     {
         name: "Deepa Venkatesh",
         role: "E-commerce Entrepreneur",
-        quote: "I was skeptical about paying ₹4,999 for a 1-day workshop. By lunch, I had already built my AI-powered website. Best investment I've made for my business this year.",
+        quote: "I was skeptical about paying ₹6,499 for a 1-day workshop. By lunch, I had already built my AI-powered website. Best investment I've made for my business this year.",
         rating: 5,
         initials: "DV"
     },

@@ -67,7 +67,7 @@ const UpscaleFooter: React.FC = () => {
                                 <Mail className="w-4 h-4 shrink-0" /> support@techtycoon.in
                             </a>
                             <div className="text-xs font-medium text-slate-400 leading-relaxed pt-1">
-                                No. 3/59B, 1st Floor, 3rd Street, Ragava Nagar, Moovarasampet, Chennai-600091
+                                No. 31, Ramalinga Nagar, Madipakkam, Chennai, TamilNadu 600091
                             </div>
                         </div>
 

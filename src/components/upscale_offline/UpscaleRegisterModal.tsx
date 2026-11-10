@@ -45,8 +45,7 @@ const UpscaleRegisterModal: React.FC = () => {
     const [companyName, setCompanyName] = useState("");
     const [gstError, setGstError] = useState("");
 
-    const baseTotal = 4999 * seatsCount;
-    const gstBreakdown = calculateGstBreakdown(baseTotal);
+    const baseTotal = 6499 * seatsCount;
 
     // Country code search state
     const [countrySearch, setCountrySearch] = useState("");
@@ -132,7 +131,7 @@ const UpscaleRegisterModal: React.FC = () => {
         }
 
         const isTestEmail = isAuthorizedTestEmail(sanitizedEmail);
-        const finalPayableInr = isTestEmail ? 1 : gstBreakdown.totalAmount;
+        const finalPayableInr = isTestEmail ? 1 : baseTotal;
         const finalAmount = finalPayableInr * 100;
 
         const payloadObj = {
@@ -142,8 +141,8 @@ const UpscaleRegisterModal: React.FC = () => {
             countryCode: form.countryCode,
             userType: sanitizeTextInput(form.profession || "Professional", 80),
             language: "Chennai Offline",
-            baseAmount: isTestEmail ? 1 : gstBreakdown.baseAmount,
-            gstAmount: isTestEmail ? 0 : gstBreakdown.gstAmount,
+            baseAmount: isTestEmail ? 1 : finalPayableInr,
+            gstAmount: 0,
             amount: finalPayableInr,
             paymentSuccess: false,
             companyName: sanitizedCompany,
@@ -171,7 +170,7 @@ const UpscaleRegisterModal: React.FC = () => {
                 amount: finalAmount,
                 currency: "INR",
                 name: "Tech Tycoon",
-                description: `UPSCALE: 1-Day AI Mastery Chennai (${seatsCount} Seats, Incl. 18% GST)`,
+                description: `UPSCALE: 1-Day AI Mastery Chennai (${seatsCount} ${seatsCount === 1 ? "Seat" : "Seats"})`,
                 prefill: {
                     name: sanitizedName,
                     email: sanitizedEmail,
@@ -214,8 +213,8 @@ const UpscaleRegisterModal: React.FC = () => {
                                 razorpay_signature: sig,
                                 email: sanitizedEmail,
                                 name: sanitizedName,
-                                baseAmount: isTestEmail ? 1 : gstBreakdown.baseAmount,
-                                gstAmount: isTestEmail ? 0 : gstBreakdown.gstAmount,
+                                baseAmount: isTestEmail ? 1 : finalPayableInr,
+                                gstAmount: 0,
                                 amount: finalPayableInr,
                                 companyName: sanitizedCompany,
                                 gstin: sanitizedGstin,
@@ -336,26 +335,17 @@ const UpscaleRegisterModal: React.FC = () => {
                                 <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">
                                     TXN ID: {paymentId}
                                 </div>
-                                <button
-                                    type="button"
-                                    onClick={() => {
-                                        if (verifiedInvoice) {
-                                            openPrintableGstInvoice(verifiedInvoice);
-                                        }
-                                    }}
-                                    className="w-full mb-3 py-3 px-4 rounded-2xl bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-700 font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all"
-                                >
-                                    <FileText className="w-4 h-4" />
-                                    <span>Download Official GST Tax Invoice (PDF)</span>
-                                </button>
-                                <button onClick={handleClose} className="w-full text-slate-400 hover:text-slate-900 py-2 font-black text-[10px] uppercase tracking-widest transition-colors">Close Window</button>
+                                <p className="text-xs text-slate-500 mb-4 text-center font-medium">
+                                    📧 Your official GST Tax Invoice has been emailed to <strong>{form.email}</strong>.
+                                </p>
+                                <button onClick={handleClose} className="w-full text-slate-400 hover:text-slate-900 py-2 font-black text-[10px] uppercase tracking-widest transition-colors cursor-pointer">Close Window</button>
                             </div>
                         ) : (
                             <>
                                     <div className="mb-8">
                                         <h2 className="text-3xl font-black text-slate-900 mb-1 tracking-tight">Register <span className="text-blue-600">Now.</span></h2>
                                         <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">
-                                            <span className="line-through text-slate-300 mr-2">₹9,999</span>₹4,999 + 18% GST (₹5,899 Total)
+                                            <span className="line-through text-slate-300 mr-2">₹9,999</span>₹6,499 (No GST Added)
                                         </p>
                                     </div>
 
@@ -497,31 +487,53 @@ const UpscaleRegisterModal: React.FC = () => {
                                             </select>
                                         </div>
                                         <div className="space-y-1 flex flex-col justify-end items-end pr-2">
-                                            <div className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Base Fee (+18% GST)</div>
-                                            <div className="text-lg font-black text-blue-600">₹{gstBreakdown.totalAmount.toLocaleString("en-IN")}</div>
+                                            <div className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Fee (No GST Added)</div>
+                                            <div className="text-lg font-black text-blue-600">₹{baseTotal.toLocaleString("en-IN")}</div>
                                         </div>
                                     </div>
 
-                                    <GstPriceBreakdown
-                                        baseAmount={baseTotal}
-                                        claimGst={claimGst}
-                                        onClaimGstChange={(checked) => {
-                                            setClaimGst(checked);
-                                            if (!checked) setGstError("");
-                                        }}
-                                        gstin={gstin}
-                                        onGstinChange={(val) => {
-                                            setGstin(val);
-                                            if (gstError) setGstError("");
-                                        }}
-                                        companyName={companyName}
-                                        onCompanyNameChange={(val) => {
-                                            setCompanyName(val);
-                                            if (gstError) setGstError("");
-                                        }}
-                                        gstError={gstError}
-                                        theme="light"
-                                    />
+                                    {/* Optional Company Details */}
+                                    <div className="rounded-xl border border-slate-200 bg-slate-50/80 p-3 text-xs">
+                                        <label className="flex items-center gap-2 cursor-pointer select-none">
+                                            <input
+                                                type="checkbox"
+                                                checked={claimGst}
+                                                onChange={e => {
+                                                    setClaimGst(e.target.checked);
+                                                    if (!e.target.checked) setGstError("");
+                                                }}
+                                                className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                                            />
+                                            <span className="font-bold text-slate-800">Add Company Name / GSTIN (Optional)</span>
+                                        </label>
+
+                                        {claimGst && (
+                                            <div className="mt-3 space-y-2.5 pt-2.5 border-t border-slate-200">
+                                                <div>
+                                                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mb-1">Legal Company Name</label>
+                                                    <input
+                                                        type="text"
+                                                        placeholder="Company Legal Name"
+                                                        value={companyName}
+                                                        onChange={e => setCompanyName(e.target.value)}
+                                                        className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs font-semibold text-slate-900 outline-none focus:border-blue-400"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mb-1">Company GSTIN</label>
+                                                    <input
+                                                        type="text"
+                                                        placeholder="15-character GSTIN (optional)"
+                                                        value={gstin}
+                                                        maxLength={15}
+                                                        onChange={e => setGstin(e.target.value.toUpperCase())}
+                                                        className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs font-semibold text-slate-900 uppercase outline-none focus:border-blue-400"
+                                                    />
+                                                </div>
+                                                {gstError && <div className="text-red-600 text-[11px] font-semibold">{gstError}</div>}
+                                            </div>
+                                        )}
+                                    </div>
 
                                     <div className="flex items-start gap-2 px-1 mb-2">
                                         <input 
@@ -541,7 +553,7 @@ const UpscaleRegisterModal: React.FC = () => {
                                         disabled={loading || verifying}
                                         className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-black text-base shadow-lg shadow-blue-200 mt-2 transition-all active:scale-95 disabled:opacity-50"
                                     >
-                                        {verifying ? "VERIFYING..." : loading ? "CONNECTING..." : `PAY & ENROLL — ₹${gstBreakdown.totalAmount.toLocaleString("en-IN")} (Incl. GST)`}
+                                        {verifying ? "VERIFYING..." : loading ? "CONNECTING..." : `PAY & ENROLL — ₹${baseTotal.toLocaleString("en-IN")}`}
                                     </button>
 
                                     <div className="flex items-center justify-center gap-4 pt-4 text-[10px] font-black text-slate-400 uppercase tracking-widest opacity-60">

@@ -61,16 +61,17 @@ const UpscaleHero: React.FC = () => {
                             </div>
                         </div>
                         
-                        {/* Urgency Badge — repositioned for mobile */}
-                        <div className="absolute -top-6 -right-3 lg:-top-12 lg:-right-12 bg-white/95 backdrop-blur-3xl rounded-[24px] lg:rounded-[48px] p-5 lg:p-10 shadow-[0_32px_80px_rgba(0,0,0,0.15)] border border-white text-center hover:scale-110 transition-all duration-500 cursor-default group/badge animate-bounce-subtle">
-                            <div className="relative mb-2 lg:mb-3">
-                                <span className="absolute -top-1 -right-1 w-4 h-4 lg:w-5 lg:h-5 bg-red-500 rounded-full animate-ping opacity-25"></span>
-                                <span className="absolute -top-1 -right-1 w-4 h-4 lg:w-5 lg:h-5 bg-red-500 rounded-full opacity-60"></span>
-                                <div className="text-3xl lg:text-5xl font-black text-slate-950 leading-none tracking-tighter group-hover/badge:text-blue-600 transition-colors">30</div>
+                        {/* Executive Cohort Badge */}
+                        <div className="absolute -top-6 -right-3 lg:-top-10 lg:-right-10 bg-white/95 backdrop-blur-3xl rounded-[24px] lg:rounded-[36px] p-5 lg:p-7 shadow-[0_32px_80px_rgba(0,0,0,0.12)] border border-slate-200 text-center hover:scale-105 transition-all duration-300 cursor-default">
+                            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-[10px] font-black uppercase tracking-wider mb-2">
+                                <span className="w-2 h-2 rounded-full bg-blue-600"></span>
+                                Executive Cohort
                             </div>
-                            <div className="text-[8px] lg:text-[10px] font-black uppercase text-blue-600 tracking-[0.35em] leading-tight">
-                                SEATS LEFT<br />
-                                <span className="text-slate-400 font-bold opacity-40">AUG 9 BATCH (SUNDAY)</span>
+                            <div className="text-xl lg:text-2xl font-black text-slate-900 leading-tight">
+                                Full-Day Workshop
+                            </div>
+                            <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mt-1">
+                                8 Hours Hands-On • Chennai
                             </div>
                         </div>
                     </div>
@@ -136,9 +137,9 @@ const UpscaleHero: React.FC = () => {
                     <div className="flex flex-col font-black border-t-2 sm:border-t-0 sm:border-l-2 border-slate-200 pt-4 sm:pt-0 sm:pl-8">
                         <div className="flex items-baseline gap-2">
                             <span className="text-sm text-slate-400 line-through">₹9,999</span>
-                            <span className="text-2xl text-slate-950 tracking-tighter">₹4,999</span>
+                            <span className="text-2xl text-slate-950 tracking-tighter">₹6,499</span>
                         </div>
-                        <div className="text-[7.5px] text-slate-400 uppercase tracking-[0.2em] mt-0.5 whitespace-nowrap">Includes Lunch & Networking</div>
+                        <div className="text-[7.5px] text-slate-400 uppercase tracking-[0.2em] mt-0.5 whitespace-nowrap">Includes Lunch & Networking • No GST Added</div>
                     </div>
                 </div>
             </div>

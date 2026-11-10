@@ -62,8 +62,8 @@ const UpscaleStickyBar: React.FC = () => {
 
                     {/* Price */}
                     <div className="flex flex-col font-black border-l-2 border-slate-200 pl-6">
-                        <div className="text-xl text-slate-950 tracking-tighter">₹4,999</div>
-                        <div className="text-[7px] text-slate-400 uppercase tracking-[0.15em] mt-0.5 whitespace-nowrap">Includes Lunch & Networking</div>
+                        <div className="text-xl text-slate-950 tracking-tighter">₹6,499</div>
+                        <div className="text-[7px] text-slate-400 uppercase tracking-[0.15em] mt-0.5 whitespace-nowrap">Includes Lunch & Networking • No GST</div>
                     </div>
                 </div>
             </div>

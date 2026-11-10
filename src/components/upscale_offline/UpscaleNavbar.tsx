@@ -121,7 +121,7 @@ const UpscaleNavbar: React.FC = () => {
                         onClick={openRegisterModal}
                         className="w-full bg-blue-600 text-white py-4 rounded-xl font-black text-lg"
                     >
-                        BOOK SEAT — ₹4,999
+                        BOOK SEAT — ₹6,499
                     </button>
                 </div>
             </div>
