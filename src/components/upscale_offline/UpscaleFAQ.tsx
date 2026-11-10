@@ -8,11 +8,11 @@ const faqs = [
     },
     {
         q: "What should I bring?",
-        a: "A laptop is mandatory — we build live at the venue. Make sure it's fully charged. A notebook for personal notes is recommended, though we provide a printed workbook with all frameworks."
+        a: "A laptop is mandatory — we build live at the venue. Make sure it's fully charged. A notebook for personal notes is recommended."
     },
     {
         q: "What's included in the ₹6,499 fee?",
-        a: "Everything: Full-day workshop (9:00 AM – 5:30 PM), printed practical workbook, executive networking lunch, morning and evening tea/coffee, and post-event WhatsApp support group."
+        a: "Everything: Full-day workshop (9:00 AM – 5:30 PM), executive networking lunch, morning and evening tea/coffee, and post-event WhatsApp support group."
     },
     {
         q: "Is there a refund policy?",
@@ -28,7 +28,7 @@ const faqs = [
     },
     {
         q: "Will I get recordings of the session?",
-        a: "No. This is a premium in-person experience designed for focused execution. The printed workbook serves as your permanent reference material with all frameworks and prompt architectures covered."
+        a: "No. This is a premium in-person experience designed for focused execution. You will receive digital reference resources and permanent WhatsApp community support for all frameworks covered."
     },
     {
         q: "Can I attend with a colleague?",

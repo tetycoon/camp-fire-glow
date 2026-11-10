@@ -33,7 +33,7 @@ const testimonials = [
     {
         name: "Ravi Kumar",
         role: "Freelance Consultant",
-        quote: "The networking lunch alone connected me with 3 potential partners. Add the AI tools mastery and the printed workbook — this is elite-level training at an unbeatable price.",
+        quote: "The networking lunch alone connected me with 3 potential partners. Add the AI tools mastery and real-time build guidance — this is elite-level training at an unbeatable price.",
         rating: 5,
         initials: "RK"
     },

@@ -8,9 +8,9 @@ const perks = [
         desc: "Bring your laptop. We build your AI frameworks locally, together in real-time."
     },
     {
-        icon: <BookOpen className="w-6 h-6" />,
-        title: "Physical Workbook",
-        desc: "A dedicated printed manual for all prompt architectures and systems covered."
+        icon: <ShieldCheck className="w-6 h-6" />,
+        title: "100% Live Execution",
+        desc: "No theoretical slides. Build, test, and deploy production AI business frameworks on spot."
     },
     {
         icon: <Coffee className="w-6 h-6" />,

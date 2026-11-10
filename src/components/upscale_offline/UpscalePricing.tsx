@@ -5,7 +5,6 @@ import { useUpscaleRegisterModal } from "./UpscaleRegisterModalContext";
 const inclusions = [
     { text: "Full Execution Roadmap", icon: <CheckCircle2 className="w-4 h-4" /> },
     { text: "Lunch & Morning/Evening Tea", icon: <Utensils className="w-4 h-4" /> },
-    { text: "Printed Practical Workbook", icon: <BookOpen className="w-4 h-4" /> },
     { text: "Direct Q&A with Trainer", icon: <ShieldCheck className="w-4 h-4" /> },
     { text: "Post-event WhatsApp Support", icon: <Zap className="w-4 h-4" /> }
 ];
@@ -26,7 +25,7 @@ const UpscalePricing: React.FC = () => {
                             <span className="bg-gradient-to-r from-blue-600 to-indigo-700 bg-clip-text text-transparent italic">Exponential Value.</span>
                         </h2>
                         <p className="text-lg text-slate-500 font-semibold mb-12 max-w-lg leading-relaxed">
-                            Your investment covers the entire curriculum, physical assets, executive dining, and direct implementation guidance.
+                            Your investment covers the entire curriculum, live hands-on execution, executive dining, and direct implementation guidance.
                         </p>
                         
                         <div className="bg-slate-50 border border-slate-200 rounded-[32px] p-8 flex items-center gap-6 mb-12">
@@ -59,7 +58,7 @@ const UpscalePricing: React.FC = () => {
                                 </div>
                                 <div className="text-emerald-400 font-bold text-xs flex items-center gap-2 mb-2">
                                     <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                                    Includes Full Course, Physical Workbook, Executive Lunch & High Tea
+                                    Includes Full Course, Executive Lunch & High Tea
                                 </div>
                             </div>
 
