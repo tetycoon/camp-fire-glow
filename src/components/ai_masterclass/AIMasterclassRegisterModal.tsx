@@ -613,15 +613,15 @@ const AIMasterclassRegisterModal: React.FC = () => {
                                             </li>
                                             <li className="flex items-center gap-1.5">
                                                 <span className="w-1.5 h-1.5 rounded-full bg-blue-600 shrink-0" />
-                                                <span>3. Multiple AI Agents Link</span>
+                                                <span>3. Multiple AI Agent Link</span>
                                             </li>
                                             <li className="flex items-center gap-1.5">
                                                 <span className="w-1.5 h-1.5 rounded-full bg-blue-600 shrink-0" />
-                                                <span>4. 10+ Secret AI Websites</span>
+                                                <span>4. 10+ Secret AI Website</span>
                                             </li>
                                         </ul>
                                         <p className="text-[10px] text-slate-500 mt-1.5 italic">
-                                            Delivered directly to your registered email & WhatsApp.
+                                            Delivered directly to your registered email.
                                         </p>
                                     </div>
                                 </div>

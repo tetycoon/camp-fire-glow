@@ -129,7 +129,7 @@ const AIMasterclassPricingSection: React.FC = () => {
                                 </div>
                                 <div className="flex items-center justify-between">
                                     <span>Toolkit Delivery:</span>
-                                    <span className="font-bold text-white">Sent Directly to Email & WhatsApp</span>
+                                    <span className="font-bold text-white">Sent Directly to Email</span>
                                 </div>
                             </div>
 
@@ -137,26 +137,26 @@ const AIMasterclassPricingSection: React.FC = () => {
                                 <p className="text-xs font-bold uppercase tracking-wider text-blue-300 mb-3.5 flex items-center gap-1.5">
                                     <span>Everything in Live Session, Plus:</span>
                                 </p>
-                                <ul className="space-y-3.5 text-xs sm:text-sm text-slate-200 mb-6">
-                                    <li className="flex items-start gap-2.5">
-                                        <CheckCircle2 className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
-                                        <span><strong>3-Hours Live Online Session</strong> (Full interactive training access)</span>
+                                <ul className="space-y-2.5 text-xs sm:text-sm text-slate-200 mb-6">
+                                    <li className="flex items-center gap-2.5">
+                                        <CheckCircle2 className="w-4 h-4 text-blue-400 shrink-0" />
+                                        <span className="font-bold text-white">3-Hours Live Online Session</span>
                                     </li>
-                                    <li className="flex items-start gap-2.5 bg-blue-500/10 border border-blue-500/20 rounded-lg p-2.5 -mx-1">
-                                        <FileText className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
-                                        <span><strong>1. Session PDF Material:</strong> Complete high-res slide deck, structured step-by-step implementation frameworks & workflows.</span>
+                                    <li className="flex items-center gap-2.5 bg-blue-500/10 border border-blue-500/20 rounded-lg py-2.5 px-3">
+                                        <FileText className="w-4 h-4 text-blue-400 shrink-0" />
+                                        <span className="font-semibold text-white">1. Session PDF Material</span>
                                     </li>
-                                    <li className="flex items-start gap-2.5 bg-blue-500/10 border border-blue-500/20 rounded-lg p-2.5 -mx-1">
-                                        <Cpu className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
-                                        <span><strong>2. 10+ AI Tool Kit:</strong> Handpicked enterprise AI software stack with configuration blueprints for marketing & operations.</span>
+                                    <li className="flex items-center gap-2.5 bg-blue-500/10 border border-blue-500/20 rounded-lg py-2.5 px-3">
+                                        <Cpu className="w-4 h-4 text-blue-400 shrink-0" />
+                                        <span className="font-semibold text-white">2. 10+ AI Tool Kit</span>
                                     </li>
-                                    <li className="flex items-start gap-2.5 bg-blue-500/10 border border-blue-500/20 rounded-lg p-2.5 -mx-1">
-                                        <Bot className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
-                                        <span><strong>3. Multiple AI Agents Link:</strong> Pre-built autonomous agent templates & links ready for immediate deployment.</span>
+                                    <li className="flex items-center gap-2.5 bg-blue-500/10 border border-blue-500/20 rounded-lg py-2.5 px-3">
+                                        <Bot className="w-4 h-4 text-blue-400 shrink-0" />
+                                        <span className="font-semibold text-white">3. Multiple AI Agent Link</span>
                                     </li>
-                                    <li className="flex items-start gap-2.5 bg-blue-500/10 border border-blue-500/20 rounded-lg p-2.5 -mx-1">
-                                        <Globe className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
-                                        <span><strong>4. 10+ Secret AI Websites:</strong> High-efficiency, unlisted AI portals for voice synthesis, video gen, and rapid graphic design.</span>
+                                    <li className="flex items-center gap-2.5 bg-blue-500/10 border border-blue-500/20 rounded-lg py-2.5 px-3">
+                                        <Globe className="w-4 h-4 text-blue-400 shrink-0" />
+                                        <span className="font-semibold text-white">4. 10+ Secret AI Website</span>
                                     </li>
                                 </ul>
                             </div>
