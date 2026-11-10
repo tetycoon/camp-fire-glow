@@ -17,7 +17,7 @@ const schedule = [
     {
         time: "01:15 PM",
         title: "Executive Networking Lunch",
-        desc: "Full buffet lunch at Vestin Park Hotel. Connect with 19 other visionaries.",
+        desc: "Full buffet lunch at Vestin Park Hotel. Connect with fellow visionaries and business leaders.",
         type: "break"
     },
     {
@@ -84,7 +84,7 @@ const UpscaleCurriculum: React.FC = () => {
                     </div>
                     <div className="flex items-center gap-10">
                         <div className="text-center">
-                            <div className="text-3xl font-black text-blue-500">20</div>
+                            <div className="text-3xl font-black text-blue-500">30</div>
                             <div className="text-[9px] uppercase font-black opacity-50 tracking-widest">Seats Total</div>
                         </div>
                         <div className="w-px h-10 bg-white/10"></div>
