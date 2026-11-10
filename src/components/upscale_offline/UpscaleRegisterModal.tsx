@@ -384,166 +384,76 @@ const UpscaleRegisterModal: React.FC = () => {
                                     </div>
                                 </div>
 
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                    <div className="space-y-1">
-                                        <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider px-0.5">WhatsApp Number</label>
-                                        <div className="flex gap-2">
-                                            {/* Searchable Country Code Picker */}
-                                            <div className="relative shrink-0" ref={countryDropdownRef} style={{ width: '110px' }}>
-                                                <button
-                                                    type="button"
-                                                    onClick={() => {
-                                                        setShowCountryDropdown(!showCountryDropdown);
-                                                        setCountrySearch("");
-                                                        setTimeout(() => countryInputRef.current?.focus(), 50);
-                                                    }}
-                                                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-2 py-2 text-sm text-slate-900 outline-none focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all cursor-pointer flex items-center justify-center gap-1"
-                                                >
-                                                    <span className="text-base leading-none">{selectedCountry.flag}</span>
-                                                    <span className="font-bold text-xs">{selectedCountry.code}</span>
-                                                    <svg className="w-3 h-3 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
-                                                </button>
-
-                                                {showCountryDropdown && (
-                                                    <div className="absolute top-full left-0 mt-1 w-64 max-h-56 rounded-xl bg-white border border-slate-200 shadow-2xl z-50 overflow-hidden flex flex-col">
-                                                        <div className="p-2 border-b border-slate-100 flex items-center gap-2 bg-slate-50">
-                                                            <Search className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                                                            <input
-                                                                ref={countryInputRef}
-                                                                type="text"
-                                                                value={countrySearch}
-                                                                onChange={e => setCountrySearch(e.target.value)}
-                                                                placeholder="Search..."
-                                                                className="w-full bg-transparent text-xs text-slate-900 placeholder:text-slate-400 outline-none"
-                                                                autoComplete="off"
-                                                            />
-                                                        </div>
-                                                        <div className="overflow-y-auto flex-1 max-h-44">
-                                                            {filteredCountries.length === 0 ? (
-                                                                <div className="px-3 py-2 text-xs text-slate-400 text-center">No results</div>
-                                                            ) : (
-                                                                filteredCountries.map((c, idx) => (
-                                                                    <button
-                                                                        key={`${c.iso}-${idx}`}
-                                                                        type="button"
-                                                                        onClick={() => {
-                                                                            setSelectedCountry(c);
-                                                                            setForm({ ...form, countryCode: c.code });
-                                                                            setShowCountryDropdown(false);
-                                                                            setCountrySearch("");
-                                                                        }}
-                                                                        className={`w-full flex items-center gap-2 px-3 py-1.5 text-xs hover:bg-blue-50 transition-colors text-left ${
-                                                                            selectedCountry.iso === c.iso && selectedCountry.code === c.code ? 'bg-blue-50 text-blue-600 font-bold' : 'text-slate-700'
-                                                                        }`}
-                                                                    >
-                                                                        <span className="text-sm leading-none w-5 text-center">{c.flag}</span>
-                                                                        <span className="flex-1 truncate">{c.name}</span>
-                                                                        <span className="text-[10px] text-slate-400 font-mono">{c.code}</span>
-                                                                    </button>
-                                                                ))
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                )}
-                                            </div>
-                                            <input 
-                                                required 
-                                                type="tel" 
-                                                placeholder="Mobile Number" 
-                                                className="flex-1 min-w-0 bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm text-slate-900 outline-none focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all"
-                                                value={form.phone}
-                                                onChange={e => setForm({...form, phone: e.target.value.replace(/\D/g, '')})}
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div className="space-y-1">
-                                        <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider px-0.5">I am a...</label>
-                                        <div className="relative">
-                                            <select 
-                                                required 
-                                                className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2 text-sm font-semibold text-slate-900 outline-none focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-100 appearance-none cursor-pointer transition-all"
-                                                value={form.profession}
-                                                onChange={e => setForm({...form, profession: e.target.value})}
+                                <div className="space-y-1">
+                                    <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider px-0.5">WhatsApp Number</label>
+                                    <div className="flex gap-2">
+                                        {/* Searchable Country Code Picker */}
+                                        <div className="relative shrink-0" ref={countryDropdownRef} style={{ width: '110px' }}>
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setShowCountryDropdown(!showCountryDropdown);
+                                                    setCountrySearch("");
+                                                    setTimeout(() => countryInputRef.current?.focus(), 50);
+                                                }}
+                                                className="w-full bg-slate-50 border border-slate-300 rounded-xl px-2 py-2 text-sm text-slate-900 outline-none focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all cursor-pointer flex items-center justify-center gap-1"
                                             >
-                                                <option value="">Select your role</option>
-                                                <option>Business Owner</option>
-                                                <option>Entrepreneur</option>
-                                                <option>Corporate Leader</option>
-                                                <option>Trainer/Coach</option>
-                                                <option>Freelancer</option>
-                                                <option>Educator</option>
-                                                <option>Other</option>
-                                            </select>
-                                            <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
-                                                <svg width="10" height="6" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                                            </div>
+                                                <span className="text-base leading-none">{selectedCountry.flag}</span>
+                                                <span className="font-bold text-xs">{selectedCountry.code}</span>
+                                                <svg className="w-3 h-3 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                                            </button>
+
+                                            {showCountryDropdown && (
+                                                <div className="absolute top-full left-0 mt-1 w-64 max-h-56 rounded-xl bg-white border border-slate-200 shadow-2xl z-50 overflow-hidden flex flex-col">
+                                                    <div className="p-2 border-b border-slate-100 flex items-center gap-2 bg-slate-50">
+                                                        <Search className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                                                        <input
+                                                            ref={countryInputRef}
+                                                            type="text"
+                                                            value={countrySearch}
+                                                            onChange={e => setCountrySearch(e.target.value)}
+                                                            placeholder="Search..."
+                                                            className="w-full bg-transparent text-xs text-slate-900 placeholder:text-slate-400 outline-none"
+                                                            autoComplete="off"
+                                                        />
+                                                    </div>
+                                                    <div className="overflow-y-auto flex-1 max-h-44">
+                                                        {filteredCountries.length === 0 ? (
+                                                            <div className="px-3 py-2 text-xs text-slate-400 text-center">No results</div>
+                                                        ) : (
+                                                            filteredCountries.map((c, idx) => (
+                                                                <button
+                                                                    key={`${c.iso}-${idx}`}
+                                                                    type="button"
+                                                                    onClick={() => {
+                                                                        setSelectedCountry(c);
+                                                                        setForm({ ...form, countryCode: c.code });
+                                                                        setShowCountryDropdown(false);
+                                                                        setCountrySearch("");
+                                                                    }}
+                                                                    className={`w-full flex items-center gap-2 px-3 py-1.5 text-xs hover:bg-blue-50 transition-colors text-left ${
+                                                                        selectedCountry.iso === c.iso && selectedCountry.code === c.code ? 'bg-blue-50 text-blue-600 font-bold' : 'text-slate-700'
+                                                                    }`}
+                                                                >
+                                                                    <span className="text-sm leading-none w-5 text-center">{c.flag}</span>
+                                                                    <span className="flex-1 truncate">{c.name}</span>
+                                                                    <span className="text-[10px] text-slate-400 font-mono">{c.code}</span>
+                                                                </button>
+                                                            ))
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            )}
                                         </div>
-                                    </div>
-                                </div>
-
-                                {/* Seat quantity selector */}
-                                <div className="grid grid-cols-2 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200">
-                                    <div className="space-y-0.5">
-                                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Number of Seats</label>
-                                        <select
-                                            value={seatsCount}
-                                            onChange={e => setSeatsCount(Number(e.target.value))}
-                                            className="w-full bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs font-bold text-slate-900 outline-none cursor-pointer"
-                                        >
-                                            {[1, 2, 3, 4, 5, 10, 15, 20].map(n => (
-                                                <option key={n} value={n}>{n} {n === 1 ? "Seat" : "Seats"}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                    <div className="flex flex-col justify-end items-end pr-1">
-                                        <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Total Investment</div>
-                                        <div className="text-base sm:text-lg font-black text-blue-600 leading-tight">₹{baseTotal.toLocaleString("en-IN")}</div>
-                                        <div className="text-[9px] font-semibold text-emerald-600">Flat Fee • No GST Added</div>
-                                    </div>
-                                </div>
-
-                                {/* Optional Company Details */}
-                                <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-2.5 text-xs">
-                                    <label className="flex items-center gap-2 cursor-pointer select-none">
-                                        <input
-                                            type="checkbox"
-                                            checked={claimGst}
-                                            onChange={e => {
-                                                setClaimGst(e.target.checked);
-                                                if (!e.target.checked) setGstError("");
-                                            }}
-                                            className="w-3.5 h-3.5 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                                        <input 
+                                            required 
+                                            type="tel" 
+                                            placeholder="Mobile Number" 
+                                            className="flex-1 min-w-0 bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm text-slate-900 outline-none focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all"
+                                            value={form.phone}
+                                            onChange={e => setForm({...form, phone: e.target.value.replace(/\D/g, '')})}
                                         />
-                                        <span className="font-semibold text-slate-700 text-xs">Add Company Name / GSTIN (Optional)</span>
-                                    </label>
-
-                                    {claimGst && (
-                                        <div className="mt-2.5 space-y-2 pt-2 border-t border-slate-200">
-                                            <div>
-                                                <label className="text-[9px] font-bold text-slate-500 uppercase tracking-wider block mb-0.5">Legal Company Name</label>
-                                                <input
-                                                    type="text"
-                                                    placeholder="Company Legal Name"
-                                                    value={companyName}
-                                                    onChange={e => setCompanyName(e.target.value)}
-                                                    className="w-full bg-white border border-slate-300 rounded-lg px-3 py-1.5 text-xs text-slate-900 outline-none focus:border-blue-500"
-                                                />
-                                            </div>
-                                            <div>
-                                                <label className="text-[9px] font-bold text-slate-500 uppercase tracking-wider block mb-0.5">Company GSTIN</label>
-                                                <input
-                                                    type="text"
-                                                    placeholder="15-character GSTIN (optional)"
-                                                    value={gstin}
-                                                    maxLength={15}
-                                                    onChange={e => setGstin(e.target.value.toUpperCase())}
-                                                    className="w-full bg-white border border-slate-300 rounded-lg px-3 py-1.5 text-xs text-slate-900 uppercase outline-none focus:border-blue-500"
-                                                />
-                                            </div>
-                                            {gstError && <div className="text-red-600 text-[11px] font-semibold">{gstError}</div>}
-                                        </div>
-                                    )}
+                                    </div>
                                 </div>
 
                                 <div className="flex items-start gap-2 px-0.5">
