@@ -406,9 +406,11 @@ const AIMasterclassRegisterModal: React.FC = () => {
                     <div className="overflow-y-auto pr-1 -mr-1 flex-1">
                         <div className="text-center mb-3">
                             <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-                                Register <span className="text-blue-600">Now</span>
+                                Register <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Now</span>
                             </h2>
-                            <p className="text-xs text-slate-500 mt-0.5">3-Hour Live Interactive Masterclass • Just ₹99 (Incl. 18% GST)</p>
+                            <p className="text-xs text-slate-500 mt-0.5 font-medium">
+                                {includePdfMaterial ? "Masterclass + Resource Toolkit Pass • Total ₹499 (Incl. 18% GST)" : "3-Hour Live Interactive Masterclass • Just ₹99 (Incl. 18% GST)"}
+                            </p>
                             
                             
                             <div className="mt-2 inline-flex items-center gap-1.5 bg-blue-50 border border-blue-200 text-blue-700 px-3 py-1 rounded-full text-xs font-bold tracking-wide">
@@ -649,7 +651,7 @@ const AIMasterclassRegisterModal: React.FC = () => {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-md shadow-blue-600/20 cursor-pointer disabled:opacity-70"
+                                className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-sm sm:text-base py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-blue-600/25 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 cursor-pointer disabled:opacity-70"
                             >
                                 {loading ? <Loader2 className="animate-spin w-4 h-4" /> : `Proceed to Payment — ₹${totalAmount} (Incl. 18% GST)`}
                             </button>
