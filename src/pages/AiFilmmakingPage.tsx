@@ -1084,17 +1084,17 @@ const AiFilmmakingPage: React.FC = () => {
         data-cfx-keep="true"
         className="relative min-h-[580px] sm:min-h-[660px] lg:min-h-[720px] flex items-center justify-center pt-12 pb-16 sm:pt-20 sm:pb-28 overflow-hidden bg-[#04060e] text-white"
       >
-        {/* Cinematic High-Tech AI Filmmaking Studio Background Image */}
+        {/* Cinematic AI World Creation & Superhero Background Image */}
         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
           <img
             src={heroAiFilmmakingStudio}
-            alt="AI Filmmaking & Video Generation Virtual Production Studio"
-            className="w-full h-full object-cover object-center scale-105 filter brightness-[0.70] contrast-[1.12]"
+            alt="AI Video Generation & AI World Creation with Superhero"
+            className="w-full h-full object-cover object-center lg:object-[80%_center] filter brightness-[0.88] contrast-[1.12]"
           />
-          {/* Atmospheric Cinematic Gradients to ensure 100% text legibility */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#04060e]/95 via-[#04060e]/85 to-[#04060e]/50 sm:to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#04060e] via-transparent to-[#04060e]/80" />
-          <div className="absolute inset-0 bg-blue-950/20 mix-blend-color-dodge" />
+          {/* Atmospheric Cinematic Gradients: deep dark on left for text, clear on right to showcase the superhero & AI world */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#04060e] via-[#04060e]/85 to-transparent sm:via-[#04060e]/70" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#04060e] via-transparent to-[#04060e]/70" />
+          <div className="absolute inset-0 bg-blue-950/15 mix-blend-screen" />
         </div>
 
         {/* 3D Perspective Horizon Floor Grid */}
