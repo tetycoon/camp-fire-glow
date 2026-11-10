@@ -66,7 +66,7 @@ const UpscaleRegisterModal: React.FC = () => {
         }
         if (cleaned === "RMDAMIABLE") {
             setAppliedCoupon("RMDAMIABLE");
-            setCouponSuccess("✓ Coupon 'RMDAMIABLE' applied! ₹1,500 discount unlocked.");
+            setCouponSuccess("✓ Coupon applied! ₹1,500 discount unlocked.");
             setCouponError("");
         } else {
             setAppliedCoupon("");
@@ -393,7 +393,7 @@ const UpscaleRegisterModal: React.FC = () => {
                                         <>
                                             <span className="line-through text-slate-400">₹6,499</span>
                                             <span className="text-emerald-600 font-extrabold text-base">₹4,999</span>
-                                            <span className="text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded text-[10px] font-extrabold">RMDAMIABLE Applied (-₹1,500)</span>
+                                            <span className="text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded text-[10px] font-extrabold">Coupon Applied (-₹1,500)</span>
                                         </>
                                     ) : (
                                         <span className="text-slate-900 font-extrabold text-sm sm:text-base">₹6,499</span>
@@ -515,7 +515,7 @@ const UpscaleRegisterModal: React.FC = () => {
                                         <div className="flex gap-2">
                                             <input 
                                                 type="text" 
-                                                placeholder="e.g. RMDAMIABLE" 
+                                                placeholder="Enter Coupon Code" 
                                                 disabled={isCouponValid}
                                                 value={couponInput}
                                                 onChange={e => {

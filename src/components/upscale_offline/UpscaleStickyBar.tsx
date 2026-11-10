@@ -63,7 +63,7 @@ const UpscaleStickyBar: React.FC = () => {
                     <div className="flex flex-col font-black border-l-2 border-slate-200 pl-6">
                         <div className="flex items-baseline gap-1.5">
                             <span className="text-xl text-slate-950 tracking-tight">₹6,499</span>
-                            <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">₹4,999 w/ code</span>
+                            <span className="text-xs text-slate-400 line-through">₹9,999</span>
                         </div>
                         <div className="text-[9px] text-slate-500 font-bold uppercase tracking-wider mt-0.5 whitespace-nowrap">Includes Lunch & High Tea</div>
                     </div>

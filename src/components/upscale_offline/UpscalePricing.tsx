@@ -57,27 +57,9 @@ const UpscalePricing: React.FC = () => {
                                     <span className="text-6xl lg:text-7xl font-black tracking-tighter bg-gradient-to-br from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">₹6,499</span>
                                     <span className="text-slate-400 font-bold text-sm tracking-widest uppercase">/ PERSON</span>
                                 </div>
-                                <div className="text-emerald-400 font-bold text-xs flex items-center gap-2 mb-4">
+                                <div className="text-emerald-400 font-bold text-xs flex items-center gap-2 mb-2">
                                     <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
                                     Includes Full Course, Physical Workbook, Executive Lunch & High Tea
-                                </div>
-
-                                {/* Coupon Code Promo Banner */}
-                                <div className="bg-gradient-to-r from-blue-950/80 via-slate-900 to-slate-900 border border-blue-500/30 rounded-2xl p-3.5 flex items-center justify-between gap-3 shadow-inner">
-                                    <div className="flex items-center gap-2.5">
-                                        <div className="w-8 h-8 rounded-xl bg-blue-500/20 border border-blue-400/30 flex items-center justify-center text-blue-400 shrink-0">
-                                            <Tag className="w-4 h-4" />
-                                        </div>
-                                        <div>
-                                            <div className="text-xs font-bold text-white flex items-center gap-1.5 flex-wrap">
-                                                Use Coupon Code <span className="font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/30 font-extrabold tracking-wider">RMDAMIABLE</span>
-                                            </div>
-                                            <div className="text-[11px] text-slate-400">Unlock special <strong className="text-emerald-300">₹4,999</strong> pass at checkout</div>
-                                        </div>
-                                    </div>
-                                    <span className="text-[11px] font-black text-emerald-300 bg-emerald-500/20 border border-emerald-500/40 px-2.5 py-1 rounded-xl shrink-0">
-                                        SAVE ₹1,500
-                                    </span>
                                 </div>
                             </div>
 
