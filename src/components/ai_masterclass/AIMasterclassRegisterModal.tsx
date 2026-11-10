@@ -591,14 +591,32 @@ const AIMasterclassRegisterModal: React.FC = () => {
                                                 htmlFor="pdf-material-opt-in"
                                                 className="text-xs sm:text-sm font-bold text-slate-900 cursor-pointer flex items-center gap-1.5"
                                             >
-                                                <span>📑 Add Resource Toolkit & Session Material</span>
+                                                <span>📑 I want resource toolkit worth of ₹ 10,000</span>
                                             </label>
                                             <span className="text-[10px] font-black text-blue-700 bg-blue-100/90 border border-blue-200 px-2 py-0.5 rounded-md">
                                                 Total ₹499
                                             </span>
                                         </div>
-                                        <p className="text-[11px] text-slate-600 mt-1 leading-relaxed">
-                                            Includes: <strong>1. Session PDF Material</strong>, <strong>2. 10+ AI Tool Kit</strong>, <strong>3. Multiple AI Agents Link</strong>, and <strong>4. 10+ Secret AI Websites</strong>. Delivered directly to your registered email & WhatsApp.
+                                        <ul className="mt-2 space-y-1 text-[11px] text-slate-700 font-medium">
+                                            <li className="flex items-center gap-1.5">
+                                                <span className="w-1.5 h-1.5 rounded-full bg-blue-600 shrink-0" />
+                                                <span>1. Session PDF Material</span>
+                                            </li>
+                                            <li className="flex items-center gap-1.5">
+                                                <span className="w-1.5 h-1.5 rounded-full bg-blue-600 shrink-0" />
+                                                <span>2. 10+ AI Tool Kit</span>
+                                            </li>
+                                            <li className="flex items-center gap-1.5">
+                                                <span className="w-1.5 h-1.5 rounded-full bg-blue-600 shrink-0" />
+                                                <span>3. Multiple AI Agents Link</span>
+                                            </li>
+                                            <li className="flex items-center gap-1.5">
+                                                <span className="w-1.5 h-1.5 rounded-full bg-blue-600 shrink-0" />
+                                                <span>4. 10+ Secret AI Websites</span>
+                                            </li>
+                                        </ul>
+                                        <p className="text-[10px] text-slate-500 mt-1.5 italic">
+                                            Delivered directly to your registered email & WhatsApp.
                                         </p>
                                     </div>
                                 </div>
