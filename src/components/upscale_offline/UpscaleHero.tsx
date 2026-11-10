@@ -108,7 +108,7 @@ const UpscaleHero: React.FC = () => {
                         </div>
                         <div className="whitespace-nowrap">
                             <div className="text-[9px] font-black uppercase text-slate-400 tracking-widest">DATE</div>
-                            <div className="text-sm font-black text-slate-900 leading-none mt-1">11th October 2026 (Sunday)</div>
+                            <div className="text-sm font-black text-slate-900 leading-none mt-1">6th December 2026 (Sunday)</div>
                         </div>
                     </div>
 

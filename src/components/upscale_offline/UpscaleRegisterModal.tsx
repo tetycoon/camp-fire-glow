@@ -321,7 +321,7 @@ const UpscaleRegisterModal: React.FC = () => {
                                 <CheckCircle2 className="w-8 h-8" />
                             </div>
                             <h3 className="text-2xl font-black text-slate-900 mb-2">Registration Complete!</h3>
-                            <p className="text-slate-600 text-sm font-medium mb-6">Your payment was successful and your seat is secured for 11th October 2026 (Sunday).</p>
+                            <p className="text-slate-600 text-sm font-medium mb-6">Your payment was successful and your seat is secured for 6th December 2026 (Sunday).</p>
                             
                             <div className="bg-slate-50 p-5 rounded-2xl border border-slate-100 mb-6">
                                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Final Step: Join the community</p>

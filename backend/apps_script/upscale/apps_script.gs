@@ -366,7 +366,7 @@ function handleWhatsAppIncoming(body) {
     sendWhatsAppImage(phone, WHATSAPP_CONFIG.POSTER_URL, "Level-2 Offline AI Workshop (Chennai)");
     
     let welcomeMsg = "Welcome! 🎉 Your registration is confirmed for the Offline AI Workshop in Chennai.\n\n";
-    welcomeMsg += `📅 Date: 9th August 2026 (Sunday)\n🕒 Time: 9:00 AM — 5:30 PM\n📍 Location: Vestin Park Hotel, Egmore\n\n`;
+    welcomeMsg += `📅 Date: 6th December 2026 (Sunday)\n🕒 Time: 9:00 AM — 5:30 PM\n📍 Location: Vestin Park Hotel, Egmore\n\n`;
     welcomeMsg += "Please join our official WhatsApp Community for updates:\n" + WHATSAPP_CONFIG.WA_GROUP_LINK;
     
     sendWhatsAppText(phone, welcomeMsg);
@@ -910,7 +910,7 @@ function syncInvoiceWithFunnelsDone(customerName, customerEmail, customerPhone, 
 }
 
 function sendMasterclassEmail(email, name, sessionDate, sessionTime, totalAmount, paymentId, orderId, phone) {
-  const dateVal = sessionDate || "9th August 2026 (Sunday)";
+  const dateVal = sessionDate || "6th December 2026 (Sunday)";
   const timeVal = sessionTime || "9:00 AM — 5:30 PM";
   const courseTitle = "AI Business Generative Model — Level-2 Offline AI Workshop (Chennai)";
 
