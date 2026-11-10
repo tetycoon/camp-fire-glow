@@ -1142,7 +1142,7 @@ const AiFilmmakingPage: React.FC = () => {
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3.5 sm:py-4 rounded-2xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/50 text-amber-200 font-bold text-xs sm:text-sm backdrop-blur-md transition-all cursor-pointer shadow-[0_0_20px_rgba(245,158,11,0.2)]"
               >
                 <FileText className="w-4 h-4 text-amber-400 shrink-0" />
-                <span>+ ₹400 Session PDF &amp; Material Option</span>
+                <span>+ ₹400 Resource ToolKit Option</span>
               </button>
             </div>
 
@@ -1760,7 +1760,7 @@ const AiFilmmakingPage: React.FC = () => {
               3-Hr AI Filmmaking:{' '}
               <span className="text-emerald-400">₹99</span>{' '}
               <span className="text-xs text-slate-400 font-normal hidden sm:inline">
-                (Optional +₹400 Session PDF &amp; Material at Checkout)
+                (Optional +₹400 Resource ToolKit at Checkout)
               </span>
             </p>
           </div>
@@ -1945,32 +1945,28 @@ const AiFilmmakingPage: React.FC = () => {
                         htmlFor="filmmaking-pdf-opt-in"
                         className="text-xs sm:text-sm font-bold text-slate-900 cursor-pointer flex items-center gap-1.5"
                       >
-                        <span>📑 Add Session PDF &amp; Material (+₹400)</span>
+                        <span>🎁 I Want Resource ToolKit worth of ₹10,000 (+₹400)</span>
                       </label>
                       <span className="text-[10px] font-black text-blue-700 bg-blue-100/90 border border-blue-200 px-2 py-0.5 rounded-md">
                         Total ₹499
                       </span>
                     </div>
-                    <p className="text-[11px] text-slate-600 mt-0.5 leading-snug">
-                      Get 150+ 3D Logo &amp; AI Video Prompts PDF, Avatar Lip-Sync Blueprints &amp; Complete Session Material sent to your email.
-                    </p>
+                    <ul className="mt-1.5 space-y-0.5 text-[11px] text-slate-700 font-medium">
+                      <li className="flex items-center gap-1.5">
+                        <span className="text-blue-600 font-bold">•</span>
+                        <span>1. Session PDF Material</span>
+                      </li>
+                      <li className="flex items-center gap-1.5">
+                        <span className="text-blue-600 font-bold">•</span>
+                        <span>2. 100+ AI Skills</span>
+                      </li>
+                      <li className="flex items-center gap-1.5">
+                        <span className="text-blue-600 font-bold">•</span>
+                        <span>3. Content creation Prompts</span>
+                      </li>
+                    </ul>
                   </div>
                 </div>
-              </div>
-
-              {/* Compact GST & Total Summary Row */}
-              <div className="rounded-xl bg-slate-50 border border-slate-200 px-3.5 py-2 flex items-center justify-between text-xs">
-                <div className="text-left">
-                  <span className="font-bold text-slate-800 block">
-                    Total Payable (Incl. 18% GST)
-                  </span>
-                  <span className="text-[10px] text-slate-500">
-                    Base ₹{accounting.base.toFixed(2)} + GST ₹{accounting.gstTotal.toFixed(2)} • SAC 999293
-                  </span>
-                </div>
-                <span className="text-base sm:text-lg font-black text-blue-600 font-mono">
-                  ₹{totalAmount}.00
-                </span>
               </div>
 
               <div className="flex items-start gap-2 ml-0.5 text-left">
