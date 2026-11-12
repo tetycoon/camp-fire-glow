@@ -8,6 +8,7 @@ const SHEET_NAME_LOGS = "Logs";
 const SHEET_NAME_LANDING_LEADS = "Landing_Leads";
 const LANDING_LEAD_HEADERS = ["Timestamp", "Lead ID", "Full Name", "Phone", "Email", "Page URL", "UTM Source", "UTM Medium", "UTM Campaign", "GCLID", "FBCLID", "User Agent"];
 const EXPECTED_PRODUCT_KEY = "ai_masterclass";
+const CHATGPT_HACKS_DOWNLOAD_URL = "https://drive.google.com/uc?export=download&id=1Zu6GYAaZ-x5gb8xjyb3LwCW8q2oiBfCj";
 
 function getScriptSecret(key) {
   const props = PropertiesService.getScriptProperties();
@@ -207,11 +208,14 @@ const WHATSAPP_CONFIG = {
   get PHONE_NUMBER_ID() { return getWhatsAppPhoneNumberId(); },
   PHONE_NUMBER: "917010340494", 
   SUPPORT_PHONE: "916379209689",
-  WA_GROUP_LINK: "https://chat.whatsapp.com/LABV7lxs19RAlwqHzlsgRw", // AI Secrets Revealed Community Group
+  WA_GROUP_LINK: "https://chat.whatsapp.com/EpsuzpxGz6F98ml2GUBejC", // AI Secrets Revealed Community Group
   WA_COMMUNITY_LINK: "https://chat.whatsapp.com/EpsuzpxGz6F98ml2GUBejC", // WhatsApp Community
-  WA_GROUP_LINK_CLAUDE_ONLINE: "https://chat.whatsapp.com/HfVfYc6ea7iEHAMFjOb4WS", // Claude Online Group
+  WA_GROUP_LINK_CLAUDE_ONLINE: "https://chat.whatsapp.com/GgMP8b9Z5HIKn5duwqgnwU", // Claude Online Group
   WA_GROUP_LINK_CLAUDE_OFFLINE: "https://chat.whatsapp.com/DMp2tRRhjwN1fziYujeQhb", // Claude Offline Group
-  POSTER_URL: "https://course.techtycoon.in/images/AI_Secrets_Revealed_Banner.png" 
+  POSTER_URL: "https://course.techtycoon.in/images/AI_Secrets_Revealed_Banner.png",
+  WA_GROUP_LINK_FILMMAKING: getOptionalScriptSecret("WA_GROUP_LINK_FILMMAKING") || "https://chat.whatsapp.com/EpsuzpxGz6F98ml2GUBejC",
+  POSTER_URL_FILMMAKING: getOptionalScriptSecret("POSTER_URL_FILMMAKING") || "",
+  AI_FILMMAKING_WEBHOOK_URL: "https://script.google.com/macros/s/AKfycbzycz3SBGah4HEEMlCKGOBcU5wBg8zoY3QJFVO_1YwnPAFREa5zgogQqKo8JXMlTM4LBw/exec"
 };
 
 const TRIGGER_MESSAGE = "HI I am completed registration of AI Secret Reveals";
@@ -277,6 +281,22 @@ function getNextSundaySession(now) {
   return target;
 }
 
+
+function getUpcomingWebinarSlotInfo() {
+  const slotDate = getUpcomingWebinarTime();
+  const fullMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const dayName = days[slotDate.getDay()];
+  const monthName = fullMonths[slotDate.getMonth()];
+  const dateNum = slotDate.getDate();
+  const year = slotDate.getFullYear();
+  
+  const dateText = dayName + ", " + monthName + " " + dateNum + ", " + year;
+  const timeText = slotDate.getDay() === 0 ? "10:00 AM - 1:00 PM IST" : "5:30 PM - 8:30 PM IST";
+  
+  return { dateText: dateText, timeText: timeText, dateObj: slotDate };
+}
+
 function getUpcomingWebinarTime() {
   const now = new Date();
   const wed = getNextWednesdaySession(now);
@@ -310,9 +330,7 @@ function doGet(e) {
   if (params.action === 'whatsapp') {
     markWhatsappClicked(params.orderId);
     const isOffline = params.mode === 'offline';
-    const msgText = isOffline 
-      ? "Hello Tech Tycoon Team I successfully complete the registration claude masterclass offline session"
-      : "Hello Tech Tycoon Team I successfully complete the registration of claude masterclass online session";
+    const msgText = "HI I am completed registration of AI Secret Reveals" + (params.orderId ? " (" + params.orderId + ")" : "");
     const waChatLink = `https://wa.me/${WHATSAPP_CONFIG.PHONE_NUMBER}?text=${encodeURIComponent(msgText)}`;
     const html = `<html><body style="font-family:sans-serif;text-align:center;padding-top:50px;background:#030712;color:white;">
       <h2>Redirecting to WhatsApp...</h2>
@@ -402,6 +420,11 @@ function doPost(e) {
 
     if (body.event === "payment.captured" || body.event === "order.paid") {
       const paymentEntity = body.payload && body.payload.payment && body.payload.payment.entity;
+      const noteProductKey = String((paymentEntity && paymentEntity.notes && paymentEntity.notes.product_key) || body.target_product || "").trim().toLowerCase();
+      if (noteProductKey === "ai_filmmaking") {
+        writeToLogs("ISOLATION_SKIP", "Ignored ai_filmmaking payment in ai_masterclass: " + (paymentEntity && paymentEntity.id));
+        return createJsonResponse({ success: false, ignored: true, reason: "Belongs to ai_filmmaking, not ai_masterclass" });
+      }
       if (!paymentEntity || !paymentEntity.order_id || !paymentEntity.id) {
         return createJsonResponse({ success: false, error: "Invalid webhook payment entity" });
       }
@@ -429,7 +452,8 @@ function doPost(e) {
     if (body.name && body.email && body.phone && !body.object) {
       const orderId = createRazorpayOrder(body);
       saveToSheet(body, orderId);
-      return createJsonResponse({ success: true, orderId: orderId });
+      saveRegistrationToLandingLeads(body, orderId);
+      return createJsonResponse({ success: true, orderId: orderId, leadId: body.leadId || orderId });
     }
 
     if (body.object === "whatsapp_business_account") {
@@ -447,6 +471,34 @@ function doPost(e) {
 // ------------------------------------------------------------
 // 3. WHATSAPP & EMAIL LOGIC (ALL WORKSHOPS)
 // ------------------------------------------------------------
+
+function getUpcomingClaudeWeekend() {
+  const now = new Date();
+  const minSat = new Date(2026, 10, 14, 17, 30, 0); // Baseline minimum Saturday: November 14, 2026
+  const day = now.getDay();
+  let daysUntilSat = (6 - day + 7) % 7;
+  // Saturday 6:00 PM (18:00) IST cutoff: automatically rolls over to next week's Saturday & Sunday
+  if (day === 6 && now.getHours() >= 18) {
+    daysUntilSat = 7;
+  } else if (day === 0) {
+    daysUntilSat = 6;
+  }
+  let nextSat = new Date(now.getFullYear(), now.getMonth(), now.getDate() + daysUntilSat, 17, 30, 0);
+  if (nextSat.getTime() < minSat.getTime()) {
+    nextSat = minSat;
+  }
+  const nextSun = new Date(nextSat.getFullYear(), nextSat.getMonth(), nextSat.getDate() + 1, 17, 30, 0);
+  const fullMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  const satM = fullMonths[nextSat.getMonth()];
+  const sunM = fullMonths[nextSun.getMonth()];
+  const satDay = nextSat.getDate();
+  const sunDay = nextSun.getDate();
+  const year = nextSat.getFullYear();
+  const isSameMonth = satM === sunM;
+  const dateRange = isSameMonth ? (satM + " " + satDay + " & " + sunDay + ", " + year) : (satM + " " + satDay + " & " + sunM + " " + sunDay + ", " + year);
+  return dateRange + " (Saturday & Sunday)";
+}
+
 function handleWhatsAppIncoming(body) {
   const message = body.entry?.[0]?.changes?.[0]?.value?.messages?.[0];
   if (!message || !message.text?.body) return;
@@ -490,8 +542,8 @@ function handleWhatsAppIncoming(body) {
     } else {
       let welcomeMsg = "Welcome! 🎉 Your registration is confirmed for the Claude MasterClass (Online Live Session).\n\n";
       welcomeMsg += `📍 Platform: Online Live Classroom\n`;
-      welcomeMsg += `📅 Date: October 3rd & 4th, 2026 (Sat & Sun)\n`;
-      welcomeMsg += `🕒 Time: 6:00 PM – 9:00 PM IST\n\n`;
+      welcomeMsg += `📅 Date: ${getUpcomingClaudeWeekend()}\n`;
+      welcomeMsg += `🕒 Time: 5:30 PM – 8:30 PM IST\n\n`;
       welcomeMsg += "Please join our exclusive Online WhatsApp Community below to receive session links:\n" + WHATSAPP_CONFIG.WA_GROUP_LINK_CLAUDE_ONLINE + "\n\n";
       welcomeMsg += "If you have any doubts, feel free to call or WhatsApp us at +91 63792 09689.";
       
@@ -500,8 +552,73 @@ function handleWhatsAppIncoming(body) {
     return;
   }
 
-  // 3. AI SECRETS REVEALED LOGIC
-  if (textReceived.includes("secret") || textReceived.includes("reveal")) {
+  // 3. AI FILMMAKING & VIDEO GENERATION LIVE WEBINAR LOGIC
+  if (
+    textReceived.includes("filmmaking") ||
+    textReceived.includes("film making") ||
+    textReceived.includes("video generation") ||
+    textReceived.includes("logo animation") ||
+    textReceived.includes("avatar creation")
+  ) {
+    let sessionDate = getNextSundaySession(new Date()).toDateString();
+    let sessionTime = "10:00 AM – 1:00 PM IST (3 Hours)";
+    const match = rawText.match(/on\s+(.+?)\s+at\s+(.+)$/i);
+    if (match) {
+      sessionDate = match[1].trim();
+      sessionTime = match[2].trim();
+    }
+    const orderMatch = rawText.match(/(order_[A-Za-z0-9]+)/i);
+    const extractedOrderId = orderMatch ? orderMatch[1] : "";
+
+    if (WHATSAPP_CONFIG.POSTER_URL_FILMMAKING) {
+      sendWhatsAppImage(
+        phone,
+        WHATSAPP_CONFIG.POSTER_URL_FILMMAKING,
+        "3-Hours AI Filmmaking & Video Generation Live Webinar"
+      );
+    }
+
+    let welcomeMsg = "Welcome! 🎬 Your registration is confirmed for the 3-Hours AI Filmmaking & Video Generation Live Webinar (Basic & Foundation Session).\n\n";
+    welcomeMsg += `📅 Date: ${sessionDate} (Sunday Morning)\n`;
+    welcomeMsg += `🕒 Time: ${sessionTime}\n`;
+    welcomeMsg += `📚 Modules: 1. AI Logo Animation | 2. AI Avatar Creation | 3. AI Video Generation\n\n`;
+    welcomeMsg += "Please join our exclusive WhatsApp Community below to receive the live session link & materials:\n" + WHATSAPP_CONFIG.WA_GROUP_LINK_FILMMAKING + "\n\n";
+    welcomeMsg += "If you have any doubts, feel free to call or WhatsApp us at +91 63792 09689.";
+
+    sendWhatsAppText(phone, welcomeMsg);
+
+    // Sync "CHATTED ✅" status back to AI Filmmaking Google Sheet
+    if (WHATSAPP_CONFIG.AI_FILMMAKING_WEBHOOK_URL) {
+      try {
+        UrlFetchApp.fetch(WHATSAPP_CONFIG.AI_FILMMAKING_WEBHOOK_URL, {
+          method: "post",
+          contentType: "application/json",
+          payload: JSON.stringify({
+            action: "markWhatsappChatted",
+            orderId: extractedOrderId,
+            phone: phone
+          }),
+          muteHttpExceptions: true
+        });
+      } catch (syncErr) {
+        writeToLogs("WA_FILMMAKING_SYNC_WARN", syncErr.message);
+      }
+    }
+    return;
+  }
+
+  // 4. AI SECRETS REVEALED & AI MASTERCLASS LOGIC
+  const isAiMasterclassMsg = textReceived.includes("secret") || 
+                             textReceived.includes("reveal") || 
+                             textReceived.includes("ai masterclass") || 
+                             textReceived.includes("ai secrets") || 
+                             textReceived.includes("masterclass") || 
+                             textReceived.includes("completed registration") || 
+                             textReceived.includes("complete the registration") || 
+                             textReceived.includes("registration details") || 
+                             textReceived.includes("tech tycoon team");
+
+  if (isAiMasterclassMsg) {
     let sessionDate = "";
     let sessionTime = "";
     const match = rawText.match(/on\s+(.+?)\s+at\s+(.+)$/i);
@@ -510,16 +627,30 @@ function handleWhatsAppIncoming(body) {
       sessionTime = match[2].trim();
     }
 
-    sendWhatsAppImage(phone, WHATSAPP_CONFIG.POSTER_URL, "AI Secrets Revealed Masterclass");
-    
-    let welcomeMsg = "Welcome! 🎉 Your registration is confirmed for the AI Masterclass.\n\n";
-    if (sessionDate && sessionTime) {
-      welcomeMsg += `📅 Date: ${sessionDate}\n🕒 Time: ${sessionTime}\n\n`;
+    if (!sessionDate || !sessionTime) {
+      const slotInfo = getUpcomingWebinarSlotInfo();
+      sessionDate = sessionDate || slotInfo.dateText;
+      sessionTime = sessionTime || slotInfo.timeText;
     }
-    welcomeMsg += "Please join our exclusive WhatsApp Community below to receive the webinar session link:\n" + WHATSAPP_CONFIG.WA_GROUP_LINK + "\n\n";
+
+    // Extract Order ID or Payment ID if present in the message
+    const orderMatch = rawText.match(/(order_[A-Za-z0-9]+)/i);
+    const extractedOrderId = orderMatch ? orderMatch[1] : "";
+
+    // Send the official AI Secrets Revealed banner poster
+    sendWhatsAppImage(phone, WHATSAPP_CONFIG.POSTER_URL, "AI Secrets Revealed Masterclass 2026");
+    
+    let welcomeMsg = "Welcome! \uD83C\uDF89 Your registration is confirmed for the AI Secrets Revealed Live Masterclass.\n\n";
+    welcomeMsg += "\uD83C\uDF10 Platform: Online Live Classroom (Link will be shared in WhatsApp group)\n";
+    welcomeMsg += "\uD83D\uDCC5 Date: " + sessionDate + "\n";
+    welcomeMsg += "\uD83D\uDD52 Time: " + sessionTime + "\n\n";
+    welcomeMsg += "Please join our exclusive WhatsApp Community below to receive live session access & updates:\n" + WHATSAPP_CONFIG.WA_GROUP_LINK + "\n\n";
     welcomeMsg += "If you have any doubts, feel free to call or WhatsApp us at +91 63792 09689.";
     
     sendWhatsAppText(phone, welcomeMsg);
+
+    // Mark attendee as CHATTED in Google Sheets
+    markWhatsappChatted(extractedOrderId, phone);
     return;
   }
 }
@@ -528,7 +659,10 @@ function handleWhatsAppIncoming(body) {
 // 4. DUAL GST INVOICE: OUR PDF BLOB + FUNNELSDONE API v2 SYNC
 // ------------------------------------------------------------
 const TOTAL_TO_EXACT_BASE_MAP = {
+  99: 83.90,
   117: 99,
+  471: 399,
+  499: 422.88,
   471: 399,
   589: 499,
   943: 799,
@@ -884,7 +1018,7 @@ function syncInvoiceWithFunnelsDone(customerName, customerEmail, customerPhone, 
 
             // 4. Expected Product / Course Name Check
             const invProductName = String(inv.name || inv.title || (inv.items && inv.items[0] && inv.items[0].name) || "").toLowerCase();
-            if (invProductName.includes("claude") || invProductName.includes("bgm") || invProductName.includes("academy") || invProductName.includes("consulting") || invProductName.includes("professionals") || invProductName.includes("upscale")) {
+            if (invProductName.includes("claude") || invProductName.includes("bgm") || invProductName.includes("academy") || invProductName.includes("consulting") || invProductName.includes("professionals") || invProductName.includes("upscale") || invProductName.includes("filmmaking") || invProductName.includes("video generation")) {
               writeToLogs("INVOICE_VALIDATION_SKIP", "Course conflict on invoice " + invId + " for ai_masterclass: " + invProductName);
               continue;
             }
@@ -1065,11 +1199,16 @@ function syncInvoiceWithFunnelsDone(customerName, customerEmail, customerPhone, 
 }
 
 function sendMasterclassEmail(email, name, sessionDate, sessionTime, totalAmount, paymentId, orderId, phone, modeOrLang) {
+  const isClaude = String(modeOrLang || "").toLowerCase().includes("claude") || Number(totalAmount) === 499 || Number(totalAmount) === 899;
+  const hasChatGptAddon = isClaude && (Number(totalAmount) >= 899 || String(modeOrLang || "").includes("ChatGPT") || String(modeOrLang || "").includes("Hacks"));
+  const chatGptDownloadUrl = "https://drive.google.com/uc?export=download&id=1Zu6GYAaZ-x5gb8xjyb3LwCW8q2oiBfCj";
+
   const defaultTime = getUpcomingWebinarTime();
   const isUpscaleOffline = (Number(totalAmount) >= 4000) || String(modeOrLang || "").toLowerCase().includes("offline") || String(modeOrLang || "").toLowerCase().includes("chennai");
   const dateVal = sessionDate || (isUpscaleOffline ? "October 2nd week 2026 (Sunday)" : defaultTime.toDateString());
   const timeVal = sessionTime || (isUpscaleOffline ? "9:00 AM – 5:30 PM IST" : "6:00 PM IST");
-  const courseTitle = isUpscaleOffline ? "UPSCALE: 1-Day Offline AI Mastery Workshop (Chennai)" : "AI Secrets Revealed Masterclass";
+  const isPdfMaterial = Number(totalAmount) === 499 || String(modeOrLang || "").includes("Material") || String(modeOrLang || "").includes("PDF") || String(modeOrLang || "").includes("PPT");
+  const courseTitle = isUpscaleOffline ? "UPSCALE: 1-Day Offline AI Mastery Workshop (Chennai)" : (isPdfMaterial ? "AI Secrets Revealed Masterclass + Session Material (PDF)" : "AI Secrets Revealed Masterclass");
   const fdCourseName = isUpscaleOffline ? "UPSCALE: Offline AI Workshop (Chennai)" : "AI-Secret Revealed";
   const waGroupLink = isUpscaleOffline ? "https://chat.whatsapp.com/EpsuzpxGz6F98ml2GUBejC" : WHATSAPP_CONFIG.WA_GROUP_LINK;
   const platformText = isUpscaleOffline ? "Vestin Park Hotel, Egmore, Chennai (In-Person)" : "Online Live Classroom (Link will be shared in WhatsApp group)";
@@ -1082,21 +1221,19 @@ function sendMasterclassEmail(email, name, sessionDate, sessionTime, totalAmount
     writeToLogs("FUNNELSDONE_SYNC_ERROR", syncErr.message);
   }
 
-  if (!fdInvoiceNo) {
-    writeToLogs("HOLDING_CONFIRMATION_EMAIL", "FunnelsDone invoice outcome is uncertain for payment " + paymentId + ". Holding customer confirmation.");
-    writeToLogs("INVOICE_PENDING_HOLD", "FunnelsDone invoice outcome is uncertain for payment " + paymentId + ". Holding customer confirmation.");
-    return { invoiceNumber: null, courseTitle: courseTitle, uncertain: true };
-  }
+  // Guaranteed invoice number so user ALWAYS receives their official GST invoice
+  const fallbackInvNo = "TT/26-27/" + String(paymentId || orderId || Date.now()).replace(/[^A-Za-z0-9]/g, "").slice(-6).toUpperCase();
+  const officialInvoiceNo = fdInvoiceNo || fallbackInvNo;
 
   // 2. Generate our side's official GST Tax Invoice PDF attachment
   let pdfAttachment = null;
   try {
-    pdfAttachment = generateOurGstInvoicePdfBlob(name, email, phone, courseTitle, totalAmount || 117, paymentId, orderId, fdInvoiceNo);
+    pdfAttachment = generateOurGstInvoicePdfBlob(name, email, phone, courseTitle, totalAmount || 117, paymentId, orderId, officialInvoiceNo);
   } catch (pdfErr) {
     writeToLogs("PDF_GEN_ERROR", pdfErr.message);
   }
 
-  if (isNotificationSuppressed() || isAuthorizedLiveTest(email, totalAmount || 117)) {
+  if (isNotificationSuppressed()) {
     Logger.log("NOTIFICATION_SUPPRESSED: Email to " + email + " suppressed (authorized test/staging)");
     if (typeof writeToLogs === "function") {
       writeToLogs("NOTIFICATION_SUPPRESSED", "Email and WhatsApp suppressed to " + email);
@@ -1130,6 +1267,31 @@ function sendMasterclassEmail(email, name, sessionDate, sessionTime, totalAmount
               <p style="color:#475569;font-size:15px;line-height:1.6;margin:0 0 24px;">
                 Your payment was successful and your seat is officially confirmed. Your official <strong>GST Tax Invoice (PDF)</strong> is attached to this email for your records!
               </p>
+              
+              ${hasChatGptAddon ? `
+              <!-- CHATGPT HACKS DOWNLOAD SECTION -->
+              <div style="background:linear-gradient(135deg,rgba(255,122,71,0.12),rgba(255,122,71,0.04));border:2px dashed #FF7A47;border-radius:16px;padding:24px;margin:24px 0;text-align:center;">
+                <div style="font-size:36px;margin-bottom:8px;">🎁</div>
+                <h3 style="color:#0f172a;font-size:18px;margin:0 0 8px;font-weight:800;">ChatGPT Secret Hacks &amp; Prompting Toolkit Unlocked!</h3>
+                <p style="color:#475569;font-size:13.5px;line-height:1.5;margin:0 0 18px;">
+                  You added the <strong>ChatGPT Hacks Package</strong> (ChatGPT Secret Hacks, Prompting Hacks &amp; Free Bonus Gift). Click below to download your complete toolkit immediately:
+                </p>
+                <a href="https://drive.google.com/uc?export=download&id=1Zu6GYAaZ-x5gb8xjyb3LwCW8q2oiBfCj" target="_blank" style="display:inline-block;background-color:#FF7A47;color:#ffffff;text-decoration:none;padding:14px 32px;border-radius:100px;font-size:15px;font-weight:700;box-shadow:0 4px 12px rgba(255,122,71,0.35);">
+                  📥 Download ChatGPT Hacks Toolkit
+                </a>
+                <p style="color:#94a3b8;font-size:11px;margin:12px 0 0;">
+                  Direct Download Link:<br/>
+                  <a href="https://drive.google.com/uc?export=download&id=1Zu6GYAaZ-x5gb8xjyb3LwCW8q2oiBfCj" style="color:#FF7A47;word-break:break-all;font-size:11px;">https://drive.google.com/uc?export=download&id=1Zu6GYAaZ-x5gb8xjyb3LwCW8q2oiBfCj</a>
+                </p>
+              </div>` : ''}
+
+              ${isPdfMaterial ? `
+              <div style="background-color:#eff6ff;border:1px solid #bfdbfe;border-radius:14px;padding:18px 20px;margin-bottom:24px;">
+                <h4 style="color:#1e3a8a;font-size:14px;margin:0 0 6px;font-weight:700;">📑 Official Session Material (PDF) Included!</h4>
+                <p style="color:#1d4ed8;font-size:13px;line-height:1.5;margin:0;">
+                  You have unlocked the complete official Masterclass training frameworks and structured AI workflow material in downloadable PDF format. It will be delivered directly to your registered email!
+                </p>
+              </div>` : ''}
               <table width="100%" style="background-color:#f1f5f9;border:1px solid #e2e8f0;border-radius:16px;margin-bottom:32px;">
                 <tr>
                   <td style="padding:16px 20px;border-bottom:1px solid #e2e8f0;font-size:14px;color:#64748b;">📅 Date</td>
@@ -1195,7 +1357,20 @@ function sendMasterclassEmail(email, name, sessionDate, sessionTime, totalAmount
     }
     return { invoiceNumber: fdInvoiceNo, courseTitle: courseTitle, suppressed: true };
   }
-  MailApp.sendEmail(emailOptions);
+  try {
+      MailApp.sendEmail(emailOptions);
+      writeToLogs("EMAIL_SENT", "Confirmation email sent to " + email);
+    } catch (mailErr) {
+      writeToLogs("EMAIL_SEND_ERROR", mailErr.message);
+      if (pdfAttachment) {
+        try {
+          MailApp.sendEmail({ to: email, subject: subject, htmlBody: htmlBody, name: "Tech Tycoon", replyTo: "techtycoondigitalsolutions@gmail.com" });
+          writeToLogs("EMAIL_FALLBACK_SENT", "Sent email without attachment to " + email);
+        } catch (fbErr) {
+          writeToLogs("EMAIL_FALLBACK_FAIL", fbErr.message);
+        }
+      }
+    }
   return { invoiceNumber: fdInvoiceNo, courseTitle: courseTitle };
 }
 
@@ -1475,6 +1650,13 @@ function createRazorpayOrder(data) {
   const keyId = isInternational ? getRazorpayKeyId(true) : getRazorpayKeyId(false);
   const keySecret = getScriptSecret(isInternational ? "RAZORPAY_KEY_SECRET_INTL" : "RAZORPAY_KEY_SECRET");
   const validAmount = validateMasterclassAmount(data);
+  const isClaude = String(data.course || data.batch || "").toLowerCase().includes("claude") || Number(validAmount) === 499 || Number(validAmount) === 899;
+  const hasChatGptAddon = isClaude && (Number(validAmount) >= 899 || String(data.addon || "").includes("ChatGPT") || String(data.hasPdfMaterial || "").toUpperCase() === "YES");
+  const isPdfMaterial = String(data.hasPdfMaterial || "").toUpperCase() === "YES" || Number(validAmount) === 499 || hasChatGptAddon;
+  let courseName = isPdfMaterial ? "AI Secrets Revealed Masterclass + Session Material (PDF)" : "AI Secrets Revealed Masterclass";
+  if (isClaude) {
+    courseName = hasChatGptAddon ? "250+ Ultimate Claude Skills + ChatGPT Hacks Bundle" : "250+ Ultimate Claude Skills";
+  }
   
   const credentials = Utilities.base64Encode(keyId + ":" + keySecret);
   const options = {
@@ -1485,9 +1667,10 @@ function createRazorpayOrder(data) {
       currency: "INR",
       notes: {
         product_key: "ai_masterclass",
-        course: "AI Secrets Revealed Masterclass",
-        base_amount: data.baseAmount || 99,
-        gst_amount: data.gstAmount || 18
+        course: courseName,
+        has_pdf_material: isPdfMaterial ? "YES" : "NO",
+        base_amount: data.baseAmount || (isPdfMaterial ? 422.88 : 83.90),
+        gst_amount: data.gstAmount || (isPdfMaterial ? 76.12 : 15.10)
       }
     }),
     muteHttpExceptions: true
@@ -1683,6 +1866,49 @@ function validateLandingLead(data) {
     return { valid: false, error: "Please enter a valid email address." };
   }
   return { valid: true, name: name, phone: phone, email: email };
+}
+
+
+function saveRegistrationToLandingLeads(data, orderId) {
+  try {
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const sheet = getLandingLeadsSheet(ss);
+    const utm = data.utm || {};
+    const utmSource = data.utm_source || utm.utm_source || (data.affiliateId ? ("Affiliate (" + data.affiliateId + ")") : "Direct");
+    const utmMedium = data.utm_medium || utm.utm_medium || "";
+    const utmCampaign = data.utm_campaign || utm.utm_campaign || "";
+    const gclid = data.gclid || utm.gclid || "";
+    const fbclid = data.fbclid || utm.fbclid || "";
+    const effectiveLeadId = data.leadId || orderId;
+
+    // Deduplication check: check if this leadId or orderId was already recorded in recent rows
+    const lastRow = sheet.getLastRow();
+    if (lastRow > 1) {
+      const checkCount = Math.min(25, lastRow - 1);
+      const rows = sheet.getRange(lastRow - checkCount + 1, 2, checkCount, 1).getValues();
+      for (let i = 0; i < rows.length; i++) {
+        if (rows[i][0] === effectiveLeadId) return;
+      }
+    }
+
+    sheet.appendRow([
+      new Date(),
+      effectiveLeadId,
+      sanitizeCell(data.name),
+      "'" + String(data.phone || "").replace(/[^\d+]/g, ""),
+      sanitizeCell(data.email),
+      sanitizeCell(String(data.pageUrl || "").substring(0, 500)),
+      sanitizeCell(String(utmSource).substring(0, 100)),
+      sanitizeCell(String(utmMedium).substring(0, 100)),
+      sanitizeCell(String(utmCampaign).substring(0, 150)),
+      sanitizeCell(String(gclid).substring(0, 200)),
+      sanitizeCell(String(fbclid).substring(0, 200)),
+      sanitizeCell(String(data.userAgent || "").substring(0, 300))
+    ]);
+    SpreadsheetApp.flush();
+  } catch (err) {
+    if (typeof writeToLogs === "function") writeToLogs("LANDING_LEAD_REG_WARN", err.message);
+  }
 }
 
 function saveLandingLead(data) {
@@ -1952,7 +2178,7 @@ function processVerifiedMasterclassPayment(orderId, paymentId, isInternational, 
     const isTestTx = isAuthorizedLiveTest(email, expectedAmountInr);
     sheet.getRange(targetRowIndex + 1, layout.status + 1).setValue(isTestTx ? "✅ TEST_VERIFIED (₹1)" : "✅ PAID");
     sheet.getRange(targetRowIndex + 1, layout.paymentId + 1).setValue(sanitizeCell(cleanPaymentId));
-    sheet.getRange(targetRowIndex + 1, layout.emailStatus + 1).setValue(isTestTx ? "TEST_SUPPRESSED" : "SENT ✅");
+    sheet.getRange(targetRowIndex + 1, layout.emailStatus + 1).setValue("SENT ✅");
     SpreadsheetApp.flush();
 
     if (props) {
@@ -2191,8 +2417,7 @@ function sendWhatsAppText(to, message) {
     const url = "https://graph.facebook.com/v19.0/" + WHATSAPP_CONFIG.PHONE_NUMBER_ID + "/messages";
     const options = {
       method: "post",
-      contentType: "application/json",
-      headers: { Authorization: "Bearer " + WHATSAPP_CONFIG.ACCESS_TOKEN },
+      contentType: "application/json; charset=UTF-8", headers: { Authorization: "Bearer " + WHATSAPP_CONFIG.ACCESS_TOKEN },
       payload: JSON.stringify({ messaging_product: "whatsapp", to: to, type: "text", text: { body: message } }),
       muteHttpExceptions: true
     };
@@ -2212,8 +2437,7 @@ function sendWhatsAppTemplate(to, templateName, parameters) {
   const url = "https://graph.facebook.com/v19.0/" + WHATSAPP_CONFIG.PHONE_NUMBER_ID + "/messages";
   const options = {
     method: "post",
-    contentType: "application/json",
-    headers: { Authorization: "Bearer " + WHATSAPP_CONFIG.ACCESS_TOKEN },
+    contentType: "application/json; charset=UTF-8", headers: { Authorization: "Bearer " + WHATSAPP_CONFIG.ACCESS_TOKEN },
     payload: JSON.stringify({
       messaging_product: "whatsapp",
       to: to,
@@ -2245,8 +2469,7 @@ function sendWhatsAppImage(to, imageUrl, caption) {
     const url = "https://graph.facebook.com/v19.0/" + WHATSAPP_CONFIG.PHONE_NUMBER_ID + "/messages";
     const options = {
       method: "post",
-      contentType: "application/json",
-      headers: { Authorization: "Bearer " + WHATSAPP_CONFIG.ACCESS_TOKEN },
+      contentType: "application/json; charset=UTF-8", headers: { Authorization: "Bearer " + WHATSAPP_CONFIG.ACCESS_TOKEN },
       payload: JSON.stringify({
         messaging_product: "whatsapp", to: to, type: "image", image: { link: imageUrl, caption: caption }
       }),
@@ -2271,6 +2494,27 @@ function createJsonResponse(data) {
   return ContentService.createTextOutput(JSON.stringify(data)).setMimeType(ContentService.MimeType.JSON);
 }
 
+
+function markWhatsappChatted(orderId, phone) {
+  try {
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const sheet = ss.getSheetByName(SHEET_NAME_REG) || ss.getSheets()[0];
+    const layout = getRegSheetLayout(sheet);
+    const data = sheet.getDataRange().getValues();
+    const cleanPhone = phone ? String(phone).replace(/\D/g, '').slice(-10) : "";
+    for (let i = 1; i < data.length; i++) {
+      const rowOrder = String(data[i][layout.orderId] || data[i][8] || "").trim();
+      const rowPhone = String(data[i][layout.phone] || data[i][3] || "").replace(/\D/g, '').slice(-10);
+      if ((orderId && rowOrder === orderId) || (cleanPhone && rowPhone && rowPhone === cleanPhone)) {
+        sheet.getRange(i + 1, layout.whatsappClicked + 1).setValue("CHATTED ✅");
+        break;
+      }
+    }
+  } catch (e) {
+    writeToLogs("WA_CHATTED_MARK_ERR", e.message);
+  }
+}
+
 function markWhatsappClicked(orderId) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const sheet = ss.getSheetByName(SHEET_NAME_REG) || ss.getSheets()[0];
@@ -2285,7 +2529,7 @@ function markWhatsappClicked(orderId) {
 }
 
 function triggerWhatsAppCampaign(contactName, contactEmail, contactPhone) {
-  if (isNotificationSuppressed() || isAuthorizedLiveTest(contactEmail, 1)) {
+  if (isNotificationSuppressed()) {
     writeToLogs("WA_CAMPAIGN_SUPPRESSED", "Notification suppressed for environment/test: " + contactEmail);
     return;
   }
@@ -2480,7 +2724,7 @@ function reconcileAiMasterclassRows() {
       // 2. Generate PDF and send confirmation email if not yet sent
       if (email && emailStatus !== "SENT ✅") {
         try {
-          if (!isNotificationSuppressed() && !isTestTx) {
+          if (!isNotificationSuppressed()) {
             let pdfBlob = null;
             try {
               pdfBlob = generateOurGstInvoicePdfBlob(name, email, phoneClean, courseTitle, expectedAmountInr, payId, orderId, invoiceNo);
@@ -2559,7 +2803,7 @@ function reconcileAiMasterclassRows() {
             createCalendarInvite(email, name, sessionDate, sessionTime);
             sheet.getRange(i + 1, layout.emailStatus + 1).setValue("SENT ✅");
           } else {
-            sheet.getRange(i + 1, layout.emailStatus + 1).setValue(isTestTx ? "TEST_SUPPRESSED" : "SENT ✅");
+            sheet.getRange(i + 1, layout.emailStatus + 1).setValue("SENT ✅");
           }
         } catch (mailErr) {
           writeToLogs("RECONCILE_MAIL_ERROR", "Failed to send email to " + email + ": " + mailErr.message);
@@ -2619,4 +2863,10 @@ function setupAutoReconcileTrigger() {
     .everyMinutes(5)
     .create();
   return "Auto-reconcile trigger successfully installed. Running every 5 minutes.";
+}
+
+
+function testSaveLandingLead() {
+  const res = saveLandingLead();
+  Logger.log("Result: " + JSON.stringify(res));
 }

@@ -8,6 +8,7 @@ const SHEET_NAME_LOGS = "Logs";
 const SHEET_NAME_LANDING_LEADS = "Landing_Leads";
 const LANDING_LEAD_HEADERS = ["Timestamp", "Lead ID", "Full Name", "Phone", "Email", "Page URL", "UTM Source", "UTM Medium", "UTM Campaign", "GCLID", "FBCLID", "User Agent"];
 const EXPECTED_PRODUCT_KEY = "ai_masterclass";
+const CHATGPT_HACKS_DOWNLOAD_URL = "https://drive.google.com/uc?export=download&id=1Zu6GYAaZ-x5gb8xjyb3LwCW8q2oiBfCj";
 
 function getScriptSecret(key) {
   const props = PropertiesService.getScriptProperties();
@@ -1198,6 +1199,14 @@ function syncInvoiceWithFunnelsDone(customerName, customerEmail, customerPhone, 
 }
 
 function sendMasterclassEmail(email, name, sessionDate, sessionTime, totalAmount, paymentId, orderId, phone, modeOrLang) {
+  const isClaude = String(modeOrLang || "").toLowerCase().includes("claude") || Number(totalAmount) === 499 || Number(totalAmount) === 899;
+  const hasChatGptAddon = isClaude && (Number(totalAmount) >= 899 || String(modeOrLang || "").includes("ChatGPT") || String(modeOrLang || "").includes("Hacks"));
+  const chatGptDownloadUrl = "https://drive.google.com/uc?export=download&id=1Zu6GYAaZ-x5gb8xjyb3LwCW8q2oiBfCj";
+
+  const isClaude = String(modeOrLang || "").toLowerCase().includes("claude") || Number(totalAmount) === 499 || Number(totalAmount) === 899;
+  const hasChatGptAddon = isClaude && (Number(totalAmount) >= 899 || String(modeOrLang || "").includes("ChatGPT") || String(modeOrLang || "").includes("Hacks"));
+  const chatGptDownloadUrl = "https://drive.google.com/uc?export=download&id=1Zu6GYAaZ-x5gb8xjyb3LwCW8q2oiBfCj";
+
   const defaultTime = getUpcomingWebinarTime();
   const isUpscaleOffline = (Number(totalAmount) >= 4000) || String(modeOrLang || "").toLowerCase().includes("offline") || String(modeOrLang || "").toLowerCase().includes("chennai");
   const dateVal = sessionDate || (isUpscaleOffline ? "October 2nd week 2026 (Sunday)" : defaultTime.toDateString());
@@ -1262,6 +1271,24 @@ function sendMasterclassEmail(email, name, sessionDate, sessionTime, totalAmount
               <p style="color:#475569;font-size:15px;line-height:1.6;margin:0 0 24px;">
                 Your payment was successful and your seat is officially confirmed. Your official <strong>GST Tax Invoice (PDF)</strong> is attached to this email for your records!
               </p>
+              
+              ${hasChatGptAddon ? `
+              <!-- CHATGPT HACKS DOWNLOAD SECTION -->
+              <div style="background:linear-gradient(135deg,rgba(255,122,71,0.12),rgba(255,122,71,0.04));border:2px dashed #FF7A47;border-radius:16px;padding:24px;margin:24px 0;text-align:center;">
+                <div style="font-size:36px;margin-bottom:8px;">🎁</div>
+                <h3 style="color:#0f172a;font-size:18px;margin:0 0 8px;font-weight:800;">ChatGPT Secret Hacks &amp; Prompting Toolkit Unlocked!</h3>
+                <p style="color:#475569;font-size:13.5px;line-height:1.5;margin:0 0 18px;">
+                  You added the <strong>ChatGPT Hacks Package</strong> (ChatGPT Secret Hacks, Prompting Hacks &amp; Free Bonus Gift). Click below to download your complete toolkit immediately:
+                </p>
+                <a href="https://drive.google.com/uc?export=download&id=1Zu6GYAaZ-x5gb8xjyb3LwCW8q2oiBfCj" target="_blank" style="display:inline-block;background-color:#FF7A47;color:#ffffff;text-decoration:none;padding:14px 32px;border-radius:100px;font-size:15px;font-weight:700;box-shadow:0 4px 12px rgba(255,122,71,0.35);">
+                  📥 Download ChatGPT Hacks Toolkit
+                </a>
+                <p style="color:#94a3b8;font-size:11px;margin:12px 0 0;">
+                  Direct Download Link:<br/>
+                  <a href="https://drive.google.com/uc?export=download&id=1Zu6GYAaZ-x5gb8xjyb3LwCW8q2oiBfCj" style="color:#FF7A47;word-break:break-all;font-size:11px;">https://drive.google.com/uc?export=download&id=1Zu6GYAaZ-x5gb8xjyb3LwCW8q2oiBfCj</a>
+                </p>
+              </div>` : ''}
+
               ${isPdfMaterial ? `
               <div style="background-color:#eff6ff;border:1px solid #bfdbfe;border-radius:14px;padding:18px 20px;margin-bottom:24px;">
                 <h4 style="color:#1e3a8a;font-size:14px;margin:0 0 6px;font-weight:700;">📑 Official Session Material (PDF) Included!</h4>
@@ -1627,8 +1654,13 @@ function createRazorpayOrder(data) {
   const keyId = isInternational ? getRazorpayKeyId(true) : getRazorpayKeyId(false);
   const keySecret = getScriptSecret(isInternational ? "RAZORPAY_KEY_SECRET_INTL" : "RAZORPAY_KEY_SECRET");
   const validAmount = validateMasterclassAmount(data);
-  const isPdfMaterial = String(data.hasPdfMaterial || "").toUpperCase() === "YES" || Number(validAmount) === 499;
-  const courseName = isPdfMaterial ? "AI Secrets Revealed Masterclass + Session Material (PDF)" : "AI Secrets Revealed Masterclass";
+  const isClaude = String(data.course || data.batch || "").toLowerCase().includes("claude") || Number(validAmount) === 499 || Number(validAmount) === 899;
+  const hasChatGptAddon = isClaude && (Number(validAmount) >= 899 || String(data.addon || "").includes("ChatGPT") || String(data.hasPdfMaterial || "").toUpperCase() === "YES");
+  const isPdfMaterial = String(data.hasPdfMaterial || "").toUpperCase() === "YES" || Number(validAmount) === 499 || hasChatGptAddon;
+  let courseName = isPdfMaterial ? "AI Secrets Revealed Masterclass + Session Material (PDF)" : "AI Secrets Revealed Masterclass";
+  if (isClaude) {
+    courseName = hasChatGptAddon ? "250+ Ultimate Claude Skills + ChatGPT Hacks Bundle" : "250+ Ultimate Claude Skills";
+  }
   
   const credentials = Utilities.base64Encode(keyId + ":" + keySecret);
   const options = {
