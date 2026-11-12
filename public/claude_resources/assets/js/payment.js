@@ -290,7 +290,7 @@
         currency: 'INR',
         name: 'TechTycoon',
         description: '4,000+ Ultimate Claude Skills Library' + (isTest ? ' (Test Mode)' : ''),
-        image: 'assets/img/logo-techtycoon.png',
+        image: 'https://course.techtycoon.in/claude_resources/assets/img/logo-techtycoon.png',
         prefill: {
           name: nameVal,
           email: emailVal,
