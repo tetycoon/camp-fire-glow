@@ -81,7 +81,7 @@ spaRoutes.forEach(route => {
 });
 
 // Ensure dedicated static landing pages are present and untouched in dist
-['advanced_masterclass', 'claude_masterclass'].forEach(folder => {
+['advanced_masterclass', 'claude_masterclass', 'claude_resources'].forEach(folder => {
   const src = path.join('public', folder, 'index.html');
   const destDir = path.join('dist', folder);
   const dest = path.join(destDir, 'index.html');
@@ -91,6 +91,14 @@ spaRoutes.forEach(route => {
     console.log(`✓ Verified dedicated static page: ${dest}`);
   }
 });
+
+// CRITICAL FIX: Ensure claude-resources (hyphenated route) is a 100% mirror of claude_resources
+const claudeResSrcDir = path.join('public', 'claude_resources');
+const claudeResHyphenDestDir = path.join('dist', 'claude-resources');
+if (fs.existsSync(claudeResSrcDir)) {
+  fs.cpSync(claudeResSrcDir, claudeResHyphenDestDir, { recursive: true });
+  console.log('✓ Synchronized claude-resources (hyphenated) with dedicated static assets');
+}
 
 // CRITICAL FIX: Ensure claude-masterclass (hyphenated route) is a 100% mirror of claude_masterclass
 const claudeSrcDir = path.join('public', 'claude_masterclass');

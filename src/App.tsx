@@ -80,6 +80,13 @@ const AdvancedMasterclassRedirect = () => {
   return null;
 };
 
+const ClaudeResourcesRedirect = () => {
+  useEffect(() => {
+    window.location.replace("/claude_resources/");
+  }, []);
+  return null;
+};
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -170,6 +177,10 @@ const App = () => (
           <Route path="/ai_video_generation/" element={<AiFilmmakingPage />} />
           <Route path="/ai-video-generation" element={<AiFilmmakingPage />} />
           <Route path="/ai-video-generation/" element={<AiFilmmakingPage />} />
+          <Route path="/claude_resources" element={<ClaudeResourcesRedirect />} />
+          <Route path="/claude_resources/" element={<ClaudeResourcesRedirect />} />
+          <Route path="/claude-resources" element={<ClaudeResourcesRedirect />} />
+          <Route path="/claude-resources/" element={<ClaudeResourcesRedirect />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
