@@ -28,23 +28,25 @@
       if (get(el.getAttribute('data-requires'))) el.hidden = false;
     });
 
-    var payOnPage = !!(C.razorpay && C.razorpay.enabled);
     document.querySelectorAll('[data-href]').forEach(function (el) {
       var key = el.getAttribute('data-href');
       var href = links[key] || get(key);
-      if (key === 'checkout' && payOnPage) {
-        // Razorpay: payment.js opens checkout on click. The href keeps the button
-        // keyboard-focusable and falls back to the pricing section if JS fails.
-        el.setAttribute('href', '#pricing');
+      if (key === 'checkout') {
+        // Direct CTA registration & checkout trigger
+        el.setAttribute('href', '#');
         el.setAttribute('role', 'button');
         el.setAttribute('data-pay', '');
+        el.classList.remove('is-pending');
+        el.removeAttribute('aria-disabled');
+        el.removeAttribute('title');
+        el.addEventListener('click', function (e) {
+          e.preventDefault();
+          if (typeof window.openRegisterModal === 'function') {
+            window.openRegisterModal();
+          }
+        });
       } else if (href) {
         el.setAttribute('href', href);
-      } else if (key === 'checkout') {
-        // No checkout link configured yet: show the button disabled, never a dead link.
-        el.classList.add('is-pending');
-        el.setAttribute('aria-disabled', 'true');
-        el.setAttribute('title', 'Checkout link pending');
       }
     });
 

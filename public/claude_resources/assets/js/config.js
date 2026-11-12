@@ -13,18 +13,25 @@ window.SITE_CONFIG = {
   brand: 'TechTycoon',
   productName: 'Ultimate Claude Skills',
 
-  // Main offer (Claude Skills library) price. Shown as e.g. "₹499".
-  // NOTE: the checkout page itself must also charge this amount.
+  // Pricing & Coupon Configuration
   currency: '₹',
+  originalPrice: 999,
   price: 499,
+  couponCode: 'AMIABLE',
+  couponDiscount: 500,
 
-  // Razorpay checkout on this page (server code in /api, keys in a private file on
-  // the server — never here). When enabled, every purchase button opens Razorpay.
-  // Keep false until the keys are set up on the server (see README "Payments").
+  // Google Apps Script endpoint for logging registrations & leads
+  appsScriptUrl: 'https://script.google.com/macros/s/AKfycbw59X8thSpB9xrJSI0GhACEm617vAbc7BDH6hJFOOBsOeq-B4az0p3B_O6koMjYfsppgA/exec',
+
+  // Live Razorpay Key IDs
+  razorpayKeyIn: 'rzp_live_T2CbVONQc6qrqj',
+  razorpayKeyIntl: 'rzp_live_gfoS1OjC8tvWjP',
+
+  // Razorpay checkout on this page
   razorpay: {
-    enabled: false,
+    enabled: true,
     apiBase: 'api/',
-    product: 'claude-skills', // price is set on the server in api/lib/bootstrap.php
+    product: 'claude-skills',
   },
 
   // Alternative to Razorpay: an external checkout link for every purchase CTA.

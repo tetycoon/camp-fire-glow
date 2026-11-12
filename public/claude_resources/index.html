@@ -32,6 +32,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
 <body>
   <!-- Icon sprite -->
@@ -479,6 +480,83 @@
     </ul>
     <p class="container footer-note">Claude is a trademark of Anthropic. This product is independently created and is not affiliated with or endorsed by Anthropic.</p>
   </footer>
+
+  <!-- Registration & Coupon Modal -->
+  <dialog class="reg-dialog" id="reg-dialog" aria-labelledby="reg-dialog-title" tabindex="-1">
+    <button type="button" class="reg-dialog-close" id="reg-dialog-close" aria-label="Close modal">✕</button>
+    
+    <div class="reg-header">
+      <span class="reg-badge">⚡ LIMITED TIME OFFER</span>
+      <h2 id="reg-dialog-title" class="reg-title">Register for Instant Access</h2>
+      <p class="reg-subtitle">Get the 4,000+ Ultimate Claude Skills library &amp; 2,500+ Prompts Bundle sent to your email.</p>
+    </div>
+
+    <!-- Pricing Summary Card -->
+    <div class="reg-price-card">
+      <div class="reg-price-row">
+        <span class="reg-price-label">Original Price:</span>
+        <span class="reg-price-orig"><del>₹999</del></span>
+      </div>
+      <div class="reg-price-row" id="reg-discount-row">
+        <span class="reg-price-label" id="reg-discount-label">Coupon Discount (AMIABLE):</span>
+        <span class="reg-price-discount" id="reg-discount-amount">-₹500</span>
+      </div>
+      <div class="reg-price-divider"></div>
+      <div class="reg-price-row reg-price-total">
+        <span>Total Payable:</span>
+        <span class="reg-final-price" id="reg-final-price">₹499</span>
+      </div>
+    </div>
+
+    <!-- Registration Form -->
+    <form id="reg-form" class="reg-form" novalidate>
+      <div class="form-group">
+        <label for="reg-name">Full Name <span class="req">*</span></label>
+        <input type="text" id="reg-name" name="name" placeholder="Enter your full name" required autocomplete="name">
+        <span class="form-error" id="err-name"></span>
+      </div>
+
+      <div class="form-group">
+        <label for="reg-email">Email Address <span class="req">*</span> <small>(Access link sent here)</small></label>
+        <input type="email" id="reg-email" name="email" placeholder="you@example.com" required autocomplete="email">
+        <span class="form-error" id="err-email"></span>
+      </div>
+
+      <div class="form-group">
+        <label for="reg-phone">WhatsApp / Mobile Number <span class="req">*</span></label>
+        <div class="phone-input-wrap">
+          <select id="reg-country-code" aria-label="Country Code">
+            <option value="+91" selected>🇮🇳 +91</option>
+            <option value="+1">🇺🇸 +1</option>
+            <option value="+44">🇬🇧 +44</option>
+            <option value="+971">🇦🇪 +971</option>
+            <option value="+65">🇸🇬 +65</option>
+            <option value="+61">🇦🇺 +61</option>
+            <option value="+49">🇩🇪 +49</option>
+          </select>
+          <input type="tel" id="reg-phone" name="phone" placeholder="Enter 10-digit mobile number" maxlength="14" required autocomplete="tel">
+        </div>
+        <span class="form-error" id="err-phone"></span>
+      </div>
+
+      <div class="form-group">
+        <label for="reg-coupon">Discount Coupon</label>
+        <div class="coupon-input-wrap">
+          <input type="text" id="reg-coupon" name="coupon" placeholder="Enter coupon code" value="AMIABLE" style="text-transform: uppercase;">
+          <button type="button" id="reg-coupon-btn" class="btn btn-outline btn-sm">Apply</button>
+        </div>
+        <div id="reg-coupon-msg" class="coupon-msg success is-visible">✓ Coupon 'AMIABLE' active: ₹500 OFF (You pay ₹499)</div>
+      </div>
+
+      <button type="submit" id="reg-submit-btn" class="btn btn-primary btn-block btn-pay">
+        Proceed to Payment — <span id="btn-price-display">₹499</span>
+      </button>
+
+      <p class="reg-security-note">
+        🔒 256-Bit SSL Encrypted · Instant Email Access · Powered by Razorpay
+      </p>
+    </form>
+  </dialog>
 
   <dialog class="lightbox" id="lightbox" aria-label="Review screenshot">
     <button class="lightbox-close" type="button" aria-label="Close">×</button>
