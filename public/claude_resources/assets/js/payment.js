@@ -33,6 +33,7 @@
   var regCoupon = document.getElementById('reg-coupon');
   var regCouponBtn = document.getElementById('reg-coupon-btn');
   var regCouponMsg = document.getElementById('reg-coupon-msg');
+  var regDiscountBadge = document.getElementById('reg-discount-badge');
   var regDiscountRow = document.getElementById('reg-discount-row');
   var regDiscountAmount = document.getElementById('reg-discount-amount');
   var regAddonRow = document.getElementById('reg-addon-row');
@@ -65,27 +66,37 @@
     if (entered === VALID_COUPON) {
       basePrice = DISCOUNTED_PRICE;
       currentCouponApplied = true;
+      if (regDiscountBadge) {
+        regDiscountBadge.style.display = 'inline';
+        regDiscountBadge.textContent = '⚡ Save ₹' + COUPON_DISCOUNT + ' (' + VALID_COUPON + ')';
+      }
       if (regDiscountRow) regDiscountRow.style.display = 'flex';
       if (regDiscountAmount) regDiscountAmount.textContent = '-₹' + COUPON_DISCOUNT;
       if (regCouponMsg) {
-        regCouponMsg.className = 'coupon-msg success is-visible';
-        regCouponMsg.textContent = "✓ Coupon '" + VALID_COUPON + "' active: ₹" + COUPON_DISCOUNT + " OFF";
+        regCouponMsg.className = 'coupon-msg-inline success is-visible';
+        regCouponMsg.textContent = '✓ ₹' + COUPON_DISCOUNT + ' OFF';
       }
     } else if (entered === '') {
       basePrice = ORIGINAL_PRICE;
       currentCouponApplied = false;
+      if (regDiscountBadge) {
+        regDiscountBadge.style.display = 'none';
+      }
       if (regDiscountRow) regDiscountRow.style.display = 'none';
       if (regCouponMsg) {
-        regCouponMsg.className = 'coupon-msg neutral is-visible';
-        regCouponMsg.textContent = "Standard price is ₹" + ORIGINAL_PRICE + ". Use 'AMIABLE' for ₹" + COUPON_DISCOUNT + " OFF.";
+        regCouponMsg.className = 'coupon-msg-inline';
+        regCouponMsg.textContent = '';
       }
     } else {
       basePrice = ORIGINAL_PRICE;
       currentCouponApplied = false;
+      if (regDiscountBadge) {
+        regDiscountBadge.style.display = 'none';
+      }
       if (regDiscountRow) regDiscountRow.style.display = 'none';
       if (regCouponMsg) {
-        regCouponMsg.className = 'coupon-msg error is-visible';
-        regCouponMsg.textContent = "✕ Invalid coupon. Enter '" + VALID_COUPON + "' to save ₹" + COUPON_DISCOUNT + ".";
+        regCouponMsg.className = 'coupon-msg-inline error is-visible';
+        regCouponMsg.textContent = '✕ Invalid';
       }
     }
 
