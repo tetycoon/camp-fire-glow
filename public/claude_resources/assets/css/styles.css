@@ -546,6 +546,12 @@ svg { width: 1em; height: 1em; flex: none; }
   .footer-note { text-align: center; }
 }
 
+/* ---- Razorpay Checkout Container -------------------------------- */
+.razorpay-container {
+  z-index: 2147483647 !important;
+  position: relative !important;
+}
+
 /* ---- Register Now Modal ------------------------------------------- */
 .reg-dialog {
   width: min(92vw, 520px);

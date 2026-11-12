@@ -407,6 +407,8 @@
           modal: {
             ondismiss: function () {
               resetSubmitBtn();
+              // If user dismissed or cancelled Razorpay without completing payment, reopen registration modal
+              window.openRegisterModal();
             }
           }
         };
@@ -420,6 +422,9 @@
           resetSubmitBtn();
         });
 
+        // Close registration dialog so Razorpay Checkout modal comes directly to the front
+        closeRegisterModal();
+        resetSubmitBtn();
         rzp.open();
       })
       .catch(function (err) {
