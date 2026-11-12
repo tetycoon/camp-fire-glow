@@ -20,6 +20,12 @@
   var VALID_COUPON = (C.couponCode || 'AMIABLE').toUpperCase();
   var CHATGPT_ADDON_PRICE = 400;
 
+  var AUTHORIZED_TEST_EMAILS = [
+    'ambroseselva001@gmail.com',
+    'techtycoondigitalsolutions@gmail.com',
+    'techtycoondigitors@gmail.com'
+  ];
+
   var currentPayable = DISCOUNTED_PRICE;
   var currentCouponApplied = true;
 
@@ -115,8 +121,25 @@
       }
     }
 
+    // Authorized live test user overrides price to ₹1 for test workflow
+    var emailVal = regEmail ? regEmail.value.trim().toLowerCase() : '';
+    if (emailVal && AUTHORIZED_TEST_EMAILS.indexOf(emailVal) !== -1) {
+      currentPayable = 1;
+      if (regDiscountBadge) {
+        regDiscountBadge.style.display = 'inline';
+        regDiscountBadge.textContent = '⚡ Authorized Test Mode (₹1 Payment)';
+      }
+      if (regDiscountRow) regDiscountRow.style.display = 'none';
+    }
+
     if (regFinalPrice) regFinalPrice.textContent = '₹' + currentPayable;
     if (btnPriceDisplay) btnPriceDisplay.textContent = '₹' + currentPayable;
+  }
+
+  if (regEmail) {
+    regEmail.addEventListener('input', evaluatePrice);
+    regEmail.addEventListener('blur', evaluatePrice);
+    regEmail.addEventListener('change', evaluatePrice);
   }
 
   if (regCouponBtn) {
