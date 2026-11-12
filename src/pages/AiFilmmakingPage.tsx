@@ -12,6 +12,7 @@ import {
   Users,
   ChevronDown,
   Download,
+  Mail,
   MessageSquare,
   Lock,
   Film,
@@ -31,6 +32,7 @@ import aiProductCommercial from '../assets/ai_product_commercial.jpg';
 import aiPixarCharacter from '../assets/ai_pixar_character.jpg';
 import aiBrandIdent from '../assets/ai_brand_ident.jpg';
 import heroAiFilmmakingStudio from '../assets/hero_ai_filmmaking_studio.jpg';
+import AiFilmmakingLeadGate from '../components/ai_filmmaking/AiFilmmakingLeadGate';
 import event1 from '../assets/event-1.jpg';
 import event2 from '../assets/event-2.jpg';
 import event3 from '../assets/event-3.jpg';
@@ -47,7 +49,7 @@ export const AI_FILMMAKING_APPS_SCRIPT_URL =
 const RAZORPAY_KEY_ID_IN = 'rzp_live_T2CbVONQc6qrqj';
 const RAZORPAY_KEY_ID_INTL = 'rzp_live_gfoS1OjC8tvWjP';
 
-const WHATSAPP_COMMUNITY_LINK = 'https://chat.whatsapp.com/LABV7lxs19RAlwqHzlsgRw';
+const WHATSAPP_COMMUNITY_LINK = 'https://chat.whatsapp.com/GuJIGDcfIIfDZHlG0MduvM';
 const WHATSAPP_BOT_NUMBER = '917010340494';
 const SUPPORT_PHONE_DISPLAY = '+91 63792 09689';
 
@@ -98,16 +100,38 @@ function getUpcomingSundaySession() {
 }
 
 // ============================================================================
-// HELPER: ACCOUNTING BREAKDOWN (FLAT PRICE - NO GST ADDED)
+// HELPER: GST BREAKDOWN (18% GST INCLUSIVE)
+// Base ₹99 = 83.90 + 7.55 CGST + 7.55 SGST
+// With ₹400 PDF & Material Add-on (Total ₹499) = 422.88 + 38.06 CGST + 38.06 SGST
 // ============================================================================
 function getAccountingBreakdown(totalAmount: number) {
+  if (totalAmount === 1) {
+    return {
+      isTest: true,
+      base: 1.0,
+      cgst: 0.0,
+      sgst: 0.0,
+      gstTotal: 0.0,
+      total: 1.0
+    };
+  }
+  if (totalAmount === 499) {
+    return {
+      isTest: false,
+      base: 422.88,
+      cgst: 38.06,
+      sgst: 38.06,
+      gstTotal: 76.12,
+      total: 499.0
+    };
+  }
   return {
-    isTest: totalAmount === 1,
-    base: totalAmount,
-    cgst: 0.0,
-    sgst: 0.0,
-    gstTotal: 0.0,
-    total: totalAmount
+    isTest: false,
+    base: 83.9,
+    cgst: 7.55,
+    sgst: 7.55,
+    gstTotal: 15.1,
+    total: 99.0
   };
 }
 
@@ -461,24 +485,6 @@ const AiFilmmakingPage: React.FC = () => {
   });
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [formError, setFormError] = useState('');
-  const leadTrackedRef = useRef(false);
-
-  // Helper: Extract UTM Attribution & Click IDs for Meta Lead Campaigns
-  const getTrackingParams = () => {
-    if (typeof window === 'undefined') {
-      return { utm_source: '', utm_medium: '', utm_campaign: '', utm_content: '', utm_term: '', gclid: '', fbclid: '' };
-    }
-    const params = new URLSearchParams(window.location.search);
-    return {
-      utm_source: params.get('utm_source') || '',
-      utm_medium: params.get('utm_medium') || '',
-      utm_campaign: params.get('utm_campaign') || '',
-      utm_content: params.get('utm_content') || '',
-      utm_term: params.get('utm_term') || '',
-      gclid: params.get('gclid') || '',
-      fbclid: params.get('fbclid') || ''
-    };
-  };
 
   // Verified Post-Payment Invoice & WhatsApp Confirmation State
   const [verifiedPayment, setVerifiedPayment] = useState<{
@@ -572,7 +578,7 @@ const AiFilmmakingPage: React.FC = () => {
     });
   };
 
-  // Handle Checkout Form Submission (Captures Lead for Meta Campaigns + Opens Razorpay)
+  // Handle Checkout Form Submission
   const handleProceedToPayment = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormError('');
@@ -586,7 +592,7 @@ const AiFilmmakingPage: React.FC = () => {
       return;
     }
     if (!cleanEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
-      setFormError('Please enter a valid email address for your webinar access link & receipt.');
+      setFormError('Please enter a valid email address for your webinar link & GST invoice.');
       return;
     }
     if (!cleanDigits || cleanDigits.length < 7) {
@@ -609,93 +615,12 @@ const AiFilmmakingPage: React.FC = () => {
         ? 'Sunday 10 AM - 1 PM IST (Live + Session PDF & Material)'
         : 'Sunday 10 AM - 1 PM IST (Live Webinar)';
 
-      const tracking = getTrackingParams();
-      const clientLeadId = 'lead_aif_' + Date.now().toString(36) + '_' + Math.random().toString(36).substring(2, 9);
-
       let createdOrderId = '';
       const isScriptConfigured =
         AI_FILMMAKING_APPS_SCRIPT_URL &&
         !AI_FILMMAKING_APPS_SCRIPT_URL.includes('PASTE_YOUR_');
 
-      // 1. Immediately Save Lead into Google Sheet for Meta Campaigns (captures lead even before payment)
-      if (isScriptConfigured) {
-        try {
-          fetch(AI_FILMMAKING_APPS_SCRIPT_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({
-              action: 'saveLandingLead',
-              leadId: clientLeadId,
-              name: cleanName,
-              email: cleanEmail,
-              phone: fullPhone,
-              countryCode: formData.countryCode,
-              userType: formData.profession,
-              course: includePdfMaterial
-                ? '3-Hours AI Filmmaking & Video Generation Live Webinar + Session PDF & Material'
-                : '3-Hours AI Filmmaking & Video Generation Live Webinar',
-              amount: totalAmount,
-              hasPdfMaterial: includePdfMaterial ? 'YES' : 'NO',
-              pageUrl: window.location.href,
-              utm: tracking,
-              utm_source: tracking.utm_source,
-              utm_medium: tracking.utm_medium,
-              utm_campaign: tracking.utm_campaign,
-              utm_content: tracking.utm_content,
-              utm_term: tracking.utm_term,
-              gclid: tracking.gclid,
-              fbclid: tracking.fbclid,
-              userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : ''
-            })
-          }).catch((leadErr) => {
-            console.warn('Meta campaign lead capture background log:', leadErr);
-          });
-        } catch (_) {}
-      }
-
-      // 2. Fire Meta Pixel Lead Event (Strictly Deduplicated for Meta Lead Campaign)
-      const leadStorageKey = `lead_tracked_${clientLeadId}`;
-      const alreadyTrackedLead =
-        leadTrackedRef.current || (typeof sessionStorage !== 'undefined' && sessionStorage.getItem(leadStorageKey));
-
-      if (!alreadyTrackedLead) {
-        leadTrackedRef.current = true;
-        try {
-          sessionStorage.setItem(leadStorageKey, 'true');
-        } catch (_) {}
-
-        if (typeof (window as any).fbq === 'function') {
-          try {
-            (window as any).fbq(
-              'track',
-              'Lead',
-              {
-                content_name: includePdfMaterial
-                  ? '3-Hours AI Filmmaking Live Webinar + Session PDF & Material'
-                  : '3-Hours AI Filmmaking Live Webinar',
-                content_category: 'AI Filmmaking Registration Form',
-                value: totalAmount,
-                currency: 'INR'
-              },
-              { eventID: clientLeadId }
-            );
-          } catch (pixelErr) {
-            console.warn('Meta Pixel Lead tracking error:', pixelErr);
-          }
-        }
-
-        if (typeof (window as any).gtag === 'function') {
-          try {
-            (window as any).gtag('event', 'generate_lead', {
-              event_category: 'AI Filmmaking Registration Form',
-              event_label: includePdfMaterial ? 'Live + Material (₹499)' : 'Live Only (₹99)',
-              value: totalAmount
-            });
-          } catch (_) {}
-        }
-      }
-
-      // 3. Create Order in Google Sheet via Apps Script
+      // 1. Create Order & Log Lead in Google Sheet via Apps Script
       if (isScriptConfigured) {
         try {
           const orderRes = await fetch(AI_FILMMAKING_APPS_SCRIPT_URL, {
@@ -703,7 +628,6 @@ const AiFilmmakingPage: React.FC = () => {
             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
             body: JSON.stringify({
               action: 'create_order',
-              leadId: clientLeadId,
               name: cleanName,
               email: cleanEmail,
               phone: fullPhone,
@@ -720,12 +644,7 @@ const AiFilmmakingPage: React.FC = () => {
               sessionTime: sessionInfo.timeRange,
               language: modeLabel,
               modeOfSession: modeLabel,
-              pageUrl: window.location.href,
-              utm_source: tracking.utm_source,
-              utm_medium: tracking.utm_medium,
-              utm_campaign: tracking.utm_campaign,
-              gclid: tracking.gclid,
-              fbclid: tracking.fbclid
+              pageUrl: window.location.href
             })
           });
           const orderJson = await orderRes.json();
@@ -737,7 +656,7 @@ const AiFilmmakingPage: React.FC = () => {
         }
       }
 
-      // 4. Open Razorpay Checkout Modal
+      // 2. Open Razorpay Checkout Modal
       const rzpOptions: any = {
         key: activeKeyId,
         amount: totalAmount * 100,
@@ -754,7 +673,6 @@ const AiFilmmakingPage: React.FC = () => {
           contact: fullPhone
         },
         notes: {
-          lead_id: clientLeadId,
           product_key: 'ai_filmmaking',
           course: includePdfMaterial
             ? 'AI Filmmaking Live Webinar + Session PDF & Material'
@@ -762,8 +680,8 @@ const AiFilmmakingPage: React.FC = () => {
           has_pdf_material: includePdfMaterial ? 'YES' : 'NO',
           session_date: sessionInfo.formattedDate,
           session_time: sessionInfo.timeRange,
-          base_amount: String(totalAmount),
-          gst_amount: '0'
+          base_amount: String(accounting.base),
+          gst_amount: String(accounting.gstTotal)
         },
         theme: {
           color: '#2563eb'
@@ -775,7 +693,7 @@ const AiFilmmakingPage: React.FC = () => {
 
           let resolvedInvoiceNo = `TT/26-27/AIF-${payId.replace(/\D/g, '').slice(-4) || '1099'}`;
 
-          // 5. Verify Payment & Trigger Receipt Email + Meta WhatsApp + Calendar in Apps Script
+          // 3. Verify Payment & Trigger GST Invoice PDF Email + Meta WhatsApp + Calendar in Apps Script
           if (isScriptConfigured) {
             try {
               const verifyRes = await fetch(AI_FILMMAKING_APPS_SCRIPT_URL, {
@@ -815,7 +733,7 @@ const AiFilmmakingPage: React.FC = () => {
               value: totalAmount,
               currency: 'INR',
               content_name: '3-Hours AI Filmmaking & Video Generation Live Webinar'
-            }, { eventID: ordId });
+            });
           }
 
           setVerifiedPayment({
@@ -944,8 +862,8 @@ const AiFilmmakingPage: React.FC = () => {
       a: 'When you check the optional ₹400 box (Total ₹499), you receive the complete Official Session PDF & Material bundle: 150+ copy-paste 3D Logo Animation prompts, AI Avatar creation & lip-sync workflow blueprints, cinematic camera motion cheat sheets, and the complete curated AI Filmmaking tool directory.'
     },
     {
-      q: 'Will I receive an official invoice / receipt for my registration?',
-      a: 'Yes! Tech Tycoon Digital Solution LLP issues an official registration receipt & invoice immediately upon payment verification, both on your confirmation screen and via email.'
+      q: 'Will I receive a GST Tax Invoice for my registration?',
+      a: 'Yes! Tech Tycoon Digital Solution LLP issues an official GST-compliant Tax Invoice (PDF) immediately upon payment verification, delivered directly to your registered email address.'
     },
     {
       q: 'How will I receive the live webinar joining link?',
@@ -954,42 +872,62 @@ const AiFilmmakingPage: React.FC = () => {
   ];
 
   // ============================================================================
-  // IF PAYMENT IS VERIFIED: RENDER INSTANT VERIFIED INVOICE & WHATSAPP SCREEN
+  // IF PAYMENT IS VERIFIED: RENDER INSTANT VERIFIED WHATSAPP SCREEN (INVOICE SENT VIA EMAIL)
   // ============================================================================
   if (verifiedPayment) {
-    const paidAcct = getAccountingBreakdown(verifiedPayment.amountPaid);
     const waTriggerText = encodeURIComponent(
       `HI I completed registration of AI Filmmaking & Video Generation Live Webinar (${verifiedPayment.orderId}) on ${verifiedPayment.sessionDate} at ${verifiedPayment.sessionTime}`
     );
 
     return (
-      <div className="min-h-screen bg-[#04060e] text-white py-8 sm:py-12 px-4 sm:px-6 relative overflow-hidden">
-        <div className="max-w-3xl mx-auto relative z-10">
-          <div className="rounded-3xl bg-slate-900/90 border border-emerald-500/40 p-5 sm:p-10 shadow-[0_0_80px_rgba(16,185,129,0.2)] backdrop-blur-xl">
+      <div className="min-h-screen bg-[#04060e] text-white py-8 sm:py-16 px-4 sm:px-6 relative overflow-hidden flex items-center justify-center">
+        {/* Subtle Ambient Glow */}
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none" />
+
+        <div className="max-w-2xl w-full mx-auto relative z-10">
+          <div className="rounded-3xl bg-slate-900/90 border border-emerald-500/40 p-6 sm:p-10 shadow-[0_0_80px_rgba(16,185,129,0.2)] backdrop-blur-xl text-center">
+            {/* Top Success Badge */}
             <div className="flex flex-col items-center text-center mb-6 sm:mb-8">
               <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-emerald-500/20 border-2 border-emerald-400 flex items-center justify-center mb-4 shadow-[0_0_30px_rgba(16,185,129,0.4)]">
                 <CheckCircle2 className="w-8 h-8 sm:w-10 sm:h-10 text-emerald-400" />
               </div>
               <span className="px-3.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-[11px] sm:text-xs font-bold uppercase tracking-widest mb-2">
-                Seat Officially Confirmed • Verified Payment
+                Seat Officially Confirmed • Payment Verified
               </span>
-              <h1 className="text-2xl sm:text-4xl font-black text-white">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-white">
                 Welcome to AI Filmmaking Studio, {verifiedPayment.customerName}! 🎬
               </h1>
-              <p className="text-slate-300 mt-2 text-xs sm:text-base max-w-xl">
-                Your registration for the <strong>3-Hours AI Filmmaking &amp; Video Generation Live Webinar</strong> is confirmed. Your official confirmation &amp; receipt has been sent to <strong>{verifiedPayment.customerEmail}</strong>.
+              <p className="text-slate-300 mt-2 text-xs sm:text-base max-w-lg mx-auto">
+                Your registration for the <strong>3-Hours AI Filmmaking &amp; Video Generation Live Webinar</strong> is confirmed.
+              </p>
+            </div>
+
+            {/* Email Invoice Confirmation Notice (Invoice only sent through email) */}
+            <div className="rounded-2xl bg-slate-800/80 border border-slate-700/80 p-4 sm:p-5 mb-6 text-center">
+              <div className="flex items-center justify-center gap-2 font-bold text-slate-100 text-sm mb-1.5">
+                <Mail className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span>GST Tax Invoice Sent to Your Email</span>
+              </div>
+              <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
+                Your official GST-compliant tax invoice (Invoice No: <span className="font-mono text-emerald-400 font-semibold">{verifiedPayment.invoiceNumber}</span>) and payment receipt have been sent directly to:
+              </p>
+              <p className="mt-1.5 font-mono text-xs sm:text-sm font-bold text-white bg-slate-950/70 py-1.5 px-3.5 rounded-lg border border-slate-700/60 inline-block">
+                {verifiedPayment.customerEmail}
+              </p>
+              <p className="text-[11px] text-slate-400 mt-2">
+                Please check your inbox (including Spam / Promotions). All tax records are preserved digitally.
               </p>
             </div>
 
             {/* Step 1: Mandatory WhatsApp Community Join */}
-            <div className="rounded-2xl bg-gradient-to-r from-emerald-950/90 via-teal-950/90 to-emerald-950/90 border border-emerald-500/40 p-5 sm:p-6 mb-6 sm:mb-8 text-center">
+            <div className="rounded-2xl bg-gradient-to-r from-emerald-950/90 via-teal-950/90 to-emerald-950/90 border border-emerald-500/40 p-5 sm:p-6 mb-6 text-center">
               <p className="text-xs font-bold uppercase tracking-widest text-emerald-300 mb-1.5">
                 ⚡ Action Required — Step 1 of 2
               </p>
               <h3 className="text-lg sm:text-xl font-bold text-white mb-2">
                 Join the Official Webinar WhatsApp Community
               </h3>
-              <p className="text-xs sm:text-sm text-emerald-100/80 mb-4">
+              <p className="text-xs sm:text-sm text-emerald-100/80 mb-4 max-w-md mx-auto">
                 All live classroom links, Sunday 10:00 AM reminders, and {verifiedPayment.hasPdfMaterial ? 'your Session PDF & Material bundle' : 'session updates'} will be shared inside the group.
               </p>
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -997,7 +935,7 @@ const AiFilmmakingPage: React.FC = () => {
                   href={WHATSAPP_COMMUNITY_LINK}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-sm sm:text-base shadow-lg shadow-emerald-500/30 transition-all"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-sm sm:text-base shadow-lg shadow-emerald-500/30 transition-all cursor-pointer"
                 >
                   <MessageSquare className="w-5 h-5" />
                   Join Official WhatsApp Group
@@ -1006,80 +944,30 @@ const AiFilmmakingPage: React.FC = () => {
                   href={`https://wa.me/${WHATSAPP_BOT_NUMBER}?text=${waTriggerText}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-xs sm:text-sm border border-white/20 transition-all"
+                  className="inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-xs sm:text-sm border border-white/20 transition-all cursor-pointer"
                 >
                   Get Instant Ticket on WhatsApp Bot
                 </a>
               </div>
             </div>
 
-            {/* Step 2: Official Invoice & Receipt Card */}
-            <div className="rounded-2xl bg-white text-slate-900 p-5 sm:p-8 shadow-xl mb-6">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b-2 border-slate-900 pb-4 mb-5 gap-3">
-                <div>
-                  <h2 className="text-base sm:text-lg font-black text-slate-900">TECH TYCOON DIGITAL SOLUTION LLP</h2>
-                  <p className="text-xs text-slate-600">
-                    No. 31, Ramalinga Nagar, Madipakkam, Chennai, Tamil Nadu - 600091
-                  </p>
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    <span className="px-2 py-0.5 bg-slate-100 border border-slate-300 text-slate-700 font-mono text-[11px] font-bold rounded">
-                      SAC: 999293
-                    </span>
-                  </div>
-                </div>
-                <div className="sm:text-right">
-                  <span className="inline-block px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-bold text-xs mb-1">
-                    PAID • OFFICIAL RECEIPT
-                  </span>
-                  <p className="text-xs font-mono text-slate-600">Invoice No: {verifiedPayment.invoiceNumber}</p>
-                  <p className="text-xs font-mono text-slate-600">Payment ID: {verifiedPayment.paymentId}</p>
-                </div>
+            {/* Session Info Quick Summary */}
+            <div className="grid grid-cols-2 gap-3 text-xs bg-slate-950/50 p-3.5 rounded-xl border border-white/5 mb-6 text-slate-300">
+              <div>
+                <span className="text-[10px] uppercase font-bold text-slate-500 block">Session Date</span>
+                <span className="font-semibold text-white">{verifiedPayment.sessionDate}</span>
               </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs bg-slate-50 p-4 rounded-xl border border-slate-200 mb-5">
-                <div>
-                  <p className="text-[10px] font-bold uppercase text-slate-400">Billed To</p>
-                  <p className="font-bold text-slate-900 text-sm">{verifiedPayment.customerName}</p>
-                  <p className="text-slate-600">{verifiedPayment.customerEmail}</p>
-                  <p className="text-slate-600">{verifiedPayment.customerPhone}</p>
-                </div>
-                <div>
-                  <p className="text-[10px] font-bold uppercase text-slate-400">Session Schedule</p>
-                  <p className="font-bold text-slate-900">{verifiedPayment.sessionDate}</p>
-                  <p className="text-blue-700 font-semibold">{verifiedPayment.sessionTime}</p>
-                  <p className="text-slate-600">Mode: Live Interactive Online Studio</p>
-                </div>
-              </div>
-
-              <div className="border-t border-slate-200 pt-4 space-y-2 text-xs sm:text-sm">
-                <div className="flex justify-between gap-2">
-                  <span className="font-semibold text-slate-800">
-                    3-Hours AI Filmmaking &amp; Video Generation Live Webinar
-                    {verifiedPayment.hasPdfMaterial ? ' + Official Session PDF & Material Bundle' : ''}
-                  </span>
-                  <span className="font-mono shrink-0">₹{paidAcct.total.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between text-xs text-slate-500">
-                  <span>Taxes &amp; Fees</span>
-                  <span className="font-mono">₹0.00 (Flat Price)</span>
-                </div>
-                <div className="flex justify-between text-sm sm:text-base font-black text-slate-900 border-t border-slate-300 pt-2">
-                  <span>Total Amount Paid (INR)</span>
-                  <span className="font-mono text-emerald-700">₹{verifiedPayment.amountPaid.toFixed(2)}</span>
-                </div>
+              <div>
+                <span className="text-[10px] uppercase font-bold text-slate-500 block">Timing &amp; Mode</span>
+                <span className="font-semibold text-emerald-400">{verifiedPayment.sessionTime}</span>
               </div>
             </div>
 
-            <div className="flex flex-wrap items-center justify-between gap-4 text-xs text-slate-400">
-              <button
-                onClick={() => window.print()}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-semibold"
-              >
-                <Download className="w-4 h-4" /> Print / Save Invoice Receipt
-              </button>
+            {/* Back to Home Link */}
+            <div className="flex justify-center text-xs text-slate-400">
               <button
                 onClick={() => setVerifiedPayment(null)}
-                className="text-slate-400 hover:text-white underline"
+                className="text-slate-400 hover:text-white underline cursor-pointer transition-colors"
               >
                 ← Back to Webinar Landing Page
               </button>
@@ -1097,6 +985,8 @@ const AiFilmmakingPage: React.FC = () => {
   // ============================================================================
   return (
     <div className="min-h-screen bg-[#040711] text-white selection:bg-blue-600 selection:text-white overflow-x-hidden font-sans pb-20">
+      {/* Lead Capture Popup Modal for Meta Ads & Campaigns */}
+      <AiFilmmakingLeadGate />
 
       {/* CSS Keyframes for 3D Perspective Grid */}
       <style>{`
@@ -1227,7 +1117,7 @@ const AiFilmmakingPage: React.FC = () => {
             {/* Trust Badges */}
             <div className="mt-5 flex flex-wrap items-center justify-center lg:justify-start gap-3 sm:gap-4 text-xs text-slate-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
               <span className="inline-flex items-center gap-1.5 font-medium">
-                <ShieldCheck className="w-4 h-4 text-emerald-400" /> Instant Access &amp; Receipt
+                <ShieldCheck className="w-4 h-4 text-emerald-400" /> GST Tax Invoice Included
               </span>
               <span className="inline-flex items-center gap-1.5 font-medium">
                 <Award className="w-4 h-4 text-blue-400" /> Beginner &amp; Foundation Friendly
@@ -1623,7 +1513,7 @@ const AiFilmmakingPage: React.FC = () => {
                     </li>
                     <li className="flex items-center gap-2.5">
                       <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0" />
-                      <span>Official Participation Certificate &amp; Instant Receipt</span>
+                      <span>Official Participation Certificate &amp; GST Tax Invoice</span>
                     </li>
                   </ul>
                 </div>
@@ -1816,7 +1706,7 @@ const AiFilmmakingPage: React.FC = () => {
       <footer className="py-10 pb-24 bg-[#03050c] border-t border-white/10 text-center text-xs text-slate-500">
         <div className="max-w-5xl mx-auto px-4 space-y-2">
           <p className="font-bold text-slate-300">
-            TECH TYCOON DIGITAL SOLUTION LLP
+            TECH TYCOON DIGITAL SOLUTION LLP (GSTIN: 33AAZFT9667P1ZP)
           </p>
           <p>No. 31, Ramalinga Nagar, Madipakkam, Chennai, Tamil Nadu - 600091</p>
           <p>
@@ -1924,7 +1814,7 @@ const AiFilmmakingPage: React.FC = () => {
                 Register <span className="text-blue-600">Now</span>
               </h2>
               <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5">
-                3-Hours AI Filmmaking Live Webinar • Just ₹99
+                3-Hours AI Filmmaking Live Webinar • Just ₹99 (Incl. 18% GST)
               </p>
               <div className="mt-1.5 inline-flex items-center gap-1.5 bg-blue-50 border border-blue-200 text-blue-700 px-3 py-1 rounded-full text-[11px] font-bold tracking-wide">
                 <span>📅 Sunday Morning (10:00 AM – 1:00 PM IST) • {sessionInfo.shortDate}</span>
@@ -2056,7 +1946,7 @@ const AiFilmmakingPage: React.FC = () => {
                   className="mt-0.5 w-3.5 h-3.5 rounded border-slate-300 text-blue-600 accent-blue-600"
                 />
                 <label htmlFor="wa-filmmaking-opt-in" className="text-[11px] text-slate-600 leading-tight">
-                  I agree to receive live webinar link, official receipt and reminders on WhatsApp &amp; Email.
+                  I agree to receive live webinar link, GST invoice and reminders on WhatsApp &amp; Email.
                 </label>
               </div>
 
@@ -2075,7 +1965,7 @@ const AiFilmmakingPage: React.FC = () => {
                 <span>
                   {isProcessingPayment
                     ? 'Connecting to Razorpay...'
-                    : `Proceed to Payment — ₹${totalAmount}`}
+                    : `Proceed to Payment — ₹${totalAmount} (Incl. 18% GST)`}
                 </span>
               </button>
 
