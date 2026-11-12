@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { 
   Sparkles, Calendar, Clock, UserCheck, ShieldCheck, 
   Crown, Check, X, ChevronDown, Globe, Lock,
-  Zap, Plug, Terminal, Laptop, Gift, FileCode, Award, ArrowRight, Star,
+  Zap, Plug, Terminal, Laptop, Gift, FileCode, FileText, Award, ArrowRight, Star,
   User, Mail, Phone, Briefcase, ArrowLeft, Video, CheckCircle2, MessageSquare
 } from 'lucide-react';
 import techTycoonLogo from '../assets/tech_tycoon_logo.png';
@@ -10,6 +10,7 @@ import antonyPraveenPhoto from '../assets/antony_praveen.jpg';
 import onlineWebp from '../assets/online.webp';
 import offlineWebp from '../assets/offline.webp';
 import GstPriceBreakdown from '../components/common/GstPriceBreakdown';
+// ClaudeMasterclassLeadGate removed
 import { calculateGstBreakdown, calculateInclusiveGstBreakdown, isAuthorizedTestEmail, isValidEmail, isValidGstin, sanitizeTextInput } from '../lib/gstUtils';
 
 declare global {
@@ -231,7 +232,7 @@ const ClaudeMasterclassPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isTermsOpen, setIsTermsOpen] = useState(false);
   const [modalStep, setModalStep] = useState<1 | 2>(1);
-  const [selectedPlan, setSelectedPlan] = useState<number>(499);
+  const [selectedPlan, setSelectedPlan] = useState<number>(999);
   const [masterclassMode, setMasterclassMode] = useState<'online' | 'offline'>('online');
   const [selectedBatch, setSelectedBatch] = useState<'online' | 'offline' | null>(null);
 
@@ -270,12 +271,11 @@ const ClaudeMasterclassPage: React.FC = () => {
 
   const getCalculatedBasePrice = () => {
     const passPrice = selectedPlan;
-    // For ₹1,999 All-Access Pass, E-Certificate is already included free
-    const certAddon = (wantCertificate && selectedPlan !== 1999) ? 1000 : 0;
+    const certAddon = wantCertificate ? 1000 : 0;
     return passPrice + certAddon;
   };
 
-  const gstBreakdown = calculateInclusiveGstBreakdown(getCalculatedBasePrice());
+  const gstBreakdown = { baseAmount: getCalculatedBasePrice(), gstAmount: 0, totalAmount: getCalculatedBasePrice() };
 
   const getCalculatedPrice = () => {
     if (isAuthorizedTestEmail(formData.email)) return 1;
@@ -298,7 +298,14 @@ const ClaudeMasterclassPage: React.FC = () => {
       } else if (pathname.includes('/online') || hash.includes('online') || batchParam === 'online') {
         setSelectedBatch('online');
         setMasterclassMode('online');
-        setSelectedPlan(499);
+        setSelectedPlan(999);
+      } else if (hash && hash !== '#' && document.querySelector(hash)) {
+        // In-page anchor (e.g. #curriculum, #pricing) - preserve active mode and scroll
+        setSelectedBatch((prev) => prev || 'online');
+        setTimeout(() => {
+          const el = document.querySelector(hash);
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
       } else {
         setSelectedBatch(null);
       }
@@ -312,7 +319,7 @@ const ClaudeMasterclassPage: React.FC = () => {
   const handleSelectBatch = (batch: 'online' | 'offline') => {
     setSelectedBatch(batch);
     setMasterclassMode(batch);
-    setSelectedPlan(batch === 'offline' ? 4999 : 499);
+    setSelectedPlan(batch === 'offline' ? 4999 : 999);
     window.scrollTo({ top: 0, behavior: 'smooth' });
     if (window.history && window.history.replaceState) {
       window.history.replaceState(null, '', `#${batch}`);
@@ -329,25 +336,26 @@ const ClaudeMasterclassPage: React.FC = () => {
 
 
 
-  // Dynamically compute the upcoming Saturday & Sunday dates starting from October 24 & 25, 2026
+  // Dynamically compute the upcoming Saturday & Sunday dates starting from November 14 & 15, 2026
   const weekendInfo = useMemo(() => {
     const now = new Date();
-    // Baseline minimum Saturday: October 24, 2026
-    const minSat = new Date(2026, 9, 24, 18, 0, 0); // Month 9 is October (0-indexed)
+    // Baseline minimum Saturday: November 14, 2026 @ 5:30 PM (17:30)
+    const minSat = new Date(2026, 10, 14, 17, 30, 0); // Month 10 is November (0-indexed)
     const currentDay = now.getDay(); // 0 = Sun, 1 = Mon, ..., 6 = Sat
     let daysUntilSat = (6 - currentDay + 7) % 7;
     
-    if (currentDay === 6 && now.getHours() >= 21) {
+    // Saturday 6:00 PM (18:00) IST is the cutoff time. Once 6 PM is reached, rollover to next week's Saturday & Sunday.
+    if (currentDay === 6 && now.getHours() >= 18) {
       daysUntilSat = 7;
     } else if (currentDay === 0) {
       daysUntilSat = 6;
     }
     
-    let nextSat = new Date(now.getFullYear(), now.getMonth(), now.getDate() + daysUntilSat, 18, 0, 0);
+    let nextSat = new Date(now.getFullYear(), now.getMonth(), now.getDate() + daysUntilSat, 17, 30, 0);
     if (nextSat.getTime() < minSat.getTime()) {
       nextSat = minSat;
     }
-    const nextSun = new Date(nextSat.getFullYear(), nextSat.getMonth(), nextSat.getDate() + 1, 18, 0, 0);
+    const nextSun = new Date(nextSat.getFullYear(), nextSat.getMonth(), nextSat.getDate() + 1, 17, 30, 0);
     
     const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const fullMonthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -384,7 +392,7 @@ const ClaudeMasterclassPage: React.FC = () => {
     };
   }, []);
 
-  // Target Date: Upcoming Saturday @ 18:00 IST for Online, disabled for Offline
+  // Target Date: Upcoming Saturday @ 17:30 (5:30 PM) IST for Online, disabled for Offline
   useEffect(() => {
     if (masterclassMode === 'offline') {
       setTimeLeft({ days: '00', hours: '00', minutes: '00', seconds: '00' });
@@ -454,7 +462,7 @@ const ClaudeMasterclassPage: React.FC = () => {
     setActiveFaq(activeFaq === index ? null : index);
   };
 
-  const handleOpenModal = (plan: number = 499) => {
+  const handleOpenModal = (plan: number = 999) => {
     setSelectedPlan(plan);
     setPromoCodeInput('CLAUDE');
     setAppliedPromo('CLAUDE');
@@ -618,14 +626,14 @@ const ClaudeMasterclassPage: React.FC = () => {
         currency: "INR",
         name: "Claude Masterclass 2026",
         description: selectedPlan === 1999
-          ? "All-Access Mastery Pass (Incl. 18% GST)"
+          ? "All-Access Mastery Pass"
           : selectedPlan === 1499
-          ? "VIP Pro Pass (Incl. 18% GST)"
+          ? "VIP Pro Pass"
           : selectedPlan === 999 
-          ? "Live + Recording Pass (Incl. 18% GST)" 
+          ? "Live + Recording Pass" 
           : selectedPlan === 4999
-          ? "In-Person Chennai Workshop Pass (Incl. 18% GST)"
-          : "Standard Live Session Pass (Incl. 18% GST)",
+          ? "In-Person Chennai Workshop Pass"
+          : "Standard Live Session Pass",
         image: "https://course.techtycoon.in/images/tech_tycoon_logo.png",
         prefill: {
           name: sanitizedName,
@@ -711,6 +719,7 @@ const ClaudeMasterclassPage: React.FC = () => {
   if (selectedBatch === null) {
     return (
       <div className="min-h-screen bg-[#FAF8F5] text-[#1F1E1C] font-sans">
+        
         <header className="bg-[#F7F4EE] border-b border-[#E6E2D9] py-4 px-6">
           <div className="max-w-6xl mx-auto flex justify-between items-center">
             <a href="/" className="flex items-center gap-3 hover:opacity-85 transition-opacity" title="Back to TechTycoon Hub">
@@ -752,11 +761,11 @@ const ClaudeMasterclassPage: React.FC = () => {
                   <span className="text-[#D85A30] text-lg font-black">From ₹499</span>
                 </div>
                 <h2 className="text-[#1F1E1C] text-xl font-bold mb-2">2-Day Live Virtual MasterClass</h2>
-                <p className="text-[#524F4A] text-xs mb-4 leading-relaxed">Learn Claude AI prompt architecture, custom MCP creation, and full web application development live from anywhere.</p>
+                <p className="text-[#524F4A] text-xs mb-4 leading-relaxed">Learn Claude AI prompt architecture, custom MCP creation, and full website development live from anywhere.</p>
                 <ul className="space-y-2.5 text-xs text-[#2C2A29] mb-6">
                   <li className="flex items-center gap-2.5"><Calendar className="w-4 h-4 text-[#D85A30]" /> <strong>{weekendInfo.fullDisplay}</strong></li>
-                  <li className="flex items-center gap-2.5"><Clock className="w-4 h-4 text-[#D85A30]" /> 6:00 PM – 9:00 PM IST (3 Hours/day)</li>
-                  <li className="flex items-center gap-2.5"><Globe className="w-4 h-4 text-[#D85A30]" /> 100% Tamil Instruction & Direct Q&A</li>
+                  <li className="flex items-center gap-2.5"><Clock className="w-4 h-4 text-[#D85A30]" /> 5:30 PM – 8:30 PM IST (3 Hours/day)</li>
+                  <li className="flex items-center gap-2.5"><Globe className="w-4 h-4 text-[#D85A30]" /> 100% Tamil & English Instruction</li>
                 </ul>
               </div>
               <button 
@@ -812,6 +821,7 @@ const ClaudeMasterclassPage: React.FC = () => {
   // BROWSER RENDERING FOR CHOSEN BATCH (ONLINE OR OFFLINE)
   return (
     <div className="min-h-screen bg-[#FDFBF7] text-[#2C2A29] font-sans antialiased selection:bg-[#D85A30]/10 selection:text-[#D85A30]">
+      
       {/* Dynamic Header */}
       <header className="sticky top-0 z-30 bg-[#FDFBF7]/90 backdrop-blur-md border-b border-[#E6E2D9]">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -830,10 +840,10 @@ const ClaudeMasterclassPage: React.FC = () => {
             <div className="hidden md:flex items-center gap-4 text-xs text-[#524F4A]">
               <span>{masterclassMode === 'offline' ? 'Coming Soon' : weekendInfo.shortRangeText}</span>
               <span className="w-1 h-1 rounded-full bg-[#C5C0B8]"></span>
-              <span>{masterclassMode === 'offline' ? 'Full Day' : '6:00 PM – 9:00 PM IST'}</span>
+              <span>{masterclassMode === 'offline' ? 'Full Day' : '5:30 PM – 8:30 PM IST'}</span>
             </div>
             <button 
-              onClick={() => handleOpenModal(masterclassMode === 'offline' ? 4999 : 499)}
+              onClick={() => handleOpenModal(masterclassMode === 'offline' ? 4999 : 999)}
               className="bg-[#D85A30] hover:bg-[#C04E27] text-white font-semibold px-4 py-2 rounded-xl text-xs transition-all shadow-sm flex items-center gap-1.5"
             >
               {masterclassMode === 'offline' ? 'Coming Soon' : 'Register @ ₹499'} <ArrowRight className="w-3.5 h-3.5" />
@@ -866,7 +876,7 @@ const ClaudeMasterclassPage: React.FC = () => {
               {masterclassMode === 'offline' ? (
                 'Join Antony Praveen live at Vestin Park Hotel, Egmore, Chennai for an intensive full-day classroom workshop. Includes luxury hotel buffet lunch, morning & evening high tea.'
               ) : (
-                'Learn how to build custom Model Context Protocols (MCP), prompt like an expert, construct web applications, and automate complex workflows with Anthropic\'s Claude 3.5.'
+                'Learn how to build custom Model Context Protocols (MCP), prompt like an expert, construct responsive websites, and automate complex workflows with Anthropic\'s Claude 3.5.'
               )}
             </p>
 
@@ -876,24 +886,30 @@ const ClaudeMasterclassPage: React.FC = () => {
               <span>
                 {masterclassMode === 'offline'
                   ? 'Direct face-to-face mentorship • Hotel Buffet Lunch & High Tea Included'
-                  : 'Direct access to Antony across both days • Live Q&A and practical exercises'}
+                  : 'Live interactive instruction across both days • Practical exercises & code demos'}
               </span>
             </div>
 
             {/* Hero CTA & Secondary Action */}
             <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
               <button 
-                onClick={() => handleOpenModal(masterclassMode === 'offline' ? 4999 : 499)}
+                onClick={() => handleOpenModal(masterclassMode === 'offline' ? 4999 : 999)}
                 className="bg-[#D85A30] hover:bg-[#C04E27] text-white font-bold py-3.5 px-7 rounded-xl text-base transition-all shadow-md flex items-center justify-center gap-2"
               >
                 {masterclassMode === 'offline' ? 'In-Person Batch Coming Soon' : 'Register Now @ ₹499'} <ArrowRight className="w-4 h-4" />
               </button>
-              <a 
-                href="#curriculum"
-                className="bg-white hover:bg-[#EFECE6] text-[#1F1E1C] font-semibold py-3.5 px-6 rounded-xl text-sm border border-[#E6E2D9] transition-all text-center flex items-center justify-center gap-2"
+              <button 
+                type="button"
+                onClick={() => {
+                  const el = document.getElementById('curriculum');
+                  if (el) {
+                    el.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
+                className="bg-white hover:bg-[#EFECE6] text-[#1F1E1C] font-semibold py-3.5 px-6 rounded-xl text-sm border border-[#E6E2D9] transition-all text-center flex items-center justify-center gap-2 cursor-pointer"
               >
                 View curriculum
-              </a>
+              </button>
             </div>
 
             {/* Honest Scoped Trust Stat */}
@@ -945,7 +961,7 @@ const ClaudeMasterclassPage: React.FC = () => {
                     <span className="text-xs text-[#524F4A]">
                       {masterclassMode === 'offline' 
                         ? '9:00 AM – 5:30 PM IST (Full Day)' 
-                        : '6:00 PM – 9:00 PM IST (3.0 Hours / day)'}
+                        : '5:30 PM – 8:30 PM IST (3.0 Hours / day)'}
                     </span>
                   </div>
                 </div>
@@ -972,7 +988,7 @@ const ClaudeMasterclassPage: React.FC = () => {
                   </div>
                   <div>
                     <strong className="block font-bold text-[#1F1E1C]">Lead Instructor</strong>
-                    <span className="text-xs text-[#524F4A]">Mr. Antony Praveen (Founder, Tech Tycoon)</span>
+                    <span className="text-xs text-[#524F4A]">Mr. Antony Praveen (AI Engineer)</span>
                   </div>
                 </div>
               </div>
@@ -1061,8 +1077,8 @@ const ClaudeMasterclassPage: React.FC = () => {
               <div className="w-10 h-10 rounded-xl bg-white border border-[#E6E2D9] flex items-center justify-center text-[#6B4FBB] mb-4">
                 <Laptop className="w-5 h-5" />
               </div>
-              <h3 className="font-bold text-[#1F1E1C] text-base mb-2">Websites & App Building</h3>
-              <p className="text-xs text-[#524F4A] leading-relaxed">Construct complete web applications, interactive dashboards, and SaaS landing pages live with Claude Artifacts.</p>
+              <h3 className="font-bold text-[#1F1E1C] text-base mb-2">Website Building</h3>
+              <p className="text-xs text-[#524F4A] leading-relaxed">Construct complete responsive websites, interactive dashboards, and landing pages live with Claude Artifacts.</p>
             </div>
 
             <div className="bg-[#F7F4EE] border border-[#E6E2D9] rounded-2xl p-6 hover:border-[#D85A30]/50 transition-all">
@@ -1101,7 +1117,7 @@ const ClaudeMasterclassPage: React.FC = () => {
               <div className="flex items-center gap-3">
                 <span className="bg-[#D85A30] text-white font-bold text-xs px-3 py-1 rounded-md uppercase">Day 1</span>
                 <div>
-                  <h3 className="font-bold text-base text-[#1F1E1C]">{weekendInfo.satDateText} • 6:00 PM – 9:00 PM IST</h3>
+                  <h3 className="font-bold text-base text-[#1F1E1C]">{weekendInfo.satDateText} • 5:30 PM – 8:30 PM IST</h3>
                   <span className="text-xs text-[#6E6B65]">Foundations, Prompt Architecture & Building Custom MCPs</span>
                 </div>
               </div>
@@ -1134,8 +1150,8 @@ const ClaudeMasterclassPage: React.FC = () => {
               <div className="flex items-center gap-3">
                 <span className="bg-[#6B4FBB] text-white font-bold text-xs px-3 py-1 rounded-md uppercase">Day 2</span>
                 <div>
-                  <h3 className="font-bold text-base text-[#1F1E1C]">{weekendInfo.sunDateText} • 6:00 PM – 9:00 PM IST</h3>
-                  <span className="text-xs text-[#6E6B65]">Claude Code CLI, Web App Construction & Live Projects</span>
+                  <h3 className="font-bold text-base text-[#1F1E1C]">{weekendInfo.sunDateText} • 5:30 PM – 8:30 PM IST</h3>
+                  <span className="text-xs text-[#6E6B65]">Claude Code CLI, Website Construction & Live Projects</span>
                 </div>
               </div>
             </div>
@@ -1149,7 +1165,7 @@ const ClaudeMasterclassPage: React.FC = () => {
 
               <div className="bg-[#F7F4EE] border border-[#E6E2D9] p-4 rounded-xl">
                 <span className="text-xs font-bold text-[#6B4FBB] block mb-1">Module 05</span>
-                <h4 className="font-bold text-sm text-[#1F1E1C] mb-1">Building Web Apps & Dashboards</h4>
+                <h4 className="font-bold text-sm text-[#1F1E1C] mb-1">Building Websites & Dashboards</h4>
                 <p className="text-xs text-[#524F4A]">Creating full-stack responsive web tools and SaaS UIs live in class.</p>
               </div>
 
@@ -1179,7 +1195,7 @@ const ClaudeMasterclassPage: React.FC = () => {
             <div className="space-y-3 text-center md:text-left">
               <span className="text-[#D85A30] font-bold text-xs uppercase tracking-widest block">Meet Your Mentor</span>
               <h2 className="text-2xl font-bold text-[#1F1E1C]">Mr. Antony Praveen</h2>
-              <p className="text-[#6B4FBB] font-semibold text-xs">AI Specialist & Founder, Tech Tycoon</p>
+              <p className="text-[#6B4FBB] font-semibold text-xs">AI ENGINEER</p>
               <p className="text-xs sm:text-sm text-[#524F4A] leading-relaxed">
                 Antony Praveen has trained thousands of students, developers, and business owners in AI adoption, prompt engineering, and modern developer tools. With hands-on expertise in production AI agents and custom MCPs, he breaks down complex technical workflows into clear Tamil instruction.
               </p>
@@ -1264,7 +1280,7 @@ const ClaudeMasterclassPage: React.FC = () => {
             </div>
           </div>
         ) : (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
+          <div className="grid sm:grid-cols-2 gap-6 max-w-3xl mx-auto items-stretch">
             {/* Card 1: Standard Pass ₹499 */}
             <div className="bg-white border border-[#E6E2D9] rounded-2xl p-6 flex flex-col justify-between hover:border-[#C5C0B8] transition-all shadow-sm">
               <div>
@@ -1273,7 +1289,7 @@ const ClaudeMasterclassPage: React.FC = () => {
                   <span className="text-3xl font-extrabold text-[#1F1E1C]">₹499</span>
                   <span className="text-xs text-[#6E6B65]">INR</span>
                 </div>
-                <div className="text-[11px] font-semibold text-emerald-600 mb-3">(Incl. 18% GST • Final Price: ₹499)</div>
+                
                 <p className="text-xs text-[#524F4A] mb-5">Ideal for live interactive participation across both days.</p>
 
                 <ul className="space-y-2.5 mb-6 text-xs text-[#2C2A29]">
@@ -1281,13 +1297,10 @@ const ClaudeMasterclassPage: React.FC = () => {
                     <Check className="w-3.5 h-3.5 text-[#D85A30] shrink-0" /> 2-Day Live Online Session
                   </li>
                   <li className="flex items-center gap-2">
-                    <Check className="w-3.5 h-3.5 text-[#D85A30] shrink-0" /> 6:00 PM – 9:00 PM IST (Both Days)
+                    <Check className="w-3.5 h-3.5 text-[#D85A30] shrink-0" /> 5:30 PM – 8:30 PM IST (Both Days)
                   </li>
                   <li className="flex items-center gap-2">
                     <Check className="w-3.5 h-3.5 text-[#D85A30] shrink-0" /> Tamil & English Instruction
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Check className="w-3.5 h-3.5 text-[#D85A30] shrink-0" /> Direct Q&A with Antony Praveen
                   </li>
                   <li className="flex items-center gap-2 text-[#A09C94] line-through">
                     <X className="w-3.5 h-3.5 text-[#C5C0B8] shrink-0" /> Recorded Video Access
@@ -1321,7 +1334,7 @@ const ClaudeMasterclassPage: React.FC = () => {
                   <span className="text-3xl font-extrabold text-[#1F1E1C]">₹999</span>
                   <span className="text-xs text-[#6E6B65]">INR</span>
                 </div>
-                <div className="text-[11px] font-semibold text-emerald-600 mb-3">(Incl. 18% GST • Final Price: ₹999)</div>
+                
                 <p className="text-xs text-[#524F4A] mb-5">Full live experience + permanent recorded access.</p>
 
                 <ul className="space-y-2.5 mb-6 text-xs text-[#2C2A29]">
@@ -1333,9 +1346,6 @@ const ClaudeMasterclassPage: React.FC = () => {
                   </li>
                   <li className="flex items-center gap-2">
                     <Check className="w-3.5 h-3.5 text-[#D85A30] shrink-0" /> Re-watch & build along anytime
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Check className="w-3.5 h-3.5 text-[#D85A30] shrink-0" /> Direct Q&A with Antony Praveen
                   </li>
                   <li className="flex items-center gap-2 text-[#A09C94] line-through">
                     <X className="w-3.5 h-3.5 text-[#C5C0B8] shrink-0" /> Project Source Code & MCPs
@@ -1351,96 +1361,6 @@ const ClaudeMasterclassPage: React.FC = () => {
                 className="w-full bg-[#6B4FBB] hover:bg-[#5A3EA8] text-white font-bold py-3 px-4 rounded-xl transition-all text-xs shadow-sm cursor-pointer"
               >
                 Select Recording Pass @ ₹999
-              </button>
-            </div>
-
-            {/* Card 3: ₹1,499 VIP Pro Pass */}
-            <div className="bg-[#FAF8F5] border-2 border-[#D85A30] rounded-2xl p-6 flex flex-col justify-between relative shadow-[0_10px_30px_rgba(216,90,48,0.12)]">
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#D85A30] text-white text-[9px] font-extrabold uppercase px-3 py-0.5 rounded-full tracking-wider shadow-sm flex items-center gap-1">
-                <Crown className="w-3 h-3" /> Recommended
-              </div>
-
-              <div>
-                <span className="text-[10px] font-bold text-[#D85A30] uppercase tracking-wider block mb-2 mt-1">VIP Pro Pass</span>
-                <div className="flex items-baseline gap-1.5 mb-1">
-                  <span className="text-3xl font-extrabold text-[#D85A30]">₹1,499</span>
-                  <span className="text-xs text-[#6E6B65]">INR</span>
-                </div>
-                <div className="text-[11px] font-semibold text-emerald-600 mb-3">(Incl. 18% GST • Final Price: ₹1,499)</div>
-                <p className="text-xs text-[#524F4A] mb-5">Recordings + Full Code Repository & Claude Prompts.</p>
-
-                <ul className="space-y-2.5 mb-6 text-xs text-[#2C2A29]">
-                  <li className="flex items-center gap-2 font-semibold">
-                    <Check className="w-3.5 h-3.5 text-[#D85A30] shrink-0" /> Everything in ₹999 Recording Pass
-                  </li>
-                  <li className="flex items-center gap-2 font-bold text-[#D85A30]">
-                    <Check className="w-3.5 h-3.5 text-[#D85A30] shrink-0" /> Complete Project Source Code
-                  </li>
-                  <li className="flex items-center gap-2 font-bold text-[#D85A30]">
-                    <Check className="w-3.5 h-3.5 text-[#D85A30] shrink-0" /> 100+ Claude Prompts & Architecture
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Check className="w-3.5 h-3.5 text-[#D85A30] shrink-0" /> Custom MCP Starter Kit & JSON Configs
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Check className="w-3.5 h-3.5 text-[#D85A30] shrink-0" /> Private WhatsApp Community Access
-                  </li>
-                  <li className="flex items-center gap-2 text-[#A09C94] line-through">
-                    <X className="w-3.5 h-3.5 text-[#C5C0B8] shrink-0" /> Verified E-Certificate
-                  </li>
-                </ul>
-              </div>
-
-              <button 
-                onClick={() => handleOpenModal(1499)}
-                className="w-full bg-[#D85A30] hover:bg-[#C04E27] text-white font-bold py-3 px-4 rounded-xl transition-all text-xs shadow-md shadow-[#D85A30]/25 cursor-pointer"
-              >
-                Select VIP Pro @ ₹1,499
-              </button>
-            </div>
-
-            {/* Card 4: ₹1,999 All-Access Mastery Pass */}
-            <div className="bg-[#1F1E1C] text-white border-2 border-[#1F1E1C] rounded-2xl p-6 flex flex-col justify-between relative shadow-xl">
-              <div className="absolute -top-3 right-4 bg-amber-400 text-slate-900 text-[9px] font-black uppercase px-2.5 py-0.5 rounded-full tracking-wider shadow-sm flex items-center gap-1">
-                <Sparkles className="w-3 h-3 text-slate-900" /> Best Value
-              </div>
-
-              <div>
-                <span className="text-[10px] font-bold text-amber-300 uppercase tracking-wider block mb-2 mt-1">All-Access Mastery Pass</span>
-                <div className="flex items-baseline gap-1.5 mb-1">
-                  <span className="text-3xl font-extrabold text-white">₹1,999</span>
-                  <span className="text-xs text-white/60">INR</span>
-                </div>
-                <div className="text-[11px] font-semibold text-amber-300 mb-3">(Incl. 18% GST • Final Price: ₹1,999)</div>
-                <p className="text-xs text-white/70 mb-5">Complete VIP Package + Official E-Certificate + Direct Mentorship.</p>
-
-                <ul className="space-y-2.5 mb-6 text-xs text-white/90">
-                  <li className="flex items-center gap-2 font-semibold text-white">
-                    <Check className="w-3.5 h-3.5 text-amber-400 shrink-0" /> Everything in ₹1,499 VIP Pro Pass
-                  </li>
-                  <li className="flex items-center gap-2 font-bold text-amber-300 bg-white/10 p-1.5 rounded-lg border border-white/10">
-                    <Award className="w-3.5 h-3.5 text-amber-400 shrink-0" /> Verified E-Certificate Included (FREE)
-                  </li>
-                  <li className="flex items-center gap-2 font-semibold">
-                    <Check className="w-3.5 h-3.5 text-amber-400 shrink-0" /> Priority Doubt Clearance & Support
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Check className="w-3.5 h-3.5 text-amber-400 shrink-0" /> Exclusive AI Automation Guide
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Check className="w-3.5 h-3.5 text-amber-400 shrink-0" /> Lifetime Template Repository Access
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Check className="w-3.5 h-3.5 text-amber-400 shrink-0" /> VIP 1-on-1 Q&A Slot Access
-                  </li>
-                </ul>
-              </div>
-
-              <button 
-                onClick={() => handleOpenModal(1999)}
-                className="w-full bg-white hover:bg-slate-100 text-[#1F1E1C] font-extrabold py-3 px-4 rounded-xl transition-all text-xs shadow-md cursor-pointer"
-              >
-                Select All-Access @ ₹1,999
               </button>
             </div>
           </div>
@@ -1483,15 +1403,15 @@ const ClaudeMasterclassPage: React.FC = () => {
             : [
               {
                 q: "When does the Claude Masterclass take place?",
-                a: "The masterclass runs Every Saturday & Sunday from 6:00 PM to 9:00 PM IST (3 hours per day, 6 total hours of live interactive training)."
+                a: "The masterclass runs Every Saturday & Sunday from 5:30 PM to 8:30 PM IST (3 hours per day, 6 total hours of live interactive training)."
               },
               {
                 q: "What language will the training be conducted in?",
                 a: "The entire session will be taught 100% in Tamil (தமிழ்) by Mr. Antony Praveen for clear, practical understanding."
               },
               {
-                q: "What is the difference between the ₹499, ₹999, ₹1,499, and ₹1,999 passes?",
-                a: "The ₹499 Standard Live Pass includes live interactive participation across both days. The ₹999 Live + Recording Pass includes everything in the standard pass PLUS lifetime recorded video access. The ₹1,499 VIP Pro Pass includes recordings PLUS complete project source code and 100+ production Claude prompts & MCP configs. The ₹1,999 All-Access Mastery Pass includes everything in VIP Pro PLUS an official verified E-Certificate (FREE), priority mentorship, and automation guide."
+                q: "What is the difference between the ₹499 and ₹999 passes?",
+                a: "The ₹499 Standard Live Pass includes live interactive participation across both days. The ₹999 Live + Recording Pass includes everything in the standard pass PLUS lifetime recorded video access of both days. You can also add an Official Verified E-Certificate to either pass as an optional add-on (+ ₹1,000) directly at checkout."
               },
               {
                 q: "How will I receive the session meeting link?",
@@ -1571,7 +1491,7 @@ const ClaudeMasterclassPage: React.FC = () => {
           <Clock className="w-4 h-4 text-[#6B4FBB] shrink-0" />
           <div>
             <strong className="block text-xs font-bold text-[#1F1E1C] leading-tight">
-              {masterclassMode === 'offline' ? 'Full Day' : '6:00 PM – 9:00 PM'}
+              {masterclassMode === 'offline' ? 'Full Day' : '5:30 PM – 8:30 PM'}
             </strong>
             <span className="text-[10px] text-[#6E6B65]">IST</span>
           </div>
@@ -1581,7 +1501,7 @@ const ClaudeMasterclassPage: React.FC = () => {
 
         {/* Column 3: CTA Button */}
         <button 
-          onClick={() => handleOpenModal(masterclassMode === 'offline' ? 4999 : 499)}
+          onClick={() => handleOpenModal(masterclassMode === 'offline' ? 4999 : 999)}
           className="bg-[#D85A30] hover:bg-[#C04E27] text-white font-bold px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl text-xs shadow-sm flex items-center gap-1.5 shrink-0 transition-all cursor-pointer"
         >
           <span>{masterclassMode === 'offline' ? 'Coming Soon' : 'Register Now'}</span>
@@ -1653,7 +1573,7 @@ const ClaudeMasterclassPage: React.FC = () => {
                         <div className="flex-1">
                           <div className="flex justify-between items-center mb-0.5">
                             <span className="font-bold text-[#1F1E1C] text-sm">Standard Live Pass</span>
-                            <span className="font-extrabold text-[#D85A30] text-sm">₹499 <span className="text-[10px] text-emerald-600 font-semibold">(Incl. 18% GST)</span></span>
+                            <span className="font-extrabold text-[#D85A30] text-sm">₹499</span>
                           </div>
                           <p className="text-xs text-[#524F4A]">Live Zoom Session (No Video Recording Access).</p>
                         </div>
@@ -1677,57 +1597,9 @@ const ClaudeMasterclassPage: React.FC = () => {
                         <div className="flex-1">
                           <div className="flex justify-between items-center mb-0.5 gap-2">
                             <span className="font-bold text-[#1F1E1C] text-sm">Live + Recording Pass</span>
-                            <span className="font-extrabold text-[#D85A30] text-sm shrink-0">₹999 <span className="text-[10px] text-emerald-600 font-semibold">(Incl. 18% GST)</span></span>
+                            <span className="font-extrabold text-[#D85A30] text-sm shrink-0">₹999</span>
                           </div>
                           <p className="text-xs text-[#6E6B65]">Live Zoom + <strong>Recorded Video Access of 2 live classes</strong>.</p>
-                        </div>
-                      </div>
-
-                      {/* VIP Pro Option ₹1,499 */}
-                      <div 
-                        onClick={() => setSelectedPlan(1499)}
-                        className={`p-3.5 pt-4 rounded-xl border-2 cursor-pointer transition-all flex gap-3.5 items-start relative ${
-                          selectedPlan === 1499 
-                            ? 'border-[#D85A30] bg-[#F7F4EE]' 
-                            : 'border-[#E6E2D9] bg-white hover:border-[#C5C0B8]'
-                        }`}
-                      >
-                        <span className="absolute -top-2.5 right-4 bg-[#D85A30] text-white text-[9px] font-extrabold px-2.5 py-0.5 rounded uppercase tracking-wider shadow-sm z-10">Recommended</span>
-                        <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center mt-1 transition-all ${
-                          selectedPlan === 1499 ? 'border-[#D85A30] bg-[#D85A30]' : 'border-[#C5C0B8]'
-                        }`}>
-                          {selectedPlan === 1499 && <div className="w-1.5 h-1.5 rounded-full bg-white"></div>}
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex justify-between items-center mb-0.5 gap-2">
-                            <span className="font-bold text-[#1F1E1C] text-sm">VIP Pro Pass</span>
-                            <span className="font-extrabold text-[#D85A30] text-sm shrink-0">₹1,499 <span className="text-[10px] text-emerald-600 font-semibold">(Incl. 18% GST)</span></span>
-                          </div>
-                          <p className="text-xs text-[#6E6B65]">Live + Recordings + <strong>Complete Project Code & 100+ MCP Prompts</strong>.</p>
-                        </div>
-                      </div>
-
-                      {/* All-Access Mastery Option ₹1,999 */}
-                      <div 
-                        onClick={() => setSelectedPlan(1999)}
-                        className={`p-3.5 pt-4 rounded-xl border-2 cursor-pointer transition-all flex gap-3.5 items-start relative ${
-                          selectedPlan === 1999 
-                            ? 'border-amber-500 bg-amber-50/60' 
-                            : 'border-[#E6E2D9] bg-white hover:border-[#C5C0B8]'
-                        }`}
-                      >
-                        <span className="absolute -top-2.5 right-4 bg-amber-500 text-slate-900 text-[9px] font-extrabold px-2.5 py-0.5 rounded uppercase tracking-wider shadow-sm z-10">Best Value • E-Cert Included</span>
-                        <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center mt-1 transition-all ${
-                          selectedPlan === 1999 ? 'border-amber-500 bg-amber-500' : 'border-[#C5C0B8]'
-                        }`}>
-                          {selectedPlan === 1999 && <div className="w-1.5 h-1.5 rounded-full bg-white"></div>}
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex justify-between items-center mb-0.5 gap-2">
-                            <span className="font-bold text-[#1F1E1C] text-sm">All-Access Mastery Pass</span>
-                            <span className="font-extrabold text-amber-600 text-sm shrink-0">₹1,999 <span className="text-[10px] text-emerald-600 font-semibold">(Incl. 18% GST)</span></span>
-                          </div>
-                          <p className="text-xs text-[#6E6B65]">VIP Pro + <strong>Verified E-Certificate (FREE)</strong> + Priority Mentorship.</p>
                         </div>
                       </div>
                     </div>
@@ -1736,8 +1608,11 @@ const ClaudeMasterclassPage: React.FC = () => {
 
                 <div className="border-t border-[#E6E2D9] pt-4">
                   <div className="flex justify-between items-center mb-4 text-xs">
-                    <span className="text-[#6E6B65]">Selected Pass Base (+ 18% GST at Checkout):</span>
-                    <strong className="text-xl font-extrabold text-[#D85A30]">₹{selectedPlan} + GST</strong>
+                    <span className="text-[#6E6B65]">Selected Pass Total:</span>
+                    <div className="text-right">
+                      <strong className="text-xl font-extrabold text-[#D85A30]">₹{selectedPlan.toLocaleString('en-IN')}</strong>
+                      
+                    </div>
                   </div>
                   <button 
                     onClick={handleStep1Proceed}
@@ -1757,7 +1632,7 @@ const ClaudeMasterclassPage: React.FC = () => {
                   onClick={() => setModalStep(1)}
                   className="flex items-center gap-1 text-[11px] text-[#6E6B65] hover:text-[#D85A30] mb-2 font-medium transition-colors"
                 >
-                  <ArrowLeft className="w-3 h-3" /> Change pass selection (₹{getCalculatedBasePrice()} + 18% GST)
+                  <ArrowLeft className="w-3 h-3" /> Change pass selection (₹{getCalculatedBasePrice().toLocaleString("en-IN")})
                 </button>
 
                 <div className="text-center mb-2">
@@ -1765,18 +1640,18 @@ const ClaudeMasterclassPage: React.FC = () => {
                     Complete Your Registration
                   </h3>
                   <p className="text-[10px] text-[#6E6B65] mt-0.5">
-                    Total Payable (Incl. 18% GST): <strong className="text-[#D85A30]">₹{getCalculatedPrice().toLocaleString("en-IN")} INR</strong>
+                    Total Payable: <strong className="text-[#D85A30]">₹{getCalculatedPrice().toLocaleString("en-IN")} INR</strong>
                   </p>
 
                   <div className="inline-flex items-center gap-1.5 bg-[#F7F4EE] border border-[#E6E2D9] text-[#524F4A] px-2 py-0.5 rounded-md text-[9.5px] font-medium mt-1">
                     <Calendar className="w-3 h-3 text-[#D85A30]" />
                     {masterclassMode === 'offline' 
                       ? 'Next Batch: Coming Soon (Dates to be announced)' 
-                      : `${weekendInfo.fullDisplay} • 6:00 PM IST`}
+                      : `${weekendInfo.fullDisplay} • 5:30 PM IST`}
                   </div>
 
                   {masterclassMode !== 'offline' && (
-                    <div className="mt-2 grid grid-cols-2 sm:grid-cols-4 bg-[#F7F4EE] p-0.5 rounded-lg border border-[#E6E2D9] gap-1">
+                    <div className="mt-2 grid grid-cols-2 bg-[#F7F4EE] p-0.5 rounded-lg border border-[#E6E2D9] gap-1">
                       <button
                         type="button"
                         onClick={() => setSelectedPlan(499)}
@@ -1798,28 +1673,6 @@ const ClaudeMasterclassPage: React.FC = () => {
                         }`}
                       >
                         <span>Live+Rec (₹999)</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setSelectedPlan(1499)}
-                        className={`py-1 px-1.5 rounded text-[9.5px] font-bold transition-all flex items-center justify-center gap-1 ${
-                          selectedPlan === 1499 
-                            ? 'bg-white text-[#D85A30] shadow-sm border border-[#E6E2D9]'
-                            : 'text-[#6E6B65] hover:text-[#1F1E1C]'
-                        }`}
-                      >
-                        <span>VIP Pro (₹1,499)</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setSelectedPlan(1999)}
-                        className={`py-1 px-1.5 rounded text-[9.5px] font-bold transition-all flex items-center justify-center gap-1 ${
-                          selectedPlan === 1999 
-                            ? 'bg-white text-amber-600 shadow-sm border border-amber-300'
-                            : 'text-[#6E6B65] hover:text-[#1F1E1C]'
-                        }`}
-                      >
-                        <span>All-Access (₹1,999)</span>
                       </button>
                     </div>
                   )}
@@ -1933,84 +1786,35 @@ const ClaudeMasterclassPage: React.FC = () => {
                     </select>
                   </div>
 
-                  <div>
-                    <label className="block text-[9px] font-bold text-[#524F4A] uppercase tracking-wider mb-0.5">Promo Code</label>
-                    <div className="flex gap-2">
-                      <input 
-                        type="text" 
-                        value={promoCodeInput}
-                        onChange={(e) => setPromoCodeInput(e.target.value.toUpperCase())}
-                        placeholder="Enter promo code"
-                        className="flex-1 bg-[#F7F4EE] border border-[#E6E2D9] rounded-lg px-3 py-1.5 text-xs text-[#1F1E1C] focus:outline-none focus:border-[#D85A30] uppercase font-bold"
-                      />
-                      <button 
-                        type="button" 
-                        onClick={handleApplyPromo}
-                        className="bg-[#EFECE6] hover:bg-[#E6E2D9] text-[#1F1E1C] font-semibold px-3 py-1.5 rounded-lg text-xs border border-[#E6E2D9] transition-all"
-                      >
-                        Apply
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* E-CERTIFICATE ADD-ON CHECKBOX */}
-                  <div className="bg-[#D85A30]/5 border border-dashed border-[#D85A30] rounded-lg p-2 text-left">
-                    <label className="flex items-start gap-2 cursor-pointer select-none">
+                  {/* RESOURCE TOOLKIT ADD-ON CHECKBOX */}
+                  <div className="bg-[#D85A30]/5 border border-dashed border-[#D85A30] rounded-lg p-2.5 text-left">
+                    <label className="flex items-start gap-2.5 cursor-pointer select-none">
                       <input 
                         type="checkbox" 
-                        checked={selectedPlan === 1999 ? true : wantCertificate}
-                        disabled={selectedPlan === 1999}
+                        checked={wantCertificate}
                         onChange={(e) => setWantCertificate(e.target.checked)}
-                        className="mt-0.5 w-3.5 h-3.5 accent-[#D85A30] rounded cursor-pointer"
+                        className="mt-1 w-3.5 h-3.5 accent-[#D85A30] rounded cursor-pointer flex-shrink-0"
                       />
-                      <div>
-                        <div className="font-bold text-[11px] text-[#1F1E1C] flex items-center gap-1.5">
-                          <span>🎓 Official E-Certificate</span>
-                          {selectedPlan === 1999 ? (
-                            <span className="bg-emerald-600 text-white text-[8.5px] font-extrabold px-1.5 py-0.2 rounded">INCLUDED FREE</span>
-                          ) : (
-                            <span className="bg-[#D85A30] text-white text-[8.5px] font-extrabold px-1.5 py-0.2 rounded">+ ₹1,000</span>
-                          )}
+                      <div className="flex-1">
+                        <div className="font-bold text-[11px] text-[#1F1E1C] flex items-center justify-between gap-1.5 flex-wrap">
+                          <span>I want Resource ToolKit worth of ₹20,000</span>
+                          <div className="flex flex-col items-end leading-none whitespace-nowrap">
+                            <span className="bg-[#D85A30] text-white text-[8.5px] font-extrabold px-1.5 py-0.5 rounded">+ ₹1,000</span>
+                            <span className="line-through text-[#8E8A83] text-[9px] font-semibold mt-0.5">₹20,000</span>
+                          </div>
                         </div>
-                        <p className="text-[9.5px] text-[#524F4A] mt-0.5 leading-snug">
-                          {selectedPlan === 1999
-                            ? "Verified official E-Certificate is included at NO extra charge in the All-Access Mastery Pass!"
-                            : "Get an official verified E-Certificate upon masterclass completion to share on LinkedIn & Resume."}
-                        </p>
+                        <ul className="text-[9.5px] text-[#524F4A] mt-1 space-y-0.5 list-disc list-inside leading-snug font-medium">
+                          <li>Session pdf material</li>
+                          <li>100+ AI Skills</li>
+                          <li>Claude Prompting Tactics</li>
+                          <li>Personalised Video Editing</li>
+                          <li>Content Creation plugin</li>
+                        </ul>
                       </div>
                     </label>
                   </div>
 
-                  <GstPriceBreakdown
-                    baseAmount={getCalculatedBasePrice()}
-                    inclusive={true}
-                    label={
-                      selectedPlan === 1999 
-                        ? "All-Access Mastery Pass" 
-                        : selectedPlan === 1499 
-                        ? "VIP Pro Pass" 
-                        : selectedPlan === 999 
-                        ? "Live + Recording Pass" 
-                        : "Standard Live Pass"
-                    }
-                    claimGst={claimGst}
-                    onClaimGstChange={(checked) => {
-                      setClaimGst(checked);
-                      if (!checked) setGstError('');
-                    }}
-                    gstin={gstin}
-                    onGstinChange={(val) => {
-                      setGstin(val);
-                      if (gstError) setGstError('');
-                    }}
-                    companyName={companyName}
-                    onCompanyNameChange={(val) => {
-                      setCompanyName(val);
-                      if (gstError) setGstError('');
-                    }}
-                    gstError={gstError}
-                    theme="light"
-                  />
+
 
                   <label className="flex items-center gap-2 cursor-pointer text-[9.5px] text-[#8E8A83]">
                     <input 
@@ -2027,7 +1831,7 @@ const ClaudeMasterclassPage: React.FC = () => {
                     type="submit" 
                     className="w-full bg-[#D85A30] hover:bg-[#C04E27] text-white font-bold py-2.5 px-4 rounded-xl shadow-md transition-all text-xs mt-1"
                   >
-                    Proceed to payment — ₹{getCalculatedPrice().toLocaleString("en-IN")} (Incl. 18% GST)
+                    Proceed to payment — ₹{getCalculatedPrice().toLocaleString("en-IN")}
                   </button>
 
                   <div className="text-center text-[9px] text-[#8E8A83] font-semibold flex items-center justify-center gap-1 pt-0.5">
@@ -2058,16 +1862,16 @@ const ClaudeMasterclassPage: React.FC = () => {
             <div className="space-y-3 text-xs text-[#524F4A] leading-relaxed">
               <div>
                 <h4 className="font-bold text-[#1F1E1C] text-xs">1. Workshop Schedule & Access</h4>
-                <p className="mt-0.5">The Claude MasterClass is a 2-Day Live Virtual Session taking place Every Saturday & Sunday (6:00 PM – 9:00 PM IST). Access details and session meeting links are provided via the official WhatsApp group upon registration.</p>
+                <p className="mt-0.5">The Claude MasterClass is a 2-Day Live Virtual Session taking place Every Saturday & Sunday (5:30 PM – 8:30 PM IST). Access details and session meeting links are provided via the official WhatsApp group upon registration.</p>
               </div>
 
               <div>
                 <h4 className="font-bold text-[#1F1E1C] text-xs">2. Registration & Pass Types</h4>
-                <p className="mt-0.5"><strong>Standard Live Pass (₹499 Incl. 18% GST)</strong> includes live interactive Zoom participation across both days. Video recording access is excluded.</p>
-                <p className="mt-0.5"><strong>Live + Recording Pass (₹999 Incl. 18% GST)</strong> includes live participation PLUS recorded video access of these 2 live classes.</p>
-                <p className="mt-0.5"><strong>VIP Pro Pass (₹1,499 Incl. 18% GST)</strong> includes live + recordings PLUS full project source code, custom MCP starter kits, and 100+ prompt templates.</p>
-                <p className="mt-0.5"><strong>All-Access Mastery Pass (₹1,999 Incl. 18% GST)</strong> includes everything in VIP Pro PLUS an official verified E-Certificate, priority mentorship, and AI automation guides.</p>
-                <p className="mt-0.5"><strong>Official E-Certificate Add-on (+ ₹1,000 Incl. 18% GST)</strong> is available for Standard, Live+Rec, and VIP Pro passes (included free in All-Access).</p>
+                <p className="mt-0.5"><strong>Standard Live Pass (₹499)</strong> includes live interactive Zoom participation across both days. Video recording access is excluded.</p>
+                <p className="mt-0.5"><strong>Live + Recording Pass (₹999)</strong> includes live participation PLUS recorded video access of these 2 live classes.</p>
+                
+                
+                <p className="mt-0.5"><strong>Resource ToolKit Add-on (+ ₹1,000)</strong> is an optional add-on available at checkout for either pass.</p>
               </div>
 
               <div>

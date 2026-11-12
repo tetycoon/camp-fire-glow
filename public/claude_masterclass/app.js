@@ -1,5 +1,21 @@
+
+function getTrackingParams() {
+    try {
+        const params = new URLSearchParams(window.location.search);
+        return {
+            utm_source: params.get("utm_source") || (document.referrer ? new URL(document.referrer).hostname : "direct"),
+            utm_medium: params.get("utm_medium") || "",
+            utm_campaign: params.get("utm_campaign") || "",
+            gclid: params.get("gclid") || "",
+            fbclid: params.get("fbclid") || ""
+        };
+    } catch (_) {
+        return {};
+    }
+}
+
 const APPS_SCRIPT_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbwP2rffwhgGYQjJFlfxYU4XHt-jFbUlWtYPAJOZcxIO--yvw2NTlnLvJDHHh4_giLq7/exec";
-let selectedPlan = 499;
+let selectedPlan = 999;
 let currentMasterclassMode = 'online'; // 'online' | 'offline'
 
 const countryCodes = [
@@ -155,8 +171,8 @@ const promoCodes30 = [
   "ENG30K", "LIVE30", "VIP30M", "REG30N", "ZOOM30", 
   "FAST30", "BEST30", "SAVE30", "GIFT30", "PLUS30"
 ];
-let appliedPromo = "CLAUDE";
-let discountPercent = 10;
+let appliedPromo = "";
+let discountPercent = 0;
 
 function getBasePrice(plan) {
     if (plan === 1999) return 2220;
@@ -166,7 +182,7 @@ function getBasePrice(plan) {
 }
 
 let wantCertificate = false;
-const GST_RATE = 0.18;
+const GST_RATE = 0;
 const GSTIN_REGEX = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
 
 function sanitizeText(str, maxLen = 100) {
@@ -180,15 +196,14 @@ function sanitizeText(str, maxLen = 100) {
 
 function getBaseSessionPrice() {
     const passPrice = selectedPlan; // 499, 999, 1499, 1999, or 4999
-    // For ₹1,999 All-Access Pass, E-Certificate is already included free!
-    const certAddon = (wantCertificate && selectedPlan !== 1999) ? 1000 : 0;
+    const certAddon = wantCertificate ? 1000 : 0;
     return passPrice + certAddon;
 }
 
 function getGstBreakdown() {
     const totalAmount = getBaseSessionPrice();
-    const baseAmount = Math.round((totalAmount / (1 + GST_RATE)) * 100) / 100;
-    const gstAmount = Math.round((totalAmount - baseAmount) * 100) / 100;
+    const baseAmount = totalAmount;
+    const gstAmount = 0;
     return { baseAmount, gstAmount, totalAmount };
 }
 
@@ -222,9 +237,9 @@ function updatePricesUI() {
     const { baseAmount, gstAmount, totalAmount } = getGstBreakdown();
     const finalPrice = getFinalPrice();
     const selTotal = document.getElementById('selected-pass-total');
-    if (selTotal) selTotal.innerText = `₹${selectedPlan.toLocaleString('en-IN')} (Incl. 18% GST)`;
-    if (document.getElementById('form-fee-display')) document.getElementById('form-fee-display').innerText = `₹${finalPrice.toLocaleString('en-IN')} INR (Incl. 18% GST)`;
-    if (document.getElementById('btn-fee-display')) document.getElementById('btn-fee-display').innerText = `₹${finalPrice.toLocaleString('en-IN')} (Incl. GST)`;
+    if (selTotal) selTotal.innerText = `₹${selectedPlan.toLocaleString('en-IN')}`;
+    if (document.getElementById('form-fee-display')) document.getElementById('form-fee-display').innerText = `₹${finalPrice.toLocaleString('en-IN')} INR`;
+    if (document.getElementById('btn-fee-display')) document.getElementById('btn-fee-display').innerText = `₹${finalPrice.toLocaleString('en-IN')}`;
     if (document.getElementById('back-pass-price')) document.getElementById('back-pass-price').innerText = `₹${totalAmount.toLocaleString('en-IN')}`;
     if (document.getElementById('gst-base-display')) document.getElementById('gst-base-display').innerText = `₹${baseAmount.toFixed(2)}`;
     if (document.getElementById('gst-tax-display')) document.getElementById('gst-tax-display').innerText = `₹${gstAmount.toFixed(2)} (Included)`;
@@ -235,27 +250,29 @@ function updatePricesUI() {
 
 
 
-// Dynamic weekend calculation starting from October 24 & 25, 2026
+// Dynamic weekend calculation starting from November 14 & 15, 2026
 function getUpcomingMasterclassWeekend() {
     const now = new Date();
-    // Baseline minimum Saturday: October 24, 2026
-    const minSat = new Date(2026, 9, 24, 18, 0, 0); // Month 9 = October
+
+    // Baseline minimum Saturday: November 14, 2026 @ 5:30 PM IST (17:30)
+    const minSat = new Date(2026, 10, 14, 17, 30, 0); // Month 10 = November
 
     const day = now.getDay(); // 0 = Sun, 1 = Mon, ..., 6 = Sat
     let daysUntilSat = (6 - day + 7) % 7;
 
-    if (day === 6 && now.getHours() >= 21) {
+    // Saturday 6:00 PM (18:00) IST cutoff: automatically rolls over to next week Saturday & Sunday
+    if (day === 6 && now.getHours() >= 18) {
         daysUntilSat = 7;
     } else if (day === 0) {
         daysUntilSat = 6;
     }
 
-    let nextSat = new Date(now.getFullYear(), now.getMonth(), now.getDate() + daysUntilSat, 18, 0, 0);
+    let nextSat = new Date(now.getFullYear(), now.getMonth(), now.getDate() + daysUntilSat, 17, 30, 0);
     if (nextSat.getTime() < minSat.getTime()) {
         nextSat = minSat;
     }
 
-    const nextSun = new Date(nextSat.getFullYear(), nextSat.getMonth(), nextSat.getDate() + 1, 18, 0, 0);
+    const nextSun = new Date(nextSat.getFullYear(), nextSat.getMonth(), nextSat.getDate() + 1, 17, 30, 0);
 
     const fullMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     const shortMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -351,7 +368,7 @@ window.addEventListener('scroll', function() {
 });
 
 // Modal Control
-function openPaymentModal(plan = 499) {
+function openPaymentModal(plan = 999) {
     if (currentMasterclassMode === 'offline') {
         plan = 4999;
     }
@@ -538,21 +555,21 @@ function switchMasterclassMode(mode) {
         if (gridOffline) gridOffline.style.display = 'none';
         
         if (document.getElementById('nav-date-text')) document.getElementById('nav-date-text').innerText = weekend.shortRange;
-        if (document.getElementById('nav-time-text')) document.getElementById('nav-time-text').innerText = '6:00 PM – 9:00 PM IST';
+        if (document.getElementById('nav-time-text')) document.getElementById('nav-time-text').innerText = '5:30 PM – 8:30 PM IST';
         if (document.getElementById('nav-reg-btn')) document.getElementById('nav-reg-btn').innerHTML = 'Register Now @ ₹499 <i class="fa-solid fa-arrow-right"></i>';
         if (document.getElementById('nav-reg-btn')) document.getElementById('nav-reg-btn').setAttribute('onclick', 'openPaymentModal(499)');
         
         if (document.getElementById('hero-badge-text')) document.getElementById('hero-badge-text').innerText = '2-DAY LIVE WORKSHOP';
         if (document.getElementById('hero-title-el')) document.getElementById('hero-title-el').innerHTML = 'Master <span class="text-terracotta">Claude AI</span>, MCPs & Code Automation in 2 Days';
-        if (document.getElementById('hero-desc-el')) document.getElementById('hero-desc-el').innerText = 'Learn how to build custom Model Context Protocols (MCP), prompt like an expert, construct web applications, and automate complex workflows with Anthropic\'s Claude 3.5.';
-        if (document.getElementById('hero-access-text')) document.getElementById('hero-access-text').innerText = 'Direct access to Antony across both days • Live Q&A and practical exercises';
+        if (document.getElementById('hero-desc-el')) document.getElementById('hero-desc-el').innerText = 'Learn how to build custom Model Context Protocols (MCP), prompt like an expert, construct responsive websites, and automate complex workflows with Anthropic\'s Claude 3.5.';
+        if (document.getElementById('hero-access-text')) document.getElementById('hero-access-text').innerText = 'Live interactive instruction across both days • Practical exercises & code demos';
         if (document.getElementById('hero-cta-btn')) document.getElementById('hero-cta-btn').innerHTML = 'Register Now @ ₹499 <i class="fa-solid fa-arrow-right"></i>';
-        if (document.getElementById('hero-cta-btn')) document.getElementById('hero-cta-btn').setAttribute('onclick', 'openPaymentModal(499)');
+        if (document.getElementById('hero-cta-btn')) document.getElementById('hero-cta-btn').setAttribute('onclick', 'openPaymentModal(999)');
         
         if (document.getElementById('session-tag-el')) document.getElementById('session-tag-el').innerText = 'SESSION DETAILS';
         if (document.getElementById('venue-badge-el')) document.getElementById('venue-badge-el').innerHTML = '<i class="fa-solid fa-video"></i> Live Online';
         if (document.getElementById('info-date-text')) document.getElementById('info-date-text').innerText = weekend.fullDisplay;
-        if (document.getElementById('info-time-text')) document.getElementById('info-time-text').innerText = '6:00 PM – 9:00 PM IST';
+        if (document.getElementById('info-time-text')) document.getElementById('info-time-text').innerText = '5:30 PM – 8:30 PM IST';
         if (document.getElementById('info-venue-text')) document.getElementById('info-venue-text').innerText = 'Live Interactive Virtual Classroom';
 
         if (document.getElementById('hero-card-sub-price')) document.getElementById('hero-card-sub-price').innerText = 'Standard Pass starting at';
@@ -562,19 +579,19 @@ function switchMasterclassMode(mode) {
         if (document.getElementById('pricing-desc-el')) document.getElementById('pricing-desc-el').innerText = 'Choose between the standard live interactive pass or the pass with recorded video access.';
 
         if (document.getElementById('float-date-title')) document.getElementById('float-date-title').innerText = weekend.shortRange;
-        if (document.getElementById('float-date-sub')) document.getElementById('float-date-sub').innerText = '6:00 PM IST';
-        if (document.getElementById('float-time-title')) document.getElementById('float-time-title').innerText = '6:00 PM – 9:00 PM';
+        if (document.getElementById('float-date-sub')) document.getElementById('float-date-sub').innerText = '5:30 PM IST';
+        if (document.getElementById('float-time-title')) document.getElementById('float-time-title').innerText = '5:30 PM – 8:30 PM';
         if (document.getElementById('float-time-sub')) document.getElementById('float-time-sub').innerText = 'IST';
         if (document.getElementById('float-cta-btn')) document.getElementById('float-cta-btn').innerHTML = 'Register Now @ ₹499 <i class="fa-solid fa-arrow-right"></i>';
-        if (document.getElementById('float-cta-btn')) document.getElementById('float-cta-btn').setAttribute('onclick', 'openPaymentModal(499)');
+        if (document.getElementById('float-cta-btn')) document.getElementById('float-cta-btn').setAttribute('onclick', 'openPaymentModal(999)');
 
         // Portal & Curriculum & Pricing dynamic updates
         if (document.getElementById('portal-online-date')) document.getElementById('portal-online-date').innerText = weekend.fullDisplay;
-        if (document.getElementById('curriculum-day1-title')) document.getElementById('curriculum-day1-title').innerText = weekend.satDateText + ' • 6:00 PM – 9:00 PM IST';
-        if (document.getElementById('curriculum-day2-title')) document.getElementById('curriculum-day2-title').innerText = weekend.sunDateText + ' • 6:00 PM – 9:00 PM IST';
+        if (document.getElementById('curriculum-day1-title')) document.getElementById('curriculum-day1-title').innerText = weekend.satDateText + ' • 5:30 PM – 8:30 PM IST';
+        if (document.getElementById('curriculum-day2-title')) document.getElementById('curriculum-day2-title').innerText = weekend.sunDateText + ' • 5:30 PM – 8:30 PM IST';
         if (document.getElementById('pricing-online-date')) document.getElementById('pricing-online-date').innerHTML = '<i class="fa-solid fa-check text-terracotta"></i> 2-Day Live Online Session (' + weekend.shortRange + ')';
 
-        selectedPlan = 499;
+        selectedPlan = 999;
     }
     
     updatePricesUI();
@@ -626,14 +643,31 @@ function selectPass(plan) {
         }
     });
 
-    // Certificate checkbox handling for ₹1,999 All-Access Pass
+    // Certificate checkbox handling for ₹1,499 VIP Pro and ₹1,999 All-Access Pass
     const certCb = document.getElementById('want-certificate');
+    const certBadge = document.getElementById('cert-addon-badge');
+    const certDesc = document.getElementById('cert-addon-desc');
     if (certCb) {
-        if (plan === 1999) {
+        if (plan === 1999 || plan === 1499) {
             certCb.checked = true;
             certCb.disabled = true;
+            wantCertificate = true;
+            if (certBadge) {
+                certBadge.innerText = 'INCLUDED FREE';
+                certBadge.style.background = '#10b981';
+            }
+            if (certDesc) {
+                certDesc.innerText = 'Verified official E-Certificate is included at NO extra charge in this pass!';
+            }
         } else {
             certCb.disabled = false;
+            if (certBadge) {
+                certBadge.innerText = '+ ₹1,000';
+                certBadge.style.background = '#D85A30';
+            }
+            if (certDesc) {
+                certDesc.innerText = 'Get an official verified E-Certificate upon masterclass completion to share on LinkedIn & Resume.';
+            }
         }
     }
 
@@ -654,11 +688,11 @@ function selectPass(plan) {
             passNote.style.color = '#6B4FBB';
         } else if (plan === 1499) {
             passNote.style.display = 'block';
-            passNote.innerHTML = '🚀 Includes Live + Recordings + Complete Code & MCP Starter Kit!';
+            passNote.innerHTML = '🎓 Includes Live Session + Complete Session PDF Material + Verified E-Certificate (No Recordings)!';
             passNote.style.color = '#D85A30';
         } else if (plan === 1999) {
             passNote.style.display = 'block';
-            passNote.innerHTML = '👑 Complete All-Access: Recordings + Code + Verified E-Certificate Included!';
+            passNote.innerHTML = '👑 Complete All-Access: Recordings + PDF Material + Verified E-Certificate Included!';
             passNote.style.color = '#d97706';
         }
     }
@@ -669,7 +703,7 @@ function selectPass(plan) {
             modalPill.innerHTML = '<i class="fa-regular fa-calendar"></i> Next Batch: Coming Soon (Dates to be announced)';
         } else {
             const weekend = getUpcomingMasterclassWeekend();
-            modalPill.innerHTML = '<i class="fa-regular fa-calendar"></i> ' + weekend.fullDisplay + ' • 6:00 PM IST';
+            modalPill.innerHTML = '<i class="fa-regular fa-calendar"></i> ' + weekend.fullDisplay + ' • 5:30 PM IST';
         }
     }
 }
@@ -746,12 +780,39 @@ async function handleFormSubmit(e) {
                     certificate: wantCertificate ? "YES (+₹1,000)" : "NO",
                     promoCode: appliedPromo,
                     mode: currentMasterclassMode,
-                    venue: currentMasterclassMode === 'offline' ? "Vestin Park Hotel, Egmore, Chennai" : "Zoom Live Virtual"
+                    venue: currentMasterclassMode === 'offline' ? "Vestin Park Hotel, Egmore, Chennai" : "Zoom Live Virtual",
+                    pageUrl: window.location.href,
+                    utm: typeof getTrackingParams === 'function' ? getTrackingParams() : {},
+                    userAgent: navigator.userAgent
                 })
             });
             const data = await res.json();
             if (data && data.orderId) {
                 orderId = data.orderId;
+
+                // Fire Meta Pixel Lead Event on Register Now submission
+                if (typeof fbq === "function") {
+                    try {
+                        fbq("track", "Lead", {
+                            content_name: "Claude 3.5 AI Masterclass Registration",
+                            content_category: "Register Now Form",
+                            value: finalPrice,
+                            currency: "INR"
+                        }, { eventID: orderId });
+                    } catch (_) {}
+                }
+
+                // Fire Google Analytics 4 generate_lead Event
+                if (typeof gtag === "function") {
+                    try {
+                        gtag("event", "generate_lead", {
+                            event_category: "Registration Form",
+                            event_label: "Claude Masterclass Register Modal",
+                            value: finalPrice,
+                            currency: "INR"
+                        });
+                    } catch (_) {}
+                }
             }
         } catch (err) {
             console.error("Backend order creation failed:", err);
@@ -772,14 +833,14 @@ async function handleFormSubmit(e) {
             order_id: orderId,
             name: "Claude Masterclass 2026",
             description: selectedPlan === 1999
-                ? "All-Access Mastery Pass (Incl. 18% GST)"
+                ? "All-Access Mastery Pass"
                 : selectedPlan === 1499
-                ? "VIP Pro Pass (Incl. 18% GST)"
+                ? "VIP Pro Pass"
                 : selectedPlan === 999 
-                ? "Live + Recording Pass (Incl. 18% GST)" 
+                ? "Live + Recording Pass" 
                 : selectedPlan === 4999
-                ? "Offline Masterclass Pass (Incl. 18% GST)"
-                : "Standard Live Session Pass (Incl. 18% GST)",
+                ? "Offline Masterclass Pass"
+                : "Standard Live Session Pass",
             image: "https://course.techtycoon.in/images/tech_tycoon_logo.png",
             prefill: {
                 name: name,
@@ -1274,5 +1335,11 @@ document.addEventListener('DOMContentLoaded', function () {
     }, { threshold: 0.5 });
 
     document.querySelectorAll('[data-count]').forEach(el => statObserver.observe(el));
+
+    // Enquiry popup removed as requested
 });
+
+
+
+// Claude Masterclass Lead Gate Popup removed - leads now collected via Register Now modal
 

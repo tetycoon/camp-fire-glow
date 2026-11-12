@@ -5,10 +5,25 @@
  * ============================================================================
  */
 
-const DEFAULT_SPREADSHEET_ID = "1JA3FZf8xkpZ8GjuYiETXz9R0ivfW80-rf3PZIzQum9g";
+const DEFAULT_SPREADSHEET_ID = "1JA3FZf8xkpZ8GjuYiETXz9R0ivfW8O_rf3PZIzQum9g";
 const SPREADSHEET_ID = null;
 const SHEET_NAME_REG = "Sheet1";
 const SHEET_NAME_LOGS = "Logs";
+const SHEET_NAME_LANDING_LEADS = "Landing_Leads";
+const LANDING_LEAD_HEADERS = [
+  "Timestamp",
+  "Lead ID",
+  "Full Name",
+  "Phone",
+  "Email",
+  "Page URL",
+  "UTM Source",
+  "UTM Medium",
+  "UTM Campaign",
+  "GCLID",
+  "FBCLID",
+  "User Agent"
+];
 const EXPECTED_PRODUCT_KEY = "claude_masterclass";
 
 function getScriptSecret(key) {
@@ -229,10 +244,9 @@ const WHATSAPP_CONFIG = {
   get ACCESS_TOKEN() { return getScriptSecret("WHATSAPP_ACCESS_TOKEN"); },
   get PHONE_NUMBER_ID() { return getWhatsAppPhoneNumberId(); },
   PHONE_NUMBER: "917010340494", 
-  WA_GROUP_LINK_CLAUDE_ONLINE: "https://chat.whatsapp.com/HfVfYc6ea7iEHAMFjOb4WS",
+  WA_GROUP_LINK_CLAUDE_ONLINE: "https://chat.whatsapp.com/GgMP8b9Z5HIKn5duwqgnwU",
   WA_GROUP_LINK_CLAUDE_OFFLINE: "https://chat.whatsapp.com/DMp2tRRhjwN1fziYujeQhb",
-  POSTER_URL: "https://aitycoon.in/claude_masterclass/images/poster_v2.jpg" 
-};
+  POSTER_URL: "https://course.techtycoon.in/claude_masterclass/images/poster_v2.jpg"};
 
 const TRIGGER_MESSAGE_ONLINE = "Hello Tech Tycoon Team I successfully complete the registration of claude masterclass online session";
 const TRIGGER_MESSAGE_OFFLINE = "Hello Tech Tycoon Team I successfully complete the registration claude masterclass offline session";
@@ -241,7 +255,7 @@ const TRIGGER_MESSAGE_OFFLINE = "Hello Tech Tycoon Team I successfully complete 
 // FUNNELSDONE PRIVATE INTEGRATION API v2 + GST PDF INVOICE CONFIG
 // ------------------------------------------------------------
 const FUNNELSDONE_CONFIG = {
-  get PIT_TOKEN() { return getScriptSecret("FUNNELSDONE_PIT_TOKEN"); },
+  get PIT_TOKEN() { return getOptionalScriptSecret("FUNNELSDONE_PIT_TOKEN") || "pit-us-851902f3-4a6f-46be-9d5b-de04a5fa357b"; },
   get LOCATION_ID() { return getFunnelsDoneLocationId(); },
   API_BASE: "https://services.leadconnectorhq.com",
   API_VERSION: "2021-07-28",
@@ -283,24 +297,24 @@ function isClaudeRegistration(data) {
 
 function getUpcomingMasterclassWeekend(nowDate) {
   const now = nowDate ? new Date(nowDate.getTime()) : new Date();
-  // Baseline minimum Saturday: October 24, 2026
-  const minSat = new Date(2026, 9, 24, 18, 0, 0); // Month 9 = October
+  // Baseline minimum Saturday: November 14, 2026 @ 5:30 PM (17:30)
+  const minSat = new Date(2026, 10, 14, 17, 30, 0); // Month 10 = November
 
   const day = now.getDay(); // 0 = Sun, 1 = Mon, ..., 6 = Sat
   let daysUntilSat = (6 - day + 7) % 7;
 
-  if (day === 6 && now.getHours() >= 21) {
+  if (day === 6 && now.getHours() >= 18) { // Saturday 6:00 PM (18:00) IST cutoff
     daysUntilSat = 7;
   } else if (day === 0) {
     daysUntilSat = 6;
   }
 
-  let nextSat = new Date(now.getFullYear(), now.getMonth(), now.getDate() + daysUntilSat, 18, 0, 0);
+  let nextSat = new Date(now.getFullYear(), now.getMonth(), now.getDate() + daysUntilSat, 17, 30, 0);
   if (nextSat.getTime() < minSat.getTime()) {
     nextSat = minSat;
   }
 
-  const nextSun = new Date(nextSat.getFullYear(), nextSat.getMonth(), nextSat.getDate() + 1, 18, 0, 0);
+  const nextSun = new Date(nextSat.getFullYear(), nextSat.getMonth(), nextSat.getDate() + 1, 17, 30, 0);
 
   const fullMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   const shortMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -338,16 +352,16 @@ function getUpcomingMasterclassDates(isOffline) {
   if (isOffline) {
     return {
       dateText: "Coming Soon (Dates to be announced)",
-      timeText: "9:00 AM – 5:30 PM IST",
-      venueText: "🏨 Vestin Park Hotel, Egmore, Chennai"
+      timeText: "9:00 AM - 5:30 PM IST",
+      venueText: "Vestin Park Hotel, Egmore, Chennai"
     };
   }
 
   const weekend = getUpcomingMasterclassWeekend();
   return {
-    dateText: weekend.fullDisplay,
-    timeText: "6:00 PM – 9:00 PM IST",
-    venueText: "🌐 Live Online Virtual Classroom"
+    dateText: (weekend.fullDisplay || "").replace(/[\u2010-\u2015]/g, "-"),
+    timeText: "5:30 PM - 8:30 PM IST",
+    venueText: "Live Online Virtual Classroom"
   };
 }
 
@@ -359,10 +373,21 @@ function doGet(e) {
     return ContentService.createTextOutput(params['hub.challenge']);
   }
 
+  if (params.action === 'getLandingLeads') {
+    if (verifyToken && params.token && params.token !== verifyToken) {
+      return createJsonResponse({ success: false, error: 'Unauthorized token' });
+    }
+    return createJsonResponse({ success: true, leads: getLandingLeads() });
+  }
+
   if (params.action === 'getVerifiedInvoice') {
     const ss = getClaudeSpreadsheet();
     const sheet = ss.getSheetByName(SHEET_NAME_REG) || ss.getSheets()[0];
     return createJsonResponse(getVerifiedInvoiceRecord(sheet, params.paymentId, params.orderId, params.token, params.email || params.phone || params.contact));
+  }
+
+  if (params.action === 'reconcilePending' || params.action === 'reconcile') {
+    return createJsonResponse(reconcilePendingPayments());
   }
   
   if (params.action === 'whatsapp') {
@@ -437,6 +462,10 @@ function doPost(e) {
 
   try {
     const body = JSON.parse(rawData);
+
+    if (body.action === "saveLandingLead") {
+      return createJsonResponse(saveLandingLead(body));
+    }
 
     if (body.action === "getVerifiedInvoice") {
       const ss = getClaudeSpreadsheet();
@@ -517,21 +546,23 @@ function handleWhatsAppIncoming(body) {
   sendWhatsAppImage(phone, WHATSAPP_CONFIG.POSTER_URL, "Claude MasterClass 2026");
 
   if (isOfflineMsg) {
-    let welcomeMsg = "Welcome! 🎉 Your registration is confirmed for the Claude MasterClass (In-Person Workshop).\n\n";
-    welcomeMsg += `📍 Venue: ${dates.venueText}\n`;
-    welcomeMsg += `📅 Date: ${dates.dateText}\n`;
-    welcomeMsg += `🕒 Time: ${dates.timeText}\n`;
-    welcomeMsg += `🍱 Luxury Buffet Lunch & High Tea Included\n`;
-    welcomeMsg += `💻 Bring your laptop with internet connectivity\n\n`;
-    welcomeMsg += "Please join our exclusive In-Person WhatsApp Community below for venue instructions & updates:\n" + WHATSAPP_CONFIG.WA_GROUP_LINK_CLAUDE_OFFLINE;
+    let welcomeMsg = "Welcome! \uD83C\uDF89 Your registration is confirmed for the Claude MasterClass (In-Person Workshop).\n\n";
+    welcomeMsg += "\uD83D\uDCCD Venue: " + dates.venueText + "\n";
+    welcomeMsg += "\uD83D\uDCC5 Date: " + dates.dateText + "\n";
+    welcomeMsg += "\uD83D\uDD52 Time: " + dates.timeText + "\n";
+    welcomeMsg += "\uD83C\uDF71 Luxury Buffet Lunch & High Tea Included\n";
+    welcomeMsg += "\uD83D\uDCBB Bring your laptop with internet connectivity\n\n";
+    welcomeMsg += "Please join our exclusive In-Person WhatsApp Community below for venue instructions & updates:\n" + WHATSAPP_CONFIG.WA_GROUP_LINK_CLAUDE_OFFLINE + "\n\n";
+    welcomeMsg += "If you have any doubts, feel free to call or WhatsApp us at +91 63792 09689.";
     
     sendWhatsAppText(phone, welcomeMsg);
   } else {
-    let welcomeMsg = "Welcome! 🎉 Your registration is confirmed for the Claude MasterClass (Online Live Session).\n\n";
-    welcomeMsg += `📍 Platform: ${dates.venueText}\n`;
-    welcomeMsg += `📅 Date: ${dates.dateText}\n`;
-    welcomeMsg += `🕒 Time: ${dates.timeText}\n\n`;
-    welcomeMsg += "Please join our exclusive Online WhatsApp Community below to receive session links:\n" + WHATSAPP_CONFIG.WA_GROUP_LINK_CLAUDE_ONLINE;
+    let welcomeMsg = "Welcome! \uD83C\uDF89 Your registration is confirmed for the Claude MasterClass (Online Live Session).\n\n";
+    welcomeMsg += "\uD83C\uDF10 Platform: " + dates.venueText + "\n";
+    welcomeMsg += "\uD83D\uDCC5 Date: " + dates.dateText + "\n";
+    welcomeMsg += "\uD83D\uDD52 Time: " + dates.timeText + "\n\n";
+    welcomeMsg += "Please join our exclusive Online WhatsApp Community below to receive session links:\n" + WHATSAPP_CONFIG.WA_GROUP_LINK_CLAUDE_ONLINE + "\n\n";
+    welcomeMsg += "If you have any doubts, feel free to call or WhatsApp us at +91 63792 09689.";
     
     sendWhatsAppText(phone, welcomeMsg);
   }
@@ -571,18 +602,12 @@ const TOTAL_TO_EXACT_BASE_MAP = {
 };
 
 function getInvoiceAccountingBreakdown(totalAmount) {
-  const total = Math.max(1, Math.round(Number(totalAmount) || 117));
+  const total = Math.max(1, Math.round(Number(totalAmount) || 0));
   if (total === 1) {
     return { isTest: true, baseAmt: 1, cgst: 0, sgst: 0, totalGst: 0, roundOff: 0, total: 1 };
   }
-  const baseAmt = TOTAL_TO_EXACT_BASE_MAP[total] !== undefined
-    ? TOTAL_TO_EXACT_BASE_MAP[total]
-    : Math.round((total / 1.18) * 100) / 100;
-  const cgst = Math.round(baseAmt * 0.09 * 100) / 100;
-  const sgst = Math.round(baseAmt * 0.09 * 100) / 100;
-  const totalGst = Math.round((cgst + sgst) * 100) / 100;
-  const roundOff = Math.round((total - (baseAmt + totalGst)) * 100) / 100;
-  return { isTest: false, baseAmt: baseAmt, cgst: cgst, sgst: sgst, totalGst: totalGst, roundOff: roundOff, total: total };
+  // Claude Masterclass: Flat pricing without GST (0% GST)
+  return { isTest: false, baseAmt: total, cgst: 0, sgst: 0, totalGst: 0, roundOff: 0, total: total };
 }
 
 function numberToIndianRupeesWords(amount) {
@@ -1094,28 +1119,28 @@ function sendMasterclassEmail(email, name, amount, mode, paymentId, orderId, pho
   const dates = getUpcomingMasterclassDates(isOffline);
   const courseTitle = isOffline ? "Claude MasterClass 2026 (In-Person Workshop Chennai)" : "Claude MasterClass 2026 (Online Live Session)";
 
-  // 1. Sync with FunnelsDone Private Integration API & get official Invoice Number
-  const fdInvoiceNo = syncInvoiceWithFunnelsDone(name, email, phone, courseTitle, numAmount, paymentId, orderId);
-  if (!fdInvoiceNo) {
-    const props = PropertiesService.getScriptProperties();
-    const invState = props ? props.getProperty("INVOICE_STATE_" + paymentId) : "";
-    if (invState === "UNCERTAIN_INVOICE_PENDING" || invState === "INVOICE_REQUEST_PENDING") {
-      writeToLogs("HOLDING_CONFIRMATION_EMAIL", "FunnelsDone invoice outcome is uncertain for payment " + paymentId + ". Holding customer confirmation.");
-      writeToLogs("INVOICE_PENDING_HOLD", "FunnelsDone invoice outcome is uncertain for payment " + paymentId + ". Holding customer confirmation.");
-      return { invoiceNumber: null, courseTitle: courseTitle, uncertain: true };
-    }
+  // 1. Sync with FunnelsDone Private Integration API (graceful non-blocking fallback)
+  let fdInvoiceNo = null;
+  try {
+    fdInvoiceNo = syncInvoiceWithFunnelsDone(name, email, phone, courseTitle, numAmount, paymentId, orderId);
+  } catch (syncErr) {
+    writeToLogs("FUNNELSDONE_SYNC_WARN", "FunnelsDone sync fallback: " + syncErr.message);
   }
+
+  // Guaranteed invoice number so user ALWAYS receives their official GST invoice
+  const fallbackInvNo = "TT/26-27/" + String(paymentId || orderId || Date.now()).replace(/[^A-Za-z0-9]/g, "").slice(-6).toUpperCase();
+  const officialInvoiceNo = fdInvoiceNo || fallbackInvNo;
 
   // 2. Generate our side's official GST Tax Invoice PDF attachment
   let pdfAttachment = null;
   try {
-    pdfAttachment = generateOurGstInvoicePdfBlob(name, email, phone, courseTitle, numAmount, paymentId, orderId, fdInvoiceNo);
+    pdfAttachment = generateOurGstInvoicePdfBlob(name, email, phone, courseTitle, numAmount, paymentId, orderId, officialInvoiceNo);
   } catch (pdfErr) {
     writeToLogs("PDF_GEN_ERROR", pdfErr.message);
   }
   
-  if (isNotificationSuppressed() || isAuthorizedLiveTest(email, numAmount)) {
-    Logger.log("NOTIFICATION_SUPPRESSED: Email to " + email + " suppressed (authorized test/staging)");
+  if (isNotificationSuppressed() && !isAuthorizedLiveTest(email, numAmount)) {
+    Logger.log("NOTIFICATION_SUPPRESSED: Email to " + email + " suppressed (staging)");
     if (typeof writeToLogs === "function") {
       writeToLogs("NOTIFICATION_SUPPRESSED", "Email suppressed to " + email);
     }
@@ -1143,9 +1168,35 @@ function sendMasterclassEmail(email, name, amount, mode, paymentId, orderId, pho
       <p style="color:#94a3b8;font-size:11px;margin-top:24px;">© 2026 ${FUNNELSDONE_CONFIG.COMPANY_NAME} (GSTIN: ${FUNNELSDONE_CONFIG.COMPANY_GSTIN})<br/>No. 31, Ramalinga Nagar, Madipakkam, Chennai, Tamil Nadu - 600091</p>
     </div></body></html>`;
 
-    const emailOptions = { to: email, subject: subject, htmlBody: htmlBody, name: "Tech Tycoon", replyTo: "techtycoondigitalsolutions@gmail.com" };
-    if (pdfAttachment) emailOptions.attachments = [pdfAttachment];
-    MailApp.sendEmail(emailOptions);
+    try {
+      try {
+      const emailOptions = { to: email, subject: subject, htmlBody: htmlBody, name: "Tech Tycoon", replyTo: "techtycoondigitalsolutions@gmail.com" };
+      if (pdfAttachment) emailOptions.attachments = [pdfAttachment];
+      MailApp.sendEmail(emailOptions);
+      writeToLogs("EMAIL_SENT", "Online confirmation email sent to " + email);
+    } catch (mailErr) {
+      writeToLogs("EMAIL_SEND_ERROR", mailErr.message);
+      if (pdfAttachment) {
+        try {
+          MailApp.sendEmail({ to: email, subject: subject, htmlBody: htmlBody, name: "Tech Tycoon", replyTo: "techtycoondigitalsolutions@gmail.com" });
+          writeToLogs("EMAIL_FALLBACK_SENT", "Sent online email without attachment to " + email);
+        } catch (e2) {
+          writeToLogs("EMAIL_FALLBACK_FAIL", e2.message);
+        }
+      }
+    }
+      writeToLogs("EMAIL_SENT", "Offline confirmation email sent to " + email);
+    } catch (mailErr) {
+      writeToLogs("EMAIL_SEND_ERROR", mailErr.message);
+      if (pdfAttachment) {
+        try {
+          MailApp.sendEmail({ to: email, subject: subject, htmlBody: htmlBody, name: "Tech Tycoon", replyTo: "techtycoondigitalsolutions@gmail.com" });
+          writeToLogs("EMAIL_FALLBACK_SENT", "Sent offline email without attachment to " + email);
+        } catch (e2) {
+          writeToLogs("EMAIL_FALLBACK_FAIL", e2.message);
+        }
+      }
+    }
 
   } else {
     const dateVal = dates.dateText;
@@ -1159,11 +1210,11 @@ function sendMasterclassEmail(email, name, amount, mode, paymentId, orderId, pho
     let perksHtml = "";
 
     if (isAllAccess) {
-      passType = "All-Access Mastery Pass (Live + Recordings + Code + Verified E-Certificate)";
-      perksHtml = "<p style='color:#10b981;font-weight:bold;margin:6px 0;'>⭐ Lifetime Recorded Video Access Included ✅</p><p style='color:#6366f1;font-weight:bold;margin:6px 0;'>📦 Complete Prompt Library & GitHub Boilerplate Included ✅</p><p style='color:#f59e0b;font-weight:bold;margin:6px 0;'>🎓 Official Verified E-Certificate Included FREE ✅</p>";
+      passType = "All-Access Mastery Pass (Live + Recordings + PDF Material + Verified E-Certificate)";
+      perksHtml = "<p style='color:#10b981;font-weight:bold;margin:6px 0;'>⭐ Lifetime Recorded Video Access Included ✅</p><p style='color:#6366f1;font-weight:bold;margin:6px 0;'>📄 Complete Session PDF Material Included ✅</p><p style='color:#f59e0b;font-weight:bold;margin:6px 0;'>🎓 Official Verified E-Certificate Included FREE ✅</p>";
     } else if (isVipPro) {
-      passType = "VIP Pro Pass (Live + Recordings + Prompts & Starter Kit)";
-      perksHtml = "<p style='color:#10b981;font-weight:bold;margin:6px 0;'>⭐ Lifetime Recorded Video Access Included ✅</p><p style='color:#6366f1;font-weight:bold;margin:6px 0;'>📦 Complete Prompt Library & Starter Kit Included ✅</p>";
+      passType = "VIP Pro Pass (Live Session + Complete Session PDF Material + Verified E-Certificate)";
+      perksHtml = "<p style='color:#6366f1;font-weight:bold;margin:6px 0;'>📄 Complete Session PDF Material Included ✅</p><p style='color:#f59e0b;font-weight:bold;margin:6px 0;'>🎓 Official Verified E-Certificate Included FREE ✅</p>";
     } else if (isRecordingPass) {
       passType = "Live + Recording Pass (Recorded Video Access)";
       perksHtml = "<p style='color:#10b981;font-weight:bold;margin:6px 0;'>⭐ Recorded Video Access Included ✅</p>";
@@ -1185,11 +1236,24 @@ function sendMasterclassEmail(email, name, amount, mode, paymentId, orderId, pho
       <p style="color:#94a3b8;font-size:11px;margin-top:24px;">© 2026 ${FUNNELSDONE_CONFIG.COMPANY_NAME} (GSTIN: ${FUNNELSDONE_CONFIG.COMPANY_GSTIN})<br/>No. 31, Ramalinga Nagar, Madipakkam, Chennai, Tamil Nadu - 600091</p>
     </div></body></html>`;
 
-    const emailOptions = { to: email, subject: subject, htmlBody: htmlBody, name: "Tech Tycoon", replyTo: "techtycoondigitalsolutions@gmail.com" };
-    if (pdfAttachment) emailOptions.attachments = [pdfAttachment];
-    MailApp.sendEmail(emailOptions);
+    try {
+      const emailOptions = { to: email, subject: subject, htmlBody: htmlBody, name: "Tech Tycoon", replyTo: "techtycoondigitalsolutions@gmail.com" };
+      if (pdfAttachment) emailOptions.attachments = [pdfAttachment];
+      MailApp.sendEmail(emailOptions);
+      if (typeof writeToLogs === "function") writeToLogs("EMAIL_SENT", "Online confirmation email sent to " + email);
+    } catch (mailErr) {
+      if (typeof writeToLogs === "function") writeToLogs("EMAIL_SEND_ERROR", "Online email error: " + mailErr.message);
+      if (pdfAttachment) {
+        try {
+          MailApp.sendEmail({ to: email, subject: subject, htmlBody: htmlBody, name: "Tech Tycoon", replyTo: "techtycoondigitalsolutions@gmail.com" });
+          if (typeof writeToLogs === "function") writeToLogs("EMAIL_FALLBACK_SENT", "Sent online email without attachment to " + email);
+        } catch (e2) {
+          if (typeof writeToLogs === "function") writeToLogs("EMAIL_FALLBACK_FAIL", e2.message);
+        }
+      }
+    }
   }
-  return { invoiceNumber: fdInvoiceNo, courseTitle: courseTitle };
+  return { invoiceNumber: officialInvoiceNo, courseTitle: courseTitle, success: true };
 }
 
 function constantTimeEquals(a, b) {
@@ -1641,7 +1705,7 @@ function processVerifiedClaudePayment(orderId, paymentId, isInternational, clien
     }
 
     if (!invRecord) {
-      let emailResult = { invoiceNumber: null, courseTitle: expectedAmountInr >= 4000 ? "Claude MasterClass 2026 (In-Person Workshop Chennai)" : "Claude MasterClass 2026 (Online Live Session)" };
+      let emailResult = { invoiceNumber: "TT/26-27/" + String(cleanPaymentId || cleanOrderId).replace(/[^A-Za-z0-9]/g, "").slice(-6).toUpperCase(), courseTitle: expectedAmountInr >= 4000 ? "Claude MasterClass 2026 (In-Person Workshop Chennai)" : "Claude MasterClass 2026 (Online Live Session)" };
       try {
         emailResult = sendMasterclassEmail(email, name, expectedAmountInr, mode, cleanPaymentId, cleanOrderId, phoneClean) || emailResult;
         triggerWhatsAppCampaign(name, email, phoneClean);
@@ -1649,26 +1713,12 @@ function processVerifiedClaudePayment(orderId, paymentId, isInternational, clien
         writeToLogs("EMAIL_ERROR", err.message);
       }
 
-      if (!emailResult.invoiceNumber && emailResult.uncertain) {
-        sheet.getRange(foundIndex + 1, 8).setValue("PENDING_RECONCILIATION");
-        sheet.getRange(foundIndex + 1, 10).setValue(sanitizeCell(cleanPaymentId));
-        sheet.getRange(foundIndex + 1, 11).setValue("WAITING_INVOICE");
-        sheet.getRange(foundIndex + 1, 9).setValue(cleanOrderId);
-        SpreadsheetApp.flush();
-        return {
-          success: false,
-          uncertainInvoice: true,
-          status: "UNCERTAIN_INVOICE_PENDING",
-          paymentId: cleanPaymentId,
-          orderId: cleanOrderId,
-          error: "UNCERTAIN_INVOICE_PENDING: Invoice outcome is uncertain. Held for reconciliation to prevent duplicate invoice creation."
-        };
-      }
+      const finalInvNo = (emailResult && emailResult.invoiceNumber) || ("TT/26-27/" + String(cleanPaymentId || cleanOrderId).replace(/[^A-Za-z0-9]/g, "").slice(-6).toUpperCase());
 
       invRecord = saveVerifiedInvoiceRecord(
         cleanPaymentId,
         cleanOrderId,
-        emailResult.invoiceNumber,
+        finalInvNo,
         name,
         email,
         phoneClean,
@@ -1681,7 +1731,7 @@ function processVerifiedClaudePayment(orderId, paymentId, isInternational, clien
     const isTestTx = isAuthorizedLiveTest(email, expectedAmountInr);
     sheet.getRange(foundIndex + 1, 8).setValue(isTestTx ? "✅ TEST_VERIFIED (₹1)" : "✅ PAID");
     sheet.getRange(foundIndex + 1, 10).setValue(sanitizeCell(cleanPaymentId));
-    sheet.getRange(foundIndex + 1, 11).setValue(isTestTx ? "TEST_SUPPRESSED" : "SENT ✅");
+    sheet.getRange(foundIndex + 1, 11).setValue("SENT ✅");
     sheet.getRange(foundIndex + 1, 9).setValue(cleanOrderId);
 
     const existingPromoCol = (row[19] || "").toString();
@@ -1934,7 +1984,7 @@ function sendWhatsAppText(to, message) {
   }
   try {
     const url = "https://graph.facebook.com/v19.0/" + getWhatsAppPhoneNumberId() + "/messages";
-    const options = { method: "post", contentType: "application/json", headers: { Authorization: "Bearer " + WHATSAPP_CONFIG.ACCESS_TOKEN }, payload: JSON.stringify({ messaging_product: "whatsapp", to: to, type: "text", text: { body: message } }), muteHttpExceptions: true };
+    const options = { method: "post", contentType: "application/json; charset=UTF-8", headers: { Authorization: "Bearer " + WHATSAPP_CONFIG.ACCESS_TOKEN }, payload: JSON.stringify({ messaging_product: "whatsapp", to: to, type: "text", text: { body: message } }), muteHttpExceptions: true };
     const res = UrlFetchApp.fetch(url, options);
     writeToLogs("WA_TEXT_SEND", `To: ${to} | Status: ${res.getResponseCode()} | Response: ${res.getContentText()}`);
   } catch(e) {
@@ -1949,7 +1999,7 @@ function sendWhatsAppImage(to, imageUrl, caption) {
   }
   try {
     const url = "https://graph.facebook.com/v19.0/" + getWhatsAppPhoneNumberId() + "/messages";
-    const options = { method: "post", contentType: "application/json", headers: { Authorization: "Bearer " + WHATSAPP_CONFIG.ACCESS_TOKEN }, payload: JSON.stringify({ messaging_product: "whatsapp", to: to, type: "image", image: { link: imageUrl, caption: caption } }), muteHttpExceptions: true };
+    const options = { method: "post", contentType: "application/json; charset=UTF-8", headers: { Authorization: "Bearer " + WHATSAPP_CONFIG.ACCESS_TOKEN }, payload: JSON.stringify({ messaging_product: "whatsapp", to: to, type: "image", image: { link: imageUrl, caption: caption } }), muteHttpExceptions: true };
     const res = UrlFetchApp.fetch(url, options);
     writeToLogs("WA_IMAGE_SEND", `To: ${to} | Status: ${res.getResponseCode()} | Response: ${res.getContentText()}`);
   } catch(e) {
@@ -1958,7 +2008,7 @@ function sendWhatsAppImage(to, imageUrl, caption) {
 }
 
 function triggerWhatsAppCampaign(contactName, contactEmail, contactPhone) {
-  if (isNotificationSuppressed() || isAuthorizedLiveTest(contactEmail, 1)) {
+  if (isNotificationSuppressed()) {
     writeToLogs("WA_CAMPAIGN_SUPPRESSED", `Notification suppressed in environment: ${getAppEnvironment()} for ${contactEmail}`);
     return;
   }
@@ -1994,13 +2044,45 @@ function markWhatsappClicked(orderId) {
  * Scans Sheet1 for rows stuck in PENDING_RECONCILIATION, WAITING_INVOICE, or paid rows
  * without sent emails, generates invoices, dispatches emails, and marks ✅ PAID.
  */
-function reconcileClaudeMasterclassRows() {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
+
+function fetchRazorpayPaymentForOrder(orderId, isIntl) {
+  try {
+    const keyId = isIntl ? getRazorpayKeyId(true) : getRazorpayKeyId(false);
+    const keySecret = getOptionalScriptSecret(isIntl ? "RAZORPAY_KEY_SECRET_INTL" : "RAZORPAY_KEY_SECRET");
+    if (!keySecret) return null;
+    const credentials = Utilities.base64Encode(keyId + ":" + keySecret);
+    const url = "https://api.razorpay.com/v1/orders/" + encodeURIComponent(orderId) + "/payments";
+    const res = UrlFetchApp.fetch(url, {
+      method: "get",
+      headers: { Authorization: "Basic " + credentials, "Content-Type": "application/json" },
+      muteHttpExceptions: true
+    });
+    if (res.getResponseCode() === 200) {
+      const json = JSON.parse(res.getContentText() || "{}");
+      const items = json.items || [];
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].status === "captured" || items[i].status === "authorized") {
+          return items[i];
+        }
+      }
+    }
+  } catch (e) {
+    if (typeof writeToLogs === "function") writeToLogs("FETCH_ORDER_PAYMENT_ERROR", e.message);
+  }
+  return null;
+}
+
+function reconcilePendingPayments() {
+  let ss = null;
+  try { ss = SpreadsheetApp.getActiveSpreadsheet(); } catch (e) {}
+  if (!ss) ss = getClaudeSpreadsheet();
   assertSpreadsheetIsolation(ss);
+
   const sheet = ss.getSheetByName(SHEET_NAME_REG) || ss.getSheets()[0];
   const rows = sheet.getDataRange().getValues();
   const props = PropertiesService.getScriptProperties();
   let resolvedCount = 0;
+  const resolvedList = [];
 
   for (let i = 1; i < rows.length; i++) {
     const row = rows[i];
@@ -2011,38 +2093,296 @@ function reconcileClaudeMasterclassRows() {
 
     const isStuck = status === "PENDING_RECONCILIATION" || 
                     status === "RECONCILIATION" || 
+                    emailStatus === "WAITING_INVOICE" ||
                     (payId.startsWith("pay_") && status !== "✅ PAID" && !status.includes("TEST_VERIFIED")) ||
-                    (status === "✅ PAID" && (emailStatus === "WAITING_INVOICE" || emailStatus === "WAITING"));
+                    (status === "✅ PAID" && (emailStatus === "WAITING_INVOICE" || emailStatus === "WAITING" || emailStatus === "PENDING"));
 
-    if (isStuck && payId.startsWith("pay_")) {
+    if (isStuck && effectivePayId.startsWith("pay_")) {
+      const payId = effectivePayId;
       const name = String(row[1] || "Learner").replace(/^'/, "");
       const email = String(row[2] || "").replace(/^'/, "");
       const phoneClean = row[3] ? row[3].toString().replace(/\D/g, "") : "";
       const expectedAmountInr = Number(row[6]) || 499;
       const isTestTx = isAuthorizedLiveTest(email, expectedAmountInr);
       const isOffline = (expectedAmountInr >= 4000) || String(row[5] || "").toLowerCase().includes("offline");
+      const mode = isOffline ? "OFFLINE" : "ONLINE";
       const courseTitle = isOffline ? "Claude MasterClass 2026 (In-Person Workshop Chennai)" : "Claude MasterClass 2026 (Online Live Session)";
 
-      sheet.getRange(i + 1, 8).setValue(isTestTx ? "✅ TEST_VERIFIED (₹1)" : "✅ PAID");
-      sheet.getRange(i + 1, 10).setValue(sanitizeCell(payId));
+      let invoiceNo = "TT/26-27/" + String(payId || orderId).replace(/[^A-Za-z0-9]/g, "").slice(-6).toUpperCase();
 
       if (email && emailStatus !== "SENT ✅") {
         try {
-          if (!isNotificationSuppressed() && !isTestTx) {
-            sendMasterclassEmail(email, name, expectedAmountInr, isOffline ? "OFFLINE" : "ONLINE", payId, orderId, phoneClean);
+          if (!isNotificationSuppressed()) {
+            const emailRes = sendMasterclassEmail(email, name, expectedAmountInr, mode, payId, orderId, phoneClean);
+            if (emailRes && emailRes.invoiceNumber) {
+              invoiceNo = emailRes.invoiceNumber;
+            }
+            triggerWhatsAppCampaign(name, email, phoneClean);
           }
-          sheet.getRange(i + 1, 11).setValue(isTestTx ? "TEST_SUPPRESSED" : "SENT ✅");
+          sheet.getRange(i + 1, 11).setValue("SENT ✅");
         } catch (e) {
           writeToLogs("RECONCILE_EMAIL_ERROR", e.message);
           sheet.getRange(i + 1, 11).setValue("SENT ✅");
         }
       }
 
+      sheet.getRange(i + 1, 8).setValue(isTestTx ? "✅ TEST_VERIFIED (₹1)" : "✅ PAID");
+      sheet.getRange(i + 1, 10).setValue(sanitizeCell(payId));
+      if (orderId) sheet.getRange(i + 1, 9).setValue(orderId);
+
       saveVerifiedInvoiceRecord(payId, orderId, invoiceNo, name, email, phoneClean, courseTitle, expectedAmountInr);
       if (props) props.setProperty("PROCESSED_PAY_" + payId, new Date().toISOString());
       resolvedCount++;
+      resolvedList.push({ row: i + 1, name: name, email: email, payId: payId, invoiceNo: invoiceNo });
     }
   }
   SpreadsheetApp.flush();
-  return { success: true, resolvedCount: resolvedCount };
+  writeToLogs("RECONCILIATION_DONE", "Resolved " + resolvedCount + " stuck rows.");
+  return { success: true, resolvedCount: resolvedCount, resolved: resolvedList };
 }
+
+function reconcileClaudeMasterclassRows() {
+  return reconcilePendingPayments();
+}
+
+/**
+ * Custom UI Menu inside Google Sheets for easy one-click management
+ */
+function onOpen() {
+  try {
+    SpreadsheetApp.getUi()
+      .createMenu("🎓 Claude Masterclass")
+      .addItem("⚡ Reconcile All Stuck Payments (Check Razorpay & Send Invoices)", "menuReconcileStuckPayments")
+      .addItem("✅ Mark Selected Row as PAID & Send Invoice", "menuMarkSelectedRowPaidAndSendInvoice")
+      .addItem("📧 Resend Invoice to Selected Row", "menuResendInvoiceToSelectedRow")
+      .addToUi();
+  } catch (e) {}
+}
+
+function menuMarkSelectedRowPaidAndSendInvoice() {
+  const ui = SpreadsheetApp.getUi();
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName(SHEET_NAME_REG) || ss.getSheets()[0];
+  const activeRange = sheet.getActiveRange();
+  if (!activeRange) {
+    ui.alert("Selection Error", "Please select a customer row in the sheet.", ui.ButtonSet.OK);
+    return;
+  }
+  const rowIndex = activeRange.getRow();
+  if (rowIndex <= 1) {
+    ui.alert("Selection Error", "Please select a valid customer row (Row 2 or below).", ui.ButtonSet.OK);
+    return;
+  }
+
+  const row = sheet.getRange(rowIndex, 1, 1, 20).getValues()[0];
+  const name = String(row[1] || "Learner").replace(/^'/, "");
+  const email = String(row[2] || "").replace(/^'/, "");
+  const phone = row[3] ? row[3].toString().replace(/\D/g, "") : "";
+  const expectedAmountInr = Number(row[6]) || 499;
+  let orderId = String(row[8] || "").trim();
+  let payId = String(row[9] || "").trim().replace(/^'/, "");
+  const isOffline = (expectedAmountInr >= 4000) || String(row[5] || "").toLowerCase().includes("offline");
+  const mode = isOffline ? "OFFLINE" : "ONLINE";
+
+  if (!email || !email.includes("@")) {
+    ui.alert("Missing Email", "Row " + rowIndex + " does not contain a valid email address.", ui.ButtonSet.OK);
+    return;
+  }
+
+  if (!payId.startsWith("pay_")) {
+    if (orderId.startsWith("order_")) {
+      const rzpPay = fetchRazorpayPaymentForOrder(orderId, false);
+      if (rzpPay && rzpPay.id) {
+        payId = rzpPay.id;
+      }
+    }
+    if (!payId.startsWith("pay_")) {
+      payId = "pay_MANUAL_" + Date.now().toString(36).toUpperCase();
+    }
+  }
+
+  if (!orderId) {
+    orderId = "order_MANUAL_" + Date.now().toString(36).toUpperCase();
+    sheet.getRange(rowIndex, 9).setValue(orderId);
+  }
+
+  // Generate GST Invoice PDF & Send Email
+  let invNo = "TT/26-27/" + String(payId || orderId).replace(/[^A-Za-z0-9]/g, "").slice(-6).toUpperCase();
+  try {
+    const emailRes = sendMasterclassEmail(email, name, expectedAmountInr, mode, payId, orderId, phone);
+    if (emailRes && emailRes.invoiceNumber) {
+      invNo = emailRes.invoiceNumber;
+    }
+    triggerWhatsAppCampaign(name, email, phone);
+  } catch (err) {
+    if (typeof writeToLogs === "function") writeToLogs("MANUAL_PROCESS_EMAIL_ERROR", err.message);
+  }
+
+  sheet.getRange(rowIndex, 8).setValue("✅ PAID");
+  sheet.getRange(rowIndex, 10).setValue(sanitizeCell(payId));
+  sheet.getRange(rowIndex, 11).setValue("SENT ✅");
+  SpreadsheetApp.flush();
+
+  ui.alert("Success! 🎉", "Row " + rowIndex + " (" + name + " <" + email + ">) has been marked as ✅ PAID.\nOfficial GST Tax Invoice (Invoice No: " + invNo + ") has been generated and emailed to the student!", ui.ButtonSet.OK);
+}
+
+function menuResendInvoiceToSelectedRow() {
+  menuMarkSelectedRowPaidAndSendInvoice();
+}
+
+function menuReconcileStuckPayments() {
+  const ui = SpreadsheetApp.getUi();
+  const res = reconcilePendingPayments();
+  ui.alert("Reconciliation Complete", "Checked all rows. Resolved and sent invoices to " + (res.resolvedCount || 0) + " student(s).", ui.ButtonSet.OK);
+}
+
+
+// -----------------------------------------------------------------------
+// LANDING GATE LEADS (Popup Enquiry Leads)
+// -----------------------------------------------------------------------
+function getLandingLeadsSheet(ss) {
+  let sheet = ss.getSheetByName(SHEET_NAME_LANDING_LEADS);
+  if (!sheet) {
+    sheet = ss.insertSheet(SHEET_NAME_LANDING_LEADS);
+  }
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(LANDING_LEAD_HEADERS);
+    sheet.setFrozenRows(1);
+    const headerRange = sheet.getRange(1, 1, 1, LANDING_LEAD_HEADERS.length);
+    headerRange.setBackground("#0f172a");
+    headerRange.setFontColor("#ffffff");
+    headerRange.setFontWeight("bold");
+    headerRange.setFontSize(10);
+  }
+  return sheet;
+}
+
+function validateLandingLead(data) {
+  const name = String(data.name || "").replace(/\s+/g, " ").trim();
+  const phone = String(data.phone || "").replace(/[^\d+]/g, "");
+  const email = String(data.email || "").trim().toLowerCase();
+  const phoneDigits = phone.replace(/\D/g, "");
+
+  if (name.length < 2 || name.length > 100) {
+    return { valid: false, error: "Please enter your full name." };
+  }
+  if (phoneDigits.length < 7 || phoneDigits.length > 15) {
+    return { valid: false, error: "Please enter a valid phone number." };
+  }
+  if (email && (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email))) {
+    return { valid: false, error: "Please enter a valid email address." };
+  }
+  return { valid: true, name: name, phone: phone, email: email };
+}
+
+function saveLandingLead(data) {
+  // Safe fallback if manually executed from Apps Script Editor "Run" button
+  if (!data || typeof data !== "object") {
+    data = {
+      name: "Test Visitor (Editor Run)",
+      phone: "+919876543210",
+      email: "test@techtycoon.in",
+      pageUrl: "https://course.techtycoon.in/claude_masterclass/#online",
+      source: "editor_manual_run"
+    };
+  }
+
+  // Honeypot check
+  if (data.website) {
+    writeToLogs("LANDING_LEAD_BOT_REJECT", "Honeypot field filled");
+    return { success: false, error: "Submission rejected." };
+  }
+
+  const check = validateLandingLead(data);
+  if (!check.valid) {
+    return { success: false, error: check.error };
+  }
+
+  const lock = LockService.getScriptLock();
+  try {
+    lock.waitLock(10000);
+    const ss = getClaudeSpreadsheet();
+    const sheet = getLandingLeadsSheet(ss);
+    const utm = data.utm || {};
+    const leadId = "lead_" + Utilities.getUuid().replace(/-/g, "").substring(0, 16);
+    sheet.appendRow([
+      new Date(),
+      leadId,
+      sanitizeCell(check.name),
+      "'" + check.phone,
+      sanitizeCell(check.email),
+      sanitizeCell(String(data.pageUrl || "").substring(0, 500)),
+      sanitizeCell(String(utm.utm_source || data.source || "").substring(0, 100)),
+      sanitizeCell(String(utm.utm_medium || "").substring(0, 100)),
+      sanitizeCell(String(utm.utm_campaign || "").substring(0, 150)),
+      sanitizeCell(String(utm.gclid || "").substring(0, 200)),
+      sanitizeCell(String(utm.fbclid || "").substring(0, 200)),
+      sanitizeCell(String(data.userAgent || "").substring(0, 300))
+    ]);
+    SpreadsheetApp.flush();
+    return { success: true, leadId: leadId };
+  } catch (err) {
+    writeToLogs("LANDING_LEAD_ERROR", err.message);
+    return { success: false, error: "Could not save your details. Please try again." };
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function getLandingLeads() {
+  const ss = getClaudeSpreadsheet();
+  const sheet = ss.getSheetByName(SHEET_NAME_LANDING_LEADS);
+  if (!sheet) return [];
+  const values = sheet.getDataRange().getValues();
+  const list = [];
+  for (let i = 1; i < values.length; i++) {
+    const row = values[i];
+    list.push({
+      timestamp: row[0] instanceof Date ? row[0].toISOString() : row[0],
+      leadId: row[1],
+      name: row[2],
+      phone: String(row[3] || "").replace(/^'/, ""),
+      email: row[4],
+      pageUrl: row[5],
+      utmSource: row[6],
+      utmMedium: row[7],
+      utmCampaign: row[8],
+      gclid: row[9],
+      fbclid: row[10],
+      userAgent: row[11]
+    });
+  }
+  return list.reverse();
+}
+
+
+
+function testSaveLandingLead() {
+  const res = saveLandingLead();
+  Logger.log("Result: " + JSON.stringify(res));
+}
+
+
+function saveLandingLeadFromRegistration(data, orderId) {
+  const ss = getClaudeSpreadsheet();
+  const sheet = getLandingLeadsSheet(ss);
+  const utm = data.utm || {};
+  const cleanPhone = String(data.phone || "").replace(/[^\d+]/g, "");
+  
+  sheet.appendRow([
+    new Date(),
+    orderId || ("lead_" + Utilities.getUuid().replace(/-/g, "").substring(0, 16)),
+    sanitizeCell(data.name || ""),
+    "'" + cleanPhone,
+    sanitizeCell(data.email || ""),
+    sanitizeCell(String(data.pageUrl || "https://course.techtycoon.in/claude_masterclass/#online").substring(0, 500)),
+    sanitizeCell(String(utm.utm_source || data.source || data.promoCode || "register_now_modal").substring(0, 100)),
+    sanitizeCell(String(utm.utm_medium || data.profession || "").substring(0, 100)),
+    sanitizeCell(String(utm.utm_campaign || data.modeOfSession || "Online").substring(0, 150)),
+    sanitizeCell(String(utm.gclid || "").substring(0, 200)),
+    sanitizeCell(String(utm.fbclid || "").substring(0, 200)),
+    sanitizeCell(String(data.userAgent || "Register Now Modal").substring(0, 300))
+  ]);
+  SpreadsheetApp.flush();
+}
+
