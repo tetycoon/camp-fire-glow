@@ -88,6 +88,8 @@ spaRoutes.forEach(route => {
   if (fs.existsSync(src)) {
     fs.mkdirSync(destDir, { recursive: true });
     fs.copyFileSync(src, dest);
+    // Also copy as folder.html so GitHub Pages serves /folder without trailing slash directly
+    fs.copyFileSync(src, path.join('dist', `${folder}.html`));
     console.log(`✓ Verified dedicated static page: ${dest}`);
   }
 });
@@ -97,6 +99,7 @@ const claudeResSrcDir = path.join('public', 'claude_resources');
 const claudeResHyphenDestDir = path.join('dist', 'claude-resources');
 if (fs.existsSync(claudeResSrcDir)) {
   fs.cpSync(claudeResSrcDir, claudeResHyphenDestDir, { recursive: true });
+  fs.copyFileSync(path.join(claudeResSrcDir, 'index.html'), path.join('dist', 'claude-resources.html'));
   console.log('✓ Synchronized claude-resources (hyphenated) with dedicated static assets');
 }
 

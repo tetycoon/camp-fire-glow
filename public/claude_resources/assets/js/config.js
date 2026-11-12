@@ -56,7 +56,7 @@ window.SITE_CONFIG = {
 
   // Confirmed by the owner. Change here to update the whole page.
   counts: {
-    skills: '4,000+',
+    skills: '250+',
     categories: '130+',
     claudePrompts: '2,500+',
     aiPrompts: '1,500+',
