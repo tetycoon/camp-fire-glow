@@ -277,9 +277,7 @@
       regSubmitBtn.disabled = true;
       regSubmitBtn.innerHTML = '<span class="pay-spinner" style="width:16px;height:16px;border-width:2px;display:inline-block;vertical-align:middle;margin-right:8px;"></span> Connecting to Payment...';
 
-  var FALLBACK_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby0fX7tjbOciJbg0Mw1SRMhlazBe4FG1Ko-f5mIFCW6Y7zGKHGZjdUZQKXclfye1FzegA/exec';
-
-      // 1. Create official Razorpay Order via Google Apps Script (with fallback)
+      // 1. Create official Razorpay Order via Google Apps Script
       var leadPayload = {
         name: nameVal,
         email: emailVal,
@@ -295,30 +293,12 @@
         userAgent: navigator.userAgent
       };
 
-      function requestOrder(targetUrl, allowFallback) {
-        return fetch(targetUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify(leadPayload)
-        })
-        .then(function (res) { return res.json(); })
-        .then(function (result) {
-          if ((!result || !result.success || !result.orderId) && allowFallback && targetUrl !== FALLBACK_APPS_SCRIPT_URL) {
-            console.warn('Script property missing on primary URL, trying verified endpoint fallback:', result);
-            return requestOrder(FALLBACK_APPS_SCRIPT_URL, false);
-          }
-          return result;
-        })
-        .catch(function (err) {
-          if (allowFallback && targetUrl !== FALLBACK_APPS_SCRIPT_URL) {
-            console.warn('Network issue on primary URL, trying verified endpoint fallback:', err);
-            return requestOrder(FALLBACK_APPS_SCRIPT_URL, false);
-          }
-          throw err;
-        });
-      }
-
-      requestOrder(appsScriptUrl, true)
+      fetch(appsScriptUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(leadPayload)
+      })
+      .then(function (res) { return res.json(); })
       .then(function (result) {
         if (!result || !result.success || !result.orderId) {
           alert('Payment initiation failed: ' + ((result && result.error) || 'Could not create order. Please try again or contact +91 7558133039'));
@@ -377,7 +357,7 @@
               pageUrl: window.location.href
             });
 
-            // Send payment confirmation back to Google Apps Script endpoints
+            // Send payment confirmation back to Google Apps Script
             fetch(appsScriptUrl, {
               method: 'POST',
               headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -385,16 +365,6 @@
             }).catch(function (e) {
               console.warn('Apps script notification notice:', e);
             });
-
-            if (appsScriptUrl !== FALLBACK_APPS_SCRIPT_URL) {
-              fetch(FALLBACK_APPS_SCRIPT_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                body: successPayload
-              }).catch(function (e) {
-                console.warn('Payment logging notice:', e);
-              });
-            }
 
             // Close modal and show success screen
             closeRegisterModal();
