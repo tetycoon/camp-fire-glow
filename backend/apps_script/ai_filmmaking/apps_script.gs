@@ -908,68 +908,124 @@ function sendMasterclassEmail(email, name, sessionDate, sessionTime, totalAmount
     writeToLogs("PDF_GEN_ERROR", pdfErr.message);
   }
 
-  if (isNotificationSuppressed() || isAuthorizedLiveTest(email, totalAmount || 99)) {
+  if (isNotificationSuppressed()) {
     return { invoiceNumber: fdInvoiceNo, courseTitle: courseTitle, suppressed: true };
   }
 
-  const subject = `🎬 Registration Confirmed & GST Invoice: ${courseTitle} — ${dateVal}`;
+  const subject = `Thank You for Registering! 🎬 3-Hours AI Filmmaking Live Webinar Confirmation`;
 
   const htmlBody = `<!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thank You for Registering</title>
 </head>
-<body style="margin:0;padding:0;background-color:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f8fafc;padding:40px 16px;">
+<body style="margin:0;padding:0;background-color:#f1f5f9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#0f172a;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f1f5f9;padding:32px 16px;">
     <tr>
       <td align="center">
-        <table width="600" style="max-width:600px;width:100%;background-color:#ffffff;border:1px solid #e2e8f0;border-radius:24px;overflow:hidden;box-shadow:0 10px 15px -3px rgba(0,0,0,0.05);">
+        <table width="600" style="max-width:600px;width:100%;background-color:#ffffff;border:1px solid #e2e8f0;border-radius:24px;overflow:hidden;box-shadow:0 10px 25px -5px rgba(0,0,0,0.06);">
+          <!-- Header Banner -->
           <tr>
-            <td style="background:linear-gradient(135deg,#7c3aed,#06b6d4);padding:40px 32px;text-align:center;">
-              <div style="font-size:48px;margin-bottom:16px;">🎬</div>
-              <h1 style="font-size:26px;font-weight:800;color:#ffffff;margin:0;letter-spacing:-0.025em;line-height:1.25;">${courseTitle}</h1>
-              <p style="color:rgba(255,255,255,0.9);font-size:13px;letter-spacing:0.18em;margin:8px 0 0;text-transform:uppercase;font-weight:700;">Every Sunday • 10:00 AM – 1:00 PM IST</p>
+            <td style="background:linear-gradient(135deg,#1e3a8a,#2563eb,#06b6d4);padding:40px 32px;text-align:center;">
+              <div style="font-size:44px;margin-bottom:12px;">🎬</div>
+              <h1 style="font-size:24px;font-weight:900;color:#ffffff;margin:0 0 6px;letter-spacing:-0.02em;line-height:1.3;">
+                Thank You for Registering!
+              </h1>
+              <p style="color:rgba(255,255,255,0.92);font-size:13px;letter-spacing:0.12em;margin:0;text-transform:uppercase;font-weight:700;">
+                3-Hours AI Filmmaking &amp; Video Generation Live Webinar
+              </p>
             </td>
           </tr>
+
+          <!-- Main Body -->
           <tr>
-            <td style="padding:40px 36px;">
-              <h2 style="color:#0f172a;font-size:22px;margin:0 0 12px;font-weight:800;">Welcome, ${name}!</h2>
-              <p style="color:#475569;font-size:15px;line-height:1.6;margin:0 0 24px;">
-                Your seat is officially confirmed for the <strong>3-Hours Basic & Foundation AI Filmmaking Live Webinar</strong> (covering <strong>3D AI Logo Animation, AI Avatar Creation & Cinematic AI Video Generation</strong>). Your official <strong>GST Tax Invoice (PDF)</strong> is attached to this email!
+            <td style="padding:36px 32px;">
+              <h2 style="color:#0f172a;font-size:20px;margin:0 0 12px;font-weight:800;">
+                Hi ${name || "Creator"},
+              </h2>
+              <p style="color:#334155;font-size:15px;line-height:1.65;margin:0 0 24px;">
+                Thank you for registering for the <strong>3-Hours AI Filmmaking &amp; Video Generation Live Webinar</strong> (Basic &amp; Foundation Session)! Your seat has been successfully reserved.
               </p>
-              ${isPdfMaterial ? `
-              <div style="background-color:#fef3c7;border:1px solid #f59e0b;border-radius:14px;padding:18px 20px;margin-bottom:24px;">
-                <h4 style="color:#92400e;font-size:14px;margin:0 0 6px;font-weight:700;">📑 Official Session PDF & Material (+₹400 Bundle) Unlocked!</h4>
-                <p style="color:#b45309;font-size:13px;line-height:1.5;margin:0;">
-                  You have unlocked the complete AI Filmmaking Prompt Book (150+ 3D Logo Animation & Video Generation Prompts), Avatar Lip-Sync Blueprints, and Tool Stack PDF.
-                </p>
-              </div>` : ''}
-              <table width="100%" style="background-color:#f1f5f9;border:1px solid #e2e8f0;border-radius:16px;margin-bottom:32px;">
+
+              <!-- Session Date & Time Box -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f8fafc;border:1px solid #e2e8f0;border-radius:16px;margin-bottom:28px;overflow:hidden;">
                 <tr>
-                  <td style="padding:16px 20px;border-bottom:1px solid #e2e8f0;font-size:14px;color:#64748b;">📅 Date</td>
-                  <td style="padding:16px 20px;border-bottom:1px solid #e2e8f0;font-size:14px;color:#0f172a;font-weight:700;">${dateVal}</td>
+                  <td style="padding:14px 20px;border-bottom:1px solid #e2e8f0;font-size:13px;color:#64748b;font-weight:600;width:35%;">
+                    📅 Session Date
+                  </td>
+                  <td style="padding:14px 20px;border-bottom:1px solid #e2e8f0;font-size:14px;color:#0f172a;font-weight:800;">
+                    ${dateVal}
+                  </td>
                 </tr>
                 <tr>
-                  <td style="padding:16px 20px;border-bottom:1px solid #e2e8f0;font-size:14px;color:#64748b;">🕒 Time</td>
-                  <td style="padding:16px 20px;border-bottom:1px solid #e2e8f0;font-size:14px;color:#0f172a;font-weight:700;">${timeVal}</td>
+                  <td style="padding:14px 20px;border-bottom:1px solid #e2e8f0;font-size:13px;color:#64748b;font-weight:600;">
+                    ⏰ Session Time
+                  </td>
+                  <td style="padding:14px 20px;border-bottom:1px solid #e2e8f0;font-size:14px;color:#0f172a;font-weight:800;">
+                    ${timeVal}
+                  </td>
                 </tr>
                 <tr>
-                  <td style="padding:16px 20px;font-size:14px;color:#64748b;">📍 Platform</td>
-                  <td style="padding:16px 20px;font-size:14px;color:#7c3aed;font-weight:700;">${platformText}</td>
-                </tr>
-              </table>
-              <table width="100%" cellpadding="0" cellspacing="0">
-                <tr>
-                  <td align="center" style="padding-bottom:32px;">
-                    <a href="${waGroupLink}" target="_blank" style="display:inline-block;background-color:#22c55e;color:#ffffff;text-decoration:none;padding:16px 36px;border-radius:100px;font-size:16px;font-weight:700;box-shadow:0 4px 6px -1px rgba(34,197,94,0.3);">
-                      📱 Join Official WhatsApp Group
-                    </a>
+                  <td style="padding:14px 20px;font-size:13px;color:#64748b;font-weight:600;">
+                    📍 Platform
+                  </td>
+                  <td style="padding:14px 20px;font-size:13px;color:#2563eb;font-weight:700;">
+                    Live Online Interactive Studio (Classroom link shared inside the WhatsApp Community)
                   </td>
                 </tr>
               </table>
-              <p style="color:#94a3b8;font-size:12px;text-align:center;margin:24px 0 0;line-height:1.5;">
-                Need help? Call or WhatsApp us at +91 63792 09689 / +91 7558133039 or email <a href="mailto:support@techtycoon.in" style="color:#7c3aed;">support@techtycoon.in</a>
+
+              <!-- WhatsApp Community CTA Card -->
+              <div style="background:linear-gradient(135deg,#ecfdf5,#d1fae5);border:1.5px solid #10b981;border-radius:18px;padding:24px 20px;margin-bottom:28px;text-align:center;">
+                <p style="color:#047857;font-size:11px;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;margin:0 0 6px;">
+                  ⚡ Action Required — Next Step
+                </p>
+                <h3 style="color:#064e3b;font-size:18px;font-weight:800;margin:0 0 8px;">
+                  Join the Official Webinar WhatsApp Community
+                </h3>
+                <p style="color:#065f46;font-size:13px;line-height:1.55;margin:0 0 18px;">
+                  All live webinar classroom links, Sunday morning reminders, and session materials will be shared directly inside the WhatsApp group.
+                </p>
+                <a href="${waGroupLink}" target="_blank" style="display:inline-block;background-color:#10b981;color:#ffffff;text-decoration:none;padding:14px 32px;border-radius:100px;font-size:15px;font-weight:800;box-shadow:0 4px 12px rgba(16,185,129,0.35);">
+                  👉 Click Here to Join WhatsApp Group
+                </a>
+                <p style="color:#047857;font-size:12px;margin:12px 0 0;word-break:break-all;">
+                  Direct link: <a href="${waGroupLink}" target="_blank" style="color:#047857;font-weight:600;">${waGroupLink}</a>
+                </p>
+              </div>
+
+              <!-- GST Tax Invoice Download Card -->
+              <div style="background-color:#f8fafc;border:1.5px solid #cbd5e1;border-radius:18px;padding:22px 20px;margin-bottom:24px;">
+                <div style="display:flex;align-items:center;margin-bottom:8px;">
+                  <h4 style="color:#0f172a;font-size:15px;font-weight:800;margin:0;">
+                    📄 Official GST Tax Invoice Attached
+                  </h4>
+                </div>
+                <p style="color:#475569;font-size:13px;line-height:1.6;margin:0 0 10px;">
+                  Your official 100% GST-compliant tax invoice (Invoice No: <strong style="color:#0f172a;">${fdInvoiceNo}</strong>) for your registration payment of <strong style="color:#059669;">₹${totalAmount || 99} INR</strong> has been generated and attached as a PDF to this email.
+                </p>
+                <p style="color:#64748b;font-size:12px;line-height:1.5;margin:0;">
+                  📥 <strong>Download Option:</strong> Scroll to the bottom of this email to preview, download, or print your official PDF invoice.
+                </p>
+              </div>
+
+              ${isPdfMaterial ? `
+              <!-- Resource ToolKit Bonus Card -->
+              <div style="background-color:#fef3c7;border:1px solid #f59e0b;border-radius:14px;padding:16px 18px;margin-bottom:24px;">
+                <h4 style="color:#92400e;font-size:14px;margin:0 0 6px;font-weight:700;">🎁 Resource ToolKit Worth ₹10,000 Unlocked!</h4>
+                <p style="color:#b45309;font-size:12.5px;line-height:1.5;margin:0;">
+                  You have added the Resource ToolKit (150+ 3D Logo &amp; AI Video Prompts PDF, 100+ AI Skills, and Content Creation Prompts). Access will be distributed during the live webinar.
+                </p>
+              </div>` : ''}
+
+              <!-- Support & Footer -->
+              <hr style="border:none;border-top:1px solid #e2e8f0;margin:28px 0 20px;">
+              <p style="color:#94a3b8;font-size:12px;text-align:center;margin:0;line-height:1.6;">
+                TECH TYCOON DIGITAL SOLUTION LLP • Madipakkam, Chennai, Tamil Nadu - 600091<br>
+                Need assistance? Call/WhatsApp: <strong style="color:#475569;">+91 63792 09689</strong> / <strong style="color:#475569;">+91 7558133039</strong><br>
+                Email: <a href="mailto:support@techtycoon.in" style="color:#2563eb;text-decoration:none;">support@techtycoon.in</a>
               </p>
             </td>
           </tr>
@@ -1342,7 +1398,7 @@ function processVerifiedFilmmakingPayment(orderId, paymentId, isInternational, c
     try {
       emailResult = sendMasterclassEmail(email, name, sessionDate, sessionTime, expectedAmountInr, cleanPaymentId, cleanOrderId, phoneClean, modeOrLang) || emailResult;
       triggerWhatsAppCampaign(name, email, phoneClean, sessionDate, sessionTime);
-      createCalendarInvite(email, name, sessionDate, sessionTime);
+      // Calendar invite intentionally omitted to avoid Google Meet attachments
     } catch (err) {
       writeToLogs("EMAIL_OR_WA_ERROR", "Failed email/wa to " + email + ": " + err.message);
     }
@@ -1350,7 +1406,7 @@ function processVerifiedFilmmakingPayment(orderId, paymentId, isInternational, c
     const isTestTx = isAuthorizedLiveTest(email, expectedAmountInr);
     sheet.getRange(targetRowIndex + 1, layout.status + 1).setValue(isTestTx ? "✅ TEST_VERIFIED (₹1)" : "✅ PAID");
     sheet.getRange(targetRowIndex + 1, layout.paymentId + 1).setValue(sanitizeCell(cleanPaymentId));
-    sheet.getRange(targetRowIndex + 1, layout.emailStatus + 1).setValue(isTestTx ? "TEST_SUPPRESSED" : "SENT ✅");
+    sheet.getRange(targetRowIndex + 1, layout.emailStatus + 1).setValue("SENT ✅");
     SpreadsheetApp.flush();
 
     if (props && cleanPaymentId) {
@@ -1458,31 +1514,8 @@ function triggerWhatsAppCampaign(contactName, contactEmail, contactPhone, sessio
 }
 
 function createCalendarInvite(email, name, sessionDate, sessionTime) {
-  if (isNotificationSuppressed()) return null;
-  try {
-    const startTime = getNextSundaySession(new Date());
-    startTime.setHours(10, 0, 0, 0);
-    const endTime = new Date(startTime.getTime() + 3 * 60 * 60 * 1000); // 10:00 AM to 1:00 PM IST (3 Hours)
-
-    const title = "🎬 Confirmed: 3-Hours AI Filmmaking & Video Generation Live Webinar";
-    const description = `Hi ${name},\n\nYour seat is confirmed for the 3-Hours AI Filmmaking & Video Generation Live Webinar (Basic & Foundation Session).\n\n` +
-      `📅 Date: ${startTime.toDateString()} (Sunday Morning)\n` +
-      `🕒 Time: 10:00 AM – 1:00 PM IST (3 Hours)\n` +
-      `📚 Modules: 1. AI Logo Animation | 2. AI Avatar Creation | 3. AI Video Generation\n` +
-      `📍 Platform: Online Live Studio (Link will be shared in the WhatsApp group)\n\n` +
-      `Join the WhatsApp community:\n${WHATSAPP_CONFIG.WA_GROUP_LINK}\n\n` +
-      `Support: +91 63792 09689\nTech Tycoon Team`;
-
-    const calendar = CalendarApp.getDefaultCalendar();
-    calendar.createEvent(title, startTime, endTime, {
-      description: description,
-      location: "Online Live Studio (Link in WhatsApp Group)",
-      guests: email,
-      sendInvites: true
-    });
-  } catch (err) {
-    writeToLogs("CALENDAR_ERROR", err.message);
-  }
+  // Disabled as per user request to prevent Google Meet attachments in learner emails
+  return null;
 }
 
 function markWhatsappClicked(orderId, phone) {
