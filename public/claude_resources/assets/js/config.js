@@ -21,7 +21,7 @@ window.SITE_CONFIG = {
   couponDiscount: 500,
 
   // Google Apps Script endpoint for logging registrations & leads
-  appsScriptUrl: 'https://script.google.com/macros/s/AKfycbw59X8thSpB9xrJSI0GhACEm617vAbc7BDH6hJFOOBsOeq-B4az0p3B_O6koMjYfsppgA/exec',
+  appsScriptUrl: 'https://script.google.com/macros/s/AKfycbzeQMzCoZPEhQerWG7nXH1k5l7t2StVkjubTIvoqUjvEQJW3Sh_dSS6dkgARGbpHnobkQ/exec',
 
   // Live Razorpay Key IDs
   razorpayKeyIn: 'rzp_live_T2CbVONQc6qrqj',

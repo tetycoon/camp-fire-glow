@@ -12,7 +12,7 @@
   'use strict';
 
   var C = window.SITE_CONFIG || {};
-  var appsScriptUrl = C.appsScriptUrl || 'https://script.google.com/macros/s/AKfycbw59X8thSpB9xrJSI0GhACEm617vAbc7BDH6hJFOOBsOeq-B4az0p3B_O6koMjYfsppgA/exec';
+  var appsScriptUrl = C.appsScriptUrl || 'https://script.google.com/macros/s/AKfycbzeQMzCoZPEhQerWG7nXH1k5l7t2StVkjubTIvoqUjvEQJW3Sh_dSS6dkgARGbpHnobkQ/exec';
 
   var ORIGINAL_PRICE = C.originalPrice || 999;
   var DISCOUNTED_PRICE = C.price || 499;
