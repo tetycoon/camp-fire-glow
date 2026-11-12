@@ -1488,22 +1488,6 @@ const AiFilmmakingPage: React.FC = () => {
                       <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0" />
                       <span>Full 3-Hour Live Interactive Sunday Session (10 AM – 1 PM)</span>
                     </li>
-                    <li className="flex items-center gap-2.5">
-                      <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0" />
-                      <span>Module 1: 3D AI Logo Animation &amp; Brand Idents</span>
-                    </li>
-                    <li className="flex items-center gap-2.5">
-                      <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0" />
-                      <span>Module 2: Hyper-Realistic AI Avatar Creation &amp; Lip-Sync</span>
-                    </li>
-                    <li className="flex items-center gap-2.5">
-                      <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0" />
-                      <span>Module 3: Cinematic AI Video Generation Foundation</span>
-                    </li>
-                    <li className="flex items-center gap-2.5">
-                      <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0" />
-                      <span>Official Participation Certificate &amp; GST Tax Invoice</span>
-                    </li>
                   </ul>
                 </div>
 
@@ -1553,27 +1537,15 @@ const AiFilmmakingPage: React.FC = () => {
                     </li>
                     <li className="flex items-center gap-2.5">
                       <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
-                      <span>
-                        <strong>+150 Copy-Paste 3D Logo &amp; Video Prompts PDF</strong> (Ready to use)
-                      </span>
+                      <span>1. Session PDF Material</span>
                     </li>
                     <li className="flex items-center gap-2.5">
                       <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
-                      <span>
-                        <strong>+Step-by-Step AI Avatar &amp; Lip-Sync Workflow Handbook</strong>
-                      </span>
+                      <span>2. 100+ AI Skills</span>
                     </li>
                     <li className="flex items-center gap-2.5">
                       <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
-                      <span>
-                        <strong>+3D Camera Motion &amp; Lighting Cheat Sheet PDF</strong>
-                      </span>
-                    </li>
-                    <li className="flex items-center gap-2.5">
-                      <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
-                      <span>
-                        <strong>+Curated AI Filmmaking Tool Stack &amp; Commercial Guide</strong>
-                      </span>
+                      <span>3. Content Creation Prompts</span>
                     </li>
                   </ul>
                 </div>

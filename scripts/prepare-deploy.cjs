@@ -124,6 +124,7 @@ if (fs.existsSync(claudeSrcDir)) {
 
 
 
+
 // Inject developer cinematic layer right before </head> (after Vite's main CSS) into filmmaking routes & root SPA fallback
 const filmmakingHtmlTargets = [
   path.join('dist', 'index.html'),
