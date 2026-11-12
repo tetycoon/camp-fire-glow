@@ -548,8 +548,8 @@ svg { width: 1em; height: 1em; flex: none; }
 
 /* ---- Register Now Modal ------------------------------------------- */
 .reg-dialog {
-  width: min(92vw, 480px);
-  padding: 28px 24px 24px;
+  width: min(92vw, 440px);
+  padding: 16px 20px 14px;
   border-radius: var(--radius);
   border: 1px solid var(--line-strong);
   background: var(--surface);
@@ -561,7 +561,7 @@ svg { width: 1em; height: 1em; flex: none; }
   transform: translate(-50%, -50%);
   margin: 0;
   overflow-y: auto;
-  max-height: 90vh;
+  max-height: 94vh;
   z-index: 9999;
 }
 .reg-dialog::backdrop {
@@ -570,15 +570,15 @@ svg { width: 1em; height: 1em; flex: none; }
 }
 .reg-dialog-close {
   position: absolute;
-  top: 14px;
-  right: 14px;
-  width: 32px;
-  height: 32px;
+  top: 10px;
+  right: 10px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   border: 1px solid var(--line);
   background: var(--surface-2);
   color: var(--text-dim);
-  font-size: 15px;
+  font-size: 13px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -592,7 +592,7 @@ svg { width: 1em; height: 1em; flex: none; }
 }
 .reg-header {
   text-align: center;
-  margin-bottom: 18px;
+  margin-bottom: 8px;
 }
 .reg-badge {
   display: inline-block;
@@ -600,23 +600,23 @@ svg { width: 1em; height: 1em; flex: none; }
   color: var(--accent);
   border: 1px solid rgba(255, 122, 71, 0.35);
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.08em;
-  padding: 3px 10px;
+  padding: 2px 8px;
   border-radius: 20px;
-  margin-bottom: 8px;
+  margin-bottom: 3px;
 }
 .reg-title {
-  font-size: 22px;
+  font-size: 18px;
   font-weight: 700;
   color: var(--text);
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 .reg-subtitle {
-  font-size: 13.5px;
+  font-size: 11.5px;
   color: var(--text-muted);
-  line-height: 1.45;
+  line-height: 1.35;
 }
 
 /* Price card */
@@ -624,56 +624,56 @@ svg { width: 1em; height: 1em; flex: none; }
   background: var(--surface-2);
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
-  padding: 12px 14px;
-  margin-bottom: 16px;
+  padding: 7px 11px;
+  margin-bottom: 8px;
 }
 .reg-price-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 13.5px;
-  margin-bottom: 5px;
+  font-size: 12px;
+  margin-bottom: 2px;
 }
 .reg-price-label { color: var(--text-muted); }
-.reg-price-orig { color: var(--text-dim); font-size: 13px; }
-.reg-price-discount { color: #22c55e; font-weight: 600; font-family: var(--font-mono); }
+.reg-price-orig { color: var(--text-dim); font-size: 11.5px; }
+.reg-price-discount { color: #22c55e; font-weight: 600; font-family: var(--font-mono); font-size: 12px; }
 .reg-price-divider {
   height: 1px;
   background: var(--line);
-  margin: 6px 0 8px;
+  margin: 4px 0 5px;
 }
 .reg-price-total {
-  font-size: 14.5px;
+  font-size: 13.5px;
   font-weight: 700;
   color: var(--text);
   margin-bottom: 0;
 }
 .reg-final-price {
-  font-size: 24px;
+  font-size: 18px;
   font-weight: 800;
   color: var(--accent);
   font-family: var(--font-display);
 }
 
 /* Form inputs */
-.reg-form { display: flex; flex-direction: column; gap: 12px; text-align: left; }
-.form-group { display: flex; flex-direction: column; gap: 5px; }
+.reg-form { display: flex; flex-direction: column; gap: 7px; text-align: left; }
+.form-group { display: flex; flex-direction: column; gap: 2px; }
 .form-group label {
-  font-size: 12.5px;
+  font-size: 11.5px;
   font-weight: 600;
   color: var(--text);
 }
-.form-group label small { color: var(--text-dim); font-weight: normal; font-size: 11px; }
+.form-group label small { color: var(--text-dim); font-weight: normal; font-size: 10px; }
 .form-group .req { color: var(--accent); }
 .form-group input, .form-group select {
   width: 100%;
-  padding: 10px 12px;
+  padding: 6px 10px;
   border-radius: var(--radius-sm);
   border: 1px solid var(--line-strong);
   background: #0B0A09;
   color: var(--text);
   font-family: var(--font-body);
-  font-size: 14px;
+  font-size: 13px;
   outline: none;
   transition: border-color .2s;
 }
@@ -681,36 +681,48 @@ svg { width: 1em; height: 1em; flex: none; }
   border-color: var(--accent);
   box-shadow: 0 0 0 2px rgba(255, 122, 71, 0.2);
 }
-.form-group input::placeholder { color: #666; font-size: 13px; }
-.form-error { color: #f87171; font-size: 11.5px; min-height: 14px; margin-top: 1px; }
+.form-group input::placeholder { color: #666; font-size: 12px; }
+.form-error {
+  color: #f87171;
+  font-size: 11px;
+  margin-top: 1px;
+}
+.form-error:empty { display: none; }
 
 .phone-input-wrap {
   display: flex;
-  gap: 8px;
+  gap: 6px;
 }
 .phone-input-wrap select {
-  width: 100px;
+  width: 90px;
   flex: none;
-  font-size: 13px;
+  font-size: 12px;
+  padding: 6px 6px;
   cursor: pointer;
 }
 .phone-input-wrap input { flex: 1; }
 
 .coupon-input-wrap {
   display: flex;
-  gap: 8px;
+  gap: 6px;
 }
 .coupon-input-wrap input {
   flex: 1;
   font-family: var(--font-mono);
   font-weight: 600;
   letter-spacing: 0.05em;
+  padding: 5px 8px;
+  font-size: 12px;
+}
+.coupon-input-wrap button {
+  padding: 4px 10px;
+  font-size: 11.5px;
 }
 .coupon-msg {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
-  margin-top: 2px;
-  padding: 3px 8px;
+  margin-top: 1px;
+  padding: 2px 6px;
   border-radius: 4px;
   display: none;
 }
@@ -732,18 +744,83 @@ svg { width: 1em; height: 1em; flex: none; }
   color: var(--text-dim);
 }
 
-.btn-pay {
-  margin-top: 4px;
-  font-size: 15.5px;
+/* Optional Add-on Checkbox Card */
+.addon-card {
+  background: linear-gradient(180deg, rgba(255, 122, 71, 0.08), rgba(255, 122, 71, 0.03));
+  border: 1px dashed rgba(255, 122, 71, 0.45);
+  border-radius: var(--radius-sm);
+  padding: 7px 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 2px;
+}
+.addon-card:hover {
+  border-color: var(--accent);
+  background: rgba(255, 122, 71, 0.12);
+}
+.addon-card.is-selected {
+  background: rgba(255, 122, 71, 0.18);
+  border: 1px solid var(--accent);
+  box-shadow: 0 0 10px rgba(255, 122, 71, 0.25);
+}
+.addon-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  cursor: pointer;
+}
+.addon-checkbox {
+  margin-top: 2px;
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.addon-info {
+  flex: 1;
+}
+.addon-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+.addon-title {
+  font-size: 12px;
   font-weight: 700;
-  padding: 13px;
+  color: #fff;
+}
+.addon-price-badge {
+  background: var(--accent);
+  color: #111;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 11px;
+  padding: 1px 6px;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+.addon-desc {
+  font-size: 10.5px;
+  color: var(--text-muted);
+  line-height: 1.3;
+  margin-top: 2px;
+}
+
+.btn-pay {
+  margin-top: 3px;
+  font-size: 14.5px;
+  font-weight: 700;
+  padding: 9px;
   cursor: pointer;
 }
 .reg-security-note {
-  font-size: 11px;
+  font-size: 10px;
   color: var(--text-dim);
   text-align: center;
   margin-top: 2px;
+  margin-bottom: 0;
 }
 
 @media (prefers-reduced-motion: reduce) {

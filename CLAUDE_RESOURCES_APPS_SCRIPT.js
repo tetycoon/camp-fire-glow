@@ -29,6 +29,7 @@ const HEADERS = [
   "Coupon Code",
   "Original Price (₹)",
   "Discount (₹)",
+  "ChatGPT Hacks Addon",
   "Final Amount (₹)",
   "Payment Status",
   "Payment ID",
@@ -96,6 +97,7 @@ function doPost(e) {
     const coupon = String(data.coupon || "NONE").trim().toUpperCase();
     const originalPrice = Number(data.originalPrice || data.originalAmount || 999);
     const discount = Number(data.discount || (coupon === "AMIABLE" ? 500 : 0));
+    const addon = String(data.addon || "No").trim();
     const finalAmount = Number(data.amount || data.finalAmount || (coupon === "AMIABLE" ? 499 : 999));
     const status = String(data.status || (action === "payment_success" ? "PAID" : "INITIATED")).toUpperCase();
     const paymentId = String(data.paymentId || data.transactionId || "").trim();
@@ -113,13 +115,13 @@ function doPost(e) {
       for (let i = values.length - 1; i >= 0; i--) {
         const rowEmail = String(values[i][2] || "").trim().toLowerCase();
         const rowPhone = String(values[i][3] || "").trim();
-        const rowStatus = String(values[i][8] || "").toUpperCase();
+        const rowStatus = String(values[i][9] || values[i][8] || "").toUpperCase();
 
         if ((rowEmail === email || (phone && rowPhone === phone)) && rowStatus !== "PAID") {
           const targetRowIndex = startRow + i;
-          sheet.getRange(targetRowIndex, 9).setValue("PAID"); // Payment Status
-          sheet.getRange(targetRowIndex, 10).setValue(paymentId); // Payment ID
-          if (orderId) sheet.getRange(targetRowIndex, 11).setValue(orderId);
+          sheet.getRange(targetRowIndex, 10).setValue("PAID"); // Payment Status
+          sheet.getRange(targetRowIndex, 11).setValue(paymentId); // Payment ID
+          if (orderId) sheet.getRange(targetRowIndex, 12).setValue(orderId);
           updated = true;
           break;
         }
@@ -136,6 +138,7 @@ function doPost(e) {
         coupon,
         originalPrice,
         discount,
+        addon,
         finalAmount,
         status,
         paymentId,

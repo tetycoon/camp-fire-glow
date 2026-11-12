@@ -502,6 +502,10 @@
         <span class="reg-price-label" id="reg-discount-label">Coupon Discount (AMIABLE):</span>
         <span class="reg-price-discount" id="reg-discount-amount">-₹500</span>
       </div>
+      <div class="reg-price-row" id="reg-addon-row" style="display: none;">
+        <span class="reg-price-label">ChatGPT Hacks Add-on:</span>
+        <span class="reg-price-addon" style="color: var(--accent); font-weight: 600; font-family: var(--font-mono); font-size: 12px;">+₹400</span>
+      </div>
       <div class="reg-price-divider"></div>
       <div class="reg-price-row reg-price-total">
         <span>Total Payable:</span>
@@ -547,6 +551,20 @@
           <button type="button" id="reg-coupon-btn" class="btn btn-outline btn-sm">Apply</button>
         </div>
         <div id="reg-coupon-msg" class="coupon-msg success is-visible">✓ Coupon 'AMIABLE' active: ₹500 OFF (You pay ₹499)</div>
+      </div>
+
+      <!-- Optional ChatGPT Hacks Add-on -->
+      <div class="addon-card" id="addon-chatgpt-card">
+        <label class="addon-label" for="reg-addon-chatgpt">
+          <input type="checkbox" id="reg-addon-chatgpt" name="addon_chatgpt" value="400" class="addon-checkbox">
+          <div class="addon-info">
+            <div class="addon-header-row">
+              <span class="addon-title">I want ChatGPT Hacks</span>
+              <span class="addon-price-badge">+₹400</span>
+            </div>
+            <p class="addon-desc">Includes ChatGPT Secret Hacks, ChatGPT Prompting Hacks &amp; Bonus Free Gift</p>
+          </div>
+        </label>
       </div>
 
       <button type="submit" id="reg-submit-btn" class="btn btn-primary btn-block btn-pay">

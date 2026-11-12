@@ -18,6 +18,7 @@
   var DISCOUNTED_PRICE = C.price || 499;
   var COUPON_DISCOUNT = C.couponDiscount || (ORIGINAL_PRICE - DISCOUNTED_PRICE);
   var VALID_COUPON = (C.couponCode || 'AMIABLE').toUpperCase();
+  var CHATGPT_ADDON_PRICE = 400;
 
   var currentPayable = DISCOUNTED_PRICE;
   var currentCouponApplied = true;
@@ -34,6 +35,9 @@
   var regCouponMsg = document.getElementById('reg-coupon-msg');
   var regDiscountRow = document.getElementById('reg-discount-row');
   var regDiscountAmount = document.getElementById('reg-discount-amount');
+  var regAddonRow = document.getElementById('reg-addon-row');
+  var regAddonChatgpt = document.getElementById('reg-addon-chatgpt');
+  var addonChatgptCard = document.getElementById('addon-chatgpt-card');
   var regFinalPrice = document.getElementById('reg-final-price');
   var btnPriceDisplay = document.getElementById('btn-price-display');
   var regSubmitBtn = document.getElementById('reg-submit-btn');
@@ -53,62 +57,78 @@
 
   var ICONS = { success: 'i-check', failed: 'i-alert', pending: 'i-once', cancelled: 'i-once' };
 
-  // ---- Coupon Evaluation Logic ---------------------------------------------
-  function evaluateCoupon() {
-    if (!regCoupon) return;
-    var entered = regCoupon.value.trim().toUpperCase();
+  // ---- Price & Coupon Evaluation Logic ---------------------------------------------
+  function evaluatePrice() {
+    var basePrice = ORIGINAL_PRICE;
+    var entered = regCoupon ? regCoupon.value.trim().toUpperCase() : '';
 
     if (entered === VALID_COUPON) {
-      currentPayable = DISCOUNTED_PRICE;
+      basePrice = DISCOUNTED_PRICE;
       currentCouponApplied = true;
       if (regDiscountRow) regDiscountRow.style.display = 'flex';
       if (regDiscountAmount) regDiscountAmount.textContent = '-₹' + COUPON_DISCOUNT;
-      if (regFinalPrice) regFinalPrice.textContent = '₹' + currentPayable;
-      if (btnPriceDisplay) btnPriceDisplay.textContent = '₹' + currentPayable;
       if (regCouponMsg) {
         regCouponMsg.className = 'coupon-msg success is-visible';
-        regCouponMsg.textContent = "✓ Coupon '" + VALID_COUPON + "' active: ₹" + COUPON_DISCOUNT + " OFF (You pay ₹" + currentPayable + ")";
+        regCouponMsg.textContent = "✓ Coupon '" + VALID_COUPON + "' active: ₹" + COUPON_DISCOUNT + " OFF";
       }
     } else if (entered === '') {
-      currentPayable = ORIGINAL_PRICE;
+      basePrice = ORIGINAL_PRICE;
       currentCouponApplied = false;
       if (regDiscountRow) regDiscountRow.style.display = 'none';
-      if (regFinalPrice) regFinalPrice.textContent = '₹' + currentPayable;
-      if (btnPriceDisplay) btnPriceDisplay.textContent = '₹' + currentPayable;
       if (regCouponMsg) {
         regCouponMsg.className = 'coupon-msg neutral is-visible';
-        regCouponMsg.textContent = "No coupon applied. Standard price is ₹" + ORIGINAL_PRICE + ". Use 'AMIABLE' for ₹" + COUPON_DISCOUNT + " OFF.";
+        regCouponMsg.textContent = "Standard price is ₹" + ORIGINAL_PRICE + ". Use 'AMIABLE' for ₹" + COUPON_DISCOUNT + " OFF.";
       }
     } else {
-      currentPayable = ORIGINAL_PRICE;
+      basePrice = ORIGINAL_PRICE;
       currentCouponApplied = false;
       if (regDiscountRow) regDiscountRow.style.display = 'none';
-      if (regFinalPrice) regFinalPrice.textContent = '₹' + currentPayable;
-      if (btnPriceDisplay) btnPriceDisplay.textContent = '₹' + currentPayable;
       if (regCouponMsg) {
         regCouponMsg.className = 'coupon-msg error is-visible';
-        regCouponMsg.textContent = "✕ Invalid coupon code. Enter '" + VALID_COUPON + "' to save ₹" + COUPON_DISCOUNT + ".";
+        regCouponMsg.textContent = "✕ Invalid coupon. Enter '" + VALID_COUPON + "' to save ₹" + COUPON_DISCOUNT + ".";
       }
     }
+
+    var isAddonChecked = regAddonChatgpt && regAddonChatgpt.checked;
+    var addonCost = isAddonChecked ? CHATGPT_ADDON_PRICE : 0;
+    currentPayable = basePrice + addonCost;
+
+    if (regAddonRow) {
+      regAddonRow.style.display = isAddonChecked ? 'flex' : 'none';
+    }
+    if (addonChatgptCard) {
+      if (isAddonChecked) {
+        addonChatgptCard.classList.add('is-selected');
+      } else {
+        addonChatgptCard.classList.remove('is-selected');
+      }
+    }
+
+    if (regFinalPrice) regFinalPrice.textContent = '₹' + currentPayable;
+    if (btnPriceDisplay) btnPriceDisplay.textContent = '₹' + currentPayable;
   }
 
   if (regCouponBtn) {
     regCouponBtn.addEventListener('click', function (e) {
       e.preventDefault();
-      evaluateCoupon();
+      evaluatePrice();
     });
   }
 
   if (regCoupon) {
-    regCoupon.addEventListener('input', evaluateCoupon);
-    regCoupon.addEventListener('blur', evaluateCoupon);
+    regCoupon.addEventListener('input', evaluatePrice);
+    regCoupon.addEventListener('blur', evaluatePrice);
+  }
+
+  if (regAddonChatgpt) {
+    regAddonChatgpt.addEventListener('change', evaluatePrice);
   }
 
   // ---- Open & Close Modal --------------------------------------------------
   window.openRegisterModal = function () {
     if (!regDialog) return;
     clearErrors();
-    evaluateCoupon();
+    evaluatePrice();
     if (typeof regDialog.showModal === 'function') {
       regDialog.showModal();
     } else {
@@ -238,6 +258,9 @@
       var countryCode = regCountryCode ? regCountryCode.value : '+91';
       var fullPhone = countryCode + ' ' + phoneDigits;
       var appliedCouponText = currentCouponApplied ? VALID_COUPON : (regCoupon.value.trim().toUpperCase() || 'NONE');
+      var isAddonSelected = !!(regAddonChatgpt && regAddonChatgpt.checked);
+      var addonText = isAddonSelected ? 'Yes - ChatGPT Hacks (+₹400)' : 'No';
+      var productName = isAddonSelected ? 'Ultimate Claude Skills + ChatGPT Hacks Bundle' : 'Ultimate Claude Skills';
 
       // Set button to loading
       regSubmitBtn.disabled = true;
@@ -254,9 +277,10 @@
         coupon: appliedCouponText,
         originalPrice: ORIGINAL_PRICE,
         discount: currentCouponApplied ? COUPON_DISCOUNT : 0,
+        addon: addonText,
         amount: currentPayable,
         status: 'INITIATED',
-        product: 'Ultimate Claude Skills',
+        product: productName,
         pageUrl: window.location.href,
         userAgent: navigator.userAgent
       };
@@ -289,7 +313,7 @@
         amount: amountToCharge * 100, // paise
         currency: 'INR',
         name: 'TechTycoon',
-        description: '4,000+ Ultimate Claude Skills Library' + (isTest ? ' (Test Mode)' : ''),
+        description: (isAddonSelected ? 'Claude Skills + ChatGPT Hacks Bundle' : '250+ Ultimate Claude Skills') + (isTest ? ' (Test Mode)' : ''),
         image: 'https://course.techtycoon.in/claude_resources/assets/img/logo-techtycoon.png',
         prefill: {
           name: nameVal,
@@ -299,6 +323,7 @@
         notes: {
           product: 'claude_resources',
           coupon: appliedCouponText,
+          addon: addonText,
           original_price: String(ORIGINAL_PRICE),
           paid_price: String(currentPayable)
         },
@@ -317,12 +342,13 @@
             coupon: appliedCouponText,
             originalPrice: ORIGINAL_PRICE,
             discount: currentCouponApplied ? COUPON_DISCOUNT : 0,
+            addon: addonText,
             amount: currentPayable,
             status: 'PAID',
             paymentId: response.razorpay_payment_id || '',
             orderId: response.razorpay_order_id || '',
             signature: response.razorpay_signature || '',
-            product: 'Ultimate Claude Skills',
+            product: productName,
             pageUrl: window.location.href
           };
 
@@ -342,7 +368,7 @@
           resetSubmitBtn();
 
           showStatusDialog('success', 'Payment Successful!',
-            'Thank you, ' + nameVal + '! Your payment of ₹' + currentPayable + ' is confirmed.\n\nYour instant access link to the 4,000+ Ultimate Claude Skills library & prompt bundles has been sent to ' + emailVal + '.\n\nPlease keep your Payment ID for your records.',
+            'Thank you, ' + nameVal + '! Your payment of ₹' + currentPayable + ' is confirmed.\n\nYour instant access link to the 250+ Ultimate Claude Skills library & prompt bundles' + (isAddonSelected ? ' (including ChatGPT Hacks)' : '') + ' has been sent to ' + emailVal + '.\n\nPlease keep your Payment ID for your records.',
             { paymentId: response.razorpay_payment_id });
         },
         modal: {
