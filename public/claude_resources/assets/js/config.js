@@ -20,8 +20,8 @@ window.SITE_CONFIG = {
   couponCode: 'AMIABLE',
   couponDiscount: 500,
 
-  // Google Apps Script endpoint for logging registrations & leads
-  appsScriptUrl: 'https://script.google.com/macros/s/AKfycbzeQMzCoZPEhQerWG7nXH1k5l7t2StVkjubTIvoqUjvEQJW3Sh_dSS6dkgARGbpHnobkQ/exec',
+  // Google Apps Script endpoint for logging registrations & leads (connected to ai_masterclass automation)
+  appsScriptUrl: 'https://script.google.com/macros/s/AKfycby0fX7tjbOciJbg0Mw1SRMhlazBe4FG1Ko-f5mIFCW6Y7zGKHGZjdUZQKXclfye1FzegA/exec',
 
   // Live Razorpay Key IDs
   razorpayKeyIn: 'rzp_live_T2CbVONQc6qrqj',

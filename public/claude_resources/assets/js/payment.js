@@ -266,128 +266,126 @@
       regSubmitBtn.disabled = true;
       regSubmitBtn.innerHTML = '<span class="pay-spinner" style="width:16px;height:16px;border-width:2px;display:inline-block;vertical-align:middle;margin-right:8px;"></span> Connecting to Payment...';
 
-      // 1. Send registration data to Google Apps Script asynchronously
+      // 1. Create official Razorpay Order via Google Apps Script (ai_masterclass backend)
       var leadPayload = {
-        action: 'registration',
-        date: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
-        timestamp: new Date().toISOString(),
         name: nameVal,
         email: emailVal,
         phone: fullPhone,
-        coupon: appliedCouponText,
-        originalPrice: ORIGINAL_PRICE,
-        discount: currentCouponApplied ? COUPON_DISCOUNT : 0,
-        addon: addonText,
+        countryCode: countryCode,
         amount: currentPayable,
-        status: 'INITIATED',
-        product: productName,
+        coupon: appliedCouponText,
+        addon: addonText,
+        hasPdfMaterial: isAddonSelected ? 'YES' : 'NO',
+        course: isAddonSelected ? '250+ Ultimate Claude Skills + ChatGPT Hacks' : '250+ Ultimate Claude Skills',
+        batch: 'Claude Resources' + (isAddonSelected ? ' (+ ChatGPT Hacks)' : ''),
         pageUrl: window.location.href,
         userAgent: navigator.userAgent
       };
 
-      try {
-        fetch(appsScriptUrl, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify(leadPayload)
-        });
-      } catch (err) {
-        console.warn('Lead logging notice:', err);
-      }
+      fetch(appsScriptUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(leadPayload)
+      })
+      .then(function (res) {
+        return res.json();
+      })
+      .then(function (result) {
+        if (!result || !result.success || !result.orderId) {
+          alert('Payment initiation failed: ' + ((result && result.error) || 'Could not create order. Please try again or contact +91 7558133039'));
+          resetSubmitBtn();
+          return;
+        }
 
-      // 2. Launch Razorpay Checkout
-      if (typeof window.Razorpay !== 'function') {
-        alert('Razorpay payment gateway is still loading. Please check your internet connection and try again.');
-        resetSubmitBtn();
-        return;
-      }
+        // 2. Launch Razorpay Checkout with the official server-side order_id
+        if (typeof window.Razorpay !== 'function') {
+          alert('Razorpay payment gateway is still loading. Please check your internet connection and try again.');
+          resetSubmitBtn();
+          return;
+        }
 
-      var isTest = (emailVal === 'ambroseselva001@gmail.com' || emailVal === 'techtycoondigitalsolutions@gmail.com');
-      var amountToCharge = isTest ? 1 : currentPayable;
-      var isIntl = countryCode !== '+91';
-      var rzpKey = isIntl ? (C.razorpayKeyIntl || 'rzp_live_gfoS1OjC8tvWjP') : (C.razorpayKeyIn || 'rzp_live_T2CbVONQc6qrqj');
+        var isIntl = countryCode !== '+91';
+        var rzpKey = isIntl ? (C.razorpayKeyIntl || 'rzp_live_gfoS1OjC8tvWjP') : (C.razorpayKeyIn || 'rzp_live_T2CbVONQc6qrqj');
 
-      var rzpOptions = {
-        key: rzpKey,
-        amount: amountToCharge * 100, // paise
-        currency: 'INR',
-        name: 'TechTycoon',
-        description: (isAddonSelected ? 'Claude Skills + ChatGPT Hacks Bundle' : '250+ Ultimate Claude Skills') + (isTest ? ' (Test Mode)' : ''),
-        image: 'https://course.techtycoon.in/claude_resources/assets/img/logo-techtycoon.png',
-        prefill: {
-          name: nameVal,
-          email: emailVal,
-          contact: phoneDigits
-        },
-        notes: {
-          product: 'claude_resources',
-          coupon: appliedCouponText,
-          addon: addonText,
-          original_price: String(ORIGINAL_PRICE),
-          paid_price: String(currentPayable)
-        },
-        theme: {
-          color: '#FF7A47'
-        },
-        handler: function (response) {
-          // Send payment confirmation to Google Apps Script
-          var paySuccessPayload = {
-            action: 'payment_success',
-            date: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
-            timestamp: new Date().toISOString(),
+        var rzpOptions = {
+          key: rzpKey,
+          order_id: result.orderId,
+          amount: currentPayable * 100, // paise
+          currency: 'INR',
+          name: 'TechTycoon',
+          description: (isAddonSelected ? 'Claude Skills + ChatGPT Hacks' : '250+ Ultimate Claude Skills'),
+          image: 'https://course.techtycoon.in/claude_resources/assets/img/logo-techtycoon.png',
+          prefill: {
             name: nameVal,
             email: emailVal,
-            phone: fullPhone,
+            contact: phoneDigits
+          },
+          notes: {
+            product: 'claude_resources',
             coupon: appliedCouponText,
-            originalPrice: ORIGINAL_PRICE,
-            discount: currentCouponApplied ? COUPON_DISCOUNT : 0,
             addon: addonText,
-            amount: currentPayable,
-            status: 'PAID',
-            paymentId: response.razorpay_payment_id || '',
-            orderId: response.razorpay_order_id || '',
-            signature: response.razorpay_signature || '',
-            product: productName,
-            pageUrl: window.location.href
-          };
+            paid_price: String(currentPayable)
+          },
+          theme: {
+            color: '#FF7A47'
+          },
+          handler: function (response) {
+            var paymentId = response.razorpay_payment_id || '';
+            var orderId = response.razorpay_order_id || result.orderId || '';
+            var signature = response.razorpay_signature || '';
 
-          try {
+            // Send payment confirmation back to Google Apps Script
             fetch(appsScriptUrl, {
               method: 'POST',
-              mode: 'no-cors',
               headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-              body: JSON.stringify(paySuccessPayload)
+              body: JSON.stringify({
+                paymentSuccess: true,
+                razorpay_order_id: orderId,
+                razorpay_payment_id: paymentId,
+                razorpay_signature: signature,
+                email: emailVal,
+                name: nameVal,
+                phone: fullPhone,
+                countryCode: countryCode,
+                amount: currentPayable,
+                course: isAddonSelected ? '250+ Ultimate Claude Skills + ChatGPT Hacks' : '250+ Ultimate Claude Skills',
+                pageUrl: window.location.href
+              })
+            }).catch(function (e) {
+              console.warn('Payment logging notice:', e);
             });
-          } catch (e) {
-            console.warn('Payment logging notice:', e);
-          }
 
-          // Close modal and show success screen
-          closeRegisterModal();
-          resetSubmitBtn();
-
-          showStatusDialog('success', 'Payment Successful!',
-            'Thank you, ' + nameVal + '! Your payment of ₹' + currentPayable + ' is confirmed.\n\nYour instant access link to the 250+ Ultimate Claude Skills library & prompt bundles' + (isAddonSelected ? ' (including ChatGPT Hacks)' : '') + ' has been sent to ' + emailVal + '.\n\nPlease keep your Payment ID for your records.',
-            { paymentId: response.razorpay_payment_id });
-        },
-        modal: {
-          ondismiss: function () {
+            // Close modal and show success screen
+            closeRegisterModal();
             resetSubmitBtn();
-          }
-        }
-      };
 
-      var rzp = new window.Razorpay(rzpOptions);
-      rzp.on('payment.failed', function (r) {
-        var errDesc = (r && r.error && r.error.description) || 'Payment failed or was cancelled.';
-        showStatusDialog('failed', 'Payment Failed',
-          errDesc + ' You have not been charged. If any amount was deducted, your bank will reverse it automatically.',
-          { retry: true, help: true });
+            showStatusDialog('success', 'Payment Successful!',
+              'Thank you, ' + nameVal + '! Your payment of ₹' + currentPayable + ' is confirmed.\n\nYour instant access link to the 250+ Ultimate Claude Skills library & prompt bundles' + (isAddonSelected ? ' (including ChatGPT Hacks)' : '') + ' has been sent to ' + emailVal + '.\n\nPlease keep your Payment ID for your records.',
+              { paymentId: paymentId, orderId: orderId });
+          },
+          modal: {
+            ondismiss: function () {
+              resetSubmitBtn();
+            }
+          }
+        };
+
+        var rzp = new window.Razorpay(rzpOptions);
+        rzp.on('payment.failed', function (r) {
+          var errDesc = (r && r.error && r.error.description) || 'Payment failed or was cancelled.';
+          showStatusDialog('failed', 'Payment Failed',
+            errDesc + ' You have not been charged. If any amount was deducted, your bank will reverse it automatically.',
+            { retry: true, help: true });
+          resetSubmitBtn();
+        });
+
+        rzp.open();
+      })
+      .catch(function (err) {
+        console.error('Order creation network error:', err);
+        alert('Failed to connect to payment server. Please check your internet connection or contact +91 7558133039.');
         resetSubmitBtn();
       });
-
-      rzp.open();
     });
   }
 
