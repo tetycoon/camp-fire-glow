@@ -16,7 +16,23 @@ export default defineConfig(({ mode }) => {
         overlay: false,
       },
     },
-    plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
+    plugins: [
+      // Dev only: serve public/<dir>/index.html for "/<dir>" and "/<dir>/", as static hosting does in production.
+      {
+        name: "serve-public-dir-index",
+        configureServer(server) {
+          server.middlewares.use((req, _res, next) => {
+            const match = req.url?.match(/^\/([\w-]+)\/?(\?.*)?$/);
+            if (match && fs.existsSync(path.join(realRoot, "public", match[1], "index.html"))) {
+              req.url = `/${match[1]}/index.html${match[2] ?? ""}`;
+            }
+            next();
+          });
+        },
+      },
+      react(),
+      mode === "development" && componentTagger(),
+    ].filter(Boolean),
     resolve: {
       alias: {
         "@": path.resolve(realRoot, "./src"),

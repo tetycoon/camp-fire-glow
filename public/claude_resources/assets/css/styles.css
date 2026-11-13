@@ -176,6 +176,12 @@ svg { width: 1em; height: 1em; flex: none; }
 .hero-sub { color: var(--text-muted); font-size: 19px; line-height: 1.65; max-width: 600px; }
 .price-row { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 20px; margin: 34px 0 34px; }
 .price-big { font-family: var(--font-display); font-size: 42px; font-weight: 600; color: var(--accent); line-height: 1; }
+.price-pair { display: inline-flex; align-items: baseline; gap: 12px; white-space: nowrap; }
+.price-old {
+  font-family: var(--font-display); font-size: 24px; font-weight: 500; line-height: 1;
+  color: var(--text-dim); text-decoration: line-through; text-decoration-color: var(--red); text-decoration-thickness: 2px;
+}
+.sticky-old { font-size: 20px; }
 .hero-ctas { display: flex; flex-wrap: wrap; gap: 20px; }
 
 .vault {
@@ -204,6 +210,16 @@ svg { width: 1em; height: 1em; flex: none; }
 .gift + .gift { border-left: 1px solid var(--line); }
 .gift img { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; }
 .gift h3 { font-family: var(--font-body); font-size: 17px; font-weight: 600; line-height: 1.4; }
+.gift-bonus { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; }
+.gift-bonus-tag { font-size: 15px; color: var(--accent); letter-spacing: .01em; }
+.gift-bonus-msg {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px; max-width: 100%;
+  padding: 10px 18px; border: 1px dashed rgba(255, 122, 71, .55); border-radius: 10px;
+  background: #2A1A12; color: var(--text); font-size: 15px; font-weight: 600; line-height: 1.4;
+  box-shadow: var(--glow);
+}
+.gift-bonus-msg svg { width: 22px; height: 22px; flex: none; color: var(--accent); }
+.gift-free { color: var(--accent); font-weight: 700; }
 
 /* ---- Trust strip ------------------------------------------------------ */
 .trust { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: #0F0D0C; }
@@ -316,6 +332,10 @@ svg { width: 1em; height: 1em; flex: none; }
 .pricing-grid .eyebrow { margin-bottom: 26px; }
 .pricing .h2 { line-height: 1.32; }
 .price-card { border: 1px solid var(--line-strong); border-radius: var(--radius); background: #15120F; padding: 22px 30px 40px; }
+.price-card-title {
+  font-family: var(--font-display); font-size: 26px; font-weight: 600; line-height: 1.25;
+  padding: 14px 0 22px; border-bottom: 1px dotted rgba(246, 243, 238, .3); overflow-wrap: break-word;
+}
 .price-rows { margin: 0; }
 .price-rows > div { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 20px 0; border-bottom: 1px dotted rgba(246, 243, 238, .3); }
 .price-rows dt { color: var(--text-muted); font-size: 16px; }
@@ -341,9 +361,32 @@ svg { width: 1em; height: 1em; flex: none; }
 .reviews a:hover { transform: translateY(-3px); border-color: rgba(255,122,71,.6); }
 .reviews img { aspect-ratio: 1 / 2; width: 100%; object-fit: cover; }
 
+/* Customer screenshots: shown whole (no crop), at their native aspect ratio */
+/* Desktop: every screenshot in one row; same-size frames; click opens the lightbox */
+.testimonials { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 230px); justify-content: center; gap: 24px; }
+.testimonials li { min-width: 0; }
+.testimonials a {
+  display: block; aspect-ratio: 702 / 1600; cursor: zoom-in;
+  border: 1px solid var(--line-strong); border-radius: 12px; overflow: hidden; background: #111;
+  transition: transform .15s ease, border-color .15s ease;
+}
+.testimonials a:hover, .testimonials a:focus-visible { transform: translateY(-3px); border-color: rgba(255, 122, 71, .6); }
+.testimonials img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.testimonials img.testimonial-dim { filter: brightness(.9); }
+/* Tablet: two per row; an odd last screenshot is centred */
+@media (max-width: 1023px) {
+  .testimonials { grid-auto-flow: row; grid-template-columns: repeat(2, minmax(0, 230px)); gap: 24px; }
+  .testimonials li:last-child:nth-child(odd) { grid-column: 1 / -1; justify-self: center; width: min(230px, calc(50% - 12px)); }
+}
+/* Mobile: two smaller screenshots per row */
+@media (max-width: 767px) {
+  .testimonials { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 14px; }
+  .testimonials li:last-child:nth-child(odd) { width: calc(50% - 7px); }
+}
+
 .lightbox { border: 0; padding: 0; background: transparent; max-width: min(92vw, 520px); max-height: 92vh; overflow: visible; }
 .lightbox::backdrop { background: rgba(0, 0, 0, .85); }
-.lightbox img { max-height: 90vh; width: auto; margin: 0 auto; border-radius: 10px; }
+.lightbox img { max-height: 90vh; max-width: 100%; width: auto; margin: 0 auto; border-radius: 10px; }
 .lightbox-close { position: absolute; top: -14px; right: -14px; width: 44px; height: 44px; border-radius: 50%; border: 0; background: #fff; color: #111; font-size: 28px; line-height: 1; cursor: pointer; }
 
 /* ---- Payment status dialog (Razorpay) ---------------------------------- */
@@ -424,6 +467,86 @@ svg { width: 1em; height: 1em; flex: none; }
 .sticky-checks svg { color: #22C55E; width: 20px; height: 20px; }
 .sticky-offer .btn-offer { flex: 0 1 516px; }
 
+/* ---- Welcome avatar above the sticky offer button --------------------- */
+/* Rest pose is the default (shown when motion is reduced); the 8s loop animates in and out of it. */
+.sticky-offer .offer-avatar-wrap { position: relative; flex: 0 1 516px; display: flex; --av-w: 150px; --av-hand: 34px; --av-hand-x: 88px; }
+.sticky-offer .offer-avatar-wrap .btn-offer { flex: 1 1 auto; position: relative; z-index: 1; }
+.offer-avatar, .av-hand, .av-bubble { pointer-events: none; user-select: none; }
+.offer-avatar {
+  position: absolute; z-index: 0; left: 50%; bottom: calc(100% - 12px);
+  width: var(--av-w); aspect-ratio: 160 / 118; transform: translateX(-50%);
+  overflow: hidden; /* the figure rises out of the button's top edge */
+}
+.av-figure {
+  display: block; width: 100%; height: auto;
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, .45));
+  animation: av-rise 8s ease-in-out infinite;
+}
+.av-head { transform-box: view-box; transform-origin: 80px 92px; animation: av-nod 8s ease-in-out infinite; }
+.av-eye { transform-box: fill-box; transform-origin: center; animation: av-blink 8s linear infinite; }
+.av-smile { transform-box: fill-box; transform-origin: 50% 0; animation: av-grin 8s ease-in-out infinite; }
+.av-hand {
+  position: absolute; z-index: 2; top: calc(var(--av-hand) * -0.9);
+  width: var(--av-hand); height: auto; transform-origin: 50% 0;
+  filter: drop-shadow(0 3px 5px rgba(0, 0, 0, .4));
+}
+.av-hand-l { left: calc(50% - var(--av-hand-x)); transform: rotate(-28deg); animation: av-hand-l 8s ease-in-out infinite; }
+.av-hand-r { right: calc(50% - var(--av-hand-x)); transform: rotate(28deg); animation: av-hand-r 8s ease-in-out infinite; }
+.av-bubble {
+  position: absolute; z-index: 2; right: calc(50% + var(--av-w) / 2 - 6px); bottom: calc(100% + 46px);
+  width: max-content; max-width: 210px; margin: 0; padding: 8px 12px;
+  background: #fff; color: #1A1410; border-radius: 12px 12px 2px 12px;
+  font-size: 13px; font-weight: 500; line-height: 1.35; box-shadow: var(--glow);
+  animation: av-bubble 8s ease-in-out infinite;
+}
+.av-bubble strong { color: var(--accent-deep); font-weight: 700; }
+.sticky-offer:not(.is-visible) .offer-avatar-wrap * { animation-play-state: paused; }
+@media (min-width: 768px) and (max-width: 1023px) {
+  .sticky-offer .offer-avatar-wrap { --av-w: 124px; --av-hand: 28px; --av-hand-x: 74px; }
+}
+
+@keyframes av-rise {
+  0%, 100% { transform: translateY(100%); }
+  12%, 86% { transform: translateY(0); }
+}
+@keyframes av-nod {
+  0%, 14% { transform: rotate(0); }
+  28% { transform: rotate(-4deg); }
+  44% { transform: rotate(3deg); }
+  60% { transform: rotate(-2deg); }
+  74%, 100% { transform: rotate(0); }
+}
+@keyframes av-blink {
+  0%, 47%, 51%, 100% { transform: scaleY(1); }
+  49% { transform: scaleY(.1); }
+}
+@keyframes av-grin {
+  0%, 24% { transform: scale(1); }
+  34%, 70% { transform: scale(1.12); }
+  80%, 100% { transform: scale(1); }
+}
+@keyframes av-hand-l {
+  0%, 12% { opacity: 0; transform: translate(-30px, 14px) rotate(-55deg); }
+  22% { opacity: 1; transform: translate(0, 0) rotate(-40deg); }
+  32%, 52%, 72% { opacity: 1; transform: translate(5px, 3px) rotate(-26deg); }
+  42%, 62% { opacity: 1; transform: translate(2px, -1px) rotate(-32deg); }
+  82% { opacity: 1; transform: translate(0, 0) rotate(-40deg); }
+  92%, 100% { opacity: 0; transform: translate(-30px, 14px) rotate(-55deg); }
+}
+@keyframes av-hand-r {
+  0%, 12% { opacity: 0; transform: translate(30px, 14px) rotate(55deg); }
+  22% { opacity: 1; transform: translate(0, 0) rotate(40deg); }
+  32%, 52%, 72% { opacity: 1; transform: translate(-5px, 3px) rotate(26deg); }
+  42%, 62% { opacity: 1; transform: translate(-2px, -1px) rotate(32deg); }
+  82% { opacity: 1; transform: translate(0, 0) rotate(40deg); }
+  92%, 100% { opacity: 0; transform: translate(30px, 14px) rotate(55deg); }
+}
+@keyframes av-bubble {
+  0%, 24% { opacity: 0; transform: translateY(6px) scale(.96); }
+  32%, 78% { opacity: 1; transform: translateY(0) scale(1); }
+  86%, 100% { opacity: 0; transform: translateY(6px) scale(.96); }
+}
+
 /* ---- Footer ----------------------------------------------------------- */
 .site-footer { border-top: 1px solid var(--line); padding: 26px 0 30px; background: var(--bg); }
 .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 14px 30px; flex-wrap: wrap; }
@@ -473,6 +596,8 @@ svg { width: 1em; height: 1em; flex: none; }
   .hero-sub { font-size: 16px; }
   .price-row { margin: 26px 0; gap: 10px 14px; }
   .price-big { font-size: 38px; }
+  .price-old { font-size: 21px; }
+  .sticky-old { font-size: 16px; }
   .pill-red { font-size: 12.5px; padding: 3px 10px; }
   .hero-ctas { flex-direction: column; align-items: stretch; gap: 14px; }
   .vault-chips { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 20px 14px; }
@@ -480,6 +605,8 @@ svg { width: 1em; height: 1em; flex: none; }
   .gifts { margin-top: 40px; padding: 40px 10px 22px; }
   .gifts-tag { font-size: 14px; }
   .gift h3 { font-size: 15px; }
+  .gift-bonus-tag { font-size: 14px; }
+  .gift-bonus-msg { font-size: 14px; padding: 9px 14px; }
 
   .trust-list { flex-direction: column; gap: 12px; font-size: 13px; padding-top: 22px; padding-bottom: 22px; }
 
@@ -516,6 +643,7 @@ svg { width: 1em; height: 1em; flex: none; }
   .step h3 { font-size: 21px; margin: 18px 0 12px; }
 
   .price-card { padding: 12px 18px 28px; }
+  .price-card-title { font-size: 22px; padding: 12px 0 18px; }
   .price-rows dt { font-size: 15px; }
   .addon { flex-direction: column; align-items: stretch; margin-top: 40px; padding: 26px 18px; }
   .addon h3 { font-size: 22px; }
@@ -540,6 +668,8 @@ svg { width: 1em; height: 1em; flex: none; }
   .sticky-info { flex: none; }
   .sticky-price { flex-direction: column; align-items: flex-start; gap: 2px; }
   .sticky-offer .btn-offer { flex: 1 1 auto; font-size: 14.5px; padding: 13px 12px; }
+  .sticky-offer .offer-avatar-wrap { flex: 1 1 auto; --av-w: 100px; --av-hand: 24px; --av-hand-x: 52px; }
+  .av-bubble { font-size: 11.5px; max-width: 150px; padding: 6px 9px; bottom: calc(100% + 30px); }
 
   .footer-inner { flex-direction: column; text-align: center; }
   .footer-contact { justify-content: center; }
