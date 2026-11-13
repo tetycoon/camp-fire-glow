@@ -390,33 +390,33 @@ const aiVideoShowcaseItems: Array<{
 }> = [
   {
     id: 'logo-reveal',
-    title: '3D Brand & Product Reveal on Neon Pedestal',
+    title: '3D AI Metallic Logo Animation & Brand Ident',
     category: 'Module 01 • 3D AI Logo & Brand Animation',
     mode: 'logo',
     videoUrl: '/videos/ai_veo_3d_brand.mp4',
     image: aiLogoSample,
-    fps: '4K • VEO 3D',
-    prompt: '"3D floating brand showcase on glowing neon pedestal with orbiting 3D icons, volumetric studio lighting, 60fps"'
+    fps: '4K • 3D LOGO',
+    prompt: '"3D metallic brand logo reveal with volumetric cyan lighting, floating sparks, water ripple reflections, 60fps"'
   },
   {
     id: 'avatar-spokesperson',
-    title: '3D Holographic Neural AI Cinema & Voiceover',
-    category: 'Module 02 • AI Avatar & Neural Audio',
+    title: 'Photorealistic AI Studio Avatar & Lip-Sync Presenter',
+    category: 'Module 02 • AI Avatar & Lip-Sync',
     mode: 'avatar',
     videoUrl: '/videos/ai_veo_neural_cinema.mp4',
     image: aiAvatarSample,
-    fps: 'Google Veo AI',
-    prompt: '"Glowing 3D holographic neural brain with orbiting cyan data particles in dark studio, spatial cinema soundscape"'
+    fps: '1080P • AI AVATAR',
+    prompt: '"Hyper-realistic AI virtual spokesperson in studio speaking to microphone with natural hand gestures and frame-accurate lip-sync"'
   },
   {
     id: 'fpv-drone-cinema',
-    title: '3D Cybernetic Mechanical VFX Transformation',
-    category: 'Module 03 • AI Video Generation & VFX',
+    title: 'Cinematic Movie Scene & Anamorphic Film Direction',
+    category: 'Module 03 • AI Video Generation & Filmmaking',
     mode: 'video',
     videoUrl: '/videos/ai_veo_cyber_vfx.mp4',
     image: aiVideoSample,
-    fps: 'Veo VFX • 60FPS',
-    prompt: '"Cybernetic 3D mechanical core exploding into floating titanium components with glowing blue energy arcs and robotic SFX"'
+    fps: 'CINEMATIC • 24FPS',
+    prompt: '"Hollywood cinematic sunset film scene with anamorphic golden-hour lighting, cinematic depth-of-field, and motion camera track"'
   },
   {
     id: 'product-ad',
