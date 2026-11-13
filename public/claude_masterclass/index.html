@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script>
+        (function() {
+            var p = window.location.pathname;
+            if (p === '/claude_masterclass' || p === '/claude-masterclass') {
+                if (window.history && window.history.replaceState) {
+                    window.history.replaceState(null, '', p + '/' + window.location.search + window.location.hash);
+                }
+            }
+        })();
+    </script>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
@@ -11,9 +21,9 @@
     <meta name="keywords" content="Claude AI, Model Context Protocol, MCP, AI Code Automation, Claude 3.5 Sonnet, Anthropic, Tamil AI Workshop, Antony Praveen, Tech Tycoon">
     
     <!-- Favicon Logo in Browser Tab -->
-    <link rel="icon" type="image/png" href="images/tech_tycoon_logo.png">
-    <link rel="shortcut icon" type="image/png" href="images/tech_tycoon_logo.png">
-    <link rel="apple-touch-icon" href="images/tech_tycoon_logo.png">
+    <link rel="icon" type="image/png" href="/claude_masterclass/images/tech_tycoon_logo.png">
+    <link rel="shortcut icon" type="image/png" href="/claude_masterclass/images/tech_tycoon_logo.png">
+    <link rel="apple-touch-icon" href="/claude_masterclass/images/tech_tycoon_logo.png">
     <!-- Canonical URL -->
     <link rel="canonical" href="https://course.techtycoon.in/claude_masterclass/">
     <!-- Open Graph / WhatsApp / Facebook -->
@@ -38,10 +48,69 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="style.css?v=20261108_clean_badges">
-    <link rel="stylesheet" href="animations.css?v=20261108_clean_badges">
+    <link rel="stylesheet" href="/claude_masterclass/style.css?v=20261113_fix1">
+    <link rel="stylesheet" href="/claude_masterclass/animations.css?v=20261113_fix1">
     
     <style>
+        /* CRITICAL INLINE LOGO & HEADER GUARD - Prevents blowout regardless of external CSS load state */
+        .logo-img, img.logo-img {
+            height: 40px !important;
+            max-height: 40px !important;
+            width: auto !important;
+            max-width: 180px !important;
+            object-fit: contain !important;
+            display: inline-block !important;
+            background: #FFFFFF !important;
+            padding: 4px !important;
+            border-radius: 8px !important;
+            border: 1px solid #E6E2D9 !important;
+            vertical-align: middle !important;
+        }
+        .brand-logo {
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 12px !important;
+            text-decoration: none !important;
+            max-height: 48px !important;
+        }
+        .brand-logo .logo-text {
+            display: inline-flex !important;
+            flex-direction: column !important;
+            gap: 1px !important;
+            text-align: left !important;
+        }
+        .brand-logo .logo-title {
+            display: block !important;
+            font-size: 15px !important;
+            font-weight: 800 !important;
+            color: #1F1E1C !important;
+            line-height: 1.1 !important;
+            letter-spacing: -0.2px !important;
+        }
+        .brand-logo .logo-sub {
+            font-size: 10px !important;
+            color: #D85A30 !important;
+            font-weight: 700 !important;
+            line-height: 1 !important;
+        }
+        .footer-logo-img, img.footer-logo-img {
+            height: 32px !important;
+            max-height: 32px !important;
+            width: auto !important;
+            max-width: 160px !important;
+            object-fit: contain !important;
+            background: #FFFFFF !important;
+            padding: 2px !important;
+            border-radius: 6px !important;
+            display: inline-block !important;
+        }
+        .instructor-photo {
+            width: 80px !important;
+            height: 80px !important;
+            border-radius: 50% !important;
+            object-fit: cover !important;
+        }
+
         /* 3-COLUMN INLINE OVERRIDE FOR FLOATING WIDGET */
         .bottom-floating-widget {
             position: fixed !important;
@@ -502,7 +571,7 @@
         <header class="navbar" style="background-color: #F7F4EE; border-bottom: 1px solid #E6E2D9;">
             <div class="container nav-container" style="justify-content: center;">
                 <a href="#" class="brand-logo">
-                    <img src="images/tech_tycoon_logo.png" alt="Tech Tycoon Digital Solutions" class="logo-img">
+                    <img src="/claude_masterclass/images/tech_tycoon_logo.png" alt="Tech Tycoon Digital Solutions" class="logo-img" width="160" height="40" style="height: 40px !important; max-height: 40px !important; width: auto !important; max-width: 180px !important; object-fit: contain !important; background: #FFFFFF !important; padding: 4px !important; border-radius: 8px !important; border: 1px solid #E6E2D9 !important; display: inline-block !important;">
                     <div class="logo-text">
                         <span class="logo-title" style="color: #1F1E1C;">TECH TYCOON</span>
                         <span class="logo-sub" style="color: #D85A30;">Digital Solution LLP</span>
@@ -533,7 +602,7 @@
                 <div class="portal-card" onclick="openBatchPage('online')" style="background: #FFFFFF; border: 2px solid #D85A30; border-radius: 20px; padding: 24px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 10px 30px rgba(216,90,48,0.12); position: relative; display: flex; flex-direction: column; justify-content: space-between;">
                     <div>
                         <div style="width: 100%; height: 180px; overflow: hidden; border-radius: 12px; margin-bottom: 16px; border: 1px solid #E6E2D9;">
-                            <img src="images/online.webp" alt="Claude AI Online MasterClass" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" class="portal-card-img">
+                            <img src="/claude_masterclass/images/online.webp" alt="Claude AI Online MasterClass" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" class="portal-card-img">
                         </div>
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
                             <span style="background: #D85A30; color: #fff; font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 50px; text-transform: uppercase;"><span class="pulse-dot" style="background:#fff;"></span>🌐 ONLINE LIVE SESSION</span>
@@ -558,7 +627,7 @@
                 <div class="portal-card" onclick="openBatchPage('offline')" style="background: #FFFFFF; border: 2px solid #E6E2D9; border-radius: 20px; padding: 24px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 10px 30px rgba(0,0,0,0.06); position: relative; display: flex; flex-direction: column; justify-content: space-between;">
                     <div>
                         <div style="width: 100%; height: 180px; overflow: hidden; border-radius: 12px; margin-bottom: 16px; border: 1px solid #E6E2D9;">
-                            <img src="images/offline.webp" alt="Claude AI In-Person Workshop Chennai" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" class="portal-card-img">
+                            <img src="/claude_masterclass/images/offline.webp" alt="Claude AI In-Person Workshop Chennai" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" class="portal-card-img">
                         </div>
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
                             <span style="background: #6E6B65; color: #fff; font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 50px; text-transform: uppercase;"><span class="pulse-dot" style="background:#fff;"></span>🏨 IN-PERSON CHENNAI — COMING SOON</span>
@@ -827,7 +896,7 @@
         <div class="container">
             <div class="instructor-card">
                 <div class="instructor-left">
-                    <img src="images/antony_praveen.jpg" alt="Mr. Antony Praveen" class="instructor-photo">
+                    <img src="/claude_masterclass/images/antony_praveen.jpg" alt="Mr. Antony Praveen" class="instructor-photo">
                     <span class="instructor-badge"><i class="fa-solid fa-award"></i> Lead Instructor</span>
                 </div>
                 <div class="instructor-right">
@@ -1011,7 +1080,7 @@
     <footer class="site-footer">
         <div class="container footer-content text-center">
             <div class="footer-logo">
-                <img src="images/tech_tycoon_logo.png" alt="TECH TYCOON Digital Solution LLP" class="footer-logo-img">
+                <img src="/claude_masterclass/images/tech_tycoon_logo.png" alt="TECH TYCOON Digital Solution LLP" class="footer-logo-img" width="140" height="32" style="height: 32px !important; max-height: 32px !important; width: auto !important; max-width: 160px !important; object-fit: contain !important; background: #FFFFFF !important; padding: 2px !important; border-radius: 6px !important; display: inline-block !important;">
             </div>
             <p>Conducted by TECH TYCOON Digital Solution LLP • Every Saturday & Sunday</p>
             <div class="footer-links" style="margin: 12px 0; display: flex; justify-content: center; gap: 14px; font-size: 11px; flex-wrap: wrap;">
@@ -1287,6 +1356,6 @@
         </div>
     </div>
 
-    <script src="app.js?v=20261112_reglead_1794465735336"></script>
+    <script src="/claude_masterclass/app.js?v=20261113_fix1"></script>
 </body>
 </html>

@@ -120,6 +120,16 @@ if (fs.existsSync(claudeSrcDir)) {
     fs.copyFileSync(path.join(claudeSrcDir, 'index.html'), path.join(underscoreSubDir, 'index.html'));
   });
   console.log('✓ Synchronized all online/offline sub-routes with dedicated static HTML');
+
+  // Provide root fallbacks for style.css and animations.css so even legacy cached relative requests never 404
+  if (!fs.existsSync('dist/style.css')) {
+    fs.copyFileSync(path.join(claudeSrcDir, 'style.css'), 'dist/style.css');
+    console.log('✓ Created dist/style.css fallback');
+  }
+  if (!fs.existsSync('dist/animations.css')) {
+    fs.copyFileSync(path.join(claudeSrcDir, 'animations.css'), 'dist/animations.css');
+    console.log('✓ Created dist/animations.css fallback');
+  }
 }
 
 

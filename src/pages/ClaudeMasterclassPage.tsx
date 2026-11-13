@@ -723,7 +723,7 @@ const ClaudeMasterclassPage: React.FC = () => {
         <header className="bg-[#F7F4EE] border-b border-[#E6E2D9] py-4 px-6">
           <div className="max-w-6xl mx-auto flex justify-between items-center">
             <a href="/" className="flex items-center gap-3 hover:opacity-85 transition-opacity" title="Back to TechTycoon Hub">
-              <img src={techTycoonLogo} alt="Tech Tycoon" className="h-10 w-auto rounded-lg bg-white p-1 border border-[#E6E2D9]" />
+              <img src={techTycoonLogo} alt="Tech Tycoon" className="h-10 w-auto rounded-lg bg-white p-1 border border-[#E6E2D9]" style={{ height: '40px', maxHeight: '40px', width: 'auto', maxWidth: '180px', objectFit: 'contain' }} />
               <div className="flex flex-col">
                 <span className="text-sm font-bold text-[#1F1E1C] tracking-tight">TECH TYCOON</span>
                 <span className="text-[10px] text-[#D85A30] font-semibold">Digital Solution LLP</span>
@@ -826,7 +826,7 @@ const ClaudeMasterclassPage: React.FC = () => {
       <header className="sticky top-0 z-30 bg-[#FDFBF7]/90 backdrop-blur-md border-b border-[#E6E2D9]">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <a href="/" className="flex items-center gap-3 hover:opacity-85 transition-opacity" title="Back to TechTycoon Hub">
-            <img src={techTycoonLogo} alt="Tech Tycoon" className="h-7 w-auto bg-white p-0.5 rounded shadow-sm" />
+            <img src={techTycoonLogo} alt="Tech Tycoon" className="h-7 w-auto bg-white p-0.5 rounded shadow-sm" style={{ height: '28px', maxHeight: '28px', width: 'auto', maxWidth: '140px', objectFit: 'contain' }} />
             <div className="flex flex-col">
               <span className="font-extrabold text-sm tracking-tight text-[#1F1E1C] uppercase leading-none">Tech Tycoon</span>
               <div className="text-[10px] text-[#1a56db] font-semibold leading-none">Digital Solution LLP</div>
@@ -1449,7 +1449,7 @@ const ClaudeMasterclassPage: React.FC = () => {
       <footer className="py-12 px-6 bg-[#1F1E1C] text-[#C5C0B8] border-t border-[#33312E] text-center text-xs">
         <div className="max-w-4xl mx-auto space-y-4">
           <div className="mb-4">
-            <img src={techTycoonLogo} alt="Tech Tycoon" className="h-7 w-auto bg-white p-0.5 rounded mx-auto" />
+            <img src={techTycoonLogo} alt="Tech Tycoon" className="h-7 w-auto bg-white p-0.5 rounded mx-auto" style={{ height: '28px', maxHeight: '28px', width: 'auto', maxWidth: '140px', objectFit: 'contain' }} />
           </div>
           <p className="text-[#8E8A83] max-w-md mx-auto">Conducted by TECH TYCOON Digital Solution LLP • Every Saturday & Sunday</p>
           <div className="flex justify-center gap-3 text-[11px] text-[#A09C94] underline flex-wrap">
