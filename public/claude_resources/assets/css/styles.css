@@ -782,7 +782,39 @@ svg { width: 1em; height: 1em; flex: none; }
 }
 
 /* Form inputs */
-.reg-form { display: flex; flex-direction: column; gap: 10px; text-align: left; }
+.reg-form {
+  display: flex; flex-direction: column; gap: 12px; text-align: left;
+  /* Outer frame around the whole form */
+  padding: 18px 18px 14px;
+  /* One bright orange frame (site accent) with a soft glow */
+  --form-accent: var(--accent);
+  border: 2px solid var(--form-accent); border-radius: 14px;
+  background: #151210;
+  box-shadow: 0 0 0 3px rgba(255, 122, 71, .10), 0 0 26px rgba(255, 122, 71, .22), 0 8px 24px rgba(0, 0, 0, .35);
+  transition: box-shadow .2s ease;
+}
+/* Even spacing: the form's gap controls the space between every row */
+.reg-form > .coupon-compact-row, .reg-form > .addon-card, .reg-form > .btn-pay, .reg-form > .reg-security-note { margin-top: 0; margin-bottom: 0; }
+.reg-form:focus-within {
+  box-shadow: 0 0 0 3px rgba(255, 122, 71, .16), 0 0 32px rgba(255, 122, 71, .32), 0 8px 24px rgba(0, 0, 0, .35);
+}
+/* Inner fields: no visible borders, dark fill only; soft orange ring on focus */
+.reg-form .form-group input, .reg-form .form-group select, .reg-form .coupon-compact-row input {
+  border-color: transparent;
+}
+.reg-form .form-group input:focus, .reg-form .form-group select:focus, .reg-form .coupon-compact-row input:focus {
+  border-color: transparent;
+  box-shadow: 0 0 0 2px rgba(255, 122, 71, .45);
+  background: #000;
+}
+@media (max-width: 767px) {
+  .reg-dialog { padding: 22px 16px 16px; }
+  .reg-form { padding: 14px 12px 12px; gap: 11px; }
+  .reg-title { padding: 0 34px; } /* keep clear of the close button */
+  .reg-form > .coupon-compact-row { flex-wrap: wrap; row-gap: 6px; }
+  .coupon-compact-row input { width: 96px; }
+  .coupon-msg-inline { white-space: nowrap; }
+}
 .form-group { display: flex; flex-direction: column; gap: 4px; }
 .form-group label {
   font-size: 13px;
