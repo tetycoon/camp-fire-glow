@@ -5,8 +5,7 @@ import {
 import { countryCodes, CountryCode } from '../lib/countryCodes';
 import { useNavigate } from 'react-router-dom';
 import SocialProofToast from '../components/common/SocialProofToast';
-import GstPriceBreakdown from '../components/common/GstPriceBreakdown';
-import { calculateGstBreakdown, isAuthorizedTestEmail, isValidEmail, isValidGstin, sanitizeTextInput } from '../lib/gstUtils';
+import { isAuthorizedTestEmail, isValidEmail, sanitizeTextInput } from '../lib/gstUtils';
 
 declare global {
   interface Window {
@@ -41,12 +40,6 @@ export default function AcademyPreRegisterPage() {
     phone: ''
   });
 
-  // GST Invoice fields
-  const [claimGst, setClaimGst] = useState(false);
-  const [gstin, setGstin] = useState("");
-  const [companyName, setCompanyName] = useState("");
-  const [gstError, setGstError] = useState("");
-
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -59,12 +52,11 @@ export default function AcademyPreRegisterPage() {
   const isInternational = selectedCountry.code !== '+91';
   const isCouponValid = appliedCoupon.trim().toUpperCase() === "AMIABLE";
 
-  // Domestic (+91 India): ₹9,999 standard, ₹4,999 with AMIABLE (50% OFF)
-  // International (Other countries): ₹11,999 standard, ₹5,999 with AMIABLE (50% OFF)
+  // Domestic (+91 India): ₹9,999 standard, ₹6,499 with AMIABLE
+  // International (Other countries): ₹11,999 standard, ₹6,499 with AMIABLE
   const actualPrice = isInternational ? 11999 : 9999;
-  const offerPrice = isCouponValid ? (isInternational ? 5999 : 4999) : actualPrice;
+  const offerPrice = isCouponValid ? 6499 : actualPrice;
   const savings = actualPrice - offerPrice;
-  const gstBreakdown = calculateGstBreakdown(offerPrice);
 
   const filteredCountries = countryCodes.filter(c =>
     c.name.toLowerCase().includes(countrySearch.toLowerCase()) ||
@@ -108,7 +100,6 @@ export default function AcademyPreRegisterPage() {
   const handleRegisterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
-    setGstError('');
 
     if (!isPhoneFullyEntered) {
       setErrorMsg('Please enter your complete mobile number to proceed');
@@ -117,30 +108,17 @@ export default function AcademyPreRegisterPage() {
 
     const sanitizedName = sanitizeTextInput(formData.name, 100);
     const sanitizedEmail = formData.email.trim().toLowerCase();
-    const sanitizedCompany = claimGst ? sanitizeTextInput(companyName, 120) : "";
-    const sanitizedGstin = claimGst ? gstin.trim().toUpperCase() : "";
 
     if (!sanitizedName || !isValidEmail(sanitizedEmail)) {
       setErrorMsg('Please fill in a valid name and email address');
       return;
     }
 
-    if (claimGst) {
-      if (!isValidGstin(sanitizedGstin)) {
-        setGstError('Please enter a valid 15-character GSTIN (e.g. 33AAAAA0000A1Z5)');
-        return;
-      }
-      if (!sanitizedCompany) {
-        setGstError('Please enter your registered Legal Company Name for the GST invoice');
-        return;
-      }
-    }
-
     setIsSubmitting(true);
     const fullPhone = selectedCountry.code + cleanPhone;
 
     const isTestEmail = isAuthorizedTestEmail(sanitizedEmail);
-    const finalAmount = isTestEmail ? 1 : gstBreakdown.totalAmount;
+    const finalAmount = isTestEmail ? 1 : offerPrice;
     const amountInPaise = finalAmount * 100;
 
     try {
@@ -159,11 +137,11 @@ export default function AcademyPreRegisterPage() {
         isInternational: isInternational,
         course: "TECH TYCOON Academy",
         modeOfSession: "TECH TYCOON Academy Pre-Registration (Udemy Platform Access)",
-        baseAmount: isTestEmail ? 1 : gstBreakdown.baseAmount,
-        gstAmount: isTestEmail ? 0 : gstBreakdown.gstAmount,
+        baseAmount: finalAmount,
+        gstAmount: 0,
         amount: finalAmount,
-        companyName: sanitizedCompany,
-        gstin: sanitizedGstin,
+        companyName: "",
+        gstin: "",
         batch: "TECH TYCOON Academy Launch Sept 10",
         promoCode: appliedCoupon,
         pageUrl: window.location.href
@@ -197,17 +175,17 @@ export default function AcademyPreRegisterPage() {
         amount: amountInPaise,
         currency: "INR",
         name: "TECH TYCOON Academy",
-        description: `Pre-Register Access ${appliedCoupon ? `(Coupon ${appliedCoupon})` : ''} — Incl. 18% GST`,
+        description: `Pre-Register Access ${appliedCoupon ? `(Coupon ${appliedCoupon})` : ''}`,
         prefill: {
           name: sanitizedName,
           email: sanitizedEmail,
           contact: fullPhone
         },
         notes: {
-          base_amount: String(gstBreakdown.baseAmount),
-          gst_amount: String(gstBreakdown.gstAmount),
-          gstin: sanitizedGstin || "N/A",
-          company_name: sanitizedCompany || "N/A",
+          base_amount: String(finalAmount),
+          gst_amount: "0",
+          gstin: "N/A",
+          company_name: "N/A",
         },
         theme: {
           color: "#0EA5E9" // Light Blue Brand Accent
@@ -233,11 +211,11 @@ export default function AcademyPreRegisterPage() {
               email: sanitizedEmail,
               name: sanitizedName,
               phone: fullPhone,
-              baseAmount: isTestEmail ? 1 : gstBreakdown.baseAmount,
-              gstAmount: isTestEmail ? 0 : gstBreakdown.gstAmount,
+              baseAmount: finalAmount,
+              gstAmount: 0,
               amount: finalAmount,
-              companyName: sanitizedCompany,
-              gstin: sanitizedGstin,
+              companyName: "",
+              gstin: "",
               promoCode: appliedCoupon
             };
 
@@ -487,8 +465,8 @@ export default function AcademyPreRegisterPage() {
             {isPhoneFullyEntered && (
               <div className="bg-gradient-to-r from-sky-50 to-blue-50 border border-sky-200 p-2.5 rounded-xl flex items-center justify-between text-xs animate-fadeIn">
                 <div>
-                  <span className="text-slate-500 text-[10px]">Base Fee: </span>
-                  <span className="text-slate-900 font-bold text-base">₹{offerPrice.toLocaleString("en-IN")} + 18% GST</span>
+                  <span className="text-slate-500 text-[10px]">Final Fee: </span>
+                  <span className="text-slate-900 font-bold text-base">₹{offerPrice.toLocaleString("en-IN")}</span>
                   {isCouponValid && (
                     <span className="text-slate-400 line-through text-[11px] ml-1">₹{actualPrice.toLocaleString("en-IN")}</span>
                   )}
@@ -496,7 +474,7 @@ export default function AcademyPreRegisterPage() {
                 <div>
                   {isCouponValid ? (
                     <span className="bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded border border-emerald-200 text-[10px]">
-                      SAVE 50% (₹{savings.toLocaleString("en-IN")})
+                      SAVE ₹{savings.toLocaleString("en-IN")}
                     </span>
                   ) : (
                     <span className="bg-slate-200 text-slate-700 text-[10px] px-2 py-0.5 rounded border border-slate-300">
@@ -608,29 +586,6 @@ export default function AcademyPreRegisterPage() {
                 </div>
               </div>
 
-              {isPhoneFullyEntered && (
-                <GstPriceBreakdown
-                  baseAmount={offerPrice}
-                  claimGst={claimGst}
-                  onClaimGstChange={(checked) => {
-                    setClaimGst(checked);
-                    if (!checked) setGstError("");
-                  }}
-                  gstin={gstin}
-                  onGstinChange={(val) => {
-                    setGstin(val);
-                    if (gstError) setGstError("");
-                  }}
-                  companyName={companyName}
-                  onCompanyNameChange={(val) => {
-                    setCompanyName(val);
-                    if (gstError) setGstError("");
-                  }}
-                  gstError={gstError}
-                  theme="light"
-                />
-              )}
-
               <button
                 type="submit"
                 disabled={isSubmitting}
@@ -642,7 +597,7 @@ export default function AcademyPreRegisterPage() {
                   <>
                     <span>
                       {isPhoneFullyEntered 
-                        ? `Proceed to Pay ₹${gstBreakdown.totalAmount.toLocaleString("en-IN")} (Incl. GST)`
+                        ? `Proceed to Pay ₹${offerPrice.toLocaleString("en-IN")}`
                         : 'Proceed to Pay'
                       }
                     </span>
