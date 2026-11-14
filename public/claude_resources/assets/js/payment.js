@@ -376,6 +376,9 @@
               phone: fullPhone,
               countryCode: countryCode,
               amount: currentPayable,
+              addon: addonText,
+              hasPdfMaterial: isAddonSelected ? 'YES' : 'NO',
+              batch: 'Claude Resources' + (isAddonSelected ? ' (+ ChatGPT Hacks)' : ''),
               course: isAddonSelected ? '250+ Ultimate Claude Skills + ChatGPT Hacks' : '250+ Ultimate Claude Skills',
               pageUrl: window.location.href
             });
