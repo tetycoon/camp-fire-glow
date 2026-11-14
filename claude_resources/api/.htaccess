@@ -1,0 +1,5 @@
+# Only the four payment endpoints are reachable.
+Options -Indexes
+<FilesMatch "^(?!(create-order|verify|status|webhook)\.php$).*$">
+  Require all denied
+</FilesMatch>
