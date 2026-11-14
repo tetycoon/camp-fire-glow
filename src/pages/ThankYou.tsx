@@ -104,21 +104,22 @@ const ThankYou = () => {
     const phone = stateData.phone || "";
     const course = stateData.course || "AI Secrets Revealed Masterclass";
     const amount = stateData.amount || "";
+    const noGst = Boolean(stateData.noGst || String(course).toLowerCase().includes("academy"));
 
     // Build the prefilled WhatsApp message triggering Meta WhatsApp Automation in Apps Script
     const prefilledMessage = [
-        `HI I am completed registration of AI Secret Reveals`,
+        `HI I am completed registration of ${course}`,
         ``,
         `📋 *My Verified Registration Details:*`,
         `• *Name:* ${name}`,
         email ? `• *Email:* ${email}` : ``,
         phone ? `• *Phone:* ${phone}` : ``,
-        amount ? `• *Amount Paid (Incl. 18% GST):* ₹${amount}` : ``,
+        amount ? `• *Amount Paid${noGst ? '' : ' (Incl. 18% GST)'}:* ₹${amount}` : ``,
         coupon ? `• *Coupon Applied:* ${coupon}` : ``,
         orderId ? `• *Order ID:* ${orderId}` : ``,
         paymentId ? `• *Payment ID:* ${paymentId}` : ``,
         ``,
-        `Please confirm my registration and send my workshop access link! 🚀`,
+        `Please confirm my registration and send my access details! 🚀`,
     ]
         .filter(Boolean)
         .join("\n");
@@ -227,7 +228,7 @@ const ThankYou = () => {
                     )}
                     {amount && (
                         <div className="flex justify-between py-1 border-b border-sky-200/60">
-                            <span className="text-slate-500">Amount Paid (Incl. 18% GST):</span>
+                            <span className="text-slate-500">Amount Paid{noGst ? ":" : " (Incl. 18% GST):"}</span>
                             <span className="font-bold text-emerald-600">₹{amount}</span>
                         </div>
                     )}
@@ -247,10 +248,14 @@ const ThankYou = () => {
 
                 <div className="bg-emerald-50 text-emerald-900 p-4 rounded-2xl border border-emerald-200 text-xs sm:text-sm leading-relaxed font-medium text-left space-y-1">
                     <p className="font-bold text-emerald-800 flex items-center gap-1.5">
-                        <span>📧 Official GST Tax Invoice Sent via Email</span>
+                        <span>{noGst ? "📧 Official Payment Receipt Sent via Email" : "📧 Official GST Tax Invoice Sent via Email"}</span>
                     </p>
                     <p className="text-slate-600 text-[11px] sm:text-xs">
-                        Your complete GST Tax Invoice (with 9% CGST + 9% SGST breakdown) and payment receipt have been emailed to <strong>{email || "your registered email"}</strong>.
+                        {noGst ? (
+                            <>Your official payment receipt and registration confirmation have been emailed to <strong>{email || "your registered email"}</strong>.</>
+                        ) : (
+                            <>Your complete GST Tax Invoice (with 9% CGST + 9% SGST breakdown) and payment receipt have been emailed to <strong>{email || "your registered email"}</strong>.</>
+                        )}
                     </p>
                 </div>
 

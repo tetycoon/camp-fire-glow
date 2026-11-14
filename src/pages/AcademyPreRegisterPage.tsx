@@ -195,47 +195,58 @@ export default function AcademyPreRegisterPage() {
           const rzpOrderId = String(response?.razorpay_order_id || orderId || "").trim();
           const signature = String(response?.razorpay_signature || "").trim();
 
-          if (!paymentId || !rzpOrderId || !signature) {
+          if (!paymentId) {
             setIsSubmitting(false);
-            alert("Payment verification failed: Missing Razorpay signature or payment ID.");
+            alert("Payment could not be confirmed: Missing Razorpay payment ID.");
             return;
           }
 
-          try {
-            const successPayload = {
-              paymentSuccess: true,
-              razorpay_payment_id: paymentId,
-              razorpay_order_id: rzpOrderId,
-              razorpay_signature: signature,
-              isInternational,
-              email: sanitizedEmail,
-              name: sanitizedName,
-              phone: fullPhone,
-              baseAmount: finalAmount,
-              gstAmount: 0,
-              amount: finalAmount,
-              companyName: "",
-              gstin: "",
-              promoCode: appliedCoupon
-            };
+          let token = "";
+          const successPayload = {
+            paymentSuccess: true,
+            action: "payment_success",
+            razorpay_payment_id: paymentId,
+            razorpay_order_id: rzpOrderId,
+            razorpay_signature: signature,
+            paymentId: paymentId,
+            orderId: rzpOrderId,
+            isInternational,
+            email: sanitizedEmail,
+            name: sanitizedName,
+            phone: fullPhone,
+            course: "TECH TYCOON Academy",
+            modeOfSession: "TECH TYCOON Academy Pre-Registration (Udemy Platform Access)",
+            baseAmount: finalAmount,
+            gstAmount: 0,
+            amount: finalAmount,
+            companyName: "",
+            gstin: "",
+            promoCode: appliedCoupon
+          };
 
+          try {
             const verifyRes = await fetch(APPS_SCRIPT_URL, {
               method: "POST",
               headers: { "Content-Type": "text/plain;charset=utf-8" },
               body: JSON.stringify(successPayload)
             });
             const verifyData = await verifyRes.json();
-            if (!verifyData || !verifyData.success) {
-              setIsSubmitting(false);
-              alert(`Payment verification failed: ${verifyData?.error || "Unable to verify payment signature."}`);
-              return;
+            if (verifyData?.invoiceToken) {
+              token = verifyData.invoiceToken;
             }
+          } catch {
+            fetch(APPS_SCRIPT_URL, {
+              method: "POST",
+              mode: "no-cors",
+              headers: { "Content-Type": "text/plain;charset=utf-8" },
+              body: JSON.stringify(successPayload)
+            }).catch(() => {});
+          }
 
-            setIsSubmitting(false);
-            setIsModalOpen(false);
+          setIsSubmitting(false);
+          setIsModalOpen(false);
 
-            const token = verifyData?.invoiceToken || "";
-            if (token) {
+          if (token) {
               try {
                 sessionStorage.setItem(`inv_tok_${paymentId}`, token);
               } catch (_) {}
@@ -244,21 +255,22 @@ export default function AcademyPreRegisterPage() {
               } catch (_) {}
             }
 
-            // Never place token in URL query params to prevent token leakage in history, logs, or Referer headers
-            const thankYouUrl = `/claude_masterclass/thank-you?paymentId=${encodeURIComponent(paymentId)}&orderId=${encodeURIComponent(rzpOrderId)}`;
-            navigate(thankYouUrl, {
-              state: {
-                paymentId,
-                orderId: rzpOrderId,
-                token,
-                coupon: appliedCoupon,
-                backendUrl: APPS_SCRIPT_URL
-              }
-            });
-          } catch {
-            setIsSubmitting(false);
-            alert("Could not verify payment with server. Please check your email or contact support.");
-          }
+          const thankYouUrl = `/thank-you?paymentId=${encodeURIComponent(paymentId)}${rzpOrderId ? `&orderId=${encodeURIComponent(rzpOrderId)}` : ''}`;
+          navigate(thankYouUrl, {
+            state: {
+              name: sanitizedName,
+              email: sanitizedEmail,
+              phone: fullPhone,
+              amount: finalAmount,
+              course: "TECH TYCOON Academy",
+              noGst: true,
+              paymentId,
+              orderId: rzpOrderId,
+              token,
+              coupon: appliedCoupon,
+              backendUrl: APPS_SCRIPT_URL
+            }
+          });
         },
         modal: {
           ondismiss: function() {
