@@ -94,6 +94,28 @@ spaRoutes.forEach(route => {
   }
 });
 
+// CRITICAL FIX: Ensure advanced_masterclass assets and hyphenated mirror are synchronized
+const advSrcDir = path.join('public', 'advanced_masterclass');
+const advHyphenDestDir = path.join('dist', 'advanced-masterclass');
+const advDestDir = path.join('dist', 'advanced_masterclass');
+if (fs.existsSync(advSrcDir)) {
+  fs.cpSync(advSrcDir, advDestDir, { recursive: true });
+  fs.cpSync(advSrcDir, advHyphenDestDir, { recursive: true });
+  fs.copyFileSync(path.join(advSrcDir, 'index.html'), path.join('dist', 'advanced_masterclass.html'));
+  fs.copyFileSync(path.join(advSrcDir, 'index.html'), path.join('dist', 'advanced-masterclass.html'));
+  console.log('✓ Synchronized advanced_masterclass & advanced-masterclass static assets');
+
+  // Provide root fallbacks so even relative requests from /advanced_masterclass without trailing slash never 404
+  ['instructor.jpg', 'hero-ai-bg.png', 'logo.png'].forEach(file => {
+    const srcFile = path.join(advSrcDir, file);
+    const rootFile = path.join('dist', file);
+    if (fs.existsSync(srcFile) && !fs.existsSync(rootFile)) {
+      fs.copyFileSync(srcFile, rootFile);
+      console.log(`✓ Created dist/${file} fallback`);
+    }
+  });
+}
+
 // CRITICAL FIX: Ensure claude-resources (hyphenated route) is a 100% mirror of claude_resources
 const claudeResSrcDir = path.join('public', 'claude_resources');
 const claudeResHyphenDestDir = path.join('dist', 'claude-resources');

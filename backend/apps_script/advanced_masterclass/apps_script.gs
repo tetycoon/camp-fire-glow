@@ -204,7 +204,7 @@ const WHATSAPP_CONFIG = {
   get ACCESS_TOKEN() { return getScriptSecret("WHATSAPP_ACCESS_TOKEN"); },
   get PHONE_NUMBER_ID() { return getWhatsAppPhoneNumberId(); },
   PHONE_NUMBER: "917010340494", 
-  WA_GROUP_LINK: "https://chat.whatsapp.com/LABV7lxs19RAlwqHzlsgRw", // AI Secrets Revealed Community Group
+  WA_GROUP_LINK: "https://chat.whatsapp.com/EpsuzpxGz6F98ml2GUBejC", // AI Secrets Revealed Community Group
   WA_COMMUNITY_LINK: "https://chat.whatsapp.com/EpsuzpxGz6F98ml2GUBejC", // WhatsApp Community
   WA_GROUP_LINK_CLAUDE_ONLINE: "https://chat.whatsapp.com/GgMP8b9Z5HIKn5duwqgnwU", // Claude Online Group
   WA_GROUP_LINK_CLAUDE_OFFLINE: "https://chat.whatsapp.com/DMp2tRRhjwN1fziYujeQhb", // Claude Offline Group

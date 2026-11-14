@@ -14,7 +14,6 @@ import { AIMasterclassRegisterModalProvider, useAIMasterclassRegisterModal } fro
 import AIMasterclassWhatsApp from "./AIMasterclassWhatsApp";
 import SocialProofToast from "../common/SocialProofToast";
 import AIMasterclassStickyBar from "./AIMasterclassStickyBar";
-import AIMasterclassLeadGate from "./AIMasterclassLeadGate";
 
 const AIMasterclassUrlTrigger: React.FC = () => {
     const { openRegisterModal } = useAIMasterclassRegisterModal();
@@ -67,7 +66,7 @@ interface AIMasterclassPageProps {
     showLeadGate?: boolean;
 }
 
-const AIMasterclassPage: React.FC<AIMasterclassPageProps> = ({ showLeadGate = true }) => {
+const AIMasterclassPage: React.FC<AIMasterclassPageProps> = ({ showLeadGate = false }) => {
     useEffect(() => {
         document.title = "AI Secrets Revealed & Business Automation Masterclass | TECH TYCOON DIGITAL SOLUTION LLP";
         if (typeof (window as any).fbq === 'function') {
@@ -94,8 +93,7 @@ const AIMasterclassPage: React.FC<AIMasterclassPageProps> = ({ showLeadGate = tr
                 <AIMasterclassWhatsApp />
                 <SocialProofToast />
                 <AIMasterclassStickyBar />
-                {showLeadGate && <AIMasterclassLeadGate />}
-            </div>
+                            </div>
         </AIMasterclassRegisterModalProvider>
     );
 };

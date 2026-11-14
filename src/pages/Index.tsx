@@ -46,7 +46,7 @@ const courses: Course[] = [
     fees: "From ₹499",
     originalFees: "₹2,499",
     date: "Every Saturday & Sunday",
-    timing: "6:00 PM – 9:00 PM IST",
+    timing: "5:30 PM – 8:30 PM IST",
     format: "Online Zoom Live",
     image: "/images/antony_praveen.jpg",
     link: "/claude_masterclass",
@@ -1049,7 +1049,7 @@ const Index: React.FC = () => {
               <div className="flex items-start gap-2">
                 <MapPin className="w-3.5 h-3.5 text-indigo-600 shrink-0 mt-0.5" />
                 <span className="leading-relaxed">
-                  No. 3/59B, 1st Floor, 3rd Street, Ragava Nagar, Moovarasampet, Chennai-600091
+                  No. 31, Ramalinga Nagar, Madipakkam, Chennai, TamilNadu 600091
                 </span>
               </div>
               <div className="flex items-center gap-2">
@@ -1086,7 +1086,7 @@ const Index: React.FC = () => {
           <div className="flex items-center gap-6">
             <Link to="/privacy" className="hover:text-slate-800 transition-colors">Privacy Policy</Link>
             <span>•</span>
-            <span className="text-slate-400">No. 3/59B, 1st Floor, 3rd Street, Ragava Nagar, Moovarasampet, Chennai-600091</span>
+            <span className="text-slate-400">No. 31, Ramalinga Nagar, Madipakkam, Chennai, TamilNadu 600091</span>
           </div>
         </div>
       </footer>

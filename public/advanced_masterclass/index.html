@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script>
+(function() {
+  var p = window.location.pathname;
+  if (p === '/advanced_masterclass' || p === '/advanced-masterclass') {
+    if (window.history && window.history.replaceState) {
+      window.history.replaceState(null, '', p + '/' + window.location.search + window.location.hash);
+    }
+  }
+})();
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>3 Days AI Live MasterClass — Tech Tycoon</title>
@@ -37,7 +47,7 @@ body{font-family:var(--bd);background:var(--bg);color:var(--slate);overflow-x:hi
 /* HERO */
 .hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:120px 24px 60px;overflow:hidden;background:linear-gradient(135deg,#fafafa 0%,#e0e7ff 50%,#c7d2fe 100%)}
 .hero-grid-bg{position:absolute;inset:0;opacity:0.3;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:1}
-.hero-img-bg{position:absolute;inset:0;background-image:url('hero-ai-bg.png');background-size:cover;background-position:center;background-repeat:no-repeat;opacity:0.25;pointer-events:none;z-index:0;mix-blend-mode:multiply}
+.hero-img-bg{position:absolute;inset:0;background-image:url('/advanced_masterclass/hero-ai-bg.png'), url('hero-ai-bg.png');background-size:cover;background-position:center;background-repeat:no-repeat;opacity:0.25;pointer-events:none;z-index:0;mix-blend-mode:multiply}
 .hero-blob{position:absolute;top:-10%;right:-5%;width:600px;height:600px;background:radial-gradient(circle,rgba(79,70,229,0.2) 0%,transparent 70%);pointer-events:none;border-radius:50%;z-index:1;animation:floatBlob 12s ease-in-out infinite}
 @keyframes floatBlob{0%,100%{transform:translate(0,0)}50%{transform:translate(-30px,30px)}}
 .hero-inner{position:relative;z-index:2;max-width:1280px;margin:0 auto;width:100%;display:grid;grid-template-columns:1.1fr 480px;gap:56px;align-items:center}
@@ -279,7 +289,7 @@ src="https://www.facebook.com/tr?id=1077721348415196&ev=PageView&noscript=1"
 
 <nav class="nav">
   <a href="/" class="nav-brand" title="Back to TechTycoon Hub">
-    <img src="logo.png" alt="Tech Tycoon Logo" class="nav-logo">
+    <img src="/advanced_masterclass/logo.png" alt="Tech Tycoon Logo" class="nav-logo" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='logo.png';}">
     TECH<span>TYCOON</span>
   </a>
   <div class="nav-links">
@@ -530,7 +540,7 @@ src="https://www.facebook.com/tr?id=1077721348415196&ev=PageView&noscript=1"
   <div class="sec-inner">
     <div class="inst-wrap sr">
       <div class="inst-img-wrap">
-        <img src="instructor.jpg" class="inst-img" alt="Antony Praveen">
+        <img src="/advanced_masterclass/instructor.jpg" class="inst-img" alt="Antony Praveen" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='instructor.jpg';}">
       </div>
       <div class="inst-content">
         <div class="sec-tag">Your Instructor</div>

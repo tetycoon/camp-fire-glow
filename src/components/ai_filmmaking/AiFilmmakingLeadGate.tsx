@@ -129,7 +129,7 @@ const AiFilmmakingLeadGate: React.FC<AiFilmmakingLeadGateProps> = ({
 
     const updateField = (field: keyof LandingLeadInput, value: string) => {
         setForm(prev => ({ ...prev, [field]: value }));
-        if (errors[field]) {
+        if ((errors as Record<string, string | undefined>)[field]) {
             setErrors(prev => ({ ...prev, [field]: undefined }));
         }
         if (submitError) setSubmitError(null);

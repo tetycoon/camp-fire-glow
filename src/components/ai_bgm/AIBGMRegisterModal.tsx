@@ -537,25 +537,19 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
                 </div>
               </div>
 
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 sm:gap-3">
+              <div className="flex flex-col items-center justify-center gap-2.5 sm:gap-3">
                 <a
-                  href="https://wa.me/917558133039?text=Hi%20Antony%2C%20I%20have%20completed%20payment%20for%20AI-BGM%20Course!%20My%20Payment%20ID%20is%20"
+                  href={`https://wa.me/917558133039?text=${encodeURIComponent("Hi Antony, I have completed payment for AI-BGM Course! My Payment ID is " + successDetails.paymentId)}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="w-full sm:w-auto px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-emerald-600/25 transition-transform hover:scale-105 flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-emerald-600/25 transition-transform hover:scale-105 flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <span>Join VIP WhatsApp Community</span>
-                  <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                  <ArrowRight className="w-4 h-4" />
                 </a>
-
-                <button
-                  type="button"
-                  onClick={() => openPrintableGstInvoice(successDetails.verifiedInvoice)}
-                  className="w-full sm:w-auto px-4 py-2.5 sm:px-5 sm:py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs border border-slate-300 flex items-center justify-center gap-1.5"
-                >
-                  <FileText className="w-3.5 h-3.5 text-indigo-600" />
-                  <span>Download GST Tax Invoice (PDF)</span>
-                </button>
+                <p className="text-[11px] text-slate-500 text-center">
+                  📧 Your official GST Tax Invoice has been emailed to <strong>{successDetails.email}</strong>.
+                </p>
               </div>
             </div>
           ) : (

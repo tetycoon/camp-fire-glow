@@ -69,7 +69,7 @@ const ConsultingFooter: React.FC = () => {
               </div>
               <div className="flex items-start gap-2">
                 <MapPin className="w-3.5 h-3.5 text-slate-400 mt-0.5 flex-shrink-0" />
-                <span>No. 3/59B, 1st Floor, 3rd Street, Ragava Nagar, Moovarasampet, Chennai-600091</span>
+                <span>No. 31, Ramalinga Nagar, Madipakkam, Chennai, TamilNadu 600091</span>
               </div>
               <div className="flex items-center gap-2">
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />

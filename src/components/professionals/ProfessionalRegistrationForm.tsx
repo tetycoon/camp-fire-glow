@@ -480,24 +480,15 @@ const ProfessionalRegistrationForm: React.FC = () => {
             href="https://academy.techtycoon.in"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-md shadow-indigo-600/25 transition-all"
+            className="w-full py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-md shadow-indigo-600/25 transition-all cursor-pointer"
           >
             <span>Open Academy Student Portal</span>
             <ExternalLink className="w-3.5 h-3.5" />
           </a>
 
-          <button
-            type="button"
-            onClick={() => {
-              if (successDetails.verifiedInvoice) {
-                openPrintableGstInvoice(successDetails.verifiedInvoice);
-              }
-            }}
-            className="w-full py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-800 font-bold text-xs flex items-center justify-center gap-1.5 transition-all"
-          >
-            <FileText className="w-3.5 h-3.5 text-indigo-600" />
-            <span>Download Official GST Tax Invoice (PDF)</span>
-          </button>
+          <p className="text-[11px] text-slate-500 text-center font-medium pt-1">
+            📧 Your official GST Tax Invoice has been emailed to <strong>{successDetails.email}</strong>.
+          </p>
         </div>
       </div>
     );

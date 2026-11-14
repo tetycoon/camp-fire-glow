@@ -417,24 +417,15 @@ const ConsultingBookingForm: React.FC<ConsultingBookingFormProps> = ({ onSuccess
             href="https://wa.me/917558133039?text=Hi%20Tech%20Tycoon%20Team%2C%20I%20have%20booked%20a%201-on-1%20AI%20Consulting%20session.%20Order%20ID%3A%20"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full py-3 px-5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/25 transition-all"
+            className="w-full py-3 px-5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/25 transition-all cursor-pointer"
           >
             <Phone className="w-4 h-4" />
             <span>Connect via WhatsApp Support</span>
           </a>
 
-          <button
-            type="button"
-            onClick={() => {
-              if (successDetails.verifiedInvoice) {
-                openPrintableGstInvoice(successDetails.verifiedInvoice);
-              }
-            }}
-            className="w-full py-2.5 px-5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-800 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all"
-          >
-            <FileText className="w-4 h-4 text-indigo-600" />
-            <span>Download Official GST Tax Invoice (PDF)</span>
-          </button>
+          <p className="text-xs text-slate-500 text-center font-medium pt-1">
+            📧 Your official GST Tax Invoice has been emailed to <strong>{successDetails.email}</strong>.
+          </p>
         </div>
       </div>
     );

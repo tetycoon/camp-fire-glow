@@ -212,7 +212,7 @@ const generateMockData = (sheetId: string): Registration[] => {
     pageUrl: `https://course.techtycoon.in/${sheetId}`,
     batch: sheetId === "ai-masterclass" ? "Masterclass 2026" : "Claude Masterclass",
     sessionDate: item.date,
-    sessionTime: "6:00 PM IST"
+    sessionTime: "5:30 PM IST"
   }));
 };
 
@@ -1370,18 +1370,18 @@ const AdminPanelPage: React.FC = () => {
                       </span>
                       <h3 className="text-lg font-bold text-white mt-1">Claude Masterclass (Online)</h3>
                     </div>
-                    <span className="text-xs font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-lg">6:00 PM IST</span>
+                    <span className="text-xs font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-lg">5:30 PM IST</span>
                   </div>
 
                   <div className="text-xs space-y-2 text-white/70 bg-white/5 p-4 rounded-xl border border-white/5">
-                    <p>📅 <strong>Next Session:</strong> October 3rd & 4th, 2026 (Sat & Sun • 6:00 PM – 9:00 PM IST)</p>
+                    <p>📅 <strong>Next Session:</strong> Every Sat & Sun (5:30 PM – 8:30 PM IST)</p>
                     <p>📍 <strong>Platform:</strong> Live Online Virtual Classroom</p>
                     <p>⚡ <strong>Capacity:</strong> 500 Attendees Room Limit</p>
                   </div>
 
                   <div className="pt-3 border-t border-white/5 flex items-center justify-between text-xs">
                     <a
-                      href="https://chat.whatsapp.com/LABV7lxs19RAlwqHzlsgRw"
+                      href="https://chat.whatsapp.com/EpsuzpxGz6F98ml2GUBejC"
                       target="_blank"
                       rel="noreferrer"
                       className="inline-flex items-center gap-2 text-emerald-400 hover:text-emerald-300 font-bold bg-emerald-500/10 border border-emerald-500/20 px-4 py-2.5 rounded-xl transition-all"

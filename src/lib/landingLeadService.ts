@@ -12,7 +12,7 @@ export interface LandingLeadInput {
   name: string;
   countryCode: string;
   phone: string;
-  email: string;
+  email?: string;
   website?: string; // honeypot
 }
 
@@ -39,7 +39,7 @@ export const validateLandingLead = (input: LandingLeadInput): LandingLeadErrors 
   const errors: LandingLeadErrors = {};
   const name = input.name.replace(/\s+/g, " ").trim();
   const phoneDigits = input.phone.replace(/\D/g, "");
-  const email = input.email.trim();
+  const email = (input.email || "").trim();
 
   if (!name) errors.name = "Full name is required.";
   else if (name.length < 2) errors.name = "Please enter your full name.";
@@ -70,7 +70,7 @@ export const buildLandingLeadPayload = (input: LandingLeadInput) => ({
   action: "saveLandingLead",
   name: input.name.replace(/\s+/g, " ").trim(),
   phone: `${input.countryCode}${input.phone.replace(/\D/g, "")}`,
-  email: input.email.trim().toLowerCase(),
+  email: (input.email || "").trim().toLowerCase(),
   website: input.website || "",
   pageUrl: window.location.href,
   utm: getTrackingParams(window.location.search),

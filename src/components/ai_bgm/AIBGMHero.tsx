@@ -59,12 +59,11 @@ const AIBGMHero: React.FC<AIBGMHeroProps> = ({ onUnlockClick }) => {
             <span className="text-blue-700"> (AI-BGM)</span>
           </h1>
 
-          {/* Core Philosophy Callout */}
-          <div className="inline-block mx-auto mb-4 sm:mb-8 px-3.5 py-1.5 sm:px-6 sm:py-2.5 rounded-xl sm:rounded-2xl bg-gradient-to-r from-amber-50 via-orange-50/70 to-amber-50 border border-amber-200/80 shadow-sm">
-            <p className="text-xs sm:text-lg font-black text-amber-900 tracking-wide flex items-center justify-center gap-1.5 sm:gap-2">
-              <Sparkles className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-amber-600 animate-spin" style={{ animationDuration: '6s' }} />
-              We Teach AI With a 100% BUSINESS PERSPECTIVE
-              <Sparkles className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-amber-600 animate-spin" style={{ animationDuration: '6s' }} />
+          {/* Executive Strategic Foundation */}
+          <div className="inline-block mx-auto mb-4 sm:mb-8 px-4 py-2 sm:px-6 sm:py-2.5 rounded-xl sm:rounded-2xl bg-slate-900 text-white shadow-md">
+            <p className="text-xs sm:text-base font-bold tracking-wide flex items-center justify-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+              Enterprise AI Architecture • Designed Exclusively for Commercial & Business Applications
             </p>
           </div>
 

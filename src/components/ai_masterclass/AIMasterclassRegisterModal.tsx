@@ -28,6 +28,27 @@ function loadRazorpayScript(): Promise<boolean> {
     });
 }
 
+
+function getTrackingAttribution(): Record<string, string> {
+    try {
+        const params = new URLSearchParams(window.location.search);
+        const keys = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "gclid", "fbclid"];
+        const attribution: Record<string, string> = {};
+        for (const k of keys) {
+            const val = params.get(k) || sessionStorage.getItem(k) || "";
+            if (val) {
+                attribution[k] = val;
+                try {
+                    sessionStorage.setItem(k, val);
+                } catch (_) {}
+            }
+        }
+        return attribution;
+    } catch (_) {
+        return {};
+    }
+}
+
 const defaultCountry = countryCodes.find(c => c.code === "+91") || countryCodes[0];
 
 const AIMasterclassRegisterModal: React.FC = () => {
@@ -127,6 +148,19 @@ const AIMasterclassRegisterModal: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
+        if (!form.name.trim()) {
+            alert("Please enter your full name.");
+            return;
+        }
+        if (!form.email.trim() || !form.email.includes("@")) {
+            alert("Please enter a valid email address.");
+            return;
+        }
+        if (!form.phone.trim() || form.phone.replace(/[^0-9]/g, "").length < 7) {
+            alert("Please enter a valid WhatsApp/Mobile number.");
+            return;
+        }
+
         if (claimGst) {
             if (!isValidGstin(gstin)) {
                 alert("Please enter a valid 15-character Indian GSTIN (e.g., 33AAAAA0000A1Z5).");
@@ -143,15 +177,7 @@ const AIMasterclassRegisterModal: React.FC = () => {
         const safeCompany = claimGst ? sanitizeTextInput(companyName, 120) : "";
         const safeGstin = claimGst ? gstin.trim().toUpperCase() : "";
 
-        // 1. Track Meta Pixel Lead event at earliest reliable point (once per submission attempt)
-        if (!leadTrackedRef.current && typeof (window as any).fbq === 'function') {
-            leadTrackedRef.current = true;
-            (window as any).fbq('track', 'Lead', {
-                content_name: 'AI Secrets Revealed Masterclass',
-                currency: 'INR',
-                value: totalAmount
-            });
-        }
+        // Meta Pixel Lead event is fired ONLY after backend accepts and saves the registration details
 
         setLoading(true);
 
@@ -164,6 +190,8 @@ const AIMasterclassRegisterModal: React.FC = () => {
 
         const pageUrl = window.location.href;
         const isTestEmail = isAuthorizedTestEmail(safeEmail);
+        const attribution = getTrackingAttribution();
+        const clientLeadId = "lead_" + Date.now().toString(36) + "_" + Math.random().toString(36).substring(2, 9);
         const finalAmount = isTestEmail ? 100 : totalInPaise; // 100 paise (₹1) for test, else ₹117 * seatsCount
 
         try {
@@ -171,6 +199,16 @@ const AIMasterclassRegisterModal: React.FC = () => {
                 method: "POST",
                 headers: { "Content-Type": "text/plain;charset=utf-8" },
                 body: JSON.stringify({
+                    leadId: clientLeadId,
+                    utm_source: attribution.utm_source,
+                    utm_medium: attribution.utm_medium,
+                    utm_campaign: attribution.utm_campaign,
+                    utm_content: attribution.utm_content,
+                    utm_term: attribution.utm_term,
+                    gclid: attribution.gclid,
+                    fbclid: attribution.fbclid,
+                    utm: attribution,
+                    userAgent: typeof navigator !== "undefined" ? navigator.userAgent : "",
                     userType: sanitizeTextInput(form.profession || "Professional", 60),
                     pageUrl,
                     affiliateId: affiliateId || "",
@@ -201,6 +239,46 @@ const AIMasterclassRegisterModal: React.FC = () => {
                 alert(`Order creation failed: ${result.error || "Please check your network and try again."}\nIf payment failed please contact +91 7558133039`);
                 setLoading(false);
                 return;
+            }
+
+            // Meta Pixel Lead tracking (clean, no PII, strictly deduplicated with eventID)
+            const leadEventId = String(result.leadId || result.orderId || clientLeadId).trim();
+            const leadStorageKey = `lead_tracked_${leadEventId}`;
+            const alreadyTrackedLead = leadTrackedRef.current || (leadEventId && sessionStorage.getItem(leadStorageKey));
+
+            if (!alreadyTrackedLead && leadEventId) {
+                leadTrackedRef.current = true;
+                try {
+                    sessionStorage.setItem(leadStorageKey, "true");
+                } catch (_) {}
+
+                if (typeof (window as any).fbq === "function") {
+                    try {
+                        (window as any).fbq(
+                            "track",
+                            "Lead",
+                            {
+                                content_name: includePdfMaterial
+                                    ? "AI Secrets Revealed Masterclass + Resource Toolkit"
+                                    : "AI Secrets Revealed Masterclass",
+                                content_category: "Masterclass Registration Form"
+                            },
+                            { eventID: leadEventId }
+                        );
+                    } catch (_) {}
+                }
+
+                if (typeof (window as any).gtag === "function") {
+                    try {
+                        (window as any).gtag("event", "generate_lead", {
+                            event_category: "Registration Form",
+                            event_label: includePdfMaterial
+                                ? "AI Secrets Revealed + Toolkit"
+                                : "AI Secrets Revealed",
+                            transaction_id: leadEventId
+                        });
+                    } catch (_) {}
+                }
             }
 
             const options: RazorpayOptions = {
@@ -300,10 +378,10 @@ const AIMasterclassRegisterModal: React.FC = () => {
                             // Meta Pixel Purchase
                             if (typeof (window as any).fbq === 'function') {
                                 (window as any).fbq('track', 'Purchase', {
-                                    content_name: 'AI Secrets Revealed Masterclass',
+                                    content_name: includePdfMaterial ? 'AI Secrets Revealed Masterclass + Session Material (PDF)' : 'AI Secrets Revealed Masterclass',
                                     currency: 'INR',
                                     value: actualPaidAmount
-                                });
+                                }, { eventID: paymentId });
                             }
 
                             // Google Analytics 4 Purchase
