@@ -70,50 +70,81 @@
       backdrop-filter: blur(8px); border-bottom: 1px solid var(--line);
     }
     .nav { display: flex; align-items: center; justify-content: space-between; height: 72px; gap: 16px; }
-    .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-    .brand-icon { width: 42px; height: 42px; overflow: hidden; flex-shrink: 0; }
-    .brand-icon img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.55); }
-    .brand-text strong { display: block; font: 800 18px "Plus Jakarta Sans", sans-serif; color: var(--brand-dark); }
-    .brand-text strong span { color: var(--yellow-dark); }
-    .brand-text small { font-size: 11.5px; color: var(--muted); font-weight: 500; }
+    .brand { display: flex; align-items: center; text-decoration: none; flex-shrink: 0; }
+    .brand-logo { height: 46px; width: auto; }
     .nav-links { display: flex; gap: 26px; font-size: 14.5px; font-weight: 500; }
     .nav-links a { text-decoration: none; color: var(--muted); }
     .nav-links a:hover { color: var(--brand); }
     .nav .btn { padding: 11px 18px; font-size: 14px; }
 
-    /* Hero */
-    .hero { position: relative; overflow: hidden; background: var(--navy); color: #fff; padding: 80px 0 90px; }
+    /* Hero — Tech Tycoon brand palette */
+    .hero {
+      --hb: #075ce5; --hb2: #168bff; --hn: 20, 34, 49;
+      position: relative; overflow: hidden; isolation: isolate;
+      min-height: calc(100vh - 72px); min-height: calc(100svh - 72px);
+      display: flex; align-items: center; padding: 72px 0;
+      background: #142231; color: #fff;
+    }
+    .hero-bg {
+      position: absolute; inset: 0; z-index: -2;
+      background: url("assets/hero.jpg") 32% center / cover no-repeat;
+      /* mirrored so the speaker and students sit on the right, clear of the text */
+      transform: scale(-1, 1);
+      animation: heroZoom 16s ease-out both;
+    }
     .hero::before {
-      content: ""; position: absolute; width: 560px; height: 560px; border-radius: 50%;
-      background: var(--navy-2); top: -220px; right: -160px;
+      content: ""; position: absolute; inset: 0; z-index: -1;
+      background:
+        radial-gradient(700px 500px at 0% 100%, rgba(7,92,229,.35), transparent 70%),
+        linear-gradient(90deg, rgba(var(--hn),.96) 0%, rgba(var(--hn),.86) 36%, rgba(var(--hn),.45) 64%, rgba(var(--hn),.2) 100%),
+        linear-gradient(0deg, rgba(var(--hn),.55) 0%, transparent 40%);
     }
-    .hero::after {
-      content: ""; position: absolute; width: 420px; height: 420px; border-radius: 50%;
-      background: rgba(255,180,0,.12); bottom: -240px; left: -160px;
+    .hero > .container { width: 100%; }
+    .hero-content { max-width: 660px; }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 10px; margin-bottom: 24px;
+      font-size: 13px; font-weight: 800; letter-spacing: .14em; color: #fff;
+      background: rgba(22,139,255,.16); border: 1px solid rgba(22,139,255,.45);
+      padding: 8px 16px; border-radius: 999px;
     }
-    .hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.1fr 1fr; gap: 56px; align-items: center; }
-    .pill {
-      display: inline-block; background: var(--yellow); color: var(--ink);
-      font-size: 13px; font-weight: 800; letter-spacing: .04em; padding: 8px 18px; border-radius: 999px; margin-bottom: 22px;
+    .hero-eyebrow::before {
+      content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--hb2);
+      box-shadow: 0 0 0 4px rgba(22,139,255,.28);
     }
-    .hero h1 { font-size: clamp(40px, 6vw, 66px); font-weight: 800; margin-bottom: 22px; }
-    .hero h1 .ai { color: var(--yellow); }
-    .hero .lead { font-size: 18px; color: #c9d4f0; max-width: 540px; margin-bottom: 30px; }
-    .price-row { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; margin-bottom: 22px; }
-    .price-badge { background: var(--yellow); color: var(--ink); border-radius: 14px; padding: 12px 22px; }
-    .price-badge .big { font-size: 32px; font-weight: 800; display: block; line-height: 1.1; }
-    .price-badge small { font-size: 13px; font-weight: 500; }
-    .hero .for { font-size: 14.5px; color: #aebbe0; }
-
-    .hero-media {
-      position: relative; aspect-ratio: 4 / 5; max-height: 520px; width: 100%; border-radius: 20px; overflow: hidden;
-      border: 2px dashed rgba(114,221,255,.45); background: rgba(19,41,107,.6);
-      display: flex; align-items: center; justify-content: center; text-align: center;
+    .hero h1 { font-size: clamp(36px, 5.2vw, 62px); font-weight: 800; letter-spacing: -.02em; line-height: 1.08; margin-bottom: 22px; }
+    .hero h1 .hl { color: var(--hb2); }
+    .hero h1 .line2 { display: block; margin-top: 12px; font-size: .58em; font-weight: 700; letter-spacing: -.01em; color: #e3ebf7; }
+    .hero-lead { font-size: 18px; color: #d2dceb; max-width: 560px; margin-bottom: 26px; }
+    .hero-offer {
+      display: inline-flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 14px; margin-bottom: 30px;
+      font-size: 14px; font-weight: 800; letter-spacing: .1em;
+      padding: 12px 18px; border-radius: 12px;
+      background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.2);
+      -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
     }
-    .hero-media .placeholder { color: #9fb2de; font-size: 15px; padding: 24px; }
-    .hero-media .placeholder img { width: 110px; margin: 0 auto 14px; opacity: .9; }
-    .hero-media > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-    .hero-media.has-img { border: 0; box-shadow: 0 24px 60px rgba(0,0,0,.4); }
+    .hero-offer .sep { width: 1px; height: 16px; background: rgba(255,255,255,.4); }
+    .hero-offer strong { color: var(--hb2); }
+    .hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; }
+    .btn-hero {
+      background: linear-gradient(135deg, var(--hb), var(--hb2)); color: #fff;
+      padding: 21px 36px; font-size: 16px; font-weight: 800; letter-spacing: .05em; border-radius: 12px;
+      box-shadow: 0 14px 34px rgba(7,92,229,.5);
+    }
+    .btn-hero:hover { box-shadow: 0 18px 42px rgba(22,139,255,.6); }
+    .btn-hero-ghost {
+      color: #fff; background: rgba(255,255,255,.05); border: 1.5px solid rgba(255,255,255,.5);
+      padding: 21px 30px; font-size: 15px; font-weight: 700; letter-spacing: .05em; border-radius: 12px;
+    }
+    .btn-hero-ghost:hover { background: rgba(255,255,255,.14); }
+    .reveal { opacity: 0; transform: translateY(26px); animation: heroIn .9s cubic-bezier(.2,.7,.2,1) forwards; }
+    .d1 { animation-delay: .1s; } .d2 { animation-delay: .25s; } .d3 { animation-delay: .4s; }
+    .d4 { animation-delay: .55s; } .d5 { animation-delay: .7s; }
+    @keyframes heroIn { to { opacity: 1; transform: none; } }
+    @keyframes heroZoom { from { transform: scale(-1.12, 1.12); } to { transform: scale(-1, 1); } }
+    @media (prefers-reduced-motion: reduce) {
+      .hero-bg { animation: none; }
+      .reveal { animation: none; opacity: 1; transform: none; }
+    }
 
     /* Highlights strip */
     .strip { background: var(--soft); border-bottom: 1px solid var(--line); }
@@ -256,11 +287,22 @@
       .why-grid, .grid-3 { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 760px) {
-      .hero { padding: 52px 0 60px; }
-      .hero-grid, .days, .film, .skills, .register, .foot { grid-template-columns: 1fr; }
+      /* Mobile hero: photo on top, text below so it never covers the people */
+      .hero { display: block; min-height: 0; text-align: center; padding: 40svh 0 48px; }
+      .hero-bg { bottom: auto; height: 54svh; background-position: 20% 20%; }
+      .hero::before {
+        bottom: auto; height: 54svh;
+        background: linear-gradient(180deg, rgba(var(--hn),.15) 0%, rgba(var(--hn),.45) 50%, #142231 100%);
+      }
+      .hero-content { margin: 0 auto; }
+      .hero-eyebrow { font-size: 11.5px; letter-spacing: .12em; }
+      .hero-lead { font-size: 16px; margin-left: auto; margin-right: auto; }
+      .hero-offer { font-size: 12.5px; }
+      .hero-ctas { flex-direction: column; }
+      .btn-hero, .btn-hero-ghost { width: 100%; padding: 19px 20px; }
+      .days, .film, .skills, .register, .foot { grid-template-columns: 1fr; }
       .why-grid, .grid-3 { grid-template-columns: 1fr; }
       .strip-grid { grid-template-columns: 1fr 1fr; }
-      .hero-media { aspect-ratio: 4 / 3; }
       section.block { padding-top: 64px; }
       .day { padding: 26px 20px; }
       .register { padding: 34px 22px; border-radius: 18px; }
@@ -274,7 +316,7 @@
       footer { padding-bottom: 100px; }
     }
     @media (max-width: 420px) {
-      .brand-text small { display: none; }
+      .brand-logo { height: 36px; }
       .nav .btn { padding: 10px 12px; font-size: 13px; }
     }
   </style>
@@ -285,11 +327,7 @@
   <header>
     <div class="container nav">
       <a href="#top" class="brand" aria-label="Tech Tycoon Academy home">
-        <div class="brand-icon"><img src="assets/logo-icon.png" alt=""></div>
-        <div class="brand-text">
-          <strong>Tech Tycoon <span>Academy</span></strong>
-          <small>by Tech Tycoon Digital Solution LLP</small>
-        </div>
+        <img class="brand-logo" src="assets/logo-full.png" alt="Tech Tycoon Digital Solution LLP" width="2172" height="724">
       </a>
       <nav class="nav-links">
         <a href="#why">Why AI</a>
@@ -303,27 +341,20 @@
 
   <!-- ===== Hero ===== -->
   <section class="hero" id="top">
-    <div class="container hero-grid">
-      <div>
-        <span class="pill">TWO-DAY AI CAREER SESSION</span>
-        <h1><span class="ai">AI</span> Powered Career Development</h1>
-        <p class="lead">Don't just prepare for your career. Prepare for the future of AI. Learn new skills, explore your creativity and discover new opportunities.</p>
-        <div class="price-row">
-          <div class="price-badge"><span class="big">₹99 only</span><small>Registration fee</small></div>
-          <a href="#register" class="btn btn-ghost btn-lg">Grab your seat &rarr;</a>
+    <div class="hero-bg" role="img" aria-label="Tech Tycoon trainer speaking to a group of students"></div>
+    <div class="container">
+      <div class="hero-content">
+        <span class="hero-eyebrow reveal d1">AI-POWERED CAREER DEVELOPMENT</span>
+        <h1 class="reveal d2">
+          <span class="hl">Your Future</span> Starts With <span class="hl">AI</span>.
+          <span class="line2">Build Skills. Discover Opportunities.</span>
+        </h1>
+        <p class="hero-lead reveal d3">Step into the world of artificial intelligence. Explore new-age digital skills, develop your creativity, and discover how AI can shape your future career.</p>
+        <div class="hero-offer reveal d4">2-DAY STUDENT WORKSHOP <span class="sep"></span> <strong>JUST ₹99</strong></div>
+        <div class="hero-ctas reveal d5">
+          <a href="#register" class="btn btn-hero">REGISTER NOW FOR ₹99</a>
+          <a href="#why" class="btn btn-hero-ghost">EXPLORE THE PROGRAM</a>
         </div>
-        <p class="for">For 12th pass students and current college students</p>
-      </div>
-
-      <!-- HERO IMAGE: save your photo as assets/hero.jpg and it appears here automatically -->
-      <div class="hero-media" id="heroMedia">
-        <div class="placeholder">
-          <img src="assets/logo-icon.png" alt="">
-          Hero image goes here<br>(save your photo as <b>assets/hero.jpg</b>)
-        </div>
-        <img src="assets/hero.jpg" alt="Students learning AI at Tech Tycoon Academy"
-             onload="document.getElementById('heroMedia').classList.add('has-img')"
-             onerror="this.remove()">
       </div>
     </div>
   </section>
