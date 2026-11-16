@@ -1,0 +1,632 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Powered Career Development | Tech Tycoon Academy</title>
+  <meta name="description" content="Two-day AI career session for 12th pass and college students. Learn AI tools, AI filmmaking and practical digital skills. Register for only ₹99.">
+  <link rel="canonical" href="https://course.techtycoon.in/ai-powered-career-development/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://course.techtycoon.in/ai-powered-career-development/">
+  <meta property="og:title" content="AI Powered Career Development | Tech Tycoon Academy">
+  <meta property="og:description" content="Two-day AI career session for 12th pass and college students. Learn AI tools, AI filmmaking and practical digital skills. Register for only ₹99.">
+  <meta property="og:image" content="https://course.techtycoon.in/ai-powered-career-development/assets/logo-full.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/png" href="assets/logo-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #0b1b3f;
+      --navy-2: #13296b;
+      --blue: #2448ff;
+      --brand: #0a6cff;
+      --brand-dark: #0047c2;
+      --sky: #3bb5ff;
+      --cyan: #72ddff;
+      --violet: #5374ff;
+      --yellow: #ffb400;
+      --yellow-dark: #e6a200;
+      --ink: #0b1b3f;
+      --muted: #46557a;
+      --line: #e3e8f4;
+      --soft: #eaf0ff;
+      --cream: #fff3d6;
+      --white: #ffffff;
+      --radius: 14px;
+      --max: 1140px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+    body {
+      font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      color: var(--ink); background: var(--white); line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    h1, h2, h3, .big { font-family: "Plus Jakarta Sans", "Inter", sans-serif; line-height: 1.15; }
+    a { color: inherit; }
+    img { max-width: 100%; display: block; }
+    .container { max-width: var(--max); margin: 0 auto; padding: 0 20px; }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      font: 700 15px/1 "Inter", sans-serif; text-decoration: none; border: 0; cursor: pointer;
+      padding: 14px 22px; border-radius: 10px; transition: transform .15s, background .15s;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-yellow { background: var(--yellow); color: var(--ink); box-shadow: 0 8px 24px rgba(255,180,0,.28); }
+    .btn-yellow:hover { background: var(--yellow-dark); }
+    .btn-blue { background: var(--brand); color: #fff; }
+    .btn-blue:hover { background: var(--brand-dark); }
+    .btn-ghost { color: #fff; border: 1.5px solid rgba(255,255,255,.35); }
+    .btn-ghost:hover { background: rgba(255,255,255,.08); }
+    .btn-lg { padding: 17px 28px; font-size: 16px; }
+
+    /* Header */
+    header {
+      position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,.96);
+      backdrop-filter: blur(8px); border-bottom: 1px solid var(--line);
+    }
+    .nav { display: flex; align-items: center; justify-content: space-between; height: 72px; gap: 16px; }
+    .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .brand-icon { width: 42px; height: 42px; overflow: hidden; flex-shrink: 0; }
+    .brand-icon img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.55); }
+    .brand-text strong { display: block; font: 800 18px "Plus Jakarta Sans", sans-serif; color: var(--brand-dark); }
+    .brand-text strong span { color: var(--yellow-dark); }
+    .brand-text small { font-size: 11.5px; color: var(--muted); font-weight: 500; }
+    .nav-links { display: flex; gap: 26px; font-size: 14.5px; font-weight: 500; }
+    .nav-links a { text-decoration: none; color: var(--muted); }
+    .nav-links a:hover { color: var(--brand); }
+    .nav .btn { padding: 11px 18px; font-size: 14px; }
+
+    /* Hero */
+    .hero { position: relative; overflow: hidden; background: var(--navy); color: #fff; padding: 80px 0 90px; }
+    .hero::before {
+      content: ""; position: absolute; width: 560px; height: 560px; border-radius: 50%;
+      background: var(--navy-2); top: -220px; right: -160px;
+    }
+    .hero::after {
+      content: ""; position: absolute; width: 420px; height: 420px; border-radius: 50%;
+      background: rgba(255,180,0,.12); bottom: -240px; left: -160px;
+    }
+    .hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.1fr 1fr; gap: 56px; align-items: center; }
+    .pill {
+      display: inline-block; background: var(--yellow); color: var(--ink);
+      font-size: 13px; font-weight: 800; letter-spacing: .04em; padding: 8px 18px; border-radius: 999px; margin-bottom: 22px;
+    }
+    .hero h1 { font-size: clamp(40px, 6vw, 66px); font-weight: 800; margin-bottom: 22px; }
+    .hero h1 .ai { color: var(--yellow); }
+    .hero .lead { font-size: 18px; color: #c9d4f0; max-width: 540px; margin-bottom: 30px; }
+    .price-row { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; margin-bottom: 22px; }
+    .price-badge { background: var(--yellow); color: var(--ink); border-radius: 14px; padding: 12px 22px; }
+    .price-badge .big { font-size: 32px; font-weight: 800; display: block; line-height: 1.1; }
+    .price-badge small { font-size: 13px; font-weight: 500; }
+    .hero .for { font-size: 14.5px; color: #aebbe0; }
+
+    .hero-media {
+      position: relative; aspect-ratio: 4 / 5; max-height: 520px; width: 100%; border-radius: 20px; overflow: hidden;
+      border: 2px dashed rgba(114,221,255,.45); background: rgba(19,41,107,.6);
+      display: flex; align-items: center; justify-content: center; text-align: center;
+    }
+    .hero-media .placeholder { color: #9fb2de; font-size: 15px; padding: 24px; }
+    .hero-media .placeholder img { width: 110px; margin: 0 auto 14px; opacity: .9; }
+    .hero-media > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .hero-media.has-img { border: 0; box-shadow: 0 24px 60px rgba(0,0,0,.4); }
+
+    /* Highlights strip */
+    .strip { background: var(--soft); border-bottom: 1px solid var(--line); }
+    .strip-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; padding: 28px 20px; text-align: center; }
+    .strip .big { font-size: 26px; font-weight: 800; color: var(--blue); }
+    .strip span { display: block; font-size: 13.5px; color: var(--muted); }
+
+    /* Sections */
+    section.block { padding: 88px 0 0; }
+    .eyebrow { display: block; color: var(--yellow-dark); font-weight: 800; font-size: 13px; letter-spacing: .08em; margin-bottom: 10px; }
+    .head { max-width: 720px; margin-bottom: 40px; }
+    .head.center { text-align: center; margin-left: auto; margin-right: auto; }
+    .head h2 { font-size: clamp(28px, 3.8vw, 40px); font-weight: 800; margin-bottom: 14px; }
+    .head p { color: var(--muted); font-size: 17px; }
+
+    /* Numbered list cards */
+    .num-list { display: grid; gap: 16px; }
+    .num-card {
+      display: flex; gap: 18px; align-items: flex-start; background: var(--soft);
+      border-radius: var(--radius); padding: 24px 26px;
+    }
+    .num {
+      flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%; background: var(--blue); color: #fff;
+      display: grid; place-items: center; font-weight: 800; font-size: 16px;
+    }
+    .num-card h3 { font-size: 19px; font-weight: 700; margin-bottom: 4px; }
+    .num-card p { color: var(--muted); font-size: 15.5px; }
+    .num-card.dark { background: var(--navy); }
+    .num-card.dark h3 { color: #fff; }
+    .num-card.dark p { color: #c2cdea; }
+    .num-card.dark .num { background: var(--yellow); color: var(--ink); }
+    .why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .why-grid .num-card { flex-direction: column; padding: 28px 26px; }
+
+    /* Grid cards */
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .tile {
+      background: var(--soft); border-radius: var(--radius); padding: 26px 24px;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .tile:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(11,27,63,.08); }
+    .tile.cream { background: var(--cream); }
+    .tile.dark { background: var(--navy); }
+    .tile.dark h3 { color: #fff; }
+    .tile.dark p { color: #c2cdea; }
+    .tile .ico {
+      width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; margin-bottom: 16px;
+      background: linear-gradient(135deg, var(--cyan), var(--violet)); color: #fff;
+    }
+    .tile.cream .ico { background: var(--yellow); color: var(--ink); }
+    .tile h3 { font-size: 19px; font-weight: 700; margin-bottom: 6px; }
+    .tile p { color: var(--muted); font-size: 15.5px; }
+
+    /* Days */
+    .days { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .day { border-radius: 20px; padding: 34px 30px; border: 1px solid var(--line); background: #fff; display: flex; flex-direction: column; }
+    .day-top { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+    .day-badge { background: var(--navy); color: var(--yellow); font-weight: 800; font-size: 13px; padding: 6px 14px; border-radius: 999px; letter-spacing: .05em; }
+    .day h3 { font-size: 26px; font-weight: 800; margin-bottom: 8px; }
+    .day > p { color: var(--muted); margin-bottom: 22px; }
+    .day .num-list { gap: 12px; margin-bottom: 22px; }
+    .day .num-card { padding: 18px 20px; }
+    .day .num-card h3 { font-size: 17px; }
+    .day .num-card p { font-size: 14.5px; }
+    .day .num { width: 34px; height: 34px; font-size: 14px; }
+    .outcome { margin-top: auto; border-radius: 12px; padding: 18px 22px; font-weight: 700; font-size: 16px; }
+    .outcome.y { background: var(--yellow); color: var(--ink); }
+    .outcome.n { background: var(--navy); color: #fff; }
+
+    /* Film */
+    .film { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+    .steps { list-style: none; display: grid; gap: 14px; counter-reset: s; }
+    .steps li { display: flex; align-items: center; gap: 16px; font-size: 17px; color: var(--muted); }
+    .steps li::before {
+      counter-increment: s; content: counter(s); flex-shrink: 0;
+      width: 42px; height: 42px; border-radius: 50%; background: var(--blue); color: #fff;
+      display: grid; place-items: center; font-weight: 800;
+    }
+    .steps b { color: var(--ink); }
+    .callout { background: var(--navy); color: #fff; border-radius: 20px; padding: 36px 32px; position: relative; overflow: hidden; }
+    .callout::after { content: ""; position: absolute; width: 200px; height: 200px; border-radius: 50%; background: var(--navy-2); right: -60px; top: -60px; }
+    .callout > * { position: relative; z-index: 1; }
+    .callout h3 { font-size: 24px; font-weight: 800; margin-bottom: 10px; }
+    .callout p { color: #c2cdea; }
+    .callout .tag { color: var(--yellow); font-weight: 800; font-size: 13px; letter-spacing: .08em; margin-bottom: 10px; display: block; }
+
+    /* Skills */
+    .skills { display: grid; grid-template-columns: 1.1fr 1fr; gap: 40px; align-items: start; }
+    .checks { list-style: none; display: grid; gap: 14px; }
+    .checks li { display: flex; gap: 12px; align-items: flex-start; font-size: 17px; color: var(--muted); }
+    .checks li::before { content: ""; flex-shrink: 0; width: 10px; height: 10px; border-radius: 50%; background: var(--yellow); margin-top: 9px; }
+    .proof { background: var(--soft); border-radius: 20px; padding: 32px 30px; border-left: 5px solid var(--blue); }
+    .proof h3 { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+    .proof p { color: var(--muted); }
+
+    /* Register */
+    .register-wrap { padding: 96px 0; }
+    .register {
+      position: relative; overflow: hidden; background: var(--navy); color: #fff; border-radius: 24px; padding: 52px 48px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center;
+    }
+    .register::before { content: ""; position: absolute; width: 380px; height: 380px; border-radius: 50%; background: var(--navy-2); top: -160px; right: -120px; }
+    .register > * { position: relative; z-index: 1; }
+    .register h2 { font-size: clamp(30px, 4vw, 44px); font-weight: 800; margin-bottom: 8px; }
+    .register .price { font: 800 clamp(64px, 9vw, 96px)/1 "Plus Jakarta Sans", sans-serif; color: var(--yellow); margin: 10px 0 6px; }
+    .register .sub { color: #c9d4f0; margin-bottom: 22px; }
+    .register .checks li { color: #dbe3f7; font-size: 16px; }
+    .meta { margin-top: 24px; display: flex; flex-wrap: wrap; gap: 8px 22px; color: var(--yellow); font-weight: 600; font-size: 15px; }
+    .form-card { background: #fff; color: var(--ink); border-radius: 18px; padding: 30px 26px; box-shadow: 0 20px 50px rgba(0,0,0,.3); }
+    .form-card h3 { font-size: 21px; font-weight: 800; margin-bottom: 4px; }
+    .form-card > p { color: var(--muted); font-size: 14px; margin-bottom: 18px; }
+    form { display: grid; gap: 14px; }
+    label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 6px; font-weight: 600; }
+    input, select {
+      width: 100%; font: 15px "Inter", sans-serif; padding: 13px 14px; border-radius: 10px;
+      border: 1px solid #cdd6ee; background: #fff; color: var(--ink); outline: none;
+    }
+    input:focus, select:focus { border-color: var(--brand); box-shadow: 0 0 0 3px rgba(10,108,255,.18); }
+    .error { color: #d93636; font-size: 13px; margin-top: 4px; display: none; }
+    .field.invalid .error { display: block; }
+    .field.invalid input { border-color: #e05252; }
+    form .btn { width: 100%; margin-top: 4px; }
+    .secure { font-size: 12.5px; color: var(--muted); text-align: center; }
+
+    /* Footer */
+    footer { background: var(--soft); border-top: 1px solid var(--line); padding: 40px 0 28px; }
+    .foot { display: grid; grid-template-columns: 1.2fr 1fr; gap: 30px; align-items: start; }
+    .foot-logo { height: 46px; width: auto; mix-blend-mode: multiply; margin-bottom: 10px; }
+    .foot p { color: var(--muted); font-size: 14px; }
+    .foot-links { display: grid; gap: 8px; justify-items: end; font-size: 14.5px; }
+    .foot-links a { color: var(--brand-dark); text-decoration: none; font-weight: 500; }
+    .foot-links a:hover { text-decoration: underline; }
+    .foot-links span { color: var(--muted); font-weight: 400; }
+    .copy { border-top: 1px solid var(--line); margin-top: 28px; padding-top: 18px; font-size: 13px; color: var(--muted); text-align: center; }
+
+    .mobile-cta { display: none; }
+
+    @media (max-width: 960px) {
+      .nav-links { display: none; }
+      .why-grid, .grid-3 { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 760px) {
+      .hero { padding: 52px 0 60px; }
+      .hero-grid, .days, .film, .skills, .register, .foot { grid-template-columns: 1fr; }
+      .why-grid, .grid-3 { grid-template-columns: 1fr; }
+      .strip-grid { grid-template-columns: 1fr 1fr; }
+      .hero-media { aspect-ratio: 4 / 3; }
+      section.block { padding-top: 64px; }
+      .day { padding: 26px 20px; }
+      .register { padding: 34px 22px; border-radius: 18px; }
+      .register-wrap { padding: 64px 0 72px; }
+      .foot-links { justify-items: start; }
+      .mobile-cta {
+        display: block; position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; padding: 12px 16px;
+        background: #fff; border-top: 1px solid var(--line); box-shadow: 0 -6px 20px rgba(11,27,63,.08);
+      }
+      .mobile-cta .btn { width: 100%; }
+      footer { padding-bottom: 100px; }
+    }
+    @media (max-width: 420px) {
+      .brand-text small { display: none; }
+      .nav .btn { padding: 10px 12px; font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== Header ===== -->
+  <header>
+    <div class="container nav">
+      <a href="#top" class="brand" aria-label="Tech Tycoon Academy home">
+        <div class="brand-icon"><img src="assets/logo-icon.png" alt=""></div>
+        <div class="brand-text">
+          <strong>Tech Tycoon <span>Academy</span></strong>
+          <small>by Tech Tycoon Digital Solution LLP</small>
+        </div>
+      </a>
+      <nav class="nav-links">
+        <a href="#why">Why AI</a>
+        <a href="#plan">2-Day Plan</a>
+        <a href="#tools">Tools</a>
+        <a href="#careers">Careers</a>
+      </nav>
+      <a href="#register" class="btn btn-yellow">Register for ₹99</a>
+    </div>
+  </header>
+
+  <!-- ===== Hero ===== -->
+  <section class="hero" id="top">
+    <div class="container hero-grid">
+      <div>
+        <span class="pill">TWO-DAY AI CAREER SESSION</span>
+        <h1><span class="ai">AI</span> Powered Career Development</h1>
+        <p class="lead">Don't just prepare for your career. Prepare for the future of AI. Learn new skills, explore your creativity and discover new opportunities.</p>
+        <div class="price-row">
+          <div class="price-badge"><span class="big">₹99 only</span><small>Registration fee</small></div>
+          <a href="#register" class="btn btn-ghost btn-lg">Grab your seat &rarr;</a>
+        </div>
+        <p class="for">For 12th pass students and current college students</p>
+      </div>
+
+      <!-- HERO IMAGE: save your photo as assets/hero.jpg and it appears here automatically -->
+      <div class="hero-media" id="heroMedia">
+        <div class="placeholder">
+          <img src="assets/logo-icon.png" alt="">
+          Hero image goes here<br>(save your photo as <b>assets/hero.jpg</b>)
+        </div>
+        <img src="assets/hero.jpg" alt="Students learning AI at Tech Tycoon Academy"
+             onload="document.getElementById('heroMedia').classList.add('has-img')"
+             onerror="this.remove()">
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Highlights ===== -->
+  <div class="strip">
+    <div class="container strip-grid">
+      <div><div class="big">2 Days</div><span>Live AI career session</span></div>
+      <div><div class="big">₹99</div><span>Registration fee</span></div>
+      <div><div class="big">0 Coding</div><span>Beginner friendly</span></div>
+      <div><div class="big">1 Project</div><span>Made by you</span></div>
+    </div>
+  </div>
+
+  <!-- ===== Why AI ===== -->
+  <section class="block" id="why">
+    <div class="container">
+      <div class="head center">
+        <span class="eyebrow">WELCOME</span>
+        <h2>Why AI skills matter now</h2>
+        <p>AI is not a future idea anymore. It is already inside the apps you use, the jobs you want and the companies you dream about. Students who learn AI early get a clear edge. They work faster, think wider and find options others miss.</p>
+      </div>
+      <div class="why-grid">
+        <div class="num-card">
+          <div class="num">1</div>
+          <div><h3>Jobs are changing</h3><p>Almost every field now uses AI in some way. Knowing how to use it is becoming a basic skill, just like using a computer.</p></div>
+        </div>
+        <div class="num-card">
+          <div class="num">2</div>
+          <div><h3>College alone is not enough</h3><p>Syllabus changes slowly. AI moves fast. You can start learning the real skills today, without waiting for a class.</p></div>
+        </div>
+        <div class="num-card dark">
+          <div class="num">3</div>
+          <div><h3>Early start, big advantage</h3><p>The sooner you know your direction, the less time you waste. A small step now can save you months of confusion later.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Industries ===== -->
+  <section class="block" id="industries">
+    <div class="container">
+      <div class="head">
+        <span class="eyebrow">GAIN 1</span>
+        <h2>How AI is changing industries</h2>
+        <p>AI is not only for coders. It is changing how work is done in every field. Here are some places you can already see it.</p>
+      </div>
+      <div class="grid-3">
+        <div class="tile"><h3>Business and marketing</h3><p>AI helps write content, study customers and plan campaigns in minutes.</p></div>
+        <div class="tile"><h3>Media and film</h3><p>AI helps create scripts, visuals, voices and edits, even for small teams.</p></div>
+        <div class="tile"><h3>Education</h3><p>AI helps students learn at their own pace and teachers prepare faster.</p></div>
+        <div class="tile"><h3>Healthcare</h3><p>AI helps people read reports and organise data so doctors can focus on care.</p></div>
+        <div class="tile"><h3>Design and creative work</h3><p>AI turns rough ideas into images, layouts and concepts very fast.</p></div>
+        <div class="tile"><h3>Technology and startups</h3><p>AI helps small teams build products that once needed large teams.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Two-day plan ===== -->
+  <section class="block" id="plan">
+    <div class="container">
+      <div class="head center">
+        <span class="eyebrow">TWO-DAY PLAN</span>
+        <h2>What you will do in 2 days</h2>
+        <p>No coding or technical background needed.</p>
+      </div>
+      <div class="days">
+        <div class="day">
+          <div class="day-top"><span class="day-badge">DAY 1</span></div>
+          <h3>Learn and explore</h3>
+          <p>Day 1 builds your base. You will understand AI in simple words and start using real tools.</p>
+          <div class="num-list">
+            <div class="num-card"><div class="num">1</div><div><h3>AI made simple</h3><p>What AI is, how it learns and what it can and cannot do.</p></div></div>
+            <div class="num-card"><div class="num">2</div><div><h3>Your first AI tools</h3><p>Hands-on practice with modern tools for writing, ideas, research and study.</p></div></div>
+            <div class="num-card"><div class="num">3</div><div><h3>AI for daily life and study</h3><p>Use AI to save time, learn faster and finish work with more quality.</p></div></div>
+            <div class="num-card"><div class="num">4</div><div><h3>Smart and safe use</h3><p>Check facts, avoid mistakes and use AI in an honest way.</p></div></div>
+          </div>
+          <div class="outcome y">By the end of Day 1, you will be able to use AI tools with confidence.</div>
+        </div>
+        <div class="day">
+          <div class="day-top"><span class="day-badge">DAY 2</span></div>
+          <h3>Create and plan</h3>
+          <p>Day 2 is about making things. You will create with AI, build useful digital skills and plan your next steps.</p>
+          <div class="num-list">
+            <div class="num-card"><div class="num">1</div><div><h3>AI filmmaking basics</h3><p>Turn an idea into a short story, visuals and a simple video with AI.</p></div></div>
+            <div class="num-card"><div class="num">2</div><div><h3>Practical digital skills</h3><p>Skills you can show to others, like content creation and clear presentation.</p></div></div>
+            <div class="num-card"><div class="num">3</div><div><h3>Explore career paths</h3><p>See the new roles AI is creating and which ones fit you best.</p></div></div>
+            <div class="num-card"><div class="num">4</div><div><h3>Your personal next step</h3><p>Leave with a simple plan for what to learn first after the session.</p></div></div>
+          </div>
+          <div class="outcome n">By the end of Day 2, you will have made something real and know your direction.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Tools ===== -->
+  <section class="block" id="tools">
+    <div class="container">
+      <div class="head">
+        <span class="eyebrow">GAIN 2</span>
+        <h2>Modern AI tools you will use</h2>
+        <p>You will not just hear about AI. You will use it. Here are the types of tools you will practice with.</p>
+      </div>
+      <div class="grid-3">
+        <div class="tile">
+          <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></div>
+          <h3>Writing and thinking tools</h3><p>Get ideas, draft text, summarise long notes and prepare for exams.</p>
+        </div>
+        <div class="tile cream">
+          <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg></div>
+          <h3>Image tools</h3><p>Create posters, pictures and concept art from a simple description.</p>
+        </div>
+        <div class="tile cream">
+          <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="14" height="12" rx="2"/><path d="M22 8l-6 4 6 4z"/></svg></div>
+          <h3>Video tools</h3><p>Make short clips and scenes from text and images.</p>
+        </div>
+        <div class="tile">
+          <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><path d="M12 17v5"/></svg></div>
+          <h3>Voice and sound tools</h3><p>Add voices and sound to your stories and projects.</p>
+        </div>
+        <div class="tile">
+          <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></div>
+          <h3>Research tools</h3><p>Find and organise information fast, then check it properly.</p>
+        </div>
+        <div class="tile cream">
+          <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg></div>
+          <h3>Presentation tools</h3><p>Turn your ideas into clear slides and short pitches.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Filmmaking ===== -->
+  <section class="block" id="film">
+    <div class="container">
+      <div class="head">
+        <span class="eyebrow">GAIN 3</span>
+        <h2>Explore AI filmmaking</h2>
+        <p>Filmmaking used to need big cameras, big teams and big budgets. AI is making it possible for a student with an idea.</p>
+      </div>
+      <div class="film">
+        <div>
+          <h3 style="font-size:20px;font-weight:800;margin-bottom:18px;">Your simple five-step flow</h3>
+          <ol class="steps">
+            <li><span><b>Idea:</b> pick a story you care about</span></li>
+            <li><span><b>Script:</b> shape it into short scenes</span></li>
+            <li><span><b>Visuals:</b> create the look of each scene</span></li>
+            <li><span><b>Voice and sound:</b> bring it to life</span></li>
+            <li><span><b>Edit:</b> put it together into one video</span></li>
+          </ol>
+        </div>
+        <div class="callout">
+          <span class="tag">CAREER EDGE</span>
+          <h3>Why it matters for your career</h3>
+          <p>Creative content is needed by every brand, school and business. If you can make good videos with AI, you can offer a skill that many people want.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Skills ===== -->
+  <section class="block" id="skills">
+    <div class="container">
+      <div class="head">
+        <span class="eyebrow">GAIN 4</span>
+        <h2>Practical digital skills</h2>
+        <p>Skills matter more than marks when you start looking for work. In this session you will practice skills you can use right away.</p>
+      </div>
+      <div class="skills">
+        <ul class="checks">
+          <li>Ask AI the right questions to get better answers</li>
+          <li>Create clear content: text, images and short videos</li>
+          <li>Research a topic quickly and check the facts</li>
+          <li>Present your ideas in a simple and strong way</li>
+          <li>Work faster by using AI for repeated tasks</li>
+          <li>Stay safe and honest while using AI</li>
+        </ul>
+        <div class="proof">
+          <h3>Small projects, real proof</h3>
+          <p>You will finish the session with something you made yourself. It can become the first piece in your digital portfolio.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Careers ===== -->
+  <section class="block" id="careers">
+    <div class="container">
+      <div class="head">
+        <span class="eyebrow">GAIN 5</span>
+        <h2>Discover new career paths with AI</h2>
+        <p>AI is not only taking tasks. It is also creating new kinds of work. Here are some paths you can explore.</p>
+      </div>
+      <div class="grid-3">
+        <div class="tile"><h3>AI content creator</h3><p>Make videos, images and posts for brands and channels.</p></div>
+        <div class="tile"><h3>AI filmmaker</h3><p>Tell stories on screen with AI tools.</p></div>
+        <div class="tile"><h3>AI-powered marketer</h3><p>Plan and run campaigns with smart tools.</p></div>
+        <div class="tile"><h3>AI assistant builder</h3><p>Help businesses set up AI helpers for daily work.</p></div>
+        <div class="tile"><h3>Freelance digital creator</h3><p>Offer creative services online from anywhere.</p></div>
+        <div class="tile dark"><h3>Future-ready professional</h3><p>Add AI skills to any career you choose.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Register ===== -->
+  <div class="register-wrap" id="register">
+    <div class="container">
+      <div class="register">
+        <div>
+          <span class="eyebrow">LIMITED SEATS</span>
+          <h2>Start your AI journey today</h2>
+          <div class="price">₹99</div>
+          <p class="sub">Two-day AI career development session</p>
+          <ul class="checks">
+            <li>Beginner friendly, no background needed</li>
+            <li>Practical AI tools and AI filmmaking</li>
+            <li>Open to 12th pass students and college students</li>
+          </ul>
+          <div class="meta">
+            <!-- EDIT: put your real session details here -->
+            <span>Date: [YOUR DATE]</span>
+            <span>Time: [YOUR TIME]</span>
+            <span>Mode: [ONLINE / OFFLINE]</span>
+          </div>
+        </div>
+        <div class="form-card">
+          <h3>Grab your seat for ₹99</h3>
+          <p>Fill your details. Session info will be shared on WhatsApp.</p>
+          <form id="regForm" novalidate>
+            <div class="field">
+              <label for="name">Full name</label>
+              <input id="name" name="name" type="text" placeholder="Your name" autocomplete="name" required>
+              <div class="error">Please enter your name</div>
+            </div>
+            <div class="field">
+              <label for="phone">WhatsApp number</label>
+              <input id="phone" name="phone" type="tel" inputmode="numeric" maxlength="10" placeholder="10 digit number" autocomplete="tel" required>
+              <div class="error">Enter a valid 10 digit mobile number</div>
+            </div>
+            <div class="field">
+              <label for="iam">I am a</label>
+              <select id="iam" name="iam">
+                <option>12th pass student</option>
+                <option>College student</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-yellow btn-lg">Pay ₹99 and Register</button>
+            <p class="secure">Secure payment. Limited seats available.</p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Footer ===== -->
+  <footer>
+    <div class="container">
+      <div class="foot">
+        <div>
+          <img class="foot-logo" src="assets/logo-full.png" alt="Tech Tycoon Digital Solution LLP">
+          <p>Tech Tycoon Digital Solution LLP &nbsp;|&nbsp; Tech Tycoon Academy</p>
+        </div>
+        <div class="foot-links">
+          <a href="https://techtycoon.in" target="_blank" rel="noopener"><span>Website:</span> techtycoon.in</a>
+          <a href="https://academy.techtycoon.in" target="_blank" rel="noopener"><span>Academy:</span> academy.techtycoon.in</a>
+          <a href="https://whatsapp.com/channel/0029VbABrzBH5JM0FIG97q2b" target="_blank" rel="noopener"><span>WhatsApp:</span> Join our Channel</a>
+        </div>
+      </div>
+      <div class="copy">&copy; <span id="yr"></span> Tech Tycoon Digital Solution LLP. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <div class="mobile-cta"><a href="#register" class="btn btn-yellow">Register Now at ₹99</a></div>
+
+  <script>
+    /* ===== EDIT THIS ===== */
+    const CONFIG = {
+      // Your Razorpay / Cashfree / Instamojo ₹99 payment page link
+      paymentLink: ""
+    };
+    /* ===================== */
+
+    document.getElementById('yr').textContent = new Date().getFullYear();
+
+    const form = document.getElementById('regForm');
+    const phone = document.getElementById('phone');
+    phone.addEventListener('input', () => { phone.value = phone.value.replace(/\D/g, '').slice(0, 10); });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = form.elements.name.value.trim();
+      const nameOk = name.length >= 2;
+      const phoneOk = /^[6-9]\d{9}$/.test(phone.value);
+      form.elements.name.closest('.field').classList.toggle('invalid', !nameOk);
+      phone.closest('.field').classList.toggle('invalid', !phoneOk);
+      if (!nameOk || !phoneOk) return;
+
+      if (!CONFIG.paymentLink) {
+        alert('Payment link is not set yet. Add it in CONFIG.paymentLink inside index.html.');
+        return;
+      }
+      window.location.href = CONFIG.paymentLink;
+    });
+  </script>
+</body>
+</html>
