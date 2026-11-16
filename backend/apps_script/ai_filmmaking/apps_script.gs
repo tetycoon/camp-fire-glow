@@ -463,9 +463,11 @@ function doPost(e) {
       const isIntl = isForeignUser(body);
       const orderId = createRazorpayOrder(body);
       saveToSheet(body, orderId);
+      const savedLeadId = saveRegistrationToLandingLeads(body, orderId);
       return createJsonResponse({
         success: true,
         orderId: orderId,
+        leadId: savedLeadId || body.leadId || orderId,
         keyId: getRazorpayKeyId(isIntl),
         isInternational: isIntl
       });
@@ -1238,6 +1240,49 @@ function getLandingLeadsSheet(ss) {
   return sheet;
 }
 
+function saveRegistrationToLandingLeads(data, orderId) {
+  try {
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const sheet = getLandingLeadsSheet(ss);
+    const utm = data.utm || {};
+    const utmSource = data.utm_source || utm.utm_source || (data.affiliateId ? ("Affiliate (" + data.affiliateId + ")") : "Direct");
+    const utmMedium = data.utm_medium || utm.utm_medium || "";
+    const utmCampaign = data.utm_campaign || utm.utm_campaign || "";
+    const gclid = data.gclid || utm.gclid || "";
+    const fbclid = data.fbclid || utm.fbclid || "";
+    const effectiveLeadId = data.leadId || orderId;
+
+    const lastRow = sheet.getLastRow();
+    if (lastRow > 1) {
+      const checkCount = Math.min(25, lastRow - 1);
+      const rows = sheet.getRange(lastRow - checkCount + 1, 2, checkCount, 1).getValues();
+      for (let i = 0; i < rows.length; i++) {
+        if (rows[i][0] === effectiveLeadId) return effectiveLeadId;
+      }
+    }
+
+    sheet.appendRow([
+      new Date(),
+      effectiveLeadId,
+      sanitizeCell(data.name),
+      "'" + String(data.phone || "").replace(/[^\d+]/g, ""),
+      sanitizeCell(data.email),
+      sanitizeCell(String(data.pageUrl || "").substring(0, 500)),
+      sanitizeCell(String(utmSource).substring(0, 100)),
+      sanitizeCell(String(utmMedium).substring(0, 100)),
+      sanitizeCell(String(utmCampaign).substring(0, 150)),
+      sanitizeCell(String(gclid).substring(0, 200)),
+      sanitizeCell(String(fbclid).substring(0, 200)),
+      sanitizeCell(String(data.userAgent || "").substring(0, 300))
+    ]);
+    SpreadsheetApp.flush();
+    return effectiveLeadId;
+  } catch (err) {
+    if (typeof writeToLogs === "function") writeToLogs("LANDING_LEAD_REG_WARN", err.message);
+    return data.leadId || orderId;
+  }
+}
+
 function saveLandingLead(data) {
   if (data.website) {
     writeToLogs("LANDING_LEAD_BOT_REJECT", "Honeypot field filled");
@@ -1256,7 +1301,17 @@ function saveLandingLead(data) {
     const ss = SpreadsheetApp.getActiveSpreadsheet();
     const sheet = getLandingLeadsSheet(ss);
     const utm = data.utm || {};
-    const leadId = "lead_" + Utilities.getUuid().replace(/-/g, "").substring(0, 16);
+    const leadId = data.leadId || ("lead_" + Utilities.getUuid().replace(/-/g, "").substring(0, 16));
+
+    const lastRow = sheet.getLastRow();
+    if (lastRow > 1) {
+      const checkCount = Math.min(25, lastRow - 1);
+      const rows = sheet.getRange(lastRow - checkCount + 1, 2, checkCount, 1).getValues();
+      for (let i = 0; i < rows.length; i++) {
+        if (rows[i][0] === leadId) return { success: true, leadId: leadId };
+      }
+    }
+
     sheet.appendRow([
       new Date(),
       leadId,

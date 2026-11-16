@@ -32,7 +32,6 @@ import aiProductCommercial from '../assets/ai_product_commercial.jpg';
 import aiPixarCharacter from '../assets/ai_pixar_character.jpg';
 import aiBrandIdent from '../assets/ai_brand_ident.jpg';
 import heroAiFilmmakingStudio from '../assets/hero_ai_filmmaking_studio.jpg';
-import AiFilmmakingLeadGate from '../components/ai_filmmaking/AiFilmmakingLeadGate';
 import event1 from '../assets/event-1.jpg';
 import event2 from '../assets/event-2.jpg';
 import event3 from '../assets/event-3.jpg';
@@ -460,10 +459,35 @@ const workshopPhotos = [
 ];
 
 // ============================================================================
+// META CAMPAIGN ATTRIBUTION & UTM CAPTURE HELPER
+// ============================================================================
+function getTrackingAttribution(): Record<string, string> {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const keys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid', 'fbclid'];
+    const attribution: Record<string, string> = {};
+    for (const k of keys) {
+      const val = params.get(k) || sessionStorage.getItem(k) || '';
+      if (val) {
+        attribution[k] = val;
+        try {
+          sessionStorage.setItem(k, val);
+        } catch (_) {}
+      }
+    }
+    return attribution;
+  } catch (_) {
+    return {};
+  }
+}
+
+// ============================================================================
 // MAIN LANDING PAGE COMPONENT
 // ============================================================================
 const AiFilmmakingPage: React.FC = () => {
   const sessionInfo = useMemo(() => getUpcomingSundaySession(), []);
+  const leadTrackedRef = useRef(false);
+  const purchaseTrackedRef = useRef(false);
 
   // Countdown timer to next Sunday 10:00 AM IST
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
@@ -503,10 +527,12 @@ const AiFilmmakingPage: React.FC = () => {
   // FAQ Accordion State
   const [openFaqIdx, setOpenFaqIdx] = useState<number | null>(0);
 
-  // Set page title, Meta Pixel ViewContent & ensure developer cinematic layer
+  // Set page title, capture UTM attribution, Meta Pixel ViewContent & ensure developer cinematic layer
   useEffect(() => {
     document.title =
       '3-Hours AI Filmmaking & Video Generation Live Webinar | Every Sunday 10 AM – 1 PM IST | Tech Tycoon';
+    getTrackingAttribution();
+
     if (typeof (window as any).fbq === 'function') {
       (window as any).fbq('track', 'ViewContent', {
         content_name: '3-Hours AI Filmmaking & Video Generation Live Webinar'
@@ -578,7 +604,7 @@ const AiFilmmakingPage: React.FC = () => {
     });
   };
 
-  // Handle Checkout Form Submission
+  // Handle Register Now Form Submission (Acts as Lead Capture Form for Meta Campaign + Checkout Initiation)
   const handleProceedToPayment = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormError('');
@@ -614,13 +640,17 @@ const AiFilmmakingPage: React.FC = () => {
       const modeLabel = includePdfMaterial
         ? 'Sunday 10 AM - 1 PM IST (Live + Session PDF & Material)'
         : 'Sunday 10 AM - 1 PM IST (Live Webinar)';
+      const attribution = getTrackingAttribution();
+      const clientLeadId =
+        'lead_' + Date.now().toString(36) + '_' + Math.random().toString(36).substring(2, 9);
 
       let createdOrderId = '';
+      let resolvedLeadId = '';
       const isScriptConfigured =
         AI_FILMMAKING_APPS_SCRIPT_URL &&
         !AI_FILMMAKING_APPS_SCRIPT_URL.includes('PASTE_YOUR_');
 
-      // 1. Create Order & Log Lead in Google Sheet via Apps Script
+      // 1. Create Order & Save Meta Campaign Lead in Google Sheet (Sheet1 + Landing_Leads) via Apps Script
       if (isScriptConfigured) {
         try {
           const orderRes = await fetch(AI_FILMMAKING_APPS_SCRIPT_URL, {
@@ -628,6 +658,16 @@ const AiFilmmakingPage: React.FC = () => {
             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
             body: JSON.stringify({
               action: 'create_order',
+              leadId: clientLeadId,
+              utm_source: attribution.utm_source || '',
+              utm_medium: attribution.utm_medium || '',
+              utm_campaign: attribution.utm_campaign || '',
+              utm_content: attribution.utm_content || '',
+              utm_term: attribution.utm_term || '',
+              gclid: attribution.gclid || '',
+              fbclid: attribution.fbclid || '',
+              utm: attribution,
+              userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : '',
               name: cleanName,
               email: cleanEmail,
               phone: fullPhone,
@@ -635,10 +675,13 @@ const AiFilmmakingPage: React.FC = () => {
               userType: formData.profession,
               isInternational,
               amount: totalAmount,
+              baseAmount: accounting.base,
+              gstAmount: accounting.gstTotal,
               hasPdfMaterial: includePdfMaterial ? 'YES' : 'NO',
               course: includePdfMaterial
                 ? '3-Hours AI Filmmaking & Video Generation Live Webinar + Session PDF & Material'
                 : '3-Hours AI Filmmaking & Video Generation Live Webinar',
+              batch: sessionInfo.batchName,
               preferredSlot: sessionInfo.batchName,
               sessionDate: sessionInfo.formattedDate,
               sessionTime: sessionInfo.timeRange,
@@ -651,8 +694,72 @@ const AiFilmmakingPage: React.FC = () => {
           if (orderJson && orderJson.orderId) {
             createdOrderId = orderJson.orderId;
           }
+          if (orderJson && orderJson.leadId) {
+            resolvedLeadId = orderJson.leadId;
+          } else {
+            // Ensure Landing_Leads tab also receives the lead even if live Apps Script is on older deployment
+            fetch(AI_FILMMAKING_APPS_SCRIPT_URL, {
+              method: 'POST',
+              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+              body: JSON.stringify({
+                action: 'saveLandingLead',
+                leadId: clientLeadId,
+                name: cleanName,
+                phone: fullPhone,
+                email: cleanEmail,
+                pageUrl: window.location.href,
+                utm: attribution,
+                userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : ''
+              })
+            }).catch(() => {});
+          }
         } catch (orderErr) {
           console.warn('Apps Script order pre-creation fallback to direct checkout:', orderErr);
+        }
+      }
+
+      // 1b. Fire Meta Pixel Lead Event & GA4 generate_lead (Deduplicated via eventID)
+      const leadEventId = String(resolvedLeadId || createdOrderId || clientLeadId).trim();
+      const leadStorageKey = `lead_tracked_${leadEventId}`;
+      const alreadyTrackedLead =
+        leadTrackedRef.current || (leadEventId && sessionStorage.getItem(leadStorageKey));
+
+      if (!alreadyTrackedLead && leadEventId) {
+        leadTrackedRef.current = true;
+        try {
+          sessionStorage.setItem(leadStorageKey, 'true');
+        } catch (_) {}
+
+        if (typeof (window as any).fbq === 'function') {
+          try {
+            (window as any).fbq(
+              'track',
+              'Lead',
+              {
+                content_name: includePdfMaterial
+                  ? '3-Hours AI Filmmaking & Video Generation Live Webinar + Resource ToolKit'
+                  : '3-Hours AI Filmmaking & Video Generation Live Webinar',
+                content_category: 'AI Filmmaking Registration Form',
+                value: totalAmount,
+                currency: 'INR'
+              },
+              { eventID: leadEventId }
+            );
+          } catch (_) {}
+        }
+
+        if (typeof (window as any).gtag === 'function') {
+          try {
+            (window as any).gtag('event', 'generate_lead', {
+              event_category: 'Registration Form',
+              event_label: includePdfMaterial
+                ? 'AI Filmmaking Live Webinar + Resource ToolKit'
+                : 'AI Filmmaking Live Webinar',
+              value: totalAmount,
+              currency: 'INR',
+              transaction_id: leadEventId
+            });
+          } catch (_) {}
         }
       }
 
@@ -693,7 +800,7 @@ const AiFilmmakingPage: React.FC = () => {
 
           let resolvedInvoiceNo = `TT/26-27/AIF-${payId.replace(/\D/g, '').slice(-4) || '1099'}`;
 
-          // 3. Verify Payment & Trigger GST Invoice PDF Email + Meta WhatsApp + Calendar in Apps Script
+          // 3. Verify Payment & Trigger GST Invoice PDF Email + Meta WhatsApp in Apps Script
           if (isScriptConfigured) {
             try {
               const verifyRes = await fetch(AI_FILMMAKING_APPS_SCRIPT_URL, {
@@ -728,12 +835,34 @@ const AiFilmmakingPage: React.FC = () => {
             }
           }
 
-          if (typeof (window as any).fbq === 'function') {
-            (window as any).fbq('track', 'Purchase', {
-              value: totalAmount,
-              currency: 'INR',
-              content_name: '3-Hours AI Filmmaking & Video Generation Live Webinar'
-            });
+          // Meta Pixel Purchase event (deduplicated via paymentId eventID)
+          const purchaseStorageKey = `purchase_tracked_${payId}`;
+          const alreadyTrackedPurchase =
+            purchaseTrackedRef.current || (payId && sessionStorage.getItem(purchaseStorageKey));
+
+          if (!alreadyTrackedPurchase && payId) {
+            purchaseTrackedRef.current = true;
+            try {
+              sessionStorage.setItem(purchaseStorageKey, 'true');
+            } catch (_) {}
+
+            if (typeof (window as any).fbq === 'function') {
+              try {
+                (window as any).fbq(
+                  'track',
+                  'Purchase',
+                  {
+                    value: totalAmount,
+                    currency: 'INR',
+                    content_name: includePdfMaterial
+                      ? '3-Hours AI Filmmaking & Video Generation Live Webinar + Resource ToolKit'
+                      : '3-Hours AI Filmmaking & Video Generation Live Webinar',
+                    content_type: 'product'
+                  },
+                  { eventID: payId }
+                );
+              } catch (_) {}
+            }
           }
 
           setVerifiedPayment({
@@ -974,9 +1103,6 @@ const AiFilmmakingPage: React.FC = () => {
   // ============================================================================
   return (
     <div className="min-h-screen bg-[#040711] text-white selection:bg-blue-600 selection:text-white overflow-x-hidden font-sans pb-20">
-      {/* Lead Capture Popup Modal for Meta Ads & Campaigns */}
-      <AiFilmmakingLeadGate />
-
       {/* CSS Keyframes for 3D Perspective Grid */}
       <style>{`
         @keyframes gridMove3D {
