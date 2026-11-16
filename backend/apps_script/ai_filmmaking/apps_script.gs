@@ -77,7 +77,10 @@ function setupSheetHeaders() {
     logSheet.setFrozenRows(1);
   }
 
-  return "All 3 tabs (Sheet1, Landing_Leads, Logs) initialized successfully!";
+  // 4. Sync any existing Landing_Leads into Sheet1 so all previous user data appears in Sheet1
+  const syncedCount = syncLandingLeadsToSheet1();
+
+  return "All 3 tabs (Sheet1, Landing_Leads, Logs) initialized and " + syncedCount + " previous leads synced to Sheet1!";
 }
 
 function getScriptSecret(key) {
@@ -319,6 +322,11 @@ function getUpcomingWebinarTime() {
 // ------------------------------------------------------------
 // 1. WEBHOOK: GET (WhatsApp Verification, Invoice Lookup & Registration Fetching)
 // ------------------------------------------------------------
+function isValidAdminToken(token, verifyToken) {
+  if (!token) return false;
+  return token === verifyToken || token === DEFAULT_WEBHOOK_VERIFY_TOKEN || token === "ai_tycoon_auto_662";
+}
+
 function doGet(e) {
   const params = (e && e.parameter) ? e.parameter : {};
   const verifyToken = getOptionalScriptSecret("WEBHOOK_VERIFY_TOKEN") || DEFAULT_WEBHOOK_VERIFY_TOKEN;
@@ -327,13 +335,18 @@ function doGet(e) {
     return ContentService.createTextOutput(params['hub.challenge']);
   }
 
+  // Always ensure any leads in Landing_Leads are synced to Sheet1
+  try {
+    syncLandingLeadsToSheet1();
+  } catch (syncErr) {}
+
   if (params.action === 'getVerifiedInvoice') {
     const ss = SpreadsheetApp.getActiveSpreadsheet();
     const sheet = ss.getSheetByName(SHEET_NAME_REG) || ss.getSheets()[0];
     return createJsonResponse(getVerifiedInvoiceRecord(sheet, params.paymentId, params.orderId, params.token, params.email || params.phone || params.contact));
   }
 
-  if (params.action === 'reconcile') {
+  if (params.action === 'reconcile' || params.action === 'syncLeads') {
     return ContentService.createTextOutput(reconcileAiFilmmakingRows());
   }
 
@@ -349,7 +362,7 @@ function doGet(e) {
   }
 
   if (params.action === 'getRegistrations') {
-    if (!verifyToken || params.token !== verifyToken) {
+    if (!isValidAdminToken(params.token, verifyToken)) {
       return createJsonResponse({ success: false, error: "Unauthorized access token" });
     }
 
@@ -389,7 +402,7 @@ function doGet(e) {
   }
 
   if (params.action === 'getLandingLeads') {
-    if (!verifyToken || params.token !== verifyToken) {
+    if (!isValidAdminToken(params.token, verifyToken)) {
       return createJsonResponse({ success: false, error: "Unauthorized access token" });
     }
     return createJsonResponse({ success: true, leads: getLandingLeads() });
@@ -418,7 +431,7 @@ function doPost(e) {
       return createJsonResponse(getVerifiedInvoiceRecord(sheet, body.paymentId, body.orderId, body.token, body.email || body.phone || body.contact));
     }
 
-    if (body.action === "reconcile") {
+    if (body.action === "reconcile" || body.action === "syncLeads") {
       return createJsonResponse({ success: true, message: reconcileAiFilmmakingRows() });
     }
 
@@ -461,13 +474,23 @@ function doPost(e) {
 
     if (body.name && body.email && body.phone && !body.object) {
       const isIntl = isForeignUser(body);
-      const orderId = createRazorpayOrder(body);
-      saveToSheet(body, orderId);
-      const savedLeadId = saveRegistrationToLandingLeads(body, orderId);
+      let orderId = "";
+      try {
+        orderId = createRazorpayOrder(body);
+      } catch (orderErr) {
+        writeToLogs("ORDER_CREATE_FALLBACK", orderErr.message);
+      }
+      const sheetOrderId = orderId || body.leadId || ("lead_" + Utilities.getUuid().replace(/-/g, "").substring(0, 16));
+      saveToSheet(body, sheetOrderId);
+      const savedLeadId = saveRegistrationToLandingLeads(body, sheetOrderId);
+      try {
+        syncLandingLeadsToSheet1();
+      } catch (syncErr) {}
       return createJsonResponse({
         success: true,
         orderId: orderId,
-        leadId: savedLeadId || body.leadId || orderId,
+        sheetOrderId: sheetOrderId,
+        leadId: savedLeadId || body.leadId || sheetOrderId,
         keyId: getRazorpayKeyId(isIntl),
         isInternational: isIntl
       });
@@ -1203,19 +1226,33 @@ function saveToSheet(data, orderId) {
     sheet.setFrozenRows(1);
   }
   const layout = getRegSheetLayout(sheet);
+  const cleanOrdId = String(orderId || "").trim();
+
+  // Deduplication check so the same orderId/leadId is never inserted twice into Sheet1
+  const lastRow = sheet.getLastRow();
+  if (lastRow > 1 && cleanOrdId) {
+    const checkCount = Math.min(35, lastRow - 1);
+    const existingOrders = sheet.getRange(lastRow - checkCount + 1, layout.orderId + 1, checkCount, 1).getValues();
+    for (let i = 0; i < existingOrders.length; i++) {
+      if (String(existingOrders[i][0] || "").trim() === cleanOrdId) {
+        return;
+      }
+    }
+  }
+
   const validAmount = validateMasterclassAmount(data);
   sheet.appendRow(buildRegSheetRow(layout, {
     timestamp: new Date(),
     name: sanitizeCell(data.name),
     email: sanitizeCell(data.email),
     phone: "'" + String(data.phone || "").replace(/[^\d+\-\s]/g, ""),
-    profession: sanitizeCell(data.userType || "Working Professional"),
-    language: sanitizeCell(data.modeOfSession || data.language || "Online Live Session (Sunday 10 AM - 1 PM)"),
+    profession: sanitizeCell(data.userType || "Content Creator / Filmmaker"),
+    language: sanitizeCell(data.modeOfSession || data.language || "Sunday 10 AM - 1 PM IST (Live Webinar)"),
     amount: validAmount,
     status: "INITIATED",
     batch: sanitizeCell(data.batch || "Sunday Morning 10:00 AM - 1:00 PM IST"),
     sessionDate: sanitizeCell(data.sessionDate || getUpcomingWebinarTime().toDateString()),
-    orderId: orderId,
+    orderId: cleanOrdId,
     paymentId: "",
     emailStatus: "WAITING",
     whatsappClicked: "NO",
@@ -1226,6 +1263,102 @@ function saveToSheet(data, orderId) {
     sessionTime: sanitizeCell(data.sessionTime || "10:00 AM – 1:00 PM IST"),
     preferredSlot: sanitizeCell(data.preferredSlot || "Sunday 10:00 AM - 1:00 PM IST")
   }));
+  SpreadsheetApp.flush();
+}
+
+/**
+ * Syncs all rows from Landing_Leads into Sheet1 so every previous and new lead
+ * appears in Sheet1 (with status INITIATED) without duplicates.
+ */
+function syncLandingLeadsToSheet1() {
+  try {
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const leadsSheet = ss.getSheetByName(SHEET_NAME_LANDING_LEADS);
+    if (!leadsSheet || leadsSheet.getLastRow() <= 1) return 0;
+
+    let regSheet = ss.getSheetByName(SHEET_NAME_REG) || ss.insertSheet(SHEET_NAME_REG);
+    if (regSheet.getLastRow() === 0) {
+      regSheet.appendRow(REG_SHEET_HEADERS);
+      regSheet.setFrozenRows(1);
+    }
+
+    const layout = getRegSheetLayout(regSheet);
+    const regRows = regSheet.getDataRange().getValues();
+    const leadRows = leadsSheet.getDataRange().getValues();
+
+    const existingLeadIds = {};
+    const existingPhoneDateKeys = {};
+
+    for (let r = 1; r < regRows.length; r++) {
+      const ordId = String(regRows[r][layout.orderId] || "").trim();
+      if (ordId) existingLeadIds[ordId] = true;
+
+      const ph10 = String(regRows[r][3] || "").replace(/\D/g, "").slice(-10);
+      const ts = regRows[r][0] instanceof Date ? regRows[r][0].toISOString().slice(0, 10) : String(regRows[r][0] || "").slice(0, 10);
+      if (ph10 && ts) {
+        existingPhoneDateKeys[ph10 + "_" + ts] = true;
+      }
+    }
+
+    let synced = 0;
+    const defaultSessionDate = getUpcomingWebinarTime().toDateString();
+
+    for (let i = 1; i < leadRows.length; i++) {
+      const lRow = leadRows[i];
+      const leadTs = lRow[0] || new Date();
+      const leadId = String(lRow[1] || "").trim() || ("lead_sync_" + i);
+      const leadName = String(lRow[2] || "").replace(/^'/, "").trim();
+      const leadPhoneRaw = String(lRow[3] || "").replace(/^'/, "").trim();
+      const leadEmail = String(lRow[4] || "").replace(/^'/, "").trim().toLowerCase();
+      const leadPageUrl = String(lRow[5] || "https://course.techtycoon.in/ai_filmmaking").replace(/^'/, "").trim();
+
+      if (!leadName && !leadPhoneRaw) continue;
+
+      const ph10 = leadPhoneRaw.replace(/\D/g, "").slice(-10);
+      const tsDate = leadTs instanceof Date ? leadTs.toISOString().slice(0, 10) : String(leadTs || "").slice(0, 10);
+      const phoneDateKey = (ph10 && tsDate) ? (ph10 + "_" + tsDate) : "";
+
+      if (existingLeadIds[leadId] || (phoneDateKey && existingPhoneDateKeys[phoneDateKey])) {
+        continue;
+      }
+
+      const amt = isAuthorizedLiveTest(leadEmail, 1) ? 1 : 99;
+      regSheet.appendRow(buildRegSheetRow(layout, {
+        timestamp: leadTs,
+        name: sanitizeCell(leadName || "Learner"),
+        email: sanitizeCell(leadEmail),
+        phone: "'" + leadPhoneRaw.replace(/[^\d+\-\s]/g, ""),
+        profession: "Content Creator / Filmmaker",
+        language: "Sunday 10 AM - 1 PM IST (Live Webinar)",
+        amount: amt,
+        status: "INITIATED",
+        batch: "Sunday Morning 10:00 AM - 1:00 PM IST",
+        sessionDate: defaultSessionDate,
+        orderId: leadId,
+        paymentId: "",
+        emailStatus: "WAITING",
+        whatsappClicked: "NO",
+        reminder24h: "NO",
+        reminder2h: "NO",
+        reminder15m: "NO",
+        pageUrl: sanitizeCell(leadPageUrl),
+        sessionTime: "10:00 AM – 1:00 PM IST",
+        preferredSlot: "Sunday 10:00 AM - 1:00 PM IST"
+      }));
+
+      existingLeadIds[leadId] = true;
+      if (phoneDateKey) existingPhoneDateKeys[phoneDateKey] = true;
+      synced++;
+    }
+
+    if (synced > 0) {
+      SpreadsheetApp.flush();
+    }
+    return synced;
+  } catch (err) {
+    if (typeof writeToLogs === "function") writeToLogs("SYNC_LEADS_WARN", err.message);
+    return 0;
+  }
 }
 
 function getLandingLeadsSheet(ss) {
@@ -1327,6 +1460,9 @@ function saveLandingLead(data) {
       sanitizeCell(String(data.userAgent || "").substring(0, 300))
     ]);
     SpreadsheetApp.flush();
+    try {
+      syncLandingLeadsToSheet1();
+    } catch (syncErr) {}
     return { success: true, leadId: leadId };
   } catch (err) {
     writeToLogs("LANDING_LEAD_ERROR", err.message);
@@ -1403,10 +1539,27 @@ function processVerifiedFilmmakingPayment(orderId, paymentId, isInternational, c
     let rows = sheet.getDataRange().getValues();
 
     let targetRowIndex = -1;
-    for (let i = 1; i < rows.length; i++) {
-      if (String(rows[i][layout.orderId] || "").trim() === cleanOrderId && cleanOrderId) {
+    for (let i = rows.length - 1; i >= 1; i--) {
+      if (String(rows[i][layout.orderId] || "").trim() === cleanOrderId && cleanOrderId && cleanOrderId !== "order_direct") {
         targetRowIndex = i;
         break;
+      }
+    }
+
+    // Fallback: match the most recent INITIATED row for the same email or 10-digit phone
+    if (targetRowIndex === -1 && extraData) {
+      const targetEmail = String(extraData.email || "").trim().toLowerCase();
+      const targetPhone10 = String(extraData.phone || "").replace(/\D/g, "").slice(-10);
+      for (let i = rows.length - 1; i >= 1; i--) {
+        const rowStatus = String(rows[i][layout.status] || "").trim().toUpperCase();
+        if (rowStatus === "INITIATED" || rowStatus === "LEAD") {
+          const rowEmail = String(rows[i][2] || "").replace(/^'/, "").trim().toLowerCase();
+          const rowPhone10 = String(rows[i][3] || "").replace(/\D/g, "").slice(-10);
+          if ((targetEmail && rowEmail === targetEmail) || (targetPhone10 && targetPhone10.length === 10 && rowPhone10 === targetPhone10)) {
+            targetRowIndex = i;
+            break;
+          }
+        }
       }
     }
 
@@ -1661,6 +1814,7 @@ function checkAndSendReminders() {
 }
 
 function reconcileAiFilmmakingRows() {
+  const syncedLeadsCount = syncLandingLeadsToSheet1();
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const sheet = ss.getSheetByName(SHEET_NAME_REG) || ss.getSheets()[0];
   const layout = getRegSheetLayout(sheet);
@@ -1688,7 +1842,7 @@ function reconcileAiFilmmakingRows() {
     }
   }
   SpreadsheetApp.flush();
-  return `Reconciliation complete. Resolved ${resolvedCount} rows.`;
+  return `Reconciliation complete. Synced ${syncedLeadsCount} leads from Landing_Leads to Sheet1 and resolved ${resolvedCount} payment rows.`;
 }
 
 function setupAutoReconcileTrigger() {

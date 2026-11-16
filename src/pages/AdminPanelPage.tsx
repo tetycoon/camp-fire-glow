@@ -67,6 +67,12 @@ const SHEET_CONFIGS = [
     name: "TECH TYCOON Academy (course.techtycoon.in/academy)",
     url: "https://script.google.com/macros/s/AKfycbwl1WKBrQxxMRbz7aj6GBUNbmR4ePHshhrBwcNjhxorIayQpMTmHaHHT_MvTroQ-ZrFbA/exec",
     verifyToken: "ai_tycoon_auto_662"
+  },
+  {
+    id: "ai-filmmaking",
+    name: "3-Hours AI Filmmaking & Video Generation",
+    url: "https://script.google.com/macros/s/AKfycbzycz3SBGah4HEEMlCKGOBcU5wBg8zoY3QJFVO_1YwnPAFREa5zgogQqKo8JXMlTM4LBw/exec",
+    verifyToken: "techtycoon_verify_2026"
   }
 ];
 
@@ -482,7 +488,40 @@ const AdminPanelPage: React.FC = () => {
       const data = await response.json();
 
       if (data.success && Array.isArray(data.registrations)) {
-        setRegistrations(processRegistrations(data.registrations));
+        let mergedList: Registration[] = [...data.registrations];
+        try {
+          const leadsRes = await fetch(`${config.url}?action=getLandingLeads&token=${config.verifyToken}`);
+          const leadsData = await leadsRes.json();
+          if (leadsData && leadsData.success && Array.isArray(leadsData.leads)) {
+            const existingOrderIds = new Set(mergedList.map((r) => String(r.orderId || "").trim()));
+            for (const lead of leadsData.leads) {
+              const lid = String(lead.leadId || "").trim();
+              if (lid && !existingOrderIds.has(lid)) {
+                mergedList.push({
+                  timestamp: lead.timestamp || new Date().toISOString(),
+                  name: lead.name || "Learner",
+                  email: lead.email || "",
+                  phone: lead.phone || "",
+                  profession: "Content Creator / Filmmaker",
+                  language: "Sunday 10 AM - 1 PM IST (Live Webinar)",
+                  amount: 99,
+                  status: "INITIATED",
+                  orderId: lid,
+                  paymentId: "",
+                  emailStatus: "WAITING",
+                  whatsappClicked: "NO",
+                  pageUrl: lead.pageUrl || "https://course.techtycoon.in/ai_filmmaking",
+                  batch: "Sunday Morning 10:00 AM - 1:00 PM IST",
+                  sessionDate: "Upcoming Sunday",
+                  sessionTime: "10:00 AM – 1:00 PM IST"
+                });
+                existingOrderIds.add(lid);
+              }
+            }
+            mergedList.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+          }
+        } catch (_) {}
+        setRegistrations(processRegistrations(mergedList));
       } else {
         throw new Error(data.error || "Failed to load sheet registrations.");
       }
