@@ -795,7 +795,11 @@ const AiFilmmakingPage: React.FC = () => {
         },
         handler: async function (response: any) {
           const payId = response.razorpay_payment_id || 'pay_verified';
-          const ordId = response.razorpay_order_id || createdOrderId || 'order_direct';
+          const ordId =
+            response.razorpay_order_id ||
+            createdOrderId ||
+            clientLeadId ||
+            `order_${payId.replace(/^pay_/, '')}`;
           const sig = response.razorpay_signature || '';
 
           let resolvedInvoiceNo = `TT/26-27/AIF-${payId.replace(/\D/g, '').slice(-4) || '1099'}`;

@@ -77,10 +77,10 @@ function setupSheetHeaders() {
     logSheet.setFrozenRows(1);
   }
 
-  // 4. Sync any existing Landing_Leads into Sheet1 so all previous user data appears in Sheet1
-  const syncedCount = syncLandingLeadsToSheet1();
+  // 4. Recover all paid & initiated users from Logs and Landing_Leads into Sheet1
+  const recovery = recoverAllFromLogsAndLeads();
 
-  return "All 3 tabs (Sheet1, Landing_Leads, Logs) initialized and " + syncedCount + " previous leads synced to Sheet1!";
+  return "All 3 tabs (Sheet1, Landing_Leads, Logs) initialized; recovered " + recovery.paidRecoveredCount + " paid & " + recovery.syncedCount + " total users to Sheet1!";
 }
 
 function getScriptSecret(key) {
@@ -335,9 +335,9 @@ function doGet(e) {
     return ContentService.createTextOutput(params['hub.challenge']);
   }
 
-  // Always ensure any leads in Landing_Leads are synced to Sheet1
+  // Always recover any paid/initiated users from Logs and Landing_Leads into Sheet1
   try {
-    syncLandingLeadsToSheet1();
+    recoverAllFromLogsAndLeads();
   } catch (syncErr) {}
 
   if (params.action === 'getVerifiedInvoice') {
@@ -348,6 +348,21 @@ function doGet(e) {
 
   if (params.action === 'reconcile' || params.action === 'syncLeads') {
     return ContentService.createTextOutput(reconcileAiFilmmakingRows());
+  }
+
+  if (params.action === 'getLogs') {
+    if (!isValidAdminToken(params.token, verifyToken)) {
+      return createJsonResponse({ success: false, error: "Unauthorized access token" });
+    }
+    const recovery = recoverAllFromLogsAndLeads();
+    return createJsonResponse({
+      success: true,
+      paidUsers: recovery.paidUsers,
+      initiatedUsers: recovery.initiatedUsers,
+      rawLogs: recovery.rawLogs,
+      syncedCount: recovery.syncedCount,
+      paidRecoveredCount: recovery.paidRecoveredCount
+    });
   }
 
   if (params.action === 'whatsapp') {
@@ -416,7 +431,7 @@ function doGet(e) {
 // ------------------------------------------------------------
 function doPost(e) {
   const rawData = (e && e.postData && e.postData.contents) ? e.postData.contents : "{}";
-  writeToLogs("RAW_WEBHOOK", rawData.substring(0, 500));
+  writeToLogs("RAW_WEBHOOK", rawData.substring(0, 2000));
 
   try {
     const body = JSON.parse(rawData);
@@ -484,7 +499,7 @@ function doPost(e) {
       saveToSheet(body, sheetOrderId);
       const savedLeadId = saveRegistrationToLandingLeads(body, sheetOrderId);
       try {
-        syncLandingLeadsToSheet1();
+        recoverAllFromLogsAndLeads();
       } catch (syncErr) {}
       return createJsonResponse({
         success: true,
@@ -1267,6 +1282,399 @@ function saveToSheet(data, orderId) {
 }
 
 /**
+ * Extracts key registration/payment fields from JSON strings in the "Logs" sheet,
+ * even if the logged payload was truncated at 500 characters.
+ */
+function extractFieldsFromMaybeTruncatedJson(rawStr) {
+  const str = String(rawStr || "").trim();
+  if (!str) return null;
+
+  try {
+    const parsed = JSON.parse(str);
+    if (parsed && typeof parsed === "object") {
+      if (parsed.payload && parsed.payload.payment && parsed.payload.payment.entity) {
+        const ent = parsed.payload.payment.entity;
+        const notes = ent.notes || {};
+        return {
+          action: parsed.event || parsed.action || "payment.captured",
+          event: parsed.event || "",
+          paymentSuccess: parsed.event === "payment.captured" || parsed.event === "order.paid",
+          paymentId: String(ent.id || "").trim(),
+          orderId: String(ent.order_id || "").trim(),
+          leadId: "",
+          amount: ent.amount ? Number(ent.amount) / 100 : undefined,
+          name: String(notes.name || ent.description || "").trim(),
+          email: String(ent.email || "").trim().toLowerCase(),
+          phone: String(ent.contact || "").trim(),
+          userType: "",
+          hasPdfMaterial: String(notes.has_pdf_material || ""),
+          sessionDate: String(notes.session_date || ""),
+          sessionTime: String(notes.session_time || ""),
+          pageUrl: ""
+        };
+      }
+      return parsed;
+    }
+  } catch (e) {}
+
+  function pickStr(key) {
+    const re = new RegExp('"' + key + '"\\s*:\\s*"((?:[^"\\\\]|\\\\.)*)"');
+    const m = str.match(re);
+    if (!m) return "";
+    return m[1].replace(/\\"/g, '"').replace(/\\\\/g, '\\').replace(/\\n/g, ' ').trim();
+  }
+
+  function pickNum(key) {
+    const re = new RegExp('"' + key + '"\\s*:\\s*([0-9]+(?:\\.[0-9]+)?)');
+    const m = str.match(re);
+    return m ? Number(m[1]) : undefined;
+  }
+
+  const eventName = pickStr("event");
+  const actionName = pickStr("action");
+  const isPaySuccess = /"paymentSuccess"\s*:\s*true/i.test(str) || actionName === "payment_success" || eventName === "payment.captured" || eventName === "order.paid";
+  const payMatch = str.match(/"(?:razorpay_payment_id|paymentId|id)"\s*:\s*"(pay_[A-Za-z0-9]+)"/);
+  const payId = payMatch ? payMatch[1] : (pickStr("razorpay_payment_id") || pickStr("paymentId"));
+  const ordMatch = str.match(/"(?:razorpay_order_id|orderId|order_id)"\s*:\s*"([^"]+)"/);
+  const ordId = ordMatch ? ordMatch[1] : (pickStr("razorpay_order_id") || pickStr("orderId"));
+  const rawAmt = pickNum("amount");
+  const isWebhook = eventName === "payment.captured" || eventName === "order.paid";
+  const normalizedAmt = (isWebhook && rawAmt && rawAmt >= 100) ? (rawAmt / 100) : rawAmt;
+
+  return {
+    action: actionName || eventName,
+    event: eventName,
+    paymentSuccess: isPaySuccess,
+    paymentId: payId,
+    razorpay_payment_id: payId,
+    orderId: ordId,
+    razorpay_order_id: ordId,
+    leadId: pickStr("leadId"),
+    amount: normalizedAmt,
+    name: pickStr("name"),
+    email: (pickStr("email") || "").toLowerCase(),
+    phone: pickStr("phone") || pickStr("contact"),
+    userType: pickStr("userType"),
+    hasPdfMaterial: pickStr("hasPdfMaterial"),
+    sessionDate: pickStr("sessionDate"),
+    sessionTime: pickStr("sessionTime"),
+    language: pickStr("language"),
+    modeOfSession: pickStr("modeOfSession"),
+    pageUrl: pickStr("pageUrl"),
+    product_key: (pickStr("product_key") || pickStr("target_product")).toLowerCase()
+  };
+}
+
+/**
+ * Reads the entire "Logs" tab and extracts all completed payments and checkout initiations.
+ */
+function parseLogsForPaymentsAndLeads() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const logSheet = ss.getSheetByName(SHEET_NAME_LOGS);
+  const paidUsers = [];
+  const initiatedUsers = [];
+  const rawLogs = [];
+
+  if (!logSheet || logSheet.getLastRow() <= 1) {
+    return { paidUsers: paidUsers, initiatedUsers: initiatedUsers, rawLogs: rawLogs };
+  }
+
+  const values = logSheet.getDataRange().getValues();
+  const seenPayIds = {};
+
+  for (let i = 1; i < values.length; i++) {
+    const row = values[i];
+    const ts = row[0] instanceof Date ? row[0].toISOString() : String(row[0] || "");
+    const event = String(row[1] || "").trim();
+    const details = String(row[2] || "").trim();
+
+    rawLogs.push({ row: i + 1, timestamp: ts, event: event, details: details });
+
+    if (event === "RAW_WEBHOOK" || details.startsWith("{")) {
+      const data = extractFieldsFromMaybeTruncatedJson(details);
+      if (!data) continue;
+      const noteProductKey = String(data.product_key || (data.payload && data.payload.payment && data.payload.payment.entity && data.payload.payment.entity.notes && data.payload.payment.entity.notes.product_key) || "").trim().toLowerCase();
+      if (noteProductKey && noteProductKey !== EXPECTED_PRODUCT_KEY) continue;
+
+      const payId = String(data.razorpay_payment_id || data.paymentId || "").trim();
+      const isPaid = Boolean(
+        data.paymentSuccess === true ||
+        data.action === "payment_success" ||
+        data.event === "payment.captured" ||
+        data.event === "order.paid" ||
+        (payId && payId.startsWith("pay_"))
+      );
+
+      if (isPaid) {
+        const dedupKey = payId || (ts + "_" + (data.email || data.phone || i));
+        if (!seenPayIds[dedupKey]) {
+          seenPayIds[dedupKey] = true;
+          paidUsers.push({
+            timestamp: row[0] || new Date(),
+            timestampIso: ts,
+            paymentId: payId || "pay_recovered",
+            orderId: String(data.razorpay_order_id || data.orderId || "").trim(),
+            name: String(data.name || "").trim(),
+            email: String(data.email || "").trim().toLowerCase(),
+            phone: String(data.phone || "").trim(),
+            amount: Number(data.amount) || (String(data.hasPdfMaterial || "").toUpperCase() === "YES" ? 499 : 99),
+            hasPdfMaterial: String(data.hasPdfMaterial || ""),
+            sessionDate: String(data.sessionDate || ""),
+            sessionTime: String(data.sessionTime || ""),
+            language: String(data.modeOfSession || data.language || ""),
+            logRow: i + 1
+          });
+        }
+      } else if (data.action === "create_order" || (data.name && (data.email || data.phone))) {
+        initiatedUsers.push({
+          timestamp: row[0] || new Date(),
+          timestampIso: ts,
+          leadId: String(data.leadId || data.orderId || ("log_init_" + i)).trim(),
+          name: String(data.name || "").trim(),
+          email: String(data.email || "").trim().toLowerCase(),
+          phone: String(data.phone || "").trim(),
+          userType: String(data.userType || "Content Creator / Filmmaker").trim(),
+          amount: Number(data.amount) || (String(data.hasPdfMaterial || "").toUpperCase() === "YES" ? 499 : 99),
+          hasPdfMaterial: String(data.hasPdfMaterial || ""),
+          sessionDate: String(data.sessionDate || ""),
+          sessionTime: String(data.sessionTime || ""),
+          language: String(data.modeOfSession || data.language || ""),
+          pageUrl: String(data.pageUrl || "https://course.techtycoon.in/ai_filmmaking").trim(),
+          logRow: i + 1
+        });
+      }
+    }
+  }
+
+  return { paidUsers: paidUsers, initiatedUsers: initiatedUsers, rawLogs: rawLogs };
+}
+
+/**
+ * Recovers all completed payments and checkout/lead initiations from both "Logs"
+ * and "Landing_Leads" into "Sheet1" without creating duplicates or overwriting other users.
+ */
+function recoverAllFromLogsAndLeads() {
+  try {
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    let regSheet = ss.getSheetByName(SHEET_NAME_REG) || ss.insertSheet(SHEET_NAME_REG);
+    if (regSheet.getLastRow() === 0) {
+      regSheet.appendRow(REG_SHEET_HEADERS);
+      regSheet.setFrozenRows(1);
+    }
+
+    const layout = getRegSheetLayout(regSheet);
+    const parsedLogs = parseLogsForPaymentsAndLeads();
+    const leadsSheet = ss.getSheetByName(SHEET_NAME_LANDING_LEADS);
+    const leadRows = (leadsSheet && leadsSheet.getLastRow() > 1) ? leadsSheet.getDataRange().getValues() : [];
+
+    // Enrich paidUsers with any missing name/email/phone from initiatedUsers or Landing_Leads
+    for (let p = 0; p < parsedLogs.paidUsers.length; p++) {
+      const pu = parsedLogs.paidUsers[p];
+      if (!pu.name || !pu.email || !pu.phone) {
+        const puPhone10 = pu.phone.replace(/\D/g, "").slice(-10);
+        for (let k = parsedLogs.initiatedUsers.length - 1; k >= 0; k--) {
+          const iu = parsedLogs.initiatedUsers[k];
+          const iuPhone10 = iu.phone.replace(/\D/g, "").slice(-10);
+          if ((pu.email && iu.email === pu.email) || (puPhone10 && iuPhone10 === puPhone10) || (pu.orderId && pu.orderId !== "order_direct" && iu.leadId === pu.orderId)) {
+            if (!pu.name && iu.name) pu.name = iu.name;
+            if (!pu.email && iu.email) pu.email = iu.email;
+            if (!pu.phone && iu.phone) pu.phone = iu.phone;
+            if (!pu.amount && iu.amount) pu.amount = iu.amount;
+            if (!pu.sessionDate && iu.sessionDate) pu.sessionDate = iu.sessionDate;
+            if (!pu.sessionTime && iu.sessionTime) pu.sessionTime = iu.sessionTime;
+            break;
+          }
+        }
+      }
+      if (!pu.name || !pu.email || !pu.phone) {
+        const puPhone10 = pu.phone.replace(/\D/g, "").slice(-10);
+        for (let l = leadRows.length - 1; l >= 1; l--) {
+          const lName = String(leadRows[l][2] || "").replace(/^'/, "").trim();
+          const lPhone = String(leadRows[l][3] || "").replace(/^'/, "").trim();
+          const lPhone10 = lPhone.replace(/\D/g, "").slice(-10);
+          const lEmail = String(leadRows[l][4] || "").replace(/^'/, "").trim().toLowerCase();
+          if ((pu.email && lEmail === pu.email) || (puPhone10 && lPhone10 === puPhone10)) {
+            if (!pu.name && lName) pu.name = lName;
+            if (!pu.email && lEmail) pu.email = lEmail;
+            if (!pu.phone && lPhone) pu.phone = lPhone;
+            break;
+          }
+        }
+      }
+    }
+
+    let regRows = regSheet.getDataRange().getValues();
+    let paidRecoveredCount = 0;
+    let syncedCount = 0;
+    const defaultSessionDate = getUpcomingWebinarTime().toDateString();
+
+    // 1. Recover all paid users from Logs into Sheet1
+    for (let p = 0; p < parsedLogs.paidUsers.length; p++) {
+      const pu = parsedLogs.paidUsers[p];
+      const puPhone10 = pu.phone.replace(/\D/g, "").slice(-10);
+      const isTest = isAuthorizedLiveTest(pu.email, pu.amount);
+      const targetStatus = isTest ? "✅ TEST_VERIFIED (₹1)" : "✅ PAID";
+
+      let matchedIdx = -1;
+      for (let r = 1; r < regRows.length; r++) {
+        const rPayId = String(regRows[r][layout.paymentId] || "").trim().replace(/^'/, "");
+        const rEmail = String(regRows[r][2] || "").replace(/^'/, "").trim().toLowerCase();
+        const rPhone10 = String(regRows[r][3] || "").replace(/\D/g, "").slice(-10);
+        const rOrdId = String(regRows[r][layout.orderId] || "").trim();
+        const rStatus = String(regRows[r][layout.status] || "").trim().toUpperCase();
+
+        // Check exact paymentId match only if email/phone doesn't belong to a completely different user (fixes order_direct overwrite collision)
+        if (pu.paymentId && pu.paymentId !== "pay_recovered" && rPayId === pu.paymentId) {
+          const sameEmail = !pu.email || !rEmail || pu.email === rEmail;
+          const samePhone = !puPhone10 || !rPhone10 || puPhone10 === rPhone10;
+          if (sameEmail && samePhone) {
+            matchedIdx = r;
+            break;
+          }
+        }
+
+        // Or match non-order_direct orderId
+        if (pu.orderId && pu.orderId !== "order_direct" && rOrdId === pu.orderId) {
+          matchedIdx = r;
+          break;
+        }
+
+        // Or upgrade existing INITIATED row for the same email/phone
+        if (rStatus === "INITIATED" || rStatus === "LEAD") {
+          if ((pu.email && rEmail === pu.email) || (puPhone10 && puPhone10.length === 10 && rPhone10 === puPhone10)) {
+            matchedIdx = r;
+            break;
+          }
+        }
+      }
+
+      if (matchedIdx !== -1) {
+        const existingStatus = String(regRows[matchedIdx][layout.status] || "").trim();
+        const existingPayId = String(regRows[matchedIdx][layout.paymentId] || "").trim().replace(/^'/, "");
+        if (existingStatus !== targetStatus || existingPayId !== pu.paymentId) {
+          if (pu.name && (!regRows[matchedIdx][1] || String(regRows[matchedIdx][1]).trim() === "Learner")) {
+            regSheet.getRange(matchedIdx + 1, 2).setValue(sanitizeCell(pu.name));
+          }
+          if (pu.email && !regRows[matchedIdx][2]) {
+            regSheet.getRange(matchedIdx + 1, 3).setValue(sanitizeCell(pu.email));
+          }
+          if (pu.phone && !regRows[matchedIdx][3]) {
+            regSheet.getRange(matchedIdx + 1, 4).setValue("'" + pu.phone.replace(/[^\d+\-\s]/g, ""));
+          }
+          if (pu.amount) {
+            regSheet.getRange(matchedIdx + 1, 7).setValue(pu.amount);
+          }
+          regSheet.getRange(matchedIdx + 1, layout.status + 1).setValue(targetStatus);
+          regSheet.getRange(matchedIdx + 1, layout.paymentId + 1).setValue(sanitizeCell(pu.paymentId));
+          regSheet.getRange(matchedIdx + 1, layout.emailStatus + 1).setValue("SENT ✅");
+          paidRecoveredCount++;
+        }
+      } else {
+        const safeOrderId = (pu.orderId && pu.orderId !== "order_direct")
+          ? pu.orderId
+          : ("order_" + pu.paymentId.replace(/^pay_/, ""));
+        regSheet.appendRow(buildRegSheetRow(layout, {
+          timestamp: pu.timestamp,
+          name: sanitizeCell(pu.name || "Learner"),
+          email: sanitizeCell(pu.email),
+          phone: "'" + String(pu.phone || "").replace(/[^\d+\-\s]/g, ""),
+          profession: "Content Creator / Filmmaker",
+          language: sanitizeCell(pu.language || (pu.amount === 499 ? "Sunday 10 AM - 1 PM IST (Live + Session PDF & Material)" : "Sunday 10 AM - 1 PM IST (Live Webinar)")),
+          amount: pu.amount || 99,
+          status: targetStatus,
+          batch: "Sunday Morning 10:00 AM - 1:00 PM IST",
+          sessionDate: sanitizeCell(pu.sessionDate || defaultSessionDate),
+          orderId: safeOrderId,
+          paymentId: sanitizeCell(pu.paymentId),
+          emailStatus: "SENT ✅",
+          whatsappClicked: "NO",
+          reminder24h: "NO",
+          reminder2h: "NO",
+          reminder15m: "NO",
+          pageUrl: "https://course.techtycoon.in/ai_filmmaking",
+          sessionTime: sanitizeCell(pu.sessionTime || "10:00 AM – 1:00 PM IST"),
+          preferredSlot: "Sunday 10:00 AM - 1:00 PM IST"
+        }));
+        paidRecoveredCount++;
+        syncedCount++;
+      }
+      regRows = regSheet.getDataRange().getValues();
+    }
+
+    // 2. Sync any initiated checkout attempts from Logs not already in Sheet1
+    const existingOrderIds = {};
+    const existingPhoneDateKeys = {};
+    const existingEmailDateKeys = {};
+    for (let r = 1; r < regRows.length; r++) {
+      const ordId = String(regRows[r][layout.orderId] || "").trim();
+      if (ordId) existingOrderIds[ordId] = true;
+      const ph10 = String(regRows[r][3] || "").replace(/\D/g, "").slice(-10);
+      const em = String(regRows[r][2] || "").replace(/^'/, "").trim().toLowerCase();
+      const tsD = regRows[r][0] instanceof Date ? regRows[r][0].toISOString().slice(0, 10) : String(regRows[r][0] || "").slice(0, 10);
+      if (ph10 && tsD) existingPhoneDateKeys[ph10 + "_" + tsD] = true;
+      if (em && tsD) existingEmailDateKeys[em + "_" + tsD] = true;
+    }
+
+    for (let k = 0; k < parsedLogs.initiatedUsers.length; k++) {
+      const iu = parsedLogs.initiatedUsers[k];
+      if (!iu.name && !iu.phone) continue;
+      const ph10 = iu.phone.replace(/\D/g, "").slice(-10);
+      const em = String(iu.email || "").trim().toLowerCase();
+      const tsD = iu.timestamp instanceof Date ? iu.timestamp.toISOString().slice(0, 10) : String(iu.timestampIso || "").slice(0, 10);
+      const key = (ph10 && tsD) ? (ph10 + "_" + tsD) : "";
+      const emKey = (em && tsD) ? (em + "_" + tsD) : "";
+      if (existingOrderIds[iu.leadId] || (key && existingPhoneDateKeys[key]) || (emKey && existingEmailDateKeys[emKey])) continue;
+
+      const amt = isAuthorizedLiveTest(iu.email, 1) ? 1 : (iu.amount || 99);
+      regSheet.appendRow(buildRegSheetRow(layout, {
+        timestamp: iu.timestamp,
+        name: sanitizeCell(iu.name || "Learner"),
+        email: sanitizeCell(iu.email),
+        phone: "'" + String(iu.phone || "").replace(/[^\d+\-\s]/g, ""),
+        profession: sanitizeCell(iu.userType || "Content Creator / Filmmaker"),
+        language: sanitizeCell(iu.language || "Sunday 10 AM - 1 PM IST (Live Webinar)"),
+        amount: amt,
+        status: "INITIATED",
+        batch: "Sunday Morning 10:00 AM - 1:00 PM IST",
+        sessionDate: sanitizeCell(iu.sessionDate || defaultSessionDate),
+        orderId: iu.leadId,
+        paymentId: "",
+        emailStatus: "WAITING",
+        whatsappClicked: "NO",
+        reminder24h: "NO",
+        reminder2h: "NO",
+        reminder15m: "NO",
+        pageUrl: sanitizeCell(iu.pageUrl || "https://course.techtycoon.in/ai_filmmaking"),
+        sessionTime: sanitizeCell(iu.sessionTime || "10:00 AM – 1:00 PM IST"),
+        preferredSlot: "Sunday 10:00 AM - 1:00 PM IST"
+      }));
+      existingOrderIds[iu.leadId] = true;
+      if (key) existingPhoneDateKeys[key] = true;
+      if (emKey) existingEmailDateKeys[emKey] = true;
+      syncedCount++;
+    }
+
+    // 3. Also run Landing_Leads -> Sheet1 backfill
+    syncedCount += syncLandingLeadsToSheet1();
+
+    if (paidRecoveredCount > 0 || syncedCount > 0) {
+      SpreadsheetApp.flush();
+    }
+
+    return {
+      syncedCount: syncedCount,
+      paidRecoveredCount: paidRecoveredCount,
+      paidUsers: parsedLogs.paidUsers,
+      initiatedUsers: parsedLogs.initiatedUsers,
+      rawLogs: parsedLogs.rawLogs
+    };
+  } catch (err) {
+    if (typeof writeToLogs === "function") writeToLogs("RECOVER_LOGS_WARN", err.message);
+    return { syncedCount: 0, paidRecoveredCount: 0, paidUsers: [], initiatedUsers: [], rawLogs: [] };
+  }
+}
+
+/**
  * Syncs all rows from Landing_Leads into Sheet1 so every previous and new lead
  * appears in Sheet1 (with status INITIATED) without duplicates.
  */
@@ -1461,7 +1869,7 @@ function saveLandingLead(data) {
     ]);
     SpreadsheetApp.flush();
     try {
-      syncLandingLeadsToSheet1();
+      recoverAllFromLogsAndLeads();
     } catch (syncErr) {}
     return { success: true, leadId: leadId };
   } catch (err) {
@@ -1564,6 +1972,9 @@ function processVerifiedFilmmakingPayment(orderId, paymentId, isInternational, c
     }
 
     if (targetRowIndex === -1) {
+      const safeNewOrderId = (cleanOrderId && cleanOrderId !== "order_direct")
+        ? cleanOrderId
+        : ("order_" + (cleanPaymentId ? cleanPaymentId.replace(/^pay_/, "") : Date.now()));
       const modeLabel = (extraData && (extraData.modeOfSession || extraData.language)) ||
         (Number(clientSuppliedAmount) === 499 ? "Online Live Session + Session PDF & Material" : "Online Live Session (Sunday 10 AM - 1 PM)");
       sheet.appendRow(buildRegSheetRow(layout, {
@@ -1571,13 +1982,13 @@ function processVerifiedFilmmakingPayment(orderId, paymentId, isInternational, c
         name: sanitizeCell((extraData && extraData.name) || "Learner"),
         email: sanitizeCell((extraData && extraData.email) || ""),
         phone: "'" + String((extraData && extraData.phone) || "").replace(/[^\d+\-\s]/g, ""),
-        profession: "Working Professional",
+        profession: sanitizeCell((extraData && extraData.userType) || "Content Creator / Filmmaker"),
         language: modeLabel,
         amount: clientSuppliedAmount || 99,
         status: "INITIATED",
         batch: "Sunday Morning 10:00 AM - 1:00 PM IST",
         sessionDate: sanitizeCell((extraData && extraData.sessionDate) || getUpcomingWebinarTime().toDateString()),
-        orderId: cleanOrderId,
+        orderId: safeNewOrderId,
         paymentId: cleanPaymentId,
         emailStatus: "WAITING",
         whatsappClicked: "NO",
@@ -1594,13 +2005,14 @@ function processVerifiedFilmmakingPayment(orderId, paymentId, isInternational, c
     }
 
     const row = rows[targetRowIndex];
-    const expectedAmountInr = Number(row[6]) || Number(clientSuppliedAmount) || 99;
-    const name = String(row[1] || (extraData && extraData.name) || "Learner").replace(/^'/, "");
-    const email = String(row[2] || (extraData && extraData.email) || "").replace(/^'/, "");
+    const expectedAmountInr = Number((extraData && extraData.amount) || clientSuppliedAmount || row[6]) || 99;
+    const name = String((extraData && extraData.name) || row[1] || "Learner").replace(/^'/, "");
+    const email = String((extraData && extraData.email) || row[2] || "").replace(/^'/, "");
     const sessionDate = (extraData && extraData.sessionDate) || row[layout.sessionDate] || getUpcomingWebinarTime().toDateString();
     const sessionTime = (extraData && extraData.sessionTime) || row[layout.sessionTime] || "10:00 AM – 1:00 PM IST";
-    const phoneClean = row[3] ? row[3].toString().replace(/\D/g, '') : "";
-    const modeOrLang = row[5] || (extraData && (extraData.language || extraData.modeOfSession)) || "";
+    const rawPhone = (extraData && extraData.phone) ? String(extraData.phone) : (row[3] ? row[3].toString() : "");
+    const phoneClean = rawPhone.replace(/\D/g, '');
+    const modeOrLang = (extraData && (extraData.language || extraData.modeOfSession)) || row[5] || "";
 
     let emailResult = { invoiceNumber: "TT/26-27/AIF-" + (cleanPaymentId.replace(/\D/g, "").slice(-4) || "1099"), courseTitle: "3-Hours AI Filmmaking & Video Generation Live Webinar" };
     try {
@@ -1612,6 +2024,16 @@ function processVerifiedFilmmakingPayment(orderId, paymentId, isInternational, c
     }
 
     const isTestTx = isAuthorizedLiveTest(email, expectedAmountInr);
+    if (name && name !== "Learner") {
+      sheet.getRange(targetRowIndex + 1, 2).setValue(sanitizeCell(name));
+    }
+    if (email) {
+      sheet.getRange(targetRowIndex + 1, 3).setValue(sanitizeCell(email));
+    }
+    if (rawPhone) {
+      sheet.getRange(targetRowIndex + 1, 4).setValue("'" + rawPhone.replace(/[^\d+\-\s]/g, ""));
+    }
+    sheet.getRange(targetRowIndex + 1, 7).setValue(expectedAmountInr);
     sheet.getRange(targetRowIndex + 1, layout.status + 1).setValue(isTestTx ? "✅ TEST_VERIFIED (₹1)" : "✅ PAID");
     sheet.getRange(targetRowIndex + 1, layout.paymentId + 1).setValue(sanitizeCell(cleanPaymentId));
     sheet.getRange(targetRowIndex + 1, layout.emailStatus + 1).setValue("SENT ✅");
@@ -1814,7 +2236,7 @@ function checkAndSendReminders() {
 }
 
 function reconcileAiFilmmakingRows() {
-  const syncedLeadsCount = syncLandingLeadsToSheet1();
+  const recovery = recoverAllFromLogsAndLeads();
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const sheet = ss.getSheetByName(SHEET_NAME_REG) || ss.getSheets()[0];
   const layout = getRegSheetLayout(sheet);
@@ -1842,7 +2264,7 @@ function reconcileAiFilmmakingRows() {
     }
   }
   SpreadsheetApp.flush();
-  return `Reconciliation complete. Synced ${syncedLeadsCount} leads from Landing_Leads to Sheet1 and resolved ${resolvedCount} payment rows.`;
+  return `Reconciliation complete. Recovered ${recovery.paidRecoveredCount} paid & ${recovery.syncedCount} total users from Logs/Landing_Leads and resolved ${resolvedCount} pending payment rows.`;
 }
 
 function setupAutoReconcileTrigger() {
