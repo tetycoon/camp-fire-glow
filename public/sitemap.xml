@@ -73,6 +73,13 @@
     <priority>0.5</priority>
   </url>
 
+  <!-- Working professionals AI skill session -->
+  <url>
+    <loc>https://course.techtycoon.in/working-professionals/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
   <!-- Legal -->
   <url>
     <loc>https://course.techtycoon.in/privacy</loc>
