@@ -59,42 +59,15 @@ const AUTHORIZED_TEST_EMAILS = [
 ];
 
 // ============================================================================
-// HELPER: NEXT SUNDAY 10:00 AM - 1:00 PM IST CALCULATOR
+// HELPER: SESSION DISPLAY INFO (FLEXIBLE / UPCOMING BATCH)
 // ============================================================================
-function getUpcomingSundaySession() {
-  const now = new Date();
-  const day = now.getDay(); // 0 = Sunday
-  const target = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 10, 0, 0, 0);
-
-  if (day === 0) {
-    const cutoff = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 11, 0, 0, 0);
-    if (now.getTime() >= cutoff.getTime()) {
-      target.setDate(target.getDate() + 7);
-    }
-  } else {
-    const daysUntilSunday = (7 - day) % 7;
-    target.setDate(target.getDate() + daysUntilSunday);
-  }
-
-  const formattedDate = target.toLocaleDateString('en-IN', {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric'
-  });
-
-  const shortDate = target.toLocaleDateString('en-IN', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric'
-  });
-
+function getSessionDisplayInfo() {
   return {
-    targetDate: target,
-    formattedDate,
-    shortDate,
-    timeRange: '10:00 AM – 1:00 PM IST (3 Hours)',
-    batchName: 'Sunday Morning 10:00 AM - 1:00 PM IST'
+    targetDate: new Date(),
+    formattedDate: 'Announced in WhatsApp Community',
+    shortDate: 'Upcoming Live Batch',
+    timeRange: 'Updating Shortly',
+    batchName: 'Upcoming Live Batch'
   };
 }
 
@@ -485,12 +458,9 @@ function getTrackingAttribution(): Record<string, string> {
 // MAIN LANDING PAGE COMPONENT
 // ============================================================================
 const AiFilmmakingPage: React.FC = () => {
-  const sessionInfo = useMemo(() => getUpcomingSundaySession(), []);
+  const sessionInfo = useMemo(() => getSessionDisplayInfo(), []);
   const leadTrackedRef = useRef(false);
   const purchaseTrackedRef = useRef(false);
-
-  // Countdown timer to next Sunday 10:00 AM IST
-  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   // Hero & Studio Interactive Showcase State
   const [heroActiveSlide, setHeroActiveSlide] = useState<0 | 1 | 2>(0);
@@ -530,7 +500,7 @@ const AiFilmmakingPage: React.FC = () => {
   // Set page title, capture UTM attribution, Meta Pixel ViewContent & ensure developer cinematic layer
   useEffect(() => {
     document.title =
-      '3-Hours AI Filmmaking & Video Generation Live Webinar | Every Sunday 10 AM – 1 PM IST | Tech Tycoon';
+      '3-Hours AI Filmmaking & Video Generation Live Webinar | Tech Tycoon';
     getTrackingAttribution();
 
     if (typeof (window as any).fbq === 'function') {
@@ -558,22 +528,6 @@ const AiFilmmakingPage: React.FC = () => {
       document.documentElement.classList.remove('cfx', 'cfx-light');
     };
   }, []);
-
-  // Live countdown timer
-  useEffect(() => {
-    const updateTimer = () => {
-      const now = new Date().getTime();
-      const diff = Math.max(0, sessionInfo.targetDate.getTime() - now);
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-      const minutes = Math.floor((diff / 1000 / 60) % 60);
-      const seconds = Math.floor((diff / 1000) % 60);
-      setTimeLeft({ days, hours, minutes, seconds });
-    };
-    updateTimer();
-    const interval = setInterval(updateTimer, 1000);
-    return () => clearInterval(interval);
-  }, [sessionInfo.targetDate]);
 
   // Dynamic Pricing Calculation (₹99 base + optional ₹400 PDF & Material = ₹499, or ₹1 for authorized test email)
   const isTestUser = AUTHORIZED_TEST_EMAILS.includes(formData.email.trim().toLowerCase());
@@ -638,8 +592,8 @@ const AiFilmmakingPage: React.FC = () => {
       const activeKeyId = isInternational ? RAZORPAY_KEY_ID_INTL : RAZORPAY_KEY_ID_IN;
       const fullPhone = `${formData.countryCode}${cleanDigits}`;
       const modeLabel = includePdfMaterial
-        ? 'Sunday 10 AM - 1 PM IST (Live + Session PDF & Material)'
-        : 'Sunday 10 AM - 1 PM IST (Live Webinar)';
+        ? 'Live Masterclass + Session PDF & Material'
+        : 'Live Masterclass';
       const attribution = getTrackingAttribution();
       const clientLeadId =
         'lead_' + Date.now().toString(36) + '_' + Math.random().toString(36).substring(2, 9);
@@ -681,10 +635,10 @@ const AiFilmmakingPage: React.FC = () => {
               course: includePdfMaterial
                 ? '3-Hours AI Filmmaking & Video Generation Live Webinar + Session PDF & Material'
                 : '3-Hours AI Filmmaking & Video Generation Live Webinar',
-              batch: sessionInfo.batchName,
-              preferredSlot: sessionInfo.batchName,
-              sessionDate: sessionInfo.formattedDate,
-              sessionTime: sessionInfo.timeRange,
+              batch: 'Upcoming Live Batch',
+              preferredSlot: 'Upcoming Live Batch',
+              sessionDate: 'To be announced shortly',
+              sessionTime: 'To be announced shortly',
               language: modeLabel,
               modeOfSession: modeLabel,
               pageUrl: window.location.href
@@ -826,8 +780,8 @@ const AiFilmmakingPage: React.FC = () => {
                   countryCode: formData.countryCode,
                   language: modeLabel,
                   modeOfSession: modeLabel,
-                  sessionDate: sessionInfo.formattedDate,
-                  sessionTime: sessionInfo.timeRange
+                  sessionDate: 'To be announced shortly',
+                  sessionTime: 'To be announced shortly'
                 })
               });
               const verifyJson = await verifyRes.json();
@@ -878,8 +832,8 @@ const AiFilmmakingPage: React.FC = () => {
             customerName: cleanName,
             customerEmail: cleanEmail,
             customerPhone: fullPhone,
-            sessionDate: sessionInfo.formattedDate,
-            sessionTime: sessionInfo.timeRange
+            sessionDate: 'Updating shortly in WhatsApp Community',
+            sessionTime: 'Updating shortly in WhatsApp Community'
           });
           setIsProcessingPayment(false);
           setIsCheckoutModalOpen(false);
@@ -913,7 +867,7 @@ const AiFilmmakingPage: React.FC = () => {
     {
       id: 'logo',
       mode: 'logo' as const,
-      badge: 'MODULE 01 • 10:00 AM – 11:00 AM',
+      badge: 'MODULE 01 • LOGO ANIMATION',
       title: 'AI Logo Animation & 3D Brand Idents',
       subtitle: 'Turn Any Flat 2D Logo into a Hollywood-Style 3D Animated Intro',
       image: aiLogoSample,
@@ -936,7 +890,7 @@ const AiFilmmakingPage: React.FC = () => {
     {
       id: 'avatar',
       mode: 'avatar' as const,
-      badge: 'MODULE 02 • 11:00 AM – 12:00 PM',
+      badge: 'MODULE 02 • AI AVATARS & VOICES',
       title: 'AI Avatar Creation & Realistic Lip-Sync',
       subtitle: 'Build Hyper-Realistic Digital Humans & Virtual Presenters',
       image: aiAvatarSample,
@@ -959,7 +913,7 @@ const AiFilmmakingPage: React.FC = () => {
     {
       id: 'video',
       mode: 'video' as const,
-      badge: 'MODULE 03 • 12:00 PM – 1:00 PM',
+      badge: 'MODULE 03 • CINEMATIC SCENES',
       title: 'AI Video Generation & Filmmaking Foundation',
       subtitle: 'Direct Complete Cinematic Scenes, Commercials & Short Films with AI',
       image: aiVideoSample,
@@ -988,7 +942,7 @@ const AiFilmmakingPage: React.FC = () => {
     },
     {
       q: 'When is the live session conducted?',
-      a: `The live webinar takes place Every Sunday Morning from 10:00 AM to 1:00 PM IST (3 Hours). Your seat is automatically booked for the upcoming session on ${sessionInfo.formattedDate}.`
+      a: 'The live webinar takes place in upcoming interactive batches. Once you complete registration, please join our official WhatsApp Community where your exact session date, timing, and direct classroom link will be updated shortly.'
     },
     {
       q: 'What is included in the optional ₹400 Session PDF & Material add-on?',
@@ -1000,7 +954,7 @@ const AiFilmmakingPage: React.FC = () => {
     },
     {
       q: 'How will I receive the live webinar joining link?',
-      a: 'Right after your ₹99 (or ₹499) payment succeeds, you will be redirected to join our official WhatsApp group and receive an instant confirmation email + Google Calendar invite with the session details.'
+      a: 'Immediately after registration, you will receive your confirmation and an invitation to join our official WhatsApp Community. We will announce and update your session date, timing, and classroom link directly in the group and via email.'
     }
   ];
 
@@ -1030,26 +984,27 @@ const AiFilmmakingPage: React.FC = () => {
             </div>
 
             <span className="inline-block px-3 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[11px] font-bold uppercase tracking-wider mb-1.5">
-              Seat Confirmed • Payment Verified
+              Registration Successful • Seat Reserved
             </span>
 
             <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-              Welcome, {verifiedPayment.customerName}! 🎬
+              Thank You, {verifiedPayment.customerName}! 🎬
             </h1>
             <p className="text-slate-600 text-xs sm:text-sm mt-1 leading-snug">
-              Your seat for the <strong>3-Hours AI Filmmaking Live Webinar</strong> is officially confirmed.
+              Your registration for the <strong>3-Hours AI Filmmaking Live Webinar</strong> is confirmed.
             </p>
 
-            {/* Primary Action: Join WhatsApp Group (Single, High-Converting Button) */}
-            <div className="rounded-2xl bg-gradient-to-br from-emerald-50 to-teal-50/70 border border-emerald-200/80 p-4 my-3.5 text-center">
-              <p className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-800 mb-1">
-                ⚡ Action Required — Next Step
-              </p>
-              <h3 className="text-sm sm:text-base font-extrabold text-slate-900 mb-1">
+            {/* Primary Action: Join WhatsApp Community */}
+            <div className="rounded-2xl bg-gradient-to-br from-emerald-50 via-teal-50/60 to-emerald-100/40 border-2 border-emerald-300 p-4 sm:p-5 my-3.5 text-center shadow-sm">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-600 text-white text-[10px] sm:text-[11px] font-black uppercase tracking-wider mb-2 shadow-sm">
+                <MessageSquare className="w-3.5 h-3.5" />
+                <span>Action Required • Join WhatsApp Community</span>
+              </div>
+              <h3 className="text-base sm:text-lg font-black text-slate-900 mb-1.5">
                 Join the Official WhatsApp Community
               </h3>
-              <p className="text-xs text-slate-600 mb-3 leading-relaxed">
-                Live classroom link, Sunday morning reminders, and {verifiedPayment.hasPdfMaterial ? 'your Resource ToolKit' : 'session updates'} are shared directly inside the group.
+              <p className="text-xs sm:text-sm text-slate-700 mb-3.5 leading-relaxed font-medium">
+                Please join our exclusive community below. <strong>We will update your session date and timing shortly</strong> inside the WhatsApp group, along with your live classroom link and {verifiedPayment.hasPdfMaterial ? 'your complete Resource ToolKit' : 'session materials'}.
               </p>
               <a
                 href={WHATSAPP_COMMUNITY_LINK}
@@ -1058,8 +1013,19 @@ const AiFilmmakingPage: React.FC = () => {
                 className="w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-extrabold text-sm sm:text-base shadow-md shadow-emerald-600/25 transition-all cursor-pointer"
               >
                 <MessageSquare className="w-5 h-5 shrink-0" />
-                <span>Join Official WhatsApp Group</span>
+                <span>Join Official WhatsApp Community →</span>
               </a>
+            </div>
+
+            {/* Session Date & Timing Status Notice */}
+            <div className="rounded-xl bg-amber-50/90 border border-amber-300 p-3 my-3 text-center">
+              <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-amber-900 mb-0.5">
+                <Clock className="w-4 h-4 text-amber-600 shrink-0" />
+                <span>Session Date &amp; Timing</span>
+              </div>
+              <p className="text-xs text-amber-800 font-semibold leading-normal">
+                We will update your session date and timing shortly inside the WhatsApp community and via Email.
+              </p>
             </div>
 
             {/* GST Tax Invoice Email Delivery Notice */}
@@ -1071,18 +1037,6 @@ const AiFilmmakingPage: React.FC = () => {
               <p className="text-[11px] text-slate-600 leading-tight">
                 Invoice: <span className="font-mono font-bold text-slate-900">{verifiedPayment.invoiceNumber}</span> • Delivered to <span className="font-semibold text-slate-900">{verifiedPayment.customerEmail}</span>
               </p>
-            </div>
-
-            {/* Session Info Quick Strip */}
-            <div className="grid grid-cols-2 gap-2 text-center bg-slate-50 border border-slate-200 rounded-xl p-2.5 my-3 text-xs">
-              <div>
-                <span className="text-[10px] uppercase font-bold text-slate-500 block">Session Date</span>
-                <span className="font-bold text-slate-900 text-xs">{verifiedPayment.sessionDate}</span>
-              </div>
-              <div>
-                <span className="text-[10px] uppercase font-bold text-slate-500 block">Timing &amp; Mode</span>
-                <span className="font-bold text-blue-600 text-xs">{verifiedPayment.sessionTime}</span>
-              </div>
             </div>
 
             {/* Back to Landing Page Link */}
@@ -1149,14 +1103,14 @@ const AiFilmmakingPage: React.FC = () => {
           {/* Center Announcement Pill (Desktop) */}
           <div className="hidden lg:flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-950/80 border border-blue-500/30 text-xs">
             <span className="inline-flex h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
-            <span className="font-bold text-blue-200">Every Sunday Morning:</span>
-            <span className="text-white font-semibold">10:00 AM – 1:00 PM IST (3 Hours Live)</span>
+            <span className="font-bold text-blue-200">Live Virtual Masterclass:</span>
+            <span className="text-white font-semibold">Upcoming Interactive Batch (3 Hours)</span>
           </div>
 
           {/* Right CTA */}
           <div className="flex items-center gap-2 shrink-0">
             <span className="hidden sm:inline-block px-2.5 py-1 rounded-full bg-amber-500/15 border border-amber-400/30 text-amber-300 font-bold text-[11px]">
-              Sun • 10 AM – 1 PM
+              Upcoming Live Batch
             </span>
             <button
               onClick={() => openCheckout()}
@@ -1210,7 +1164,7 @@ const AiFilmmakingPage: React.FC = () => {
               Go from complete beginner to directing studio-quality{' '}
               <strong className="text-cyan-300">3D AI Logo Animations</strong>, hyper-realistic{' '}
               <strong className="text-blue-300">Talking AI Avatars</strong>, and breathtaking{' '}
-              <strong className="text-amber-300">Cinematic AI Videos</strong> — live every Sunday morning (10:00 AM – 1:00 PM IST) without expensive cameras or complex 3D software.
+              <strong className="text-amber-300">Cinematic AI Videos</strong> — live in an interactive 3-hour masterclass without expensive cameras or complex 3D software.
             </p>
 
             {/* CTA Buttons */}
@@ -1219,7 +1173,7 @@ const AiFilmmakingPage: React.FC = () => {
                 onClick={() => openCheckout(false)}
                 className="w-full sm:w-auto group relative inline-flex items-center justify-center gap-2.5 px-7 py-3.5 sm:py-4 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-black text-sm sm:text-base shadow-[0_0_35px_rgba(37,99,235,0.6)] transition-all cursor-pointer"
               >
-                <span>Reserve Sunday Seat for ₹99</span>
+                <span>Reserve Your Seat for ₹99</span>
                 <span className="line-through text-xs text-white/70 font-normal">₹1,999</span>
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </button>
@@ -1256,7 +1210,7 @@ const AiFilmmakingPage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-16">
             <span className="px-3.5 py-1.5 rounded-full bg-blue-500/15 border border-blue-500/30 text-blue-300 text-[11px] sm:text-xs font-bold uppercase tracking-widest">
-              3-Hour Foundation Roadmap • Sunday 10:00 AM to 1:00 PM IST
+              3-Hour Foundation Roadmap • Live Interactive Masterclass
             </span>
             <h2 className="text-2xl sm:text-5xl font-black mt-3 sm:mt-4 mb-3 sm:mb-4">
               What You Will Build Live in{' '}
@@ -1454,7 +1408,7 @@ const AiFilmmakingPage: React.FC = () => {
                     onClick={() => openCheckout()}
                     className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-black text-xs sm:text-sm shadow-lg shadow-blue-600/30 transition-all cursor-pointer"
                   >
-                    <span>Learn This Live on Sunday @ ₹99</span>
+                    <span>Learn This Live @ ₹99</span>
                     <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
@@ -1525,7 +1479,7 @@ const AiFilmmakingPage: React.FC = () => {
               6 Real AI Videos You Will Learn to Direct Live
             </h2>
             <p className="text-slate-400 text-xs sm:text-base">
-              Inspect the live 60FPS AI video renders below — complete with the exact text prompts, camera settings, and audio controls we teach on Sunday morning.
+              Inspect the live 60FPS AI video renders below — complete with the exact text prompts, camera settings, and audio controls we teach live in the masterclass.
             </p>
           </div>
 
@@ -1577,7 +1531,7 @@ const AiFilmmakingPage: React.FC = () => {
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
             <span className="px-3.5 py-1.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-[11px] sm:text-xs font-bold uppercase tracking-widest">
-              Simple &amp; Transparent Pricing • Sunday 10 AM – 1 PM IST
+              Simple &amp; Transparent Pricing • Live 3-Hour Masterclass
             </span>
             <h2 className="text-2xl sm:text-5xl font-black mt-3 sm:mt-4 mb-3">
               Join the 3-Hour Live Session for Just <span className="text-emerald-400">₹99</span>
@@ -1602,7 +1556,7 @@ const AiFilmmakingPage: React.FC = () => {
                     3-Hours AI Filmmaking Live Webinar
                   </h3>
                   <p className="text-xs text-slate-400 mt-1">
-                    Every Sunday Morning • 10:00 AM – 1:00 PM IST
+                    Upcoming Live Batch • 3 Hours Interactive
                   </p>
 
                   <div className="my-5 sm:my-6 flex items-baseline gap-3">
@@ -1616,7 +1570,7 @@ const AiFilmmakingPage: React.FC = () => {
                   <ul className="space-y-2.5 sm:space-y-3 text-xs sm:text-sm text-slate-300 mb-6 sm:mb-8">
                     <li className="flex items-center gap-2.5">
                       <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0" />
-                      <span>Full 3-Hour Live Interactive Sunday Session (10 AM – 1 PM)</span>
+                      <span>Full 3-Hour Live Interactive Masterclass Session</span>
                     </li>
                   </ul>
                 </div>
@@ -1663,7 +1617,7 @@ const AiFilmmakingPage: React.FC = () => {
                   <ul className="space-y-2.5 sm:space-y-3 text-xs sm:text-sm text-slate-200 mb-6 sm:mb-8">
                     <li className="flex items-center gap-2.5">
                       <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                      <strong>Everything in the ₹99 3-Hour Live Sunday Webinar</strong>
+                      <strong>Everything in the ₹99 3-Hour Live Webinar</strong>
                     </li>
                     <li className="flex items-center gap-2.5">
                       <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
@@ -1720,7 +1674,7 @@ const AiFilmmakingPage: React.FC = () => {
 
               <div className="md:col-span-8 space-y-4 text-center md:text-left">
                 <span className="inline-block px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 text-xs font-bold uppercase tracking-wider">
-                  Your Live Sunday Instructor
+                  Your Live Masterclass Instructor
                 </span>
                 <h2 className="text-2xl sm:text-4xl font-black text-white">
                   Learn Practical AI Filmmaking from an Industry AI Practitioner
@@ -1756,7 +1710,7 @@ const AiFilmmakingPage: React.FC = () => {
           <div className="text-center mb-10 sm:mb-12">
             <h2 className="text-2xl sm:text-4xl font-black">Frequently Asked Questions</h2>
             <p className="text-slate-400 text-xs sm:text-sm mt-2">
-              Everything you need to know about the Sunday 10:00 AM – 1:00 PM IST Live Webinar
+              Everything you need to know about the 3-Hour AI Filmmaking Live Masterclass
             </p>
           </div>
 
@@ -1813,7 +1767,7 @@ const AiFilmmakingPage: React.FC = () => {
         <div className="max-w-6xl mx-auto flex items-center justify-between gap-3">
           <div className="min-w-0">
             <p className="text-[10px] sm:text-[11px] uppercase tracking-wider text-cyan-400 font-bold truncate">
-              Sunday • 10:00 AM – 1:00 PM IST
+              Upcoming Live Batch • 3 Hours Intensive
             </p>
             <p className="text-xs sm:text-base font-black text-white truncate">
               3-Hr AI Filmmaking:{' '}
@@ -1908,7 +1862,7 @@ const AiFilmmakingPage: React.FC = () => {
                 3-Hours AI Filmmaking Live Webinar • Just ₹99 (Incl. 18% GST)
               </p>
               <div className="mt-1.5 inline-flex items-center gap-1.5 bg-blue-50 border border-blue-200 text-blue-700 px-3 py-1 rounded-full text-[11px] font-bold tracking-wide">
-                <span>📅 Sunday Morning (10:00 AM – 1:00 PM IST) • {sessionInfo.shortDate}</span>
+                <span>📅 Upcoming Live Batch • Session Date &amp; Timing Shared on WhatsApp</span>
               </div>
             </div>
 
