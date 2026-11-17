@@ -927,23 +927,24 @@ function reconcileClaudeResourcesRows() {
 
   for (let i = 1; i < rows.length; i++) {
     const row = rows[i];
-    const status = String(row[layout.status] || row[7] || "").trim();
-    const orderId = String(row[layout.orderId] || row[8] || "").trim();
-    let payId = String(row[layout.paymentId] || row[9] || "").trim().replace(/^'/, "");
-    const emailStatus = String(row[layout.emailStatus] || row[10] || "").trim();
+    const status = String(row[layout.status] || "").trim();
+    const orderId = String(row[layout.orderId] || "").trim();
+    let payId = String(row[layout.paymentId] || "").trim().replace(/^'/, "");
+    const emailStatus = String(row[layout.emailStatus] || "").trim();
 
-    // If row is still INITIATED and has an orderId, check Razorpay to see if user completed payment
-    if (status === "INITIATED" && !payId && orderId.startsWith("order_")) {
+    // If Payment ID is missing and row has an orderId, check Razorpay to fetch the captured payment ID
+    if (!payId.startsWith("pay_") && orderId.startsWith("order_") &&
+        (status === "INITIATED" || status === "✅ PAID" || status.includes("TEST_VERIFIED") || status.includes("RECONCILIATION"))) {
       const foundPayId = fetchCapturedPaymentForOrder(orderId);
       if (foundPayId) {
         payId = foundPayId;
       }
     }
 
+    const isPaidStatus = status === "✅ PAID" || status.includes("TEST_VERIFIED") || status.includes("RECONCILIATION");
     const needsEmail =
-      payId.startsWith("pay_") &&
       emailStatus !== "CLAUDE_DELIVERED ✅" &&
-      (status === "INITIATED" || status === "✅ PAID" || status.includes("TEST_VERIFIED") || status.includes("RECONCILIATION"));
+      ((payId.startsWith("pay_") && (status === "INITIATED" || isPaidStatus)) || isPaidStatus);
 
     if (needsEmail) {
       const name = String(row[1] || "Customer").replace(/^'/, "");
@@ -953,17 +954,20 @@ function reconcileClaudeResourcesRows() {
       const isTestTx = isAuthorizedLiveTest(email, expectedAmountInr);
       const modeOrLang = String(row[5] || "");
       const batchOrCourse = String(row[layout.batch] || "");
+      const effectivePayRef = payId.startsWith("pay_") ? payId : (orderId || ("PAID_ROW_" + (i + 1)));
 
       sheet.getRange(i + 1, layout.status + 1).setValue(isTestTx ? "✅ TEST_VERIFIED (₹1)" : "✅ PAID");
-      sheet.getRange(i + 1, layout.paymentId + 1).setValue(sanitizeCell(payId));
+      if (payId.startsWith("pay_")) {
+        sheet.getRange(i + 1, layout.paymentId + 1).setValue(sanitizeCell(payId));
+      }
 
       if (email) {
         try {
-          const mailRes = sendClaudeResourcesEmail(email, name, expectedAmountInr, payId, orderId, phoneClean, modeOrLang, batchOrCourse);
+          const mailRes = sendClaudeResourcesEmail(email, name, expectedAmountInr, effectivePayRef, orderId, phoneClean, modeOrLang, batchOrCourse);
           sheet.getRange(i + 1, layout.emailStatus + 1).setValue("CLAUDE_DELIVERED ✅");
           resolvedCount++;
           Logger.log("✅ Sent to " + name + " <" + email + "> | ₹" + expectedAmountInr + " | Package: " + (mailRes.hasChatGptAddon ? "2 Resources (Claude + ChatGPT Hacks)" : "1 Resource (Only Claude Resources)"));
-          writeToLogs("ROW_RECONCILED", "Emailed Claude Resources & Invoice to " + email + " (" + payId + ") | Addon: " + mailRes.hasChatGptAddon);
+          writeToLogs("ROW_RECONCILED", "Emailed Claude Resources & Invoice to " + email + " (" + effectivePayRef + ") | Addon: " + mailRes.hasChatGptAddon);
         } catch (mailErr) {
           Logger.log("❌ Error sending to " + email + ": " + mailErr.message);
           writeToLogs("RECONCILE_MAIL_ERROR", "Failed to send email to " + email + ": " + mailErr.message);
