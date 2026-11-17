@@ -4,12 +4,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>AI Powered Career Development | Tech Tycoon Academy</title>
-  <meta name="description" content="Two-day AI career session for 12th pass and college students. Learn AI tools, AI filmmaking and practical digital skills. Register for only ₹99.">
+  <meta name="description" content="Two-day AI career session for students, fresh graduates and job seekers. Learn practical AI tools, resume and portfolio building with AI, and digital skills. Join from ₹99.">
   <link rel="canonical" href="https://course.techtycoon.in/ai-powered-career-development/">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://course.techtycoon.in/ai-powered-career-development/">
   <meta property="og:title" content="AI Powered Career Development | Tech Tycoon Academy">
-  <meta property="og:description" content="Two-day AI career session for 12th pass and college students. Learn AI tools, AI filmmaking and practical digital skills. Register for only ₹99.">
+  <meta property="og:description" content="Two-day AI career session for students, fresh graduates and job seekers. Learn practical AI tools, resume and portfolio building with AI, and digital skills. Join from ₹99.">
   <meta property="og:image" content="https://course.techtycoon.in/ai-powered-career-development/assets/logo-full.png">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" type="image/png" href="assets/logo-icon.png">
@@ -283,11 +283,173 @@
     .foot-links span { color: var(--muted); font-weight: 400; }
     .copy { border-top: 1px solid var(--line); margin-top: 28px; padding-top: 18px; font-size: 13px; color: var(--muted); text-align: center; }
 
+    /* Hero pricing cards */
+    .hero-content { max-width: 720px; }
+    .hero-plans { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 22px; }
+    .hplan {
+      position: relative; display: flex; flex-direction: column; text-align: left;
+      padding: 22px 20px 20px; border-radius: 16px;
+      background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.22);
+      -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+      transition: transform .2s, border-color .2s, background .2s;
+    }
+    .hplan:hover { transform: translateY(-3px); border-color: rgba(114,221,255,.7); background: rgba(255,255,255,.1); }
+    .hplan.best { background: rgba(22,139,255,.18); border-color: rgba(114,221,255,.65); box-shadow: 0 18px 40px rgba(7,92,229,.35); }
+    .hplan .ribbon {
+      position: absolute; top: -11px; right: 16px; background: var(--cyan); color: var(--navy);
+      font-size: 11px; font-weight: 800; letter-spacing: .08em; padding: 4px 10px; border-radius: 999px;
+    }
+    .hplan .pname { font-size: 13px; font-weight: 800; letter-spacing: .1em; color: var(--cyan); text-transform: uppercase; }
+    .hplan .pprice { font: 800 40px/1 "Plus Jakarta Sans", sans-serif; margin: 8px 0 2px; color: #fff; }
+    .hplan .pfee { font-size: 12.5px; color: #b9c7dd; margin-bottom: 12px; }
+    .hplan ul { list-style: none; display: grid; gap: 7px; margin-bottom: 18px; font-size: 14px; color: #dce6f5; }
+    .hplan li { display: flex; gap: 8px; align-items: flex-start; }
+    .hplan li::before { content: "✓"; color: var(--cyan); font-weight: 800; flex-shrink: 0; }
+    .hplan .btn { margin-top: auto; width: 100%; padding: 15px 14px; font-size: 14.5px; letter-spacing: .02em; }
+    .btn-light { background: #fff; color: var(--navy); box-shadow: 0 10px 24px rgba(0,0,0,.18); }
+    .btn-light:hover { background: #eaf3ff; }
+    .hero-note { font-size: 13.5px; color: #b9c7dd; }
+    .hero-note a { color: #fff; font-weight: 600; }
+
+    /* Audience */
+    .audience { display: grid; grid-template-columns: 1fr 1.1fr; gap: 40px; align-items: center; }
+    .photo-stack { position: relative; padding: 0 0 48px 0; }
+    .photo-stack img { height: auto; border-radius: 20px; box-shadow: 0 24px 50px rgba(11,27,63,.18); object-fit: cover; }
+    .photo-stack .p1 { width: 88%; aspect-ratio: 4 / 3; }
+    .photo-stack .p2 { position: absolute; width: 52%; aspect-ratio: 4 / 3; right: 0; bottom: 0; border: 6px solid #fff; }
+    .aud-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .aud {
+      display: flex; gap: 14px; align-items: center; padding: 18px 18px; border-radius: var(--radius);
+      background: var(--soft); border: 1px solid transparent; transition: border-color .2s, transform .2s;
+    }
+    .aud:hover { border-color: #bcd0ff; transform: translateY(-2px); }
+    .aud .ico {
+      flex-shrink: 0; width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center;
+      background: linear-gradient(135deg, var(--sky), var(--brand)); color: #fff;
+    }
+    .aud h3 { font-size: 16.5px; font-weight: 700; }
+    .aud p { font-size: 13.5px; color: var(--muted); line-height: 1.45; }
+
+    /* What you will learn */
+    .learn-wrap { background: linear-gradient(180deg, #fff 0%, var(--soft) 100%); padding-bottom: 8px; }
+    .learn-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+    .lcard {
+      position: relative; overflow: hidden; background: #fff; border: 1px solid var(--line); border-radius: 18px;
+      padding: 26px 22px 24px; transition: transform .25s, box-shadow .25s, border-color .25s;
+    }
+    .lcard::before {
+      content: ""; position: absolute; left: 0; top: 0; right: 0; height: 4px;
+      background: linear-gradient(90deg, var(--brand), var(--cyan)); transform: scaleX(0); transform-origin: left; transition: transform .35s;
+    }
+    .lcard:hover { transform: translateY(-4px); box-shadow: 0 18px 40px rgba(11,27,63,.1); border-color: #c9d8ff; }
+    .lcard:hover::before { transform: scaleX(1); }
+    .lcard .lnum { position: absolute; right: 18px; top: 16px; font: 800 30px/1 "Plus Jakarta Sans", sans-serif; color: #e4ebfb; }
+    .lcard .ico {
+      width: 46px; height: 46px; border-radius: 13px; display: grid; place-items: center; margin-bottom: 16px;
+      background: var(--navy); color: var(--cyan);
+    }
+    .lcard h3 { font-size: 17.5px; font-weight: 700; margin-bottom: 6px; }
+    .lcard p { font-size: 14.5px; color: var(--muted); }
+    .lcard.feature { background: var(--navy); border-color: var(--navy); }
+    .lcard.feature h3 { color: #fff; }
+    .lcard.feature p { color: #c2cdea; }
+    .lcard.feature .ico { background: var(--brand); color: #fff; }
+    .lcard.feature .lnum { color: rgba(255,255,255,.12); }
+    .photo-band { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 16px; margin-top: 28px; }
+    .photo-band figure { position: relative; border-radius: 18px; overflow: hidden; aspect-ratio: 16 / 10; }
+    .photo-band img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s; }
+    .photo-band figure:hover img { transform: scale(1.05); }
+    .photo-band figcaption {
+      position: absolute; left: 0; right: 0; bottom: 0; padding: 30px 16px 12px; color: #fff; font-weight: 700; font-size: 14.5px;
+      background: linear-gradient(0deg, rgba(11,27,63,.85), transparent);
+    }
+
+    /* Scroll reveal for sections (JS adds .in) */
+    .sr { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1); }
+    .sr.in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) { .sr { opacity: 1; transform: none; transition: none; } }
+
+    /* Pricing (register section) */
+    .plans { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .plan { background: #fff; color: var(--ink); border-radius: 18px; padding: 26px 22px; display: flex; flex-direction: column; position: relative; }
+    .plan.best { outline: 3px solid var(--cyan); }
+    .plan .ribbon { position: absolute; top: -12px; left: 22px; background: var(--cyan); color: var(--navy); font-size: 11px; font-weight: 800; letter-spacing: .08em; padding: 4px 10px; border-radius: 999px; }
+    .plan h3 { font-size: 18px; font-weight: 800; }
+    .plan .amt { font: 800 46px/1 "Plus Jakarta Sans", sans-serif; color: var(--brand); margin: 10px 0 2px; }
+    .plan .fee { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+    .plan ul { list-style: none; display: grid; gap: 8px; margin-bottom: 20px; font-size: 14.5px; color: var(--muted); }
+    .plan li { display: flex; gap: 8px; }
+    .plan li::before { content: "✓"; color: var(--brand); font-weight: 800; }
+    .plan .btn { margin-top: auto; width: 100%; }
+
+    /* Registration modal */
+    body.modal-open { overflow: hidden; }
+    .rmodal { position: fixed; inset: 0; z-index: 100; display: none; align-items: center; justify-content: center; padding: 20px; }
+    .rmodal.open { display: flex; }
+    .rmodal-backdrop { position: absolute; inset: 0; background: rgba(8,18,40,.7); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); animation: fadeIn .25s ease; }
+    .rmodal-panel {
+      position: relative; width: 100%; max-width: 640px; max-height: calc(100vh - 40px); max-height: calc(100dvh - 40px); overflow-y: auto;
+      background: #fff; border-radius: 22px; box-shadow: 0 30px 80px rgba(0,0,0,.4); animation: popIn .3s cubic-bezier(.2,.8,.2,1);
+    }
+    @keyframes fadeIn { from { opacity: 0; } }
+    @keyframes popIn { from { opacity: 0; transform: translateY(24px) scale(.98); } }
+    .rm-head { position: sticky; top: 0; z-index: 2; background: var(--navy); color: #fff; padding: 20px 56px 18px 24px; }
+    .rm-head h2 { font-size: 21px; font-weight: 800; }
+    .rm-head p { font-size: 13.5px; color: #c2cdea; }
+    .rm-close {
+      position: absolute; right: 14px; top: 14px; width: 38px; height: 38px; border-radius: 50%; border: 0; cursor: pointer;
+      background: rgba(255,255,255,.12); color: #fff; font-size: 22px; line-height: 1; display: grid; place-items: center;
+    }
+    .rm-close:hover { background: rgba(255,255,255,.22); }
+    .rm-body { padding: 22px 24px 24px; }
+    .rm-form { display: grid; gap: 14px; }
+    .rm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .req { color: #d93636; }
+    .field.invalid select { border-color: #e05252; }
+    .same { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); margin-top: 6px; font-weight: 500; cursor: pointer; }
+    .same input { width: 16px; height: 16px; padding: 0; accent-color: var(--brand); }
+    .pkg-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .pkg-opt { position: relative; display: block; cursor: pointer; margin: 0; }
+    .pkg-opt input { position: absolute; opacity: 0; pointer-events: none; }
+    .pkg-opt .box {
+      display: block; border: 2px solid var(--line); border-radius: 14px; padding: 14px 14px 12px; transition: border-color .15s, background .15s, box-shadow .15s;
+    }
+    .pkg-opt .t { display: block; font-weight: 700; color: var(--ink); font-size: 14.5px; }
+    .pkg-opt .p { display: block; font: 800 22px/1.2 "Plus Jakarta Sans", sans-serif; color: var(--brand); margin-top: 4px; }
+    .pkg-opt .d { display: block; font-size: 12.5px; color: var(--muted); font-weight: 500; margin-top: 2px; }
+    .pkg-opt input:checked + .box { border-color: var(--brand); background: #f1f6ff; box-shadow: 0 0 0 3px rgba(10,108,255,.15); }
+    .pkg-opt input:focus-visible + .box { outline: 2px solid var(--brand); outline-offset: 2px; }
+    .summary { background: var(--soft); border-radius: 14px; padding: 16px 18px; }
+    .summary h3 { font-size: 13px; letter-spacing: .1em; color: var(--muted); font-weight: 800; margin-bottom: 8px; }
+    .summary dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; font-size: 14.5px; }
+    .summary dt { color: var(--muted); }
+    .summary dd { text-align: right; font-weight: 600; color: var(--ink); word-break: break-word; }
+    .summary .total { border-top: 1px dashed #c6d3ef; padding-top: 8px; margin-top: 4px; font-size: 17px; font-weight: 800; color: var(--ink); }
+    .summary dd.total { color: var(--brand); }
+    .rm-msg { display: none; background: #fff3f3; color: #b42323; border: 1px solid #f5c2c2; border-radius: 10px; padding: 10px 12px; font-size: 13.5px; }
+    .rm-msg.show { display: block; }
+    .rm-form .btn[disabled] { opacity: .65; cursor: wait; transform: none; }
+    .spin { width: 18px; height: 18px; border-radius: 50%; border: 2.5px solid rgba(255,255,255,.4); border-top-color: #fff; animation: rot .8s linear infinite; }
+    .spin.dark { border-color: #d6e2fb; border-top-color: var(--brand); width: 46px; height: 46px; border-width: 4px; margin: 0 auto 16px; }
+    @keyframes rot { to { transform: rotate(360deg); } }
+    .rm-state { display: none; text-align: center; padding: 10px 4px 4px; }
+    .rm-state.show { display: block; }
+    .rm-state h3 { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+    .rm-state > p { color: var(--muted); font-size: 15px; margin-bottom: 16px; }
+    .ok-badge { width: 64px; height: 64px; border-radius: 50%; margin: 0 auto 14px; display: grid; place-items: center; background: #e5f8ee; color: #149653; font-size: 32px; font-weight: 800; }
+    .bad-badge { width: 64px; height: 64px; border-radius: 50%; margin: 0 auto 14px; display: grid; place-items: center; background: #fdecec; color: #c62828; font-size: 32px; font-weight: 800; }
+    .rm-state .summary { text-align: left; margin-bottom: 16px; }
+    .rm-state .summary h3 { font-size: 13px; margin-bottom: 8px; }
+    .rm-actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+
     .mobile-cta { display: none; }
 
     @media (max-width: 960px) {
       .nav-links { display: none; }
       .why-grid, .grid-3 { grid-template-columns: 1fr 1fr; }
+      .learn-grid { grid-template-columns: 1fr 1fr; }
+      .audience { grid-template-columns: 1fr; }
+      .photo-stack { max-width: 560px; }
     }
     @media (max-width: 760px) {
       /* Mobile hero: photo on top, text below so it never covers the people */
@@ -317,6 +479,19 @@
       }
       .mobile-cta .btn { width: 100%; }
       footer { padding-bottom: 100px; }
+      .hero-plans { grid-template-columns: 1fr; gap: 18px; }
+      .hplan { text-align: left; }
+      .aud-grid, .plans { grid-template-columns: 1fr; }
+      .learn-grid { grid-template-columns: 1fr; }
+      .photo-band { grid-template-columns: 1fr; }
+      .photo-band figure:nth-child(n+2) { display: none; }
+      /* Registration form becomes a full-height bottom sheet on phones */
+      .rmodal { padding: 0; align-items: flex-end; }
+      .rmodal-panel { max-width: none; max-height: 94vh; max-height: 94dvh; border-radius: 20px 20px 0 0; }
+      .rm-head { padding: 18px 56px 16px 18px; }
+      .rm-body { padding: 18px 16px 24px; }
+      .rm-grid, .pkg-opts { grid-template-columns: 1fr; }
+      input, select { font-size: 16px; } /* stops iOS zooming into fields */
     }
     @media (max-width: 420px) {
       .brand-logo { height: 34px; }
@@ -336,11 +511,12 @@
       </a>
       <nav class="nav-links">
         <a href="#why">Why AI</a>
+        <a href="#audience">Who Can Join</a>
+        <a href="#learn">What You Learn</a>
         <a href="#plan">2-Day Plan</a>
-        <a href="#tools">Tools</a>
-        <a href="#careers">Careers</a>
+        <a href="#register">Pricing</a>
       </nav>
-      <a href="#register" class="btn btn-yellow">Register for ₹99</a>
+      <a href="#register" class="btn btn-yellow" data-pkg="class">Register from ₹99</a>
     </div>
   </header>
 
@@ -351,15 +527,33 @@
       <div class="hero-content">
         <span class="hero-eyebrow reveal d1">YOUR FUTURE STARTS WITH AI</span>
         <h1 class="reveal d2">
-          <span class="hl">AI</span> Powered Career Development
-          <span class="line2">Build Skills. Discover Opportunities.</span>
+          Build Your Future Career with <span class="hl">AI</span> Skills
+          <span class="line2">AI-Powered Career Development</span>
         </h1>
-        <p class="hero-lead reveal d3">Step into the world of artificial intelligence. Explore new-age digital skills, develop your creativity, and discover how AI can shape your future career.</p>
-        <div class="hero-offer reveal d4">2-DAY STUDENT WORKSHOP <span class="sep"></span> <strong>JUST ₹99</strong></div>
-        <div class="hero-ctas reveal d5">
-          <a href="#register" class="btn btn-hero">REGISTER NOW FOR ₹99</a>
-          <a href="#why" class="btn btn-hero-ghost">EXPLORE THE PROGRAM</a>
+        <p class="hero-lead reveal d3">Discover how AI is changing the future of work. Learn practical AI tools, develop modern digital skills, and prepare yourself for new career opportunities.</p>
+        <div class="hero-plans reveal d4">
+          <div class="hplan">
+            <span class="pname">Class Only</span>
+            <div class="pprice">₹99</div>
+            <div class="pfee">Registration fee</div>
+            <ul>
+              <li>Access to the AI-Powered Career Development session</li>
+            </ul>
+            <a href="#register" class="btn btn-light" data-pkg="class">Join the Class</a>
+          </div>
+          <div class="hplan best">
+            <span class="ribbon">BEST VALUE</span>
+            <span class="pname">Class + Learning Document</span>
+            <div class="pprice">₹299</div>
+            <div class="pfee">Registration fee</div>
+            <ul>
+              <li>Access to the complete session</li>
+              <li>Learning document with useful AI learning resources</li>
+            </ul>
+            <a href="#register" class="btn btn-hero" data-pkg="bundle">Join Class + Get Document</a>
+          </div>
         </div>
+        <p class="hero-note reveal d5">2-day live session &nbsp;·&nbsp; Beginner friendly &nbsp;·&nbsp; <a href="#learn">See what you will learn</a></p>
       </div>
     </div>
   </section>
@@ -368,7 +562,7 @@
   <div class="strip">
     <div class="container strip-grid">
       <div><div class="big">2 Days</div><span>Live AI career session</span></div>
-      <div><div class="big">₹99</div><span>Registration fee</span></div>
+      <div><div class="big">From ₹99</div><span>Registration fee</span></div>
       <div><div class="big">0 Coding</div><span>Beginner friendly</span></div>
       <div><div class="big">1 Project</div><span>Made by you</span></div>
     </div>
@@ -399,6 +593,109 @@
     </div>
   </section>
 
+  <!-- ===== Who can join ===== -->
+  <section class="block" id="audience">
+    <div class="container">
+      <div class="audience">
+        <div class="photo-stack sr">
+          <img class="p1" src="assets/learn-students.jpg" alt="Students attending a Tech Tycoon AI session" loading="lazy" width="1200" height="800">
+          <img class="p2" src="assets/learn-handson.jpg" alt="Participants practising AI tools on laptops" loading="lazy" width="1200" height="800">
+        </div>
+        <div>
+          <div class="head sr" style="margin-bottom:26px;">
+            <span class="eyebrow">WHO CAN JOIN</span>
+            <h2>Made for students and young career builders</h2>
+            <p>If you want to start or grow your career with AI skills, this session is for you. No coding or technical background needed.</p>
+          </div>
+          <div class="aud-grid sr">
+            <div class="aud">
+              <div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/></svg></div>
+              <div><h3>College Students</h3><p>Add AI skills alongside your degree</p></div>
+            </div>
+            <div class="aud">
+              <div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg></div>
+              <div><h3>Final-Year Students</h3><p>Get job-ready before you graduate</p></div>
+            </div>
+            <div class="aud">
+              <div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 6 6 .9-4.5 4.3 1 6.3L12 16.6 6.5 19.5l1-6.3L3 8.9 9 8z"/></svg></div>
+              <div><h3>Fresh Graduates</h3><p>Stand out in your first job search</p></div>
+            </div>
+            <div class="aud">
+              <div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/></svg></div>
+              <div><h3>School Students</h3><p>Preparing for college? Start early</p></div>
+            </div>
+            <div class="aud">
+              <div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></div>
+              <div><h3>Job Seekers</h3><p>Build skills employers now look for</p></div>
+            </div>
+            <div class="aud">
+              <div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></div>
+              <div><h3>Young Professionals</h3><p>Work smarter and grow faster</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== What you will learn ===== -->
+  <section class="block learn-wrap" id="learn">
+    <div class="container">
+      <div class="head center sr">
+        <span class="eyebrow">WHAT YOU WILL LEARN</span>
+        <h2>Eight practical skills for your AI career</h2>
+        <p>Clear, hands-on lessons that take you from AI basics to real projects you can show.</p>
+      </div>
+      <div class="learn-grid sr">
+        <div class="lcard">
+          <span class="lnum">01</span>
+          <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="5" width="14" height="14" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></svg></div>
+          <h3>AI Fundamentals</h3><p>What AI is, how it works and what it can and cannot do, in simple words.</p>
+        </div>
+        <div class="lcard">
+          <span class="lnum">02</span>
+          <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z"/></svg></div>
+          <h3>Popular AI Tools</h3><p>Hands-on practice with today's most used AI tools for text, images and video.</p>
+        </div>
+        <div class="lcard">
+          <span class="lnum">03</span>
+          <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/><path d="M9 2h6"/></svg></div>
+          <h3>AI for Productivity</h3><p>Use AI to plan, research, summarise and finish work in less time.</p>
+        </div>
+        <div class="lcard feature">
+          <span class="lnum">04</span>
+          <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg></div>
+          <h3>Resume and Portfolio Creation Using AI</h3><p>Build a strong resume and a simple portfolio that shows your work.</p>
+        </div>
+        <div class="lcard">
+          <span class="lnum">05</span>
+          <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="14" height="12" rx="2"/><path d="M22 8l-6 4 6 4z"/></svg></div>
+          <h3>AI-Powered Content Creation</h3><p>Create posts, images and short videos with AI, from idea to finished piece.</p>
+        </div>
+        <div class="lcard">
+          <span class="lnum">06</span>
+          <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg></div>
+          <h3>Future Career Opportunities</h3><p>See the new roles AI is creating and find the path that fits you.</p>
+        </div>
+        <div class="lcard">
+          <span class="lnum">07</span>
+          <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 18l6-6-6-6"/><path d="M8 6l-6 6 6 6"/></svg></div>
+          <h3>Practical AI Projects</h3><p>Finish small real projects that become proof of your skills.</p>
+        </div>
+        <div class="lcard">
+          <span class="lnum">08</span>
+          <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg></div>
+          <h3>Digital Skills for Career Growth</h3><p>Communication, presentation and online skills that help you grow.</p>
+        </div>
+      </div>
+      <div class="photo-band sr">
+        <figure><img src="assets/learn-classroom.jpg" alt="A full classroom learning about AI" loading="lazy" width="1200" height="675"><figcaption>Learn live with others</figcaption></figure>
+        <figure><img src="assets/learn-creator.jpg" alt="Creating AI content at a computer setup" loading="lazy" width="1200" height="675"><figcaption>Create with AI</figcaption></figure>
+        <figure><img src="assets/learn-handson.jpg" alt="Hands-on practice on laptops" loading="lazy" width="1200" height="800"><figcaption>Practise hands-on</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
   <!-- ===== Industries ===== -->
   <section class="block" id="industries">
     <div class="container">
@@ -410,7 +707,7 @@
       <div class="grid-3">
         <div class="tile"><h3>Business and marketing</h3><p>AI helps write content, study customers and plan campaigns in minutes.</p></div>
         <div class="tile"><h3>Media and film</h3><p>AI helps create scripts, visuals, voices and edits, even for small teams.</p></div>
-        <div class="tile"><h3>Education</h3><p>AI helps students learn at their own pace and teachers prepare faster.</p></div>
+        <div class="tile"><h3>Education</h3><p>AI helps students learn at their own pace and prepare for exams faster.</p></div>
         <div class="tile"><h3>Healthcare</h3><p>AI helps people read reports and organise data so doctors can focus on care.</p></div>
         <div class="tile"><h3>Design and creative work</h3><p>AI turns rough ideas into images, layouts and concepts very fast.</p></div>
         <div class="tile"><h3>Technology and startups</h3><p>AI helps small teams build products that once needed large teams.</p></div>
@@ -572,11 +869,11 @@
           <span class="eyebrow">LIMITED SEATS</span>
           <h2>Start your AI journey today</h2>
           <div class="price">₹99</div>
-          <p class="sub">Two-day AI career development session</p>
+          <p class="sub">Two-day AI-Powered Career Development session. Add the Learning Document for ₹299 in total.</p>
           <ul class="checks">
             <li>Beginner friendly, no background needed</li>
-            <li>Practical AI tools and AI filmmaking</li>
-            <li>Open to 12th pass students and college students</li>
+            <li>Practical AI tools, resume and portfolio building with AI</li>
+            <li>For students, fresh graduates, job seekers and young professionals</li>
           </ul>
           <div class="meta">
             <!-- EDIT: put your real session details here -->
@@ -585,30 +882,27 @@
             <span>Mode: [ONLINE / OFFLINE]</span>
           </div>
         </div>
-        <div class="form-card">
-          <h3>Grab your seat for ₹99</h3>
-          <p>Fill your details. Session info will be shared on WhatsApp.</p>
-          <form id="regForm" novalidate>
-            <div class="field">
-              <label for="name">Full name</label>
-              <input id="name" name="name" type="text" placeholder="Your name" autocomplete="name" required>
-              <div class="error">Please enter your name</div>
-            </div>
-            <div class="field">
-              <label for="phone">WhatsApp number</label>
-              <input id="phone" name="phone" type="tel" inputmode="numeric" maxlength="10" placeholder="10 digit number" autocomplete="tel" required>
-              <div class="error">Enter a valid 10 digit mobile number</div>
-            </div>
-            <div class="field">
-              <label for="iam">I am a</label>
-              <select id="iam" name="iam">
-                <option>12th pass student</option>
-                <option>College student</option>
-              </select>
-            </div>
-            <button type="submit" class="btn btn-yellow btn-lg">Pay ₹99 and Register</button>
-            <p class="secure">Secure payment. Limited seats available.</p>
-          </form>
+        <div class="plans" style="grid-template-columns:1fr;">
+          <div class="plan">
+            <h3>Class Only</h3>
+            <div class="amt">₹99</div>
+            <div class="fee">Registration fee</div>
+            <ul>
+              <li>Access to the AI-Powered Career Development session</li>
+            </ul>
+            <button type="button" class="btn btn-blue btn-lg" data-pkg="class">Join the Class</button>
+          </div>
+          <div class="plan best">
+            <span class="ribbon">BEST VALUE</span>
+            <h3>Class + Learning Document</h3>
+            <div class="amt">₹299</div>
+            <div class="fee">Registration fee</div>
+            <ul>
+              <li>Access to the complete session</li>
+              <li>Additional learning document with useful AI learning resources</li>
+            </ul>
+            <button type="button" class="btn btn-yellow btn-lg" data-pkg="bundle">Join Class + Get Document</button>
+          </div>
         </div>
       </div>
     </div>
@@ -632,37 +926,414 @@
     </div>
   </footer>
 
-  <div class="mobile-cta"><a href="#register" class="btn btn-yellow">Register Now at ₹99</a></div>
+  <div class="mobile-cta"><a href="#register" class="btn btn-yellow" data-pkg="class">Register Now – from ₹99</a></div>
+
+  <!-- ===== Registration popup ===== -->
+  <div class="rmodal" id="regModal" aria-hidden="true">
+    <div class="rmodal-backdrop" data-close></div>
+    <div class="rmodal-panel" role="dialog" aria-modal="true" aria-labelledby="rmTitle">
+      <div class="rm-head">
+        <h2 id="rmTitle">Register for the session</h2>
+        <p>AI-Powered Career Development · 2-day live session</p>
+        <button type="button" class="rm-close" data-close aria-label="Close">&times;</button>
+      </div>
+      <div class="rm-body">
+
+        <!-- Step 1: details + summary -->
+        <form class="rm-form" id="regForm" novalidate>
+          <div class="field">
+            <label for="fName">Full Name <span class="req">*</span></label>
+            <input id="fName" name="name" type="text" placeholder="Your full name" autocomplete="name" maxlength="80" required>
+            <div class="error">Please enter your full name</div>
+          </div>
+          <div class="rm-grid">
+            <div class="field">
+              <label for="fMobile">Mobile Number <span class="req">*</span></label>
+              <input id="fMobile" name="mobile" type="tel" inputmode="numeric" maxlength="10" placeholder="10 digit number" autocomplete="tel-national" required>
+              <div class="error">Enter a valid 10 digit mobile number</div>
+            </div>
+            <div class="field">
+              <label for="fWhatsapp">WhatsApp Number <span class="req">*</span></label>
+              <input id="fWhatsapp" name="whatsapp" type="tel" inputmode="numeric" maxlength="10" placeholder="10 digit number" required>
+              <label class="same"><input type="checkbox" id="fSame"> Same as mobile number</label>
+              <div class="error">Enter a valid 10 digit WhatsApp number</div>
+            </div>
+          </div>
+          <div class="field">
+            <label for="fEmail">Email Address <span class="req">*</span></label>
+            <input id="fEmail" name="email" type="email" placeholder="you@example.com" autocomplete="email" maxlength="120" required>
+            <div class="error">Enter a valid email address</div>
+          </div>
+          <div class="rm-grid">
+            <div class="field">
+              <label for="fEdu">Current Education / Qualification <span class="req">*</span></label>
+              <select id="fEdu" name="education" required>
+                <option value="">Select one</option>
+                <option>School student (preparing for college)</option>
+                <option>12th pass</option>
+                <option>College student (UG)</option>
+                <option>Final-year student</option>
+                <option>Postgraduate student</option>
+                <option>Fresh graduate</option>
+                <option>Job seeker</option>
+                <option>Young professional</option>
+                <option>Other</option>
+              </select>
+              <div class="error">Please choose your education</div>
+            </div>
+            <div class="field">
+              <label for="fCity">City <span class="req">*</span></label>
+              <input id="fCity" name="city" type="text" placeholder="Your city" autocomplete="address-level2" maxlength="60" required>
+              <div class="error">Please enter your city</div>
+            </div>
+          </div>
+          <div class="field">
+            <label for="fInst">College / Institution Name <span class="req">*</span></label>
+            <input id="fInst" name="institution" type="text" placeholder="College, school or institution" autocomplete="organization" maxlength="120" required>
+            <div class="error">Please enter your college or institution</div>
+          </div>
+          <div class="field">
+            <label>Registration Package <span class="req">*</span></label>
+            <div class="pkg-opts" role="radiogroup" aria-label="Registration package">
+              <label class="pkg-opt">
+                <input type="radio" name="package" value="class" checked>
+                <span class="box"><span class="t">Class Only</span><span class="p">₹99</span><span class="d">Session access</span></span>
+              </label>
+              <label class="pkg-opt">
+                <input type="radio" name="package" value="bundle">
+                <span class="box"><span class="t">Class + Learning Document</span><span class="p">₹299</span><span class="d">Session + AI learning resources</span></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="summary" aria-live="polite">
+            <h3>PAYMENT SUMMARY</h3>
+            <dl>
+              <dt>Participant Name</dt><dd id="sName">–</dd>
+              <dt>Selected Package</dt><dd id="sPkg">Class Only</dd>
+              <dt>Registration Fee</dt><dd id="sFee">₹99</dd>
+              <dt class="total">Total Amount</dt><dd class="total" id="sTotal">₹99</dd>
+            </dl>
+          </div>
+
+          <div class="rm-msg" id="rmMsg" role="alert"></div>
+          <button type="submit" class="btn btn-yellow btn-lg" id="payBtn">Pay ₹99 &amp; Register</button>
+          <p class="secure">Secure payment by Razorpay. Your seat is confirmed only after payment is verified.</p>
+        </form>
+
+        <!-- Step 2: verifying -->
+        <div class="rm-state" id="stVerify">
+          <div class="spin dark"></div>
+          <h3>Verifying your payment…</h3>
+          <p>Please don't close this window. This takes a few seconds.</p>
+        </div>
+
+        <!-- Step 3: confirmed -->
+        <div class="rm-state" id="stSuccess">
+          <div class="ok-badge">✓</div>
+          <h3>Registration confirmed!</h3>
+          <p>Your payment is verified. Session details will be shared on WhatsApp and email.</p>
+          <div class="summary">
+            <h3>REGISTRATION DETAILS</h3>
+            <dl id="okDetails"></dl>
+          </div>
+          <div class="rm-actions">
+            <a class="btn btn-blue" href="https://whatsapp.com/channel/0029VbABrzBH5JM0FIG97q2b" target="_blank" rel="noopener">Join our WhatsApp Channel</a>
+            <button type="button" class="btn btn-ghost" style="color:var(--ink);border-color:var(--line);" data-close>Close</button>
+          </div>
+        </div>
+
+        <!-- Step 3b: not confirmed -->
+        <div class="rm-state" id="stFail">
+          <div class="bad-badge">!</div>
+          <h3 id="failTitle">Payment not completed</h3>
+          <p id="failText">Your payment was not completed. You have not been registered.</p>
+          <div class="rm-actions">
+            <button type="button" class="btn btn-yellow" id="retryBtn">Try again</button>
+            <a class="btn btn-blue" id="helpBtn" href="https://wa.me/917558133039" target="_blank" rel="noopener">Get help on WhatsApp</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
 
   <script>
     /* ===== EDIT THIS ===== */
     const CONFIG = {
-      // Your Razorpay / Cashfree / Instamojo ₹99 payment page link
-      paymentLink: ""
+      // Web app URL of backend/apps_script/career_development/apps_script.gs after you deploy it.
+      // Looks like: https://script.google.com/macros/s/XXXX/exec
+      appsScriptUrl: "",
+      supportWhatsApp: "917558133039"
     };
     /* ===================== */
 
+    // Display only. The real amount is set by the server for each package.
+    const PACKAGES = {
+      class:  { label: "Class Only", price: 99 },
+      bundle: { label: "Class + Learning Document", price: 299 }
+    };
+
     document.getElementById('yr').textContent = new Date().getFullYear();
 
+    /* ---- Scroll reveal ---- */
+    (function () {
+      const els = document.querySelectorAll('.sr');
+      if (!('IntersectionObserver' in window)) { els.forEach(e => e.classList.add('in')); return; }
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
+      }, { threshold: 0.12 });
+      els.forEach(e => io.observe(e));
+    })();
+
+    /* ---- Modal ---- */
+    const modal = document.getElementById('regModal');
     const form = document.getElementById('regForm');
-    const phone = document.getElementById('phone');
-    phone.addEventListener('input', () => { phone.value = phone.value.replace(/\D/g, '').slice(0, 10); });
+    const states = { form: form, verify: document.getElementById('stVerify'), success: document.getElementById('stSuccess'), fail: document.getElementById('stFail') };
+    const payBtn = document.getElementById('payBtn');
+    const msg = document.getElementById('rmMsg');
+    let busy = false;      // true while talking to the server or Razorpay
+    let lastFocus = null;
 
-    form.addEventListener('submit', (e) => {
+    function showState(name) {
+      form.style.display = name === 'form' ? '' : 'none';
+      ['verify', 'success', 'fail'].forEach(k => states[k].classList.toggle('show', k === name));
+      modal.querySelector('.rmodal-panel').scrollTop = 0;
+    }
+
+    function openModal(pkg) {
+      lastFocus = document.activeElement;
+      if (pkg && PACKAGES[pkg]) form.elements.package.value = pkg;
+      showState('form');
+      hideMsg();
+      updateSummary();
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('modal-open');
+      setTimeout(() => document.getElementById('fName').focus(), 60);
+    }
+
+    function closeModal() {
+      if (busy) return;
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('modal-open');
+      if (lastFocus) lastFocus.focus();
+    }
+
+    document.querySelectorAll('[data-pkg]').forEach(btn => {
+      btn.addEventListener('click', (e) => { e.preventDefault(); openModal(btn.dataset.pkg); });
+    });
+    modal.querySelectorAll('[data-close]').forEach(el => el.addEventListener('click', closeModal));
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.classList.contains('open')) closeModal(); });
+
+    /* ---- Live payment summary ---- */
+    function selectedPkg() { return PACKAGES[form.elements.package.value] ? form.elements.package.value : 'class'; }
+
+    function updateSummary() {
+      const p = PACKAGES[selectedPkg()];
+      document.getElementById('sName').textContent = form.elements.name.value.trim() || '–';
+      document.getElementById('sPkg').textContent = p.label;
+      document.getElementById('sFee').textContent = '₹' + p.price;
+      document.getElementById('sTotal').textContent = '₹' + p.price;
+      payBtn.textContent = 'Pay ₹' + p.price + ' & Register';
+    }
+    form.addEventListener('input', updateSummary);
+    form.addEventListener('change', updateSummary);
+
+    /* ---- Phone fields ---- */
+    const mobile = document.getElementById('fMobile');
+    const whatsapp = document.getElementById('fWhatsapp');
+    const same = document.getElementById('fSame');
+    [mobile, whatsapp].forEach(inp => inp.addEventListener('input', () => {
+      inp.value = inp.value.replace(/\D/g, '').slice(0, 10);
+      if (same.checked && inp === mobile) whatsapp.value = mobile.value;
+    }));
+    same.addEventListener('change', () => {
+      whatsapp.readOnly = same.checked;
+      if (same.checked) whatsapp.value = mobile.value;
+    });
+
+    /* ---- Validation ---- */
+    function setInvalid(el, bad) { el.closest('.field').classList.toggle('invalid', bad); return !bad; }
+
+    function validate() {
+      const f = form.elements;
+      const phoneRe = /^[6-9]\d{9}$/;
+      const checks = [
+        setInvalid(f.name, f.name.value.trim().length < 2),
+        setInvalid(mobile, !phoneRe.test(mobile.value)),
+        setInvalid(whatsapp, !phoneRe.test(whatsapp.value)),
+        setInvalid(f.email, !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(f.email.value.trim())),
+        setInvalid(f.education, !f.education.value),
+        setInvalid(f.city, f.city.value.trim().length < 2),
+        setInvalid(f.institution, f.institution.value.trim().length < 2)
+      ];
+      const ok = checks.every(Boolean);
+      if (!ok) {
+        const first = form.querySelector('.field.invalid input, .field.invalid select');
+        if (first) first.focus();
+      }
+      return ok;
+    }
+
+    function showMsg(text) { msg.textContent = text; msg.classList.add('show'); }
+    function hideMsg() { msg.classList.remove('show'); }
+
+    function setLoading(on, label) {
+      payBtn.disabled = on;
+      if (on) payBtn.innerHTML = '<span class="spin"></span> ' + label;
+      else updateSummary();
+    }
+
+    /* ---- Server calls (Google Apps Script) ---- */
+    async function api(payload) {
+      const res = await fetch(CONFIG.appsScriptUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },  // avoids a CORS preflight
+        body: JSON.stringify(payload)
+      });
+      return res.json();
+    }
+
+    let razorpayLoading = null;
+    function loadRazorpay() {
+      if (window.Razorpay) return Promise.resolve();
+      if (!razorpayLoading) {
+        razorpayLoading = new Promise((resolve, reject) => {
+          const s = document.createElement('script');
+          s.src = 'https://checkout.razorpay.com/v1/checkout.js';
+          s.onload = resolve;
+          s.onerror = () => { razorpayLoading = null; reject(new Error('Could not load Razorpay')); };
+          document.head.appendChild(s);
+        });
+      }
+      return razorpayLoading;
+    }
+
+    function readForm() {
+      const f = form.elements;
+      return {
+        name: f.name.value.trim(),
+        mobile: mobile.value,
+        whatsapp: whatsapp.value,
+        email: f.email.value.trim().toLowerCase(),
+        education: f.education.value,
+        institution: f.institution.value.trim(),
+        city: f.city.value.trim(),
+        package: selectedPkg()
+      };
+    }
+
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const name = form.elements.name.value.trim();
-      const nameOk = name.length >= 2;
-      const phoneOk = /^[6-9]\d{9}$/.test(phone.value);
-      form.elements.name.closest('.field').classList.toggle('invalid', !nameOk);
-      phone.closest('.field').classList.toggle('invalid', !phoneOk);
-      if (!nameOk || !phoneOk) return;
-
-      if (!CONFIG.paymentLink) {
-        alert('Payment link is not set yet. Add it in CONFIG.paymentLink inside index.html.');
+      hideMsg();
+      if (!validate()) return;
+      if (!CONFIG.appsScriptUrl) {
+        showMsg('Online payment is not connected yet. Please contact us on WhatsApp at +91 75581 33039 to register.');
         return;
       }
-      window.location.href = CONFIG.paymentLink;
+
+      const data = readForm();
+      busy = true;
+      setLoading(true, 'Connecting to secure payment…');
+      try {
+        await loadRazorpay();
+        const order = await api(Object.assign({ action: 'createOrder', pageUrl: location.href }, data));
+        if (!order || !order.success || !order.orderId) throw new Error((order && order.error) || 'Could not start the payment.');
+        openCheckout(order, data);
+      } catch (err) {
+        busy = false;
+        setLoading(false);
+        showMsg(err.message + ' Please try again, or contact us on WhatsApp at +91 75581 33039.');
+      }
     });
+
+    function openCheckout(order, data) {
+      const rzp = new window.Razorpay({
+        key: order.keyId,
+        order_id: order.orderId,
+        amount: order.amount * 100,          // paise, as fixed by the server
+        currency: 'INR',
+        name: 'Tech Tycoon Academy',
+        description: 'AI-Powered Career Development – ' + order.packageLabel,
+        image: new URL('assets/logo-icon.png', location.href).href,
+        prefill: { name: data.name, email: data.email, contact: data.mobile },
+        notes: { product: 'career_development', package: data.package },
+        theme: { color: '#0a6cff' },
+        handler: (resp) => verifyPayment(resp, data, order),
+        modal: {
+          ondismiss: () => { busy = false; setLoading(false); showMsg('Payment was cancelled. You have not been registered. You can try again.'); }
+        }
+      });
+      rzp.on('payment.failed', (r) => {
+        busy = false;
+        setLoading(false);
+        showFail('Payment failed', ((r && r.error && r.error.description) || 'Your payment did not go through.') +
+          ' You have not been charged. If any amount was deducted, your bank will reverse it automatically.', '');
+      });
+      rzp.open();
+    }
+
+    async function verifyPayment(resp, data, order) {
+      showState('verify');
+      try {
+        const v = await api({
+          action: 'verifyPayment',
+          razorpay_order_id: resp.razorpay_order_id,
+          razorpay_payment_id: resp.razorpay_payment_id,
+          razorpay_signature: resp.razorpay_signature
+        });
+        busy = false;
+        setLoading(false);
+        if (v && v.success && v.verified) {
+          showSuccess(v.registration || {}, data, order, resp.razorpay_payment_id);
+        } else {
+          showFail('We could not confirm your payment yet',
+            'If money was deducted, don\'t worry. Message us on WhatsApp with your Payment ID and we will confirm your seat.',
+            resp.razorpay_payment_id);
+        }
+      } catch (err) {
+        busy = false;
+        setLoading(false);
+        showFail('We could not confirm your payment yet',
+          'We could not reach our server to verify the payment. If money was deducted, message us on WhatsApp with your Payment ID.',
+          resp.razorpay_payment_id);
+      }
+    }
+
+    function showSuccess(reg, data, order, paymentId) {
+      const rows = [
+        ['Participant Name', reg.name || data.name],
+        ['Mobile Number', reg.mobile || data.mobile],
+        ['WhatsApp Number', reg.whatsapp || data.whatsapp],
+        ['Email Address', reg.email || data.email],
+        ['Education', reg.education || data.education],
+        ['College / Institution', reg.institution || data.institution],
+        ['City', reg.city || data.city],
+        ['Selected Package', reg.packageLabel || order.packageLabel],
+        ['Amount Paid', '₹' + (reg.amount || order.amount)],
+        ['Payment ID', reg.paymentId || paymentId]
+      ];
+      const dl = document.getElementById('okDetails');
+      dl.textContent = '';
+      rows.forEach(([k, v]) => {
+        const dt = document.createElement('dt'); dt.textContent = k;
+        const dd = document.createElement('dd'); dd.textContent = v || '–';
+        dl.append(dt, dd);
+      });
+      showState('success');
+    }
+
+    function showFail(title, text, paymentId) {
+      document.getElementById('failTitle').textContent = title;
+      document.getElementById('failText').textContent = text + (paymentId ? ' Payment ID: ' + paymentId : '');
+      const help = 'Hi, I need help with my AI-Powered Career Development registration.' + (paymentId ? ' Payment ID: ' + paymentId : '');
+      document.getElementById('helpBtn').href = 'https://wa.me/' + CONFIG.supportWhatsApp + '?text=' + encodeURIComponent(help);
+      showState('fail');
+    }
+
+    document.getElementById('retryBtn').addEventListener('click', () => { showState('form'); updateSummary(); });
   </script>
 </body>
 </html>
