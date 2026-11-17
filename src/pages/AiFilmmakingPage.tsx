@@ -21,8 +21,10 @@ import {
   Sparkles,
   Volume2,
   VolumeX,
-  Maximize2
+  Maximize2,
+  Search
 } from 'lucide-react';
+import { countryCodes, CountryCode } from '../lib/countryCodes';
 import logo from '../assets/tech_tycoon_logo.png';
 import antonyImage from '../assets/trainer-photo.png';
 import aiLogoSample from '../assets/ai_logo_sample.jpg';
@@ -479,6 +481,43 @@ const AiFilmmakingPage: React.FC = () => {
   });
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [formError, setFormError] = useState('');
+
+  // Country Code Search & Auto-Suggestion State
+  const defaultCountry = useMemo(
+    () => countryCodes.find((c) => c.code === '+91') || countryCodes[0],
+    []
+  );
+  const [selectedCountry, setSelectedCountry] = useState<CountryCode>(defaultCountry);
+  const [countrySearch, setCountrySearch] = useState('');
+  const [showCountryDropdown, setShowCountryDropdown] = useState(false);
+  const countryDropdownRef = useRef<HTMLDivElement>(null);
+  const countrySearchInputRef = useRef<HTMLInputElement>(null);
+  const phoneInputRef = useRef<HTMLInputElement>(null);
+
+  const filteredCountries = useMemo(() => {
+    if (!countrySearch.trim()) return countryCodes;
+    const q = countrySearch.toLowerCase().trim();
+    return countryCodes.filter(
+      (c) =>
+        c.name.toLowerCase().includes(q) ||
+        c.code.includes(q) ||
+        c.iso.toLowerCase().includes(q)
+    );
+  }, [countrySearch]);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        countryDropdownRef.current &&
+        !countryDropdownRef.current.contains(e.target as Node)
+      ) {
+        setShowCountryDropdown(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   // Verified Post-Payment Invoice & WhatsApp Confirmation State
   const [verifiedPayment, setVerifiedPayment] = useState<{
@@ -1908,25 +1947,104 @@ const AiFilmmakingPage: React.FC = () => {
                   WhatsApp Number *
                 </label>
                 <div className="flex gap-2">
-                  <select
-                    value={formData.countryCode}
-                    onChange={(e) => setFormData({ ...formData, countryCode: e.target.value })}
-                    className="w-24 sm:w-28 shrink-0 bg-slate-50 border border-slate-300 rounded-xl px-2 py-2 text-xs sm:text-sm font-semibold text-slate-900 focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition-all"
-                  >
-                    <option value="+91">🇮🇳 +91</option>
-                    <option value="+1">🇺🇸 +1</option>
-                    <option value="+44">🇬🇧 +44</option>
-                    <option value="+971">🇦🇪 +971</option>
-                    <option value="+65">🇸🇬 +65</option>
-                    <option value="+60">🇲🇾 +60</option>
-                    <option value="+61">🇦🇺 +61</option>
-                  </select>
+                  {/* Searchable Country Code Picker with Auto-Suggestion */}
+                  <div className="relative shrink-0" ref={countryDropdownRef}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowCountryDropdown(!showCountryDropdown);
+                        setCountrySearch('');
+                        setTimeout(() => countrySearchInputRef.current?.focus(), 80);
+                      }}
+                      className="w-24 sm:w-28 h-full bg-slate-50 border border-slate-300 rounded-xl px-2 py-2 text-xs sm:text-sm font-semibold text-slate-900 hover:bg-slate-100 focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition-all cursor-pointer flex items-center justify-center gap-1.5"
+                      title="Select country code"
+                    >
+                      <span className="text-base leading-none">{selectedCountry.flag}</span>
+                      <span className="font-bold text-xs">{selectedCountry.code}</span>
+                      <ChevronDown className="w-3 h-3 text-slate-500 shrink-0" />
+                    </button>
+
+                    {showCountryDropdown && (
+                      <div className="absolute top-full left-0 mt-1.5 w-72 sm:w-80 max-h-64 rounded-2xl border border-slate-200 bg-white shadow-2xl z-50 overflow-hidden flex flex-col text-slate-900 animate-in fade-in zoom-in-95 duration-150">
+                        {/* Search Input Box */}
+                        <div className="p-2.5 border-b border-slate-100 flex items-center gap-2 bg-slate-50">
+                          <Search className="w-4 h-4 text-slate-400 shrink-0" />
+                          <input
+                            ref={countrySearchInputRef}
+                            type="text"
+                            value={countrySearch}
+                            onChange={(e) => setCountrySearch(e.target.value)}
+                            placeholder="Search country or code (e.g. +1, UAE, India)..."
+                            className="w-full bg-transparent text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 outline-none"
+                            autoComplete="off"
+                          />
+                          {countrySearch && (
+                            <button
+                              type="button"
+                              onClick={() => setCountrySearch('')}
+                              className="text-slate-400 hover:text-slate-600 p-0.5"
+                            >
+                              <X className="w-3.5 h-3.5" />
+                            </button>
+                          )}
+                        </div>
+
+                        {/* Search Results / Suggestion List */}
+                        <div className="overflow-y-auto flex-1 max-h-52 divide-y divide-slate-100">
+                          {filteredCountries.length === 0 ? (
+                            <div className="px-4 py-4 text-xs text-slate-400 text-center">
+                              No matching country found
+                            </div>
+                          ) : (
+                            filteredCountries.map((c, idx) => {
+                              const isSelected =
+                                selectedCountry.iso === c.iso && selectedCountry.code === c.code;
+                              return (
+                                <button
+                                  key={`${c.iso}-${c.code}-${idx}`}
+                                  type="button"
+                                  onClick={() => {
+                                    setSelectedCountry(c);
+                                    setFormData((prev) => ({ ...prev, countryCode: c.code }));
+                                    setShowCountryDropdown(false);
+                                    setCountrySearch('');
+                                    setTimeout(() => phoneInputRef.current?.focus(), 50);
+                                  }}
+                                  className={`w-full flex items-center gap-2.5 px-3 py-2 text-xs hover:bg-blue-50/70 transition-colors text-left cursor-pointer ${
+                                    isSelected
+                                      ? 'bg-blue-50 text-blue-700 font-bold'
+                                      : 'text-slate-700'
+                                  }`}
+                                >
+                                  <span className="text-base leading-none w-5 text-center shrink-0">
+                                    {c.flag}
+                                  </span>
+                                  <span className="flex-1 truncate">{c.name}</span>
+                                  <span className="text-xs text-slate-500 font-mono font-bold shrink-0">
+                                    {c.code}
+                                  </span>
+                                </button>
+                              );
+                            })
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
                   <input
+                    ref={phoneInputRef}
                     type="tel"
                     required
-                    placeholder="10-digit WhatsApp Number"
+                    placeholder={
+                      formData.countryCode === '+91'
+                        ? '10-digit WhatsApp Number'
+                        : 'WhatsApp phone number'
+                    }
                     value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value.replace(/\D/g, '') })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, phone: e.target.value.replace(/\D/g, '') })
+                    }
                     className="flex-1 bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition-all"
                   />
                 </div>
