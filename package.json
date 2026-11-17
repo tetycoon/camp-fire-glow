@@ -11,8 +11,7 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "predeploy": "npm run build",
-    "deploy": "node scripts/prepare-deploy.cjs && gh-pages -d dist --cname course.techtycoon.in --nojekyll -f"
+    "deploy": "node -e \"console.error('Local deploy is disabled: it force-pushes gh-pages and overwrites the live site with whatever is on this machine. Deploy by pushing to main (GitHub Actions builds and publishes), or use Actions > Build and Deploy to GitHub Pages > Run workflow.'); process.exit(1)\""
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
