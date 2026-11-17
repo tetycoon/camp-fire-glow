@@ -156,9 +156,9 @@ describe("Register Now Meta Lead & Purchase Tracking Suite", () => {
       </MemoryRouter>
     );
 
-    expect(screen.queryByText(/Preferred Date & Session/i)).toBeNull();
+    expect(screen.queryByText(/Live Session Schedule/i)).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "Open Register Form" }));
-    expect(await screen.findByText(/Preferred Date & Session/i)).toBeTruthy();
+    expect(await screen.findByText(/Live Session Schedule/i)).toBeTruthy();
   });
 
   // 2. The old lead popup no longer appears on the page
@@ -256,7 +256,7 @@ describe("Register Now Meta Lead & Purchase Tracking Suite", () => {
     );
 
     fireEvent.click(screen.getByRole("button", { name: "Open Register Form" }));
-    await screen.findByText(/Preferred Date & Session/i);
+    await screen.findByText(/Live Session Schedule/i);
 
     // Fill form
     fireEvent.change(screen.getByPlaceholderText(/enter your name/i), { target: { value: "Ananya Sharma" } });
@@ -322,7 +322,7 @@ describe("Register Now Meta Lead & Purchase Tracking Suite", () => {
     );
 
     fireEvent.click(screen.getByRole("button", { name: "Open Register Form" }));
-    await screen.findByText(/Preferred Date & Session/i);
+    await screen.findByText(/Live Session Schedule/i);
 
     // Leave fields empty and click submit
     const submitBtn = screen.getByRole("button", { name: /proceed to payment/i });
@@ -368,7 +368,7 @@ describe("Register Now Meta Lead & Purchase Tracking Suite", () => {
     );
 
     fireEvent.click(screen.getByRole("button", { name: "Open Register Form" }));
-    await screen.findByText(/Preferred Date & Session/i);
+    await screen.findByText(/Live Session Schedule/i);
 
     fireEvent.change(screen.getByPlaceholderText(/enter your name/i), { target: { value: "Karthik Raja" } });
     fireEvent.change(screen.getByPlaceholderText(/email@example\.com/i), { target: { value: "karthik@example.com" } });
@@ -479,7 +479,7 @@ describe("Register Now Meta Lead & Purchase Tracking Suite", () => {
     );
 
     fireEvent.click(screen.getByRole("button", { name: "Open Form" }));
-    await screen.findByText(/Preferred Date & Session/i);
+    await screen.findByText(/Live Session Schedule/i);
 
     // Initially standard base seat: ₹99
     expect(screen.getByRole("button", { name: /Proceed to Payment.*99/i })).toBeTruthy();

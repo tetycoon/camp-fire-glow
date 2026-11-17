@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Clock, ArrowRight } from "lucide-react";
+import { Clock, ArrowRight, MessageSquare } from "lucide-react";
 import { useAIMasterclassRegisterModal } from "./AIMasterclassRegisterModalContext";
-import { getMasterclassDateStrings } from "../../lib/masterclassDateUtils";
 
 const AIMasterclassStickyBar: React.FC = () => {
     const { openRegisterModal } = useAIMasterclassRegisterModal();
-    const { nextSession } = getMasterclassDateStrings();
     const [isVisible, setIsVisible] = useState(false);
 
     useEffect(() => {
@@ -33,9 +31,9 @@ const AIMasterclassStickyBar: React.FC = () => {
                                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-500 opacity-75"></span>
                                 <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-600"></span>
                             </span>
-                            <span className="text-[11px] font-bold text-blue-700 uppercase tracking-wider">EXECUTIVE AI MASTERCLASS • WED & FRI 5:30-8:30 PM | SUN 10-1 PM</span>
+                            <span className="text-[11px] font-bold text-blue-700 uppercase tracking-wider">EXECUTIVE AI MASTERCLASS • 3-HOUR LIVE ONLINE WORKSHOP</span>
                         </div>
-                        <p className="text-sm font-bold text-slate-900 tracking-tight">Next Live Cohort: {nextSession.regularDate} • {nextSession.shortTime}</p>
+                        <p className="text-sm font-bold text-slate-900 tracking-tight">Tentative Every Friday (5:30 PM - 8:30 PM IST) • Schedule in WhatsApp</p>
                     </div>
 
                     <div className="h-8 w-px bg-slate-200" />
@@ -49,8 +47,8 @@ const AIMasterclassStickyBar: React.FC = () => {
                 {/* Right Side / Mobile Layout */}
                 <div className="flex items-center justify-between w-full md:w-auto gap-4">
                     <div className="flex flex-col md:hidden">
-                        <span className="text-[10px] font-bold text-blue-700 uppercase tracking-widest">NEXT COHORT: {nextSession.dayName.toUpperCase()}</span>
-                        <span className="text-xs font-bold text-slate-900">{nextSession.shortTime} • ₹99</span>
+                        <span className="text-[10px] font-bold text-blue-700 uppercase tracking-widest">EXECUTIVE AI MASTERCLASS</span>
+                        <span className="text-xs font-bold text-slate-900">Live Online • ₹99</span>
                     </div>
 
                     <div className="flex items-center gap-3">

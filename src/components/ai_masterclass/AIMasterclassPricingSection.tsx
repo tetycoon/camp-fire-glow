@@ -1,11 +1,9 @@
 import React from "react";
 import { CheckCircle2, XCircle, Zap, ShieldCheck, ArrowRight, Building2, Sparkles, FileText, Cpu, Bot, Globe } from "lucide-react";
 import { useAIMasterclassRegisterModal } from "./AIMasterclassRegisterModalContext";
-import { getMasterclassDateStrings } from "../../lib/masterclassDateUtils";
 
 const AIMasterclassPricingSection: React.FC = () => {
     const { openRegisterModal } = useAIMasterclassRegisterModal();
-    const { nextSession } = getMasterclassDateStrings();
 
     return (
         <section id="pricing" className="py-20 sm:py-24 px-4 bg-gradient-to-b from-slate-50/70 via-white to-slate-50/70 border-t border-slate-200/90 relative overflow-hidden">
@@ -54,8 +52,8 @@ const AIMasterclassPricingSection: React.FC = () => {
 
                             <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5 mb-6 text-xs text-slate-600 space-y-1.5">
                                 <div className="flex items-center justify-between">
-                                    <span>Next Live Cohort:</span>
-                                    <span className="font-bold text-slate-900">{nextSession.dayName} • {nextSession.shortTime}</span>
+                                    <span>Schedule:</span>
+                                    <span className="font-bold text-slate-900">Tentative Every Friday (5:30 PM - 8:30 PM IST)</span>
                                 </div>
                                 <div className="flex items-center justify-between">
                                     <span>Medium:</span>
@@ -70,7 +68,7 @@ const AIMasterclassPricingSection: React.FC = () => {
                                 <ul className="space-y-3 text-xs sm:text-sm text-slate-700 mb-6">
                                     <li className="flex items-start gap-2.5">
                                         <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                                        <span><strong>3-Hours Live Interactive Training</strong> (Wed, Fri or Sun)</span>
+                                        <span><strong>3-Hours Live Interactive Training</strong> (Live Virtual Classroom)</span>
                                     </li>
                                     <li className="flex items-start gap-2.5 text-slate-400">
                                         <XCircle className="w-4 h-4 text-slate-300 shrink-0 mt-0.5" />
@@ -127,8 +125,8 @@ const AIMasterclassPricingSection: React.FC = () => {
 
                             <div className="bg-slate-800/80 border border-slate-700 rounded-xl p-3.5 mb-6 text-xs text-slate-300 space-y-1.5">
                                 <div className="flex items-center justify-between">
-                                    <span>Live Training Cohort:</span>
-                                    <span className="font-bold text-white">{nextSession.dayName} • {nextSession.shortTime}</span>
+                                    <span>Schedule:</span>
+                                    <span className="font-bold text-white">Tentative Every Friday (5:30 PM - 8:30 PM IST)</span>
                                 </div>
                                 <div className="flex items-center justify-between">
                                     <span>Toolkit Delivery:</span>

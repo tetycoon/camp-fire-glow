@@ -628,9 +628,8 @@ function handleWhatsAppIncoming(body) {
     }
 
     if (!sessionDate || !sessionTime) {
-      const slotInfo = getUpcomingWebinarSlotInfo();
-      sessionDate = sessionDate || slotInfo.dateText;
-      sessionTime = sessionTime || slotInfo.timeText;
+      sessionDate = "Tentative Every Friday";
+      sessionTime = "Evening 5:30 PM - 8:30 PM IST";
     }
 
     // Extract Order ID or Payment ID if present in the message
@@ -641,11 +640,9 @@ function handleWhatsAppIncoming(body) {
     sendWhatsAppImage(phone, WHATSAPP_CONFIG.POSTER_URL, "AI Secrets Revealed Masterclass 2026");
     
     let welcomeMsg = "Welcome! \uD83C\uDF89 Your registration is confirmed for the AI Secrets Revealed Live Masterclass.\n\n";
-    welcomeMsg += "\uD83C\uDF10 Platform: Online Live Classroom (Link will be shared in WhatsApp group)\n";
-    welcomeMsg += "\uD83D\uDCC5 Date: " + sessionDate + "\n";
-    welcomeMsg += "\uD83D\uDD52 Time: " + sessionTime + "\n\n";
-    welcomeMsg += "Please join our exclusive WhatsApp Community below to receive live session access & updates:\n" + WHATSAPP_CONFIG.WA_GROUP_LINK + "\n\n";
-    welcomeMsg += "If you have any doubts, feel free to call or WhatsApp us at +91 63792 09689.";
+    welcomeMsg += "\uD83D\uDCC5 Schedule: Tentative Every Friday (5:30 PM - 8:30 PM IST)\n\n";
+    welcomeMsg += "Join our official WhatsApp Community for session links & updates:\n" + WHATSAPP_CONFIG.WA_GROUP_LINK + "\n\n";
+    welcomeMsg += "Need help? WhatsApp / Call: +91 63792 09689";
     
     sendWhatsAppText(phone, welcomeMsg);
 
@@ -1203,10 +1200,9 @@ function sendMasterclassEmail(email, name, sessionDate, sessionTime, totalAmount
   const hasChatGptAddon = isClaude && (Number(totalAmount) >= 899 || String(modeOrLang || "").includes("ChatGPT") || String(modeOrLang || "").includes("Hacks"));
   const chatGptDownloadUrl = "https://drive.google.com/uc?export=download&id=1Zu6GYAaZ-x5gb8xjyb3LwCW8q2oiBfCj";
 
-  const defaultTime = getUpcomingWebinarTime();
   const isUpscaleOffline = (Number(totalAmount) >= 4000) || String(modeOrLang || "").toLowerCase().includes("offline") || String(modeOrLang || "").toLowerCase().includes("chennai");
-  const dateVal = sessionDate || (isUpscaleOffline ? "October 2nd week 2026 (Sunday)" : defaultTime.toDateString());
-  const timeVal = sessionTime || (isUpscaleOffline ? "9:00 AM – 5:30 PM IST" : "6:00 PM IST");
+  const dateVal = sessionDate || (isUpscaleOffline ? "October 2nd week 2026 (Sunday)" : "Tentative Every Friday");
+  const timeVal = sessionTime || (isUpscaleOffline ? "9:00 AM – 5:30 PM IST" : "Evening 5:30 PM - 8:30 PM IST");
   const isPdfMaterial = Number(totalAmount) === 499 || String(modeOrLang || "").includes("Material") || String(modeOrLang || "").includes("PDF") || String(modeOrLang || "").includes("PPT");
   const courseTitle = isUpscaleOffline ? "UPSCALE: 1-Day Offline AI Mastery Workshop (Chennai)" : (isPdfMaterial ? "AI Secrets Revealed Masterclass + Session Material (PDF)" : "AI Secrets Revealed Masterclass");
   const fdCourseName = isUpscaleOffline ? "UPSCALE: Offline AI Workshop (Chennai)" : "AI-Secret Revealed";
@@ -1241,7 +1237,7 @@ function sendMasterclassEmail(email, name, sessionDate, sessionTime, totalAmount
     return { invoiceNumber: fdInvoiceNo, courseTitle: courseTitle, suppressed: true };
   }
 
-  const subject = `🎉 Registration Confirmed & GST Invoice: ${courseTitle} — ${dateVal}`;
+  const subject = isUpscaleOffline ? `🎉 Registration Confirmed & GST Invoice: ${courseTitle} — ${dateVal}` : `🎉 Registration Confirmed & GST Invoice: ${courseTitle} (Tentative Every Friday)`;
   
   const htmlBody = `<!DOCTYPE html>
 <html>
@@ -1294,12 +1290,8 @@ function sendMasterclassEmail(email, name, sessionDate, sessionTime, totalAmount
               </div>` : ''}
               <table width="100%" style="background-color:#f1f5f9;border:1px solid #e2e8f0;border-radius:16px;margin-bottom:32px;">
                 <tr>
-                  <td style="padding:16px 20px;border-bottom:1px solid #e2e8f0;font-size:14px;color:#64748b;">📅 Date</td>
-                  <td style="padding:16px 20px;border-bottom:1px solid #e2e8f0;font-size:14px;color:#0f172a;font-weight:700;">${dateVal}</td>
-                </tr>
-                <tr>
-                  <td style="padding:16px 20px;border-bottom:1px solid #e2e8f0;font-size:14px;color:#64748b;">🕒 Time</td>
-                  <td style="padding:16px 20px;border-bottom:1px solid #e2e8f0;font-size:14px;color:#0f172a;font-weight:700;">${timeVal}</td>
+                  <td style="padding:16px 20px;border-bottom:1px solid #e2e8f0;font-size:14px;color:#64748b;">📅 Session Schedule</td>
+                  <td style="padding:16px 20px;border-bottom:1px solid #e2e8f0;font-size:14px;color:#0f172a;font-weight:700;">Tentative Every Friday (5:30 PM – 8:30 PM IST) — Announced in WhatsApp Community</td>
                 </tr>
                 <tr>
                   <td style="padding:16px 20px;font-size:14px;color:#64748b;">📍 Platform</td>
@@ -1310,14 +1302,14 @@ function sendMasterclassEmail(email, name, sessionDate, sessionTime, totalAmount
                 <tr>
                   <td align="center" style="padding-bottom:32px;">
                     <a href="${waGroupLink}" target="_blank" style="display:inline-block;background-color:#22c55e;color:#ffffff;text-decoration:none;padding:16px 36px;border-radius:100px;font-size:16px;font-weight:700;box-shadow:0 4px 6px -1px rgba(34,197,94,0.3);">
-                      📱 Join Official WhatsApp Group
+                      📱 Join Official WhatsApp Community
                     </a>
                   </td>
                 </tr>
               </table>
               <div style="background-color:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:20px;margin-bottom:24px;">
                 <h4 style="color:#1e3a8a;font-size:14px;margin:0 0 8px;font-weight:700;">⚡ Important Instructions:</h4>
-                <p style="color:#1e40af;font-size:13px;margin:0 0 6px;line-height:1.5;">1. Make sure to join the WhatsApp group using the button above to receive the session link.</p>
+                <p style="color:#1e40af;font-size:13px;margin:0 0 6px;line-height:1.5;">1. Make sure to join the WhatsApp Community using the button above. We will schedule and announce the upcoming live session dates, timings, and meeting link inside the group.</p>
                 <p style="color:#1e40af;font-size:13px;margin:0 0 6px;line-height:1.5;">2. Log in 10 minutes prior to the scheduled session time.</p>
                 <p style="color:#1e40af;font-size:13px;margin:0 0 6px;line-height:1.5;">3. Keep a notebook and pen ready to take notes of critical AI tools and workflows.</p>
                 <p style="color:#1e40af;font-size:13px;margin:6px 0 0;line-height:1.5;">4. If you have any doubts, feel free to call or WhatsApp us at +91 63792 09689 / +91 7558133039.</p>

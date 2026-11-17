@@ -1,15 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import heroBg from "@/assets/hero-bg.jpg";
-import { Calendar, Clock, Video, Languages, ShieldCheck, CheckCircle2, ArrowRight, Zap, Cpu, Building2 } from "lucide-react";
+import { Clock, Video, Languages, ShieldCheck, CheckCircle2, ArrowRight, Zap, Cpu, Building2, MessageSquare } from "lucide-react";
 import { useAIMasterclassRegisterModal } from "./AIMasterclassRegisterModalContext";
-import { getMasterclassDateStrings } from "../../lib/masterclassDateUtils";
 
 const AIMasterclassHeroSection: React.FC = () => {
     const { openRegisterModal } = useAIMasterclassRegisterModal();
-    const { orderedSlots, nextSession } = getMasterclassDateStrings();
-    const [selectedSlotId, setSelectedSlotId] = useState<"wednesday" | "friday" | "sunday">(nextSession.id);
-
-    const activeSlot = orderedSlots.find(s => s.id === selectedSlotId) || nextSession;
 
     const scrollTo = (id: string) => {
         document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
@@ -60,7 +55,7 @@ const AIMasterclassHeroSection: React.FC = () => {
                                 <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-400"></span>
                             </span>
                             <span className="text-[11px] font-bold uppercase tracking-widest text-slate-100">
-                                EXECUTIVE 3-HOUR LIVE WORKSHOP • WED, FRI & SUN COHORTS
+                                EXECUTIVE 3-HOUR LIVE WORKSHOP • BILINGUAL (TAMIL & ENGLISH)
                             </span>
                         </div>
 
@@ -128,7 +123,7 @@ const AIMasterclassHeroSection: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* Right Column: Interactive Live Batch Selector Card */}
+                    {/* Right Column: Executive Live Pass Overview Card */}
                     <div className="lg:col-span-5 flex justify-center lg:justify-end">
                         <div className="w-full max-w-[430px] bg-white/95 backdrop-blur-md rounded-2xl p-6 sm:p-7 border border-slate-200/90 shadow-[0_20px_50px_rgba(15,23,42,0.08)] hover:shadow-[0_25px_60px_rgba(15,23,42,0.12)] transition-all duration-300 relative overflow-hidden">
                             {/* Corporate Royal Blue top accent */}
@@ -144,65 +139,15 @@ const AIMasterclassHeroSection: React.FC = () => {
                                 </span>
                             </div>
 
-                            {/* Batch Selection Tabs */}
-                            <div className="mb-5">
-                                <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-2">
-                                    Select Your Preferred Cohort:
-                                </label>
-                                <div className="grid grid-cols-3 gap-2">
-                                    {orderedSlots.map((slot) => {
-                                        const isSelected = selectedSlotId === slot.id;
-                                        const isEvening = slot.id === "wednesday" || slot.id === "friday";
-                                        return (
-                                            <button
-                                                key={slot.id}
-                                                type="button"
-                                                onClick={() => setSelectedSlotId(slot.id)}
-                                                className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer relative ${
-                                                    isSelected
-                                                        ? "bg-blue-50/80 border-2 border-blue-600 shadow-sm"
-                                                        : "bg-slate-50/80 hover:bg-slate-100/90 border-slate-200 text-slate-600"
-                                                }`}
-                                            >
-                                                <div className="text-[11px] font-bold text-slate-900 flex items-center justify-between gap-1">
-                                                    <span className="truncate">{slot.dayName}</span>
-                                                    {slot.id === nextSession.id && (
-                                                        <span className="text-[7px] font-extrabold uppercase bg-blue-100 text-blue-800 px-1 py-0.5 rounded shrink-0">
-                                                            Next
-                                                        </span>
-                                                    )}
-                                                </div>
-                                                <div className="text-[10px] font-bold text-blue-700 mt-1 leading-tight">
-                                                    {isEvening ? "5:30 – 8:30 PM" : "10 AM – 1 PM"}
-                                                </div>
-                                                <div className="text-[9px] text-slate-500 font-medium mt-0.5">
-                                                    {isEvening ? "Evening" : "Morning"}
-                                                </div>
-                                            </button>
-                                        );
-                                    })}
-                                </div>
-                            </div>
-
-                            {/* Active Slot Detailed Snapshot */}
-                            <div className="bg-slate-50/90 border border-slate-200/80 rounded-xl p-4 space-y-3 mb-5">
+                            {/* Live Masterclass Program Overview */}
+                            <div className="bg-slate-50/90 border border-slate-200/80 rounded-xl p-4 space-y-3.5 mb-5">
                                 <div className="flex items-start gap-3">
                                     <div className="w-9 h-9 rounded-lg bg-white border border-slate-200 text-blue-600 flex items-center justify-center shrink-0 shadow-2xs">
-                                        <Calendar className="w-4 h-4" />
-                                    </div>
-                                    <div>
-                                        <div className="text-sm font-bold text-slate-900">{activeSlot.dateString}</div>
-                                        <div className="text-[11px] font-semibold text-blue-700 uppercase tracking-wider">{activeSlot.dayName} Live Cohort</div>
-                                    </div>
-                                </div>
-
-                                <div className="flex items-start gap-3">
-                                    <div className="w-9 h-9 rounded-lg bg-white border border-slate-200 text-slate-700 flex items-center justify-center shrink-0 shadow-2xs">
                                         <Clock className="w-4 h-4" />
                                     </div>
                                     <div>
-                                        <div className="text-sm font-bold text-slate-900">{activeSlot.timeSlot}</div>
-                                        <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">3 Hours Intensive Executive Training</div>
+                                        <div className="text-sm font-bold text-slate-900">3-Hours Intensive Workshop</div>
+                                        <div className="text-[11px] font-semibold text-blue-700 uppercase tracking-wider">Live Virtual Masterclass</div>
                                     </div>
                                 </div>
 
@@ -221,8 +166,20 @@ const AIMasterclassHeroSection: React.FC = () => {
                                         <Video className="w-4 h-4" />
                                     </div>
                                     <div>
-                                        <div className="text-sm font-bold text-slate-900">Live Online</div>
-                                        <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Joining Credentials Sent via WhatsApp & Email</div>
+                                        <div className="text-sm font-bold text-slate-900">Live Online Classroom</div>
+                                        <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Interactive Q&A With Antony Praveen</div>
+                                    </div>
+                                </div>
+
+                                <div className="flex items-start gap-3 p-3 rounded-xl bg-emerald-50/80 border border-emerald-200/80">
+                                    <div className="w-9 h-9 rounded-lg bg-white border border-emerald-200 text-emerald-600 flex items-center justify-center shrink-0 shadow-2xs">
+                                        <MessageSquare className="w-4 h-4" />
+                                    </div>
+                                    <div>
+                                        <div className="text-xs font-bold text-emerald-950">Schedule: Tentative Every Friday</div>
+                                        <div className="text-[11px] font-medium text-emerald-700 leading-snug mt-0.5">
+                                            Evening 5:30 PM – 8:30 PM IST • Upcoming live links &amp; updates shared in our official WhatsApp Community.
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -233,7 +190,7 @@ const AIMasterclassHeroSection: React.FC = () => {
                                     onClick={openRegisterModal}
                                     className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-sm py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 shadow-md shadow-blue-600/25 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer"
                                 >
-                                    <span>Enroll for {activeSlot.dayName} Batch — ₹99</span>
+                                    <span>Register for Masterclass — ₹99</span>
                                     <ArrowRight className="w-4 h-4 text-white" />
                                 </button>
                             </div>

@@ -9,8 +9,8 @@ import { HelpCircle } from "lucide-react";
 
 const faqs = [
     {
-        q: "What days and times are the masterclass sessions conducted?",
-        a: "Sessions are conducted live every week in three convenient batches: Wednesday Evening (5:30 PM to 8:30 PM IST), Friday Evening (5:30 PM to 8:30 PM IST), and Sunday Morning (10:00 AM to 1:00 PM IST). You can select your preferred session date and time directly in the registration form."
+        q: "When will the masterclass sessions be conducted?",
+        a: "Sessions are tentatively planned Every Friday evening (5:30 PM - 8:30 PM IST). Upcoming live session dates, reminders, and virtual classroom meeting links will be announced directly inside our exclusive WhatsApp Community right after registration."
     },
     {
         q: "Do I need technical or coding skills?",
@@ -25,8 +25,8 @@ const faqs = [
         a: "When you choose the ₹499 Masterclass + Resource Toolkit pass, your complete asset bundle (Session PDF Material, 10+ AI Tool Kit, Multiple AI Agent Links, and 10+ Secret AI Websites) will be delivered directly to your registered email upon enrollment."
     },
     {
-        q: "How will I receive the meeting link after registering?",
-        a: "Immediately after completing your payment via Razorpay, your live training credentials and session access link will be sent directly to your registered email and WhatsApp number."
+        q: "How will I receive the session schedule and meeting link after registering?",
+        a: "Immediately after completing your payment via Razorpay, you will be invited to join our official WhatsApp Community. All upcoming session schedule announcements, virtual classroom meeting links, and reminders will be posted directly inside the WhatsApp group."
     },
     {
         q: "What if I have questions during the session?",

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { CheckCircle2, Loader2, ShieldCheck, X, Search } from "lucide-react";
+import { CheckCircle2, Loader2, ShieldCheck, X, Search, MessageSquare } from "lucide-react";
 import { useAIMasterclassRegisterModal } from "./AIMasterclassRegisterModalContext";
 import { RazorpayOptions } from "@/types/razorpay";
 import { getMasterclassDateStrings } from "../../lib/masterclassDateUtils";
@@ -218,15 +218,15 @@ const AIMasterclassRegisterModal: React.FC = () => {
                     phone: `${form.countryCode}${form.phone.replace(/\D/g, "")}`,
                     countryCode: form.countryCode,
                     language: form.language,
-                    batch: `Masterclass 2026 (${selectedSlot.timingLabel})` + (includePdfMaterial ? " + Resource Toolkit (₹499)" : ""),
-                    preferredSlot: selectedSlot.fullLabel,
+                    batch: `Masterclass 2026 (Live Online)` + (includePdfMaterial ? " + Resource Toolkit (₹499)" : ""),
+                    preferredSlot: "Tentative Every Friday (5:30 PM - 8:30 PM IST)",
                     hasPdfMaterial: includePdfMaterial ? "YES" : "NO",
                     course: includePdfMaterial ? "AI Secrets Revealed Masterclass + Resource Toolkit" : "AI Secrets Revealed Masterclass",
                     baseAmount: isTestEmail ? 1 : baseSessionAmount,
                     gstAmount: isTestEmail ? 0 : gstAmount,
                     amount: isTestEmail ? 1 : totalAmount,
-                    sessionDate: selectedSlot.regularDate,
-                    sessionTime: selectedSlot.timeSlot,
+                    sessionDate: "Tentative Every Friday",
+                    sessionTime: "Evening 5:30 PM - 8:30 PM IST",
                     companyName: safeCompany,
                     gstin: safeGstin,
                     seats: seatsCount
@@ -332,9 +332,9 @@ const AIMasterclassRegisterModal: React.FC = () => {
                                 email: safeEmail,
                                 name: safeName,
                                 language: form.language,
-                                preferredSlot: selectedSlot.fullLabel,
-                                sessionDate: selectedSlot.regularDate,
-                                sessionTime: selectedSlot.timeSlot,
+                                preferredSlot: "Tentative Every Friday (5:30 PM - 8:30 PM IST)",
+                                sessionDate: "Tentative Every Friday",
+                                sessionTime: "Evening 5:30 PM - 8:30 PM IST",
                                 baseAmount: isTestEmail ? 1 : baseSessionAmount,
                                 gstAmount: isTestEmail ? 0 : gstAmount,
                                 amount: isTestEmail ? 1 : totalAmount,
@@ -473,12 +473,37 @@ const AIMasterclassRegisterModal: React.FC = () => {
                 </button>
 
                 {submitted ? (
-                    <div className="text-center py-6">
-                        <CheckCircle2 className="w-14 h-14 text-emerald-600 mx-auto mb-4" />
-                        <h3 className="text-2xl font-black text-slate-900 mb-2">Enrolled Successfully!</h3>
-                        <p className="text-slate-600 text-sm mb-4">Welcome to the AI Secrets Revealed Masterclass. See you soon!</p>
-                        <div className="bg-slate-100 border border-slate-200 text-slate-700 text-xs px-4 py-2 rounded-full mb-6 inline-block font-mono">Payment ID: {paymentId}</div>
-                        <button onClick={handleClose} className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl transition-colors cursor-pointer">CLOSE</button>
+                    <div className="text-center py-6 space-y-4">
+                        <CheckCircle2 className="w-14 h-14 text-emerald-600 mx-auto" />
+                        <div>
+                            <h3 className="text-2xl font-black text-slate-900 mb-1">Enrolled Successfully! 🎉</h3>
+                            <p className="text-slate-600 text-xs sm:text-sm">Welcome to the AI Secrets Revealed Masterclass.</p>
+                        </div>
+                        <div className="bg-slate-100 border border-slate-200 text-slate-700 text-xs px-4 py-1.5 rounded-full inline-block font-mono">
+                            Payment ID: {paymentId}
+                        </div>
+                        <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-center space-y-2.5">
+                            <div className="text-xs font-bold text-emerald-950 flex items-center justify-center gap-1.5">
+                                <MessageSquare className="w-4 h-4 text-emerald-700 shrink-0" />
+                                <span>Join Official WhatsApp Community</span>
+                            </div>
+                            <p className="text-xs text-slate-600">
+                                Schedule: <strong>Tentative Every Friday (5:30 PM - 8:30 PM IST)</strong><br />
+                                Meeting link &amp; updates will be shared inside the community group.
+                            </p>
+                            <a
+                                href="https://chat.whatsapp.com/EpsuzpxGz6F98ml2GUBejC"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 text-xs transition-all cursor-pointer"
+                            >
+                                <MessageSquare className="w-4 h-4" />
+                                <span>Join WhatsApp Community Now</span>
+                            </a>
+                        </div>
+                        <button onClick={handleClose} className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 rounded-xl transition-colors cursor-pointer text-xs">
+                            CLOSE
+                        </button>
                     </div>
                 ) : (
                     <div className="overflow-y-auto pr-1 -mr-1 flex-1">
@@ -490,9 +515,8 @@ const AIMasterclassRegisterModal: React.FC = () => {
                                 {includePdfMaterial ? "Masterclass + Resource Toolkit Pass • Total ₹499 (Incl. 18% GST)" : "3-Hour Live Interactive Masterclass • Just ₹99 (Incl. 18% GST)"}
                             </p>
                             
-                            
                             <div className="mt-2 inline-flex items-center gap-1.5 bg-blue-50 border border-blue-200 text-blue-700 px-3 py-1 rounded-full text-xs font-bold tracking-wide">
-                                <span>📅 Selected: {selectedSlot.fullLabel}</span>
+                                <span>💬 Tentative Every Friday (5:30 PM - 8:30 PM IST) • Details in WhatsApp</span>
                             </div>
                             {affiliateId && (
                                 <div className="mt-1.5 inline-flex items-center gap-1 bg-emerald-50 border border-emerald-200 text-emerald-700 px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wide">
@@ -504,44 +528,14 @@ const AIMasterclassRegisterModal: React.FC = () => {
                         </div>
 
                         <form onSubmit={handleSubmit} className="space-y-3">
-                            {/* Preferred Date & Session Selection */}
-                            <div className="space-y-1">
-                                <label className="text-[10px] font-bold text-slate-700 uppercase tracking-wider ml-0.5 flex items-center justify-between">
-                                    <span>Preferred Date & Session</span>
-                                    <span className="text-[9px] text-blue-600 font-semibold uppercase">Required</span>
-                                </label>
-                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                                    {orderedSlots.map((slot) => {
-                                        const isSelected = preferredSlotId === slot.id;
-                                        return (
-                                            <button
-                                                key={slot.id}
-                                                type="button"
-                                                onClick={() => setPreferredSlotId(slot.id)}
-                                                className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer relative flex flex-col justify-between ${
-                                                    isSelected
-                                                        ? "bg-emerald-50/90 border-2 border-emerald-600 text-slate-900 shadow-sm"
-                                                        : "bg-slate-50 hover:bg-slate-100 border-slate-200 text-slate-600"
-                                                }`}
-                                            >
-                                                <div className="flex items-center justify-between mb-0.5">
-                                                    <span className="text-xs font-black flex items-center gap-1.5 text-slate-900">
-                                                        <span className={`w-3.5 h-3.5 rounded-full border-2 flex items-center justify-center shrink-0 ${isSelected ? "border-emerald-600 bg-emerald-600" : "border-slate-300 bg-white"}`}>
-                                                            {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
-                                                        </span>
-                                                        <span>{slot.dayName} {slot.id === "sunday" ? "Morning" : "Evening"}</span>
-                                                    </span>
-                                                    {slot.id === nextSession.id && (
-                                                        <span className="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-200">
-                                                            Next Up
-                                                        </span>
-                                                    )}
-                                                </div>
-                                                <div className="text-[11px] font-bold text-emerald-700 ml-5">{slot.timeSlot}</div>
-                                                <div className="text-[11px] text-slate-500 font-medium ml-5">{slot.dateString}</div>
-                                            </button>
-                                        );
-                                    })}
+                            {/* Live Session Schedule Information Card */}
+                            <div className="p-3.5 rounded-xl bg-blue-50/80 border border-blue-200/90 text-blue-950 text-xs flex items-start gap-2.5">
+                                <MessageSquare className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
+                                <div>
+                                    <p className="font-bold text-slate-900">Live Session Schedule: Tentative Every Friday</p>
+                                    <p className="text-[11px] text-blue-700 mt-0.5 leading-relaxed font-medium">
+                                        Evening 5:30 PM – 8:30 PM IST. Upcoming live session dates, meeting links &amp; schedule updates are announced inside our exclusive WhatsApp Community right after registration.
+                                    </p>
                                 </div>
                             </div>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">

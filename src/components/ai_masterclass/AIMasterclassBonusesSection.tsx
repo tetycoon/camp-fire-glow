@@ -18,7 +18,7 @@ const AIMasterclassBonusesSection: React.FC = () => {
                             Live 3-Hour Workshop + ₹9,997 Toolkit = <span className="text-blue-400">₹499</span>
                         </h3>
                         <p className="text-sm text-slate-300 mb-6 max-w-2xl mx-auto">
-                            Select Wednesday & Friday Evening (5:30 PM – 8:30 PM) or Sunday Morning (10:00 AM – 1:00 PM). Official GST tax invoice provided upon registration.
+                            Live 3-Hour virtual masterclass + complete digital resource suite. Tentatively planned Every Friday (Evening 5:30 PM - 8:30 PM IST), with exact session links scheduled in our official WhatsApp Community. Official GST invoice provided.
                         </p>
                         <button
                             onClick={() => openRegisterModal({ includePdfMaterial: true })}
