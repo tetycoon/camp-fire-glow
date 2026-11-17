@@ -299,11 +299,11 @@ function getUpcomingMasterclassWeekend() {
 
     return {
         targetTimestamp: nextSat.getTime(),
-        satDateText: `Saturday, ${satM} ${satDay}${getOrdinal(satDay)}`,
-        sunDateText: `Sunday, ${sunM} ${sunDay}${getOrdinal(sunDay)}`,
-        shortRange: shortRange,
+        satDateText: 'Day 1: Saturday',
+        sunDateText: 'Day 2: Sunday',
+        shortRange: 'Saturday & Sunday',
         dateRange: dateRange,
-        fullDisplay: fullDisplay
+        fullDisplay: 'Every Saturday & Sunday'
     };
 }
 
@@ -554,7 +554,7 @@ function switchMasterclassMode(mode) {
         if (gridOnline) gridOnline.style.display = 'grid';
         if (gridOffline) gridOffline.style.display = 'none';
         
-        if (document.getElementById('nav-date-text')) document.getElementById('nav-date-text').innerText = weekend.shortRange;
+        if (document.getElementById('nav-date-text')) document.getElementById('nav-date-text').innerText = 'Saturday & Sunday';
         if (document.getElementById('nav-time-text')) document.getElementById('nav-time-text').innerText = '5:30 PM – 8:30 PM IST';
         if (document.getElementById('nav-reg-btn')) document.getElementById('nav-reg-btn').innerHTML = 'Register Now @ ₹499 <i class="fa-solid fa-arrow-right"></i>';
         if (document.getElementById('nav-reg-btn')) document.getElementById('nav-reg-btn').setAttribute('onclick', 'openPaymentModal(499)');
@@ -568,7 +568,7 @@ function switchMasterclassMode(mode) {
         
         if (document.getElementById('session-tag-el')) document.getElementById('session-tag-el').innerText = 'SESSION DETAILS';
         if (document.getElementById('venue-badge-el')) document.getElementById('venue-badge-el').innerHTML = '<i class="fa-solid fa-video"></i> Live Online';
-        if (document.getElementById('info-date-text')) document.getElementById('info-date-text').innerText = weekend.fullDisplay;
+        if (document.getElementById('info-date-text')) document.getElementById('info-date-text').innerText = 'Every Saturday & Sunday';
         if (document.getElementById('info-time-text')) document.getElementById('info-time-text').innerText = '5:30 PM – 8:30 PM IST';
         if (document.getElementById('info-venue-text')) document.getElementById('info-venue-text').innerText = 'Live Interactive Virtual Classroom';
 
@@ -578,7 +578,7 @@ function switchMasterclassMode(mode) {
         if (document.getElementById('pricing-title-el')) document.getElementById('pricing-title-el').innerText = 'Select your pass for the live batch';
         if (document.getElementById('pricing-desc-el')) document.getElementById('pricing-desc-el').innerText = 'Choose between the standard live interactive pass or the pass with recorded video access.';
 
-        if (document.getElementById('float-date-title')) document.getElementById('float-date-title').innerText = weekend.shortRange;
+        if (document.getElementById('float-date-title')) document.getElementById('float-date-title').innerText = 'Saturday & Sunday';
         if (document.getElementById('float-date-sub')) document.getElementById('float-date-sub').innerText = '5:30 PM IST';
         if (document.getElementById('float-time-title')) document.getElementById('float-time-title').innerText = '5:30 PM – 8:30 PM';
         if (document.getElementById('float-time-sub')) document.getElementById('float-time-sub').innerText = 'IST';
@@ -586,10 +586,10 @@ function switchMasterclassMode(mode) {
         if (document.getElementById('float-cta-btn')) document.getElementById('float-cta-btn').setAttribute('onclick', 'openPaymentModal(999)');
 
         // Portal & Curriculum & Pricing dynamic updates
-        if (document.getElementById('portal-online-date')) document.getElementById('portal-online-date').innerText = weekend.fullDisplay;
-        if (document.getElementById('curriculum-day1-title')) document.getElementById('curriculum-day1-title').innerText = weekend.satDateText + ' • 5:30 PM – 8:30 PM IST';
-        if (document.getElementById('curriculum-day2-title')) document.getElementById('curriculum-day2-title').innerText = weekend.sunDateText + ' • 5:30 PM – 8:30 PM IST';
-        if (document.getElementById('pricing-online-date')) document.getElementById('pricing-online-date').innerHTML = '<i class="fa-solid fa-check text-terracotta"></i> 2-Day Live Online Session (' + weekend.shortRange + ')';
+        if (document.getElementById('portal-online-date')) document.getElementById('portal-online-date').innerText = 'Every Saturday & Sunday';
+        if (document.getElementById('curriculum-day1-title')) document.getElementById('curriculum-day1-title').innerText = 'Day 1: Saturday • 5:30 PM – 8:30 PM IST';
+        if (document.getElementById('curriculum-day2-title')) document.getElementById('curriculum-day2-title').innerText = 'Day 2: Sunday • 5:30 PM – 8:30 PM IST';
+        if (document.getElementById('pricing-online-date')) document.getElementById('pricing-online-date').innerHTML = '<i class="fa-solid fa-check text-terracotta"></i> 2-Day Live Online Session (Saturday & Sunday)';
 
         selectedPlan = 999;
     }
@@ -703,7 +703,7 @@ function selectPass(plan) {
             modalPill.innerHTML = '<i class="fa-regular fa-calendar"></i> Next Batch: Coming Soon (Dates to be announced)';
         } else {
             const weekend = getUpcomingMasterclassWeekend();
-            modalPill.innerHTML = '<i class="fa-regular fa-calendar"></i> ' + weekend.fullDisplay + ' • 5:30 PM IST';
+            modalPill.innerHTML = '<i class="fa-regular fa-calendar"></i> Every Saturday & Sunday • 5:30 PM IST';
         }
     }
 }
@@ -902,13 +902,10 @@ async function handleFormSubmit(e) {
                 // Ping AppScript to mark whatsapp clicked
                 fetch(`${APPS_SCRIPT_WEBAPP_URL}?action=whatsapp&orderId=${response.razorpay_order_id || orderId}`).catch(() => {});
 
-                // Direct redirect to WhatsApp
+                // Redirect to Thank You page recommending WhatsApp to get session date
                 const isOffline = currentMasterclassMode === 'offline' || selectedPlan === 4999;
-                const msgText = isOffline
-                  ? "Hello Tech Tycoon Team I successfully complete the registration claude masterclass offline session"
-                  : "Hello Tech Tycoon Team I successfully complete the registration of claude masterclass online session";
-                const waMessage = encodeURIComponent(msgText);
-                window.location.href = `https://wa.me/917010340494?text=${waMessage}`;
+                const thankYouUrl = `/claude_masterclass/thank-you/?paymentId=${encodeURIComponent(response.razorpay_payment_id || '')}&orderId=${encodeURIComponent(response.razorpay_order_id || orderId)}&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&phone=${encodeURIComponent(phone)}&amount=${encodeURIComponent(finalPrice)}&course=${encodeURIComponent(isOffline ? 'Claude Masterclass In-Person Chennai' : 'Claude 3.5 AI Masterclass')}&mode=${encodeURIComponent(currentMasterclassMode)}`;
+                window.location.href = thankYouUrl;
             },
             modal: {
                 ondismiss: function () {

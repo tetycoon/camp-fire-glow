@@ -105,6 +105,7 @@ const ThankYou = () => {
     const course = stateData.course || "AI Secrets Revealed Masterclass";
     const amount = stateData.amount || "";
     const noGst = Boolean(stateData.noGst || String(course).toLowerCase().includes("academy"));
+    const isClaude = Boolean(String(course).toLowerCase().includes("claude") || location.pathname.includes("claude") || searchParams.get("course")?.toLowerCase().includes("claude"));
 
     // Build the prefilled WhatsApp message triggering Meta WhatsApp Automation in Apps Script
     const prefilledMessage = [
@@ -119,12 +120,13 @@ const ThankYou = () => {
         orderId ? `• *Order ID:* ${orderId}` : ``,
         paymentId ? `• *Payment ID:* ${paymentId}` : ``,
         ``,
-        `Please confirm my registration and send my access details! 🚀`,
+        `${isClaude ? "Please send me my confirmed session date and Live Zoom joining link!" : "Please confirm my registration and send my access details! 🚀"}`,
     ]
         .filter(Boolean)
         .join("\n");
 
     const waChatLink = `https://wa.me/917010340494?text=${encodeURIComponent(prefilledMessage)}`;
+    const WA_COMMUNITY_LINK = "https://chat.whatsapp.com/EpsuzpxGz6F98ml2GUBejC";
 
     useEffect(() => {
         // Track Purchase event exactly once upon landing
@@ -167,7 +169,7 @@ const ThankYou = () => {
             setCountdown((prev) => {
                 if (prev <= 1) {
                     clearInterval(timer);
-                    window.location.href = waChatLink;
+                    window.location.href = WA_COMMUNITY_LINK;
                     return 0;
                 }
                 return prev - 1;
@@ -175,7 +177,7 @@ const ThankYou = () => {
         }, 1000);
 
         return () => clearInterval(timer);
-    }, [waChatLink, paymentId, stateData.alreadyTrackedPurchase, course, amount, orderId]);
+    }, [waChatLink, WA_COMMUNITY_LINK, paymentId, stateData.alreadyTrackedPurchase, course, amount, orderId]);
 
     const handleSendWhatsAppMessage = () => {
         if (orderId && inferredBackendUrl) {
@@ -246,35 +248,36 @@ const ThankYou = () => {
                     )}
                 </div>
 
-                <div className="bg-emerald-50 text-emerald-900 p-4 rounded-2xl border border-emerald-200 text-xs sm:text-sm leading-relaxed font-medium text-left space-y-1">
-                    <p className="font-bold text-emerald-800 flex items-center gap-1.5">
-                        <span>{noGst ? "📧 Official Payment Receipt Sent via Email" : "📧 Official GST Tax Invoice Sent via Email"}</span>
-                    </p>
-                    <p className="text-slate-600 text-[11px] sm:text-xs">
-                        {noGst ? (
-                            <>Your official payment receipt and registration confirmation have been emailed to <strong>{email || "your registered email"}</strong>.</>
-                        ) : (
-                            <>Your complete GST Tax Invoice (with 9% CGST + 9% SGST breakdown) and payment receipt have been emailed to <strong>{email || "your registered email"}</strong>.</>
-                        )}
-                    </p>
-                </div>
-
-                <div className="space-y-3 pt-1">
-                    <button
-                        onClick={handleSendWhatsAppMessage}
-                        className="w-full bg-gradient-to-r from-emerald-500 via-teal-600 to-emerald-600 hover:from-emerald-600 hover:to-teal-700 text-white font-extrabold py-4 px-6 rounded-2xl shadow-lg shadow-emerald-500/25 transition-all flex items-center justify-center gap-3 transform hover:-translate-y-0.5 border border-emerald-400/30 text-sm sm:text-base cursor-pointer"
-                    >
-                        <MessageSquare className="w-5 h-5" />
-                        <span>Click Here To Send WhatsApp Message 🚀</span>
-                    </button>
-
-                    <p className="text-xs text-slate-500 flex items-center justify-center gap-1.5 font-medium">
-                        <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                        <span>
-                            Auto-redirecting to WhatsApp in <strong className="text-sky-700">{countdown}</strong> seconds...
+                {/* Clean & Simple WhatsApp Community Card */}
+                <div className="bg-emerald-50/90 border border-emerald-200 rounded-2xl p-5 text-center space-y-3">
+                    <div className="flex items-center justify-center gap-2 text-emerald-950 font-bold text-base">
+                        <MessageSquare className="w-5 h-5 text-emerald-600 shrink-0" />
+                        <span>Join Official WhatsApp Community</span>
+                    </div>
+                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                        Schedule: <strong>{isClaude ? "Every Saturday & Sunday (5:30 PM - 8:30 PM IST)" : "Tentative Every Friday (5:30 PM - 8:30 PM IST)"}</strong><br />
+                        <span className="text-emerald-700 font-semibold block mt-1">
+                            {isClaude ? "👉 Join our official WhatsApp group below to receive your confirmed session date & Live Zoom link!" : "Meeting link and session updates will be shared inside the community group."}
                         </span>
                     </p>
+                    <a
+                        href={WA_COMMUNITY_LINK}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-xl shadow-md shadow-emerald-600/25 transition-all flex items-center justify-center gap-2 text-sm sm:text-base cursor-pointer"
+                    >
+                        <MessageSquare className="w-5 h-5" />
+                        <span>{isClaude ? "Join WhatsApp to Get Session Date" : "Join WhatsApp Community"}</span>
+                    </a>
+                    <p className="text-xs text-slate-500 font-medium flex items-center justify-center gap-1.5 pt-1">
+                        <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                        <span>Redirecting in <strong className="text-emerald-700">{countdown}</strong> seconds...</span>
+                    </p>
                 </div>
+
+                <p className="text-xs text-slate-500 text-center">
+                    📧 Invoice &amp; receipt sent to <strong>{email || "your registered email"}</strong>
+                </p>
             </div>
         </div>
     );

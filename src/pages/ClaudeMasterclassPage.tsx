@@ -381,14 +381,14 @@ const ClaudeMasterclassPage: React.FC = () => {
 
     return {
       targetTimestamp: nextSat.getTime(),
-      satDateText: `Saturday, ${satM} ${satDay}${getOrdinal(satDay)}`,
-      sunDateText: `Sunday, ${sunM} ${sunDay}${getOrdinal(sunDay)}`,
-      rangeText: formattedRange,
-      shortRangeText: shortRange,
-      dateRange,
+      satDateText: 'Day 1: Saturday',
+      sunDateText: 'Day 2: Sunday',
+      rangeText: 'Saturday & Sunday',
+      shortRangeText: 'Saturday & Sunday',
+      dateRange: 'Every Saturday & Sunday',
       year,
-      fullDisplay: `${dateRange} (Saturday & Sunday)`,
-      badgeDisplay: `Every Sat & Sun (${shortRange})`
+      fullDisplay: 'Every Saturday & Sunday',
+      badgeDisplay: 'Every Saturday & Sunday'
     };
   }, []);
 
@@ -688,13 +688,10 @@ const ClaudeMasterclassPage: React.FC = () => {
           // Ping AppScript to mark whatsapp clicked
           fetch(`${APPS_SCRIPT_WEBAPP_URL}?action=whatsapp&orderId=${response.razorpay_order_id || orderId}`).catch(() => {});
 
-          // Direct redirect to WhatsApp
+          // Redirect to Thank You page recommending WhatsApp to get session date
           const isOffline = masterclassMode === 'offline' || selectedPlan === 4999;
-          const msgText = isOffline
-            ? "Hello Tech Tycoon Team I successfully complete the registration claude masterclass offline session"
-            : "Hello Tech Tycoon Team I successfully complete the registration of claude masterclass online session";
-          const waMessage = encodeURIComponent(msgText);
-          window.location.href = `https://wa.me/917010340494?text=${waMessage}`;
+          const thankYouUrl = `/claude_masterclass/thank-you/?paymentId=${encodeURIComponent(response.razorpay_payment_id || '')}&orderId=${encodeURIComponent(response.razorpay_order_id || orderId)}&name=${encodeURIComponent(sanitizedName)}&email=${encodeURIComponent(sanitizedEmail)}&phone=${encodeURIComponent(fullPhone)}&amount=${encodeURIComponent(finalPrice)}&course=${encodeURIComponent(isOffline ? 'Claude Masterclass In-Person Chennai' : 'Claude 3.5 AI Masterclass')}&mode=${encodeURIComponent(masterclassMode)}`;
+          window.location.href = thankYouUrl;
         },
         modal: {
           ondismiss: function () {
@@ -966,6 +963,13 @@ const ClaudeMasterclassPage: React.FC = () => {
                   </div>
                 </div>
 
+                {masterclassMode === 'online' && (
+                  <div className="flex items-center gap-2 p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold">
+                    <MessageSquare className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span>Join WhatsApp after payment to get your confirmed session date & Live Zoom link.</span>
+                  </div>
+                )}
+
                 <div className="flex items-start gap-3.5">
                   <div className="w-9 h-9 rounded-xl bg-[#F7F4EE] border border-[#E6E2D9] flex items-center justify-center text-[#D85A30] shrink-0">
                     <Globe className="w-4 h-4" />
@@ -1117,7 +1121,7 @@ const ClaudeMasterclassPage: React.FC = () => {
               <div className="flex items-center gap-3">
                 <span className="bg-[#D85A30] text-white font-bold text-xs px-3 py-1 rounded-md uppercase">Day 1</span>
                 <div>
-                  <h3 className="font-bold text-base text-[#1F1E1C]">{weekendInfo.satDateText} • 5:30 PM – 8:30 PM IST</h3>
+                  <h3 className="font-bold text-base text-[#1F1E1C]">Day 1: Saturday • 5:30 PM – 8:30 PM IST</h3>
                   <span className="text-xs text-[#6E6B65]">Foundations, Prompt Architecture & Building Custom MCPs</span>
                 </div>
               </div>
@@ -1150,7 +1154,7 @@ const ClaudeMasterclassPage: React.FC = () => {
               <div className="flex items-center gap-3">
                 <span className="bg-[#6B4FBB] text-white font-bold text-xs px-3 py-1 rounded-md uppercase">Day 2</span>
                 <div>
-                  <h3 className="font-bold text-base text-[#1F1E1C]">{weekendInfo.sunDateText} • 5:30 PM – 8:30 PM IST</h3>
+                  <h3 className="font-bold text-base text-[#1F1E1C]">Day 2: Sunday • 5:30 PM – 8:30 PM IST</h3>
                   <span className="text-xs text-[#6E6B65]">Claude Code CLI, Website Construction & Live Projects</span>
                 </div>
               </div>
@@ -1649,6 +1653,13 @@ const ClaudeMasterclassPage: React.FC = () => {
                       ? 'Next Batch: Coming Soon (Dates to be announced)' 
                       : `${weekendInfo.fullDisplay} • 5:30 PM IST`}
                   </div>
+
+                  {masterclassMode !== 'offline' && (
+                    <div className="flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 text-emerald-800 px-2 py-1 rounded-md text-[9.5px] font-semibold mt-1">
+                      <MessageSquare className="w-3 h-3 text-emerald-600 shrink-0" />
+                      <span>Session date & Live Zoom link will be shared via WhatsApp after registration.</span>
+                    </div>
+                  )}
 
                   {masterclassMode !== 'offline' && (
                     <div className="mt-2 grid grid-cols-2 bg-[#F7F4EE] p-0.5 rounded-lg border border-[#E6E2D9] gap-1">
