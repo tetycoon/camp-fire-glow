@@ -15,7 +15,7 @@
 // Same packages and prices as create-order.js (the price is never taken from the browser)
 const PACKAGES = {
   class: { amount: 29900, label: 'Class Only' },
-  class_doc: { amount: 79900, label: 'Class + Learning Document' }
+  class_doc: { amount: 79900, label: 'Class + Recorded Video Access + Learning Document' }
 };
 
 // Optional, kept for older forms that still send it

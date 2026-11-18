@@ -15,7 +15,7 @@
 
 const PACKAGES = {
   class: { amount: 29900, label: 'Class Only' },
-  class_doc: { amount: 79900, label: 'Class + Learning Document' }
+  class_doc: { amount: 79900, label: 'Class + Recorded Video Access + Learning Document' }
 };
 
 export async function onRequestPost({ request, env }) {

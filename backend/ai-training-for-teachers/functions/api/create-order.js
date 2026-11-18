@@ -11,7 +11,7 @@
 
 const PACKAGES = {
   class: { amount: 29900, label: 'Class Only' },                       // ₹299 in paise
-  class_doc: { amount: 79900, label: 'Class + Learning Document' }    // ₹799 in paise
+  class_doc: { amount: 79900, label: 'Class + Recorded Video Access + Learning Document' }    // ₹799 in paise
 };
 
 export async function onRequestOptions({ env }) {

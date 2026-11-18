@@ -32,24 +32,17 @@
 
   <link rel="stylesheet" href="css/styles.css" />
 
-  <!-- Runs before paint: marks JS as on, decides if the preloader should show -->
+  <!-- Runs before paint: marks JS as on -->
   <script>
     (function () {
       var d = document.documentElement;
       d.classList.add('js');
       try {
         var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        var c = navigator.connection;
-        var slow = c && (c.saveData || /(^|-)2g/.test(c.effectiveType || ''));
         // 'anim' hides elements that will animate in. js/main.js removes it if GSAP is missing.
         if (!reduced) d.classList.add('anim');
-        if (!reduced && !slow && !sessionStorage.getItem('tt_preloader')) {
-          d.classList.add('preload');
-          sessionStorage.setItem('tt_preloader', '1');
-        }
       } catch (e) {}
-      // Safety nets: never block or hide the page for long, even if scripts fail to load.
-      setTimeout(function () { d.classList.remove('preload'); }, 3000);
+      // Safety net: never hide the page for long, even if scripts fail to load.
       setTimeout(function () { if (!window.__ttReady) d.classList.remove('anim'); }, 3400);
     })();
   </script>
@@ -107,18 +100,6 @@
   </svg>
 
   <a class="skip-link" href="#main">Skip to content</a>
-
-  <!-- ============ 0. Preloader (first visit per session only) ============ -->
-  <div id="preloader" class="preloader" aria-hidden="true">
-    <span class="preloader-blob preloader-blob-1"></span>
-    <span class="preloader-blob preloader-blob-2"></span>
-    <div class="preloader-inner">
-      <div class="preloader-logo"><img src="assets/logo-mark.png" alt="" width="80" height="80" class="preloader-mark" /></div>
-      <p class="preloader-brand">Tech Tycoon</p>
-      <div class="preloader-bar"><span></span></div>
-    </div>
-    <button type="button" class="preloader-skip" id="preloader-skip">Skip</button>
-  </div>
 
 
   <!-- ============ Header ============ -->
@@ -186,7 +167,7 @@
             <button type="button" class="hero-fee hero-fee-featured" data-register data-package="class_doc">
               <span class="hero-fee-tag">Option 2<span class="hero-fee-rec"> · Recommended</span></span>
               <span class="hero-fee-price">₹799</span>
-              <span class="hero-fee-name">Class + Practical Learning Document</span>
+              <span class="hero-fee-name">Class + Recorded Video Access + Practical Learning Document</span>
             </button>
           </div>
 
@@ -664,6 +645,38 @@
       </div>
     </section>
 
+    <!-- ============ 6b. Photos from our sessions ============ -->
+    <section class="gallery section" id="gallery" aria-labelledby="gallery-title">
+      <div class="container">
+        <div class="section-head center">
+          <p class="eyebrow">From our sessions</p>
+          <h2 class="section-title" id="gallery-title" data-title>Real classrooms. <span class="text-gradient">Real teachers learning AI.</span></h2>
+        </div>
+
+        <!-- Column widths follow each photo's own proportions, so both show at equal height, uncropped -->
+        <div class="gallery-grid">
+          <figure class="ph ph-portrait">
+            <div class="ph-float">
+              <div class="ph-frame">
+                <img src="assets/teachers-session-live.jpg" width="960" height="1280" loading="lazy" decoding="async"
+                     alt="A Tech Tycoon trainer speaking with a microphone to a hall of teachers seated at desks" />
+              </div>
+            </div>
+            <figcaption>A live AI training session with teachers</figcaption>
+          </figure>
+          <figure class="ph ph-wide">
+            <div class="ph-float">
+              <div class="ph-frame">
+                <img src="assets/teachers-group-photo.jpg" width="1600" height="739" loading="lazy" decoding="async"
+                     alt="A large group of teachers and professors posing together in front of a red brick building with arches" />
+              </div>
+            </div>
+            <figcaption>Teachers and professors together after a training session</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
     <!-- ============ 7. What happens in the session ============ -->
     <section class="session section" id="session" aria-labelledby="session-title">
       <div class="container session-grid">
@@ -794,17 +807,18 @@
             <span class="price-badge"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg> Recommended</span>
             <div class="price-top">
               <span class="price-icon"><svg class="icon" aria-hidden="true"><use href="#i-file"/></svg></span>
-              <h3 class="price-name" id="pkg2-name">Class + Practical Learning Document</h3>
+              <h3 class="price-name" id="pkg2-name">Class + Recorded Video Access + Practical Learning Document</h3>
             </div>
             <p class="price"><span class="price-cur">₹</span>799</p>
             <p class="price-note">One-time fee</p>
             <ul class="price-list">
               <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> Access to the complete AI skill session.</li>
               <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> Everything included in the Class Only package.</li>
+              <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> Recorded video access of the session, so you can rewatch and practise at your own pace.</li>
               <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> Additional learning document with useful AI tools, prompt starters, resources and learning materials.</li>
               <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> Keep the document for future reference.</li>
             </ul>
-            <button type="button" class="btn btn-primary btn-lg btn-block btn-on-dark" data-package="class_doc"><span class="btn-label">Register with Document <span class="nowrap">- ₹799</span></span></button>
+            <button type="button" class="btn btn-primary btn-lg btn-block btn-on-dark" data-package="class_doc"><span class="btn-label">Register with Recording &amp; Document <span class="nowrap">- ₹799</span></span></button>
           </article>
         </div>
 
@@ -895,7 +909,7 @@
                 <input type="radio" name="package" value="class_doc" />
                 <span class="reg-pkg-card">
                   <span class="reg-pkg-tag">Option 2 · Recommended</span>
-                  <span class="reg-pkg-name">Class + Practical Learning Document</span>
+                  <span class="reg-pkg-name">Class + Recorded Video Access + Practical Learning Document</span>
                   <span class="reg-pkg-price">₹799</span>
                 </span>
               </label>
