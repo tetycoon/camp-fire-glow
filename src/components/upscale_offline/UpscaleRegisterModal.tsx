@@ -44,14 +44,17 @@ const UpscaleRegisterModal: React.FC = () => {
     const [gstin, setGstin] = useState("");
     const [companyName, setCompanyName] = useState("");
     const [gstError, setGstError] = useState("");
+    const [wantMaterialsSession, setWantMaterialsSession] = useState(false);
 
-    // Coupon Code State: "RMDAMIABLE" drops price to ₹4,999
+    // Coupon Code State: "AIANTONY", "RMB" (and legacy "RMDAMIABLE") drop price to ₹4,999
+    const VALID_COUPONS = ["AIANTONY", "RMB", "RMDAMIABLE"];
     const [couponInput, setCouponInput] = useState("");
     const [appliedCoupon, setAppliedCoupon] = useState("");
     const [couponError, setCouponError] = useState("");
     const [couponSuccess, setCouponSuccess] = useState("");
 
-    const isCouponValid = appliedCoupon.trim().toUpperCase() === "RMDAMIABLE";
+    const normalizedAppliedCoupon = appliedCoupon.trim().toUpperCase();
+    const isCouponValid = VALID_COUPONS.includes(normalizedAppliedCoupon);
     const currentPrice = isCouponValid ? 4999 : 6499;
     const baseTotal = currentPrice * seatsCount;
 
@@ -64,8 +67,8 @@ const UpscaleRegisterModal: React.FC = () => {
             setCouponError("Please enter a coupon code.");
             return;
         }
-        if (cleaned === "RMDAMIABLE") {
-            setAppliedCoupon("RMDAMIABLE");
+        if (VALID_COUPONS.includes(cleaned)) {
+            setAppliedCoupon(cleaned);
             setCouponSuccess("✓ Coupon applied! ₹1,500 discount unlocked.");
             setCouponError("");
         } else {
@@ -182,7 +185,8 @@ const UpscaleRegisterModal: React.FC = () => {
             companyName: sanitizedCompany,
             gstin: sanitizedGstin,
             seats: seatsCount,
-            coupon: isCouponValid ? "RMDAMIABLE" : ""
+            coupon: isCouponValid ? normalizedAppliedCoupon : "",
+            wantMaterialsSession
         };
 
         try {
@@ -205,7 +209,7 @@ const UpscaleRegisterModal: React.FC = () => {
                 amount: finalAmount,
                 currency: "INR",
                 name: "Tech Tycoon",
-                description: `UPSCALE: 1-Day AI Mastery Chennai ${isCouponValid ? "(Coupon: RMDAMIABLE)" : ""}`,
+                description: `UPSCALE: 1-Day AI Mastery Chennai ${isCouponValid ? `(Coupon: ${normalizedAppliedCoupon})` : ""}`,
                 prefill: {
                     name: sanitizedName,
                     email: sanitizedEmail,
@@ -215,7 +219,8 @@ const UpscaleRegisterModal: React.FC = () => {
                     batch: "OFFLINE_CHENNAI_DEC06",
                     base_amount: String(finalPayableInr),
                     gst_amount: "0",
-                    coupon: isCouponValid ? "RMDAMIABLE" : "NONE",
+                    coupon: isCouponValid ? normalizedAppliedCoupon : "NONE",
+                    materials_session: wantMaterialsSession ? "YES" : "NO",
                     gstin: sanitizedGstin || "N/A",
                     company_name: sanitizedCompany || "N/A",
                 },
@@ -254,7 +259,8 @@ const UpscaleRegisterModal: React.FC = () => {
                                 amount: finalPayableInr,
                                 companyName: sanitizedCompany,
                                 gstin: sanitizedGstin,
-                                coupon: isCouponValid ? "RMDAMIABLE" : ""
+                                coupon: isCouponValid ? normalizedAppliedCoupon : "",
+                                wantMaterialsSession
                             })
                         });
                         const verifyData = await verifyRes.json();
@@ -559,6 +565,24 @@ const UpscaleRegisterModal: React.FC = () => {
                                             </p>
                                         )}
                                     </div>
+                                </div>
+
+                                <div className="flex items-start gap-2.5 p-2.5 rounded-xl bg-blue-50/70 border border-blue-100">
+                                    <input
+                                        type="checkbox"
+                                        id="upscale-materials-session"
+                                        checked={wantMaterialsSession}
+                                        onChange={e => setWantMaterialsSession(e.target.checked)}
+                                        className="mt-0.5 w-3.5 h-3.5 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer shrink-0"
+                                    />
+                                    <label htmlFor="upscale-materials-session" className="cursor-pointer select-none leading-tight">
+                                        <span className="block text-xs font-bold text-slate-800">
+                                            I want Materials session <span className="text-[10px] font-semibold text-slate-400">(Optional)</span>
+                                        </span>
+                                        <span className="block text-[11px] font-medium text-blue-700 mt-0.5">
+                                            Bonus: Includes Claude Materials
+                                        </span>
+                                    </label>
                                 </div>
 
                                 <div className="flex items-start gap-2 px-0.5">

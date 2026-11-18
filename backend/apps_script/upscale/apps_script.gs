@@ -1285,14 +1285,24 @@ function getVerifiedInvoiceRecord(sheet, paymentId, orderId, token, userContact)
 // ------------------------------------------------------------
 // 4. RAZORPAY & SHEET SYNC
 // ------------------------------------------------------------
+const VALID_UPSCALE_COUPONS = ["AIANTONY", "RMB", "RMDAMIABLE"];
+
+function isValidUpscaleCoupon(coupon) {
+  const cleaned = String(coupon || "").trim().toUpperCase();
+  return VALID_UPSCALE_COUPONS.indexOf(cleaned) !== -1;
+}
+
 function validateUpscaleAmount(data) {
   const email = (data.email || "").toString().toLowerCase().trim();
   if (TEST_EMAILS.indexOf(email) !== -1 && Number(data.amount) === 1) return 1;
-  return Math.round(Number(data.amount) || 5899);
+  const seats = Math.max(1, Math.round(Number(data.seats) || 1));
+  const unitPrice = isValidUpscaleCoupon(data.coupon) ? 4999 : 6499;
+  return unitPrice * seats;
 }
 
 function createRazorpayOrder(data) {
   const validAmount = validateUpscaleAmount(data);
+  const couponCode = isValidUpscaleCoupon(data.coupon) ? String(data.coupon).trim().toUpperCase() : "NONE";
   const isIntl = Boolean(data.isInternational || (data.countryCode && data.countryCode !== "+91"));
   const keyId = getRazorpayKeyId(isIntl);
   const keySecret = getScriptSecret(isIntl ? "RAZORPAY_KEY_SECRET_INTL" : "RAZORPAY_KEY_SECRET");
@@ -1307,8 +1317,10 @@ function createRazorpayOrder(data) {
       notes: {
         product_key: "upscale",
         course: "UPSCALE: 1-Day AI Mastery Workshop (Chennai)",
-        base_amount: data.baseAmount || 4999,
-        gst_amount: data.gstAmount || 900
+        base_amount: data.baseAmount || validAmount,
+        gst_amount: data.gstAmount !== undefined ? data.gstAmount : 0,
+        coupon: couponCode,
+        materials_session: data.wantMaterialsSession ? "YES" : "NO"
       }
     }),
     muteHttpExceptions: true
