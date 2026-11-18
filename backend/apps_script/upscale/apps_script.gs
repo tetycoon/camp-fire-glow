@@ -1696,6 +1696,85 @@ function updatePaymentStatusFromWebhook(orderId, paymentId, email, proxySignatur
   return result;
 }
 
+function fetchCapturedPaymentForOrder_(orderId) {
+  const cleanOrderId = String(orderId || "").trim();
+  if (!cleanOrderId) return null;
+
+  const modes = [false, true];
+  for (let m = 0; m < modes.length; m++) {
+    const isIntl = modes[m];
+    let keyId = "";
+    let keySecret = "";
+    try {
+      keyId = getRazorpayKeyId(isIntl);
+      keySecret = getScriptSecret(isIntl ? "RAZORPAY_KEY_SECRET_INTL" : "RAZORPAY_KEY_SECRET");
+    } catch (e) {
+      continue;
+    }
+    if (!keyId || !keySecret) continue;
+
+    const credentials = Utilities.base64Encode(keyId + ":" + keySecret);
+    const url = "https://api.razorpay.com/v1/orders/" + encodeURIComponent(cleanOrderId) + "/payments";
+    const res = UrlFetchApp.fetch(url, {
+      method: "get",
+      headers: { Authorization: "Basic " + credentials },
+      muteHttpExceptions: true
+    });
+    if (res.getResponseCode() !== 200) continue;
+
+    const json = JSON.parse(res.getContentText() || "{}");
+    const items = Array.isArray(json.items) ? json.items : [];
+    const captured = items.find(function (p) {
+      return p && String(p.status || "").toLowerCase() === "captured";
+    });
+    if (captured && captured.id) {
+      return { payment: captured, isInternational: isIntl };
+    }
+  }
+  return null;
+}
+
+/**
+ * Reconciles WAITING / INITIATED rows in the sheet against Razorpay /orders/{id}/payments.
+ * Run manually from the Apps Script editor (or on a 5-min trigger) to complete payments
+ * whose browser callback was closed early (e.g., Sujatha's WAITING order).
+ */
+function reconcileWaitingUpscaleOrders() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  assertSpreadsheetIsolation(ss);
+  const sheet = ss.getSheetByName(SHEET_NAME_REG) || ss.getSheets()[0];
+  const rows = sheet.getDataRange().getValues();
+  const results = [];
+
+  for (let i = 1; i < rows.length; i++) {
+    const rowStatus = String(rows[i][7] || "").trim().toUpperCase();
+    const rowOrderId = String(rows[i][8] || "").trim();
+    const rowPayId = String(rows[i][9] || "").trim();
+    const rowWaitStatus = String(rows[i][10] || "").trim().toUpperCase();
+    const rowEmail = String(rows[i][2] || "").trim();
+
+    if (!rowOrderId || rowPayId) continue;
+    if (rowStatus !== "INITIATED" && rowWaitStatus !== "WAITING") continue;
+
+    const match = fetchCapturedPaymentForOrder_(rowOrderId);
+    if (!match) continue;
+
+    const pay = match.payment;
+    const paidInr = Math.round(Number(pay.amount || 0) / 100);
+    const res = processVerifiedUpscalePayment(
+      rowOrderId,
+      pay.id,
+      match.isInternational,
+      paidInr,
+      { email: pay.email || rowEmail, notes: pay.notes || {} }
+    );
+    results.push({ row: i + 1, orderId: rowOrderId, paymentId: pay.id, result: res });
+  }
+
+  Logger.log("Reconciled waiting orders: " + JSON.stringify(results));
+  return results;
+}
+
 // ------------------------------------------------------------
 // 5. HELPER FUNCTIONS
 // ------------------------------------------------------------
