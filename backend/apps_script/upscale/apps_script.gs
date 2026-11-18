@@ -915,25 +915,25 @@ function sendMasterclassEmail(email, name, sessionDate, sessionTime, totalAmount
   const timeVal = sessionTime || "9:00 AM — 5:30 PM";
   const courseTitle = "AI Business Generative Model — Level-2 Offline AI Workshop (Chennai)";
 
-  // 1. Sync with FunnelsDone Private Integration API & get official Invoice Number
-  const fdInvoiceNo = syncInvoiceWithFunnelsDone(name, email, phone, "UPSCALE: Level-2 Offline AI Workshop (Chennai)", totalAmount || 5899, paymentId, orderId);
+  // 1. Sync with FunnelsDone Private Integration API & get official Invoice Number (optional)
+  let fdInvoiceNo = null;
+  try {
+    fdInvoiceNo = syncInvoiceWithFunnelsDone(name, email, phone, "UPSCALE: Level-2 Offline AI Workshop (Chennai)", totalAmount || 4999, paymentId, orderId);
+  } catch (fdErr) {
+    writeToLogs("FUNNELSDONE_SKIPPED", "FunnelsDone sync skipped/failed for " + paymentId + ": " + fdErr.message);
+  }
+  const effectiveInvoiceNo = fdInvoiceNo || ("TT-" + String(paymentId || orderId || Date.now()).replace(/[^a-zA-Z0-9]/g, "").slice(-8).toUpperCase());
 
   // Staging / Test Isolation Gate: Notification suppression
   if (isNotificationSuppressed() || isAuthorizedLiveTest(email, totalAmount)) {
     writeToLogs("EMAIL_SUPPRESSED", "Email notification suppressed in environment: " + getAppEnvironment() + " for " + email);
-    return { invoiceNumber: fdInvoiceNo, courseTitle: courseTitle, uncertain: false, suppressed: true };
+    return { invoiceNumber: effectiveInvoiceNo, courseTitle: courseTitle, uncertain: false, suppressed: true };
   }
 
-  // If FunnelsDone invoice generation failed/timed out, hold customer confirmation email until reconciliation
-  if (!fdInvoiceNo) {
-    writeToLogs("HOLDING_CONFIRMATION_EMAIL", "Invoice creation uncertain or failed for payment " + paymentId + ". Suppressing speculative email.");
-    return { invoiceNumber: null, courseTitle: courseTitle, uncertain: true };
-  }
-
-  // 2. Generate our side's official GST Tax Invoice PDF attachment
+  // 2. Generate PDF receipt/invoice attachment if available
   let pdfAttachment = null;
   try {
-    pdfAttachment = generateOurGstInvoicePdfBlob(name, email, phone, courseTitle, totalAmount || 5899, paymentId, orderId, fdInvoiceNo);
+    pdfAttachment = generateOurGstInvoicePdfBlob(name, email, phone, courseTitle, totalAmount || 4999, paymentId, orderId, effectiveInvoiceNo);
   } catch (pdfErr) {
     writeToLogs("PDF_GEN_ERROR", pdfErr.message);
   }
@@ -1429,28 +1429,13 @@ function processVerifiedUpscalePayment(orderId, paymentId, isInternational, clie
       let emailResult = { invoiceNumber: null, courseTitle: "AI Business Generative Model — Level-2 Offline AI Workshop (Chennai)", uncertain: false };
       try {
         emailResult = sendMasterclassEmail(email, name, sessionDate, sessionTime, expectedAmountInr, cleanPaymentId, cleanOrderId, phoneClean) || emailResult;
-        if (!emailResult.uncertain) {
-          triggerWhatsAppCampaign(name, email, phoneClean);
-        }
+        triggerWhatsAppCampaign(name, email, phoneClean);
       } catch (err) {
         writeToLogs("EMAIL_OR_WA_ERROR", `Failed email/wa to ${email}: ${err.message}`);
       }
 
-      // If FunnelsDone invoice generation failed/timed out, hold customer confirmation until reconciliation
-      if (emailResult.uncertain || !emailResult.invoiceNumber) {
-        sheet.getRange(targetRowIndex + 1, 8).setValue("PENDING_RECONCILIATION");
-        SpreadsheetApp.flush();
-        writeToLogs("HOLDING_CONFIRMATION_EMAIL", "Invoice creation uncertain or failed for payment " + cleanPaymentId + ". Held for reconciliation.");
-        return {
-          success: true,
-          verified: true,
-          uncertainInvoice: true,
-          paymentId: cleanPaymentId,
-          orderId: cleanOrderId,
-          status: "PENDING_RECONCILIATION",
-          message: "Payment captured but invoice synchronization is uncertain. Held for reconciliation."
-        };
-      }
+      const fallbackRef = "TT-" + String(cleanPaymentId || cleanOrderId || Date.now()).replace(/[^a-zA-Z0-9]/g, "").slice(-8).toUpperCase();
+      const finalInvoiceNo = emailResult.invoiceNumber || fallbackRef;
 
       const isTestTx = isAuthorizedLiveTest(email, expectedAmountInr);
       // Persist status in sheet
@@ -1465,7 +1450,7 @@ function processVerifiedUpscalePayment(orderId, paymentId, isInternational, clie
       invRecord = saveVerifiedInvoiceRecord(
         cleanPaymentId,
         cleanOrderId,
-        emailResult.invoiceNumber,
+        finalInvoiceNo,
         name,
         email,
         phoneClean,
@@ -1754,7 +1739,7 @@ function reconcileWaitingUpscaleOrders() {
     const rowEmail = String(rows[i][2] || "").trim();
 
     if (!rowOrderId || rowPayId) continue;
-    if (rowStatus !== "INITIATED" && rowWaitStatus !== "WAITING") continue;
+    if (rowStatus !== "INITIATED" && rowStatus !== "PENDING_RECONCILIATION" && rowWaitStatus !== "WAITING") continue;
 
     const match = fetchCapturedPaymentForOrder_(rowOrderId);
     if (!match) continue;
