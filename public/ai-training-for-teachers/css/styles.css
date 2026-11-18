@@ -235,7 +235,7 @@ button { cursor: pointer; }
 .hero {
   --hn: 0, 28, 69; /* navy-ink as RGB for the overlay */
   position: relative; overflow: hidden; isolation: isolate;
-  padding: calc(var(--header-h) + 64px) 0 56px;
+  padding: calc(var(--header-h) + 48px) 0 40px;
   background: var(--navy-ink); color: #fff;
 }
 .hero-bg { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
@@ -315,12 +315,13 @@ button { cursor: pointer; }
 }
 @media (max-width: 560px) { .hero-ctas .btn { width: 100%; } }
 
+/* Desktop: hero sizes to its content (no forced full-screen height, which left blank bands on tall screens) */
 @media (min-width: 901px) {
-  .hero { min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; justify-content: center; padding-bottom: 64px; }
+  .hero { padding-bottom: 56px; }
 }
 @media (max-width: 900px) {
   /* Phones and tablets: photo on top, text below on solid navy so it never covers the people */
-  .hero { --media-h: clamp(280px, 70vw, 520px); padding-top: calc(var(--header-h) + var(--media-h) + 8px); }
+  .hero { --media-h: clamp(280px, 70vw, 520px); padding-top: calc(var(--header-h) + var(--media-h) + 8px); padding-bottom: 32px; }
   .hero-bg { bottom: auto; top: var(--header-h); height: var(--media-h); }
   .hero-media img { object-position: 64% 40%; }
   .hero-bg::after { background: linear-gradient(180deg, rgba(var(--hn), 0) 0%, rgba(var(--hn), .1) 60%, var(--navy-ink) 100%); }
