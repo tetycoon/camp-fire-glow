@@ -10,134 +10,13 @@ import {
   Terminal, Shield, Compass, ArrowUpRight
 } from "lucide-react";
 
-import imgEntrepreneur from "../assets/indian_entrepreneur.png";
-import imgAnalytics from "../assets/indian_analytics.png";
+import { courses, courseCategories, type Course } from "../data/courses";
 import event1 from "../assets/event-1.jpg";
 import event2 from "../assets/event-2.jpg";
 import event3 from "../assets/event-3.jpg";
 import event4 from "../assets/event-4.jpg";
 import event7 from "../assets/event-7.jpg";
 import event8 from "../assets/event-8.jpg";
-
-interface Course {
-  id: string;
-  title: string;
-  category: "online" | "offline" | "bootcamp" | "academy";
-  tag: string;
-  intro: string;
-  fees: string;
-  originalFees?: string;
-  date: string;
-  timing: string;
-  format: string;
-  image: string;
-  link: string;
-  isExternal: boolean;
-  highlights: string[];
-}
-
-const courses: Course[] = [
-  {
-    id: "claude-masterclass",
-    title: "Claude 3.5 AI Masterclass",
-    category: "online",
-    tag: "Hot & Trending",
-    intro: "Master Anthropic Claude 3.5 Sonnet, prompt engineering architecture, custom MCP creation, and full web application development with direct guidance in Tamil.",
-    fees: "From ₹499",
-    originalFees: "₹2,499",
-    date: "Every Saturday & Sunday",
-    timing: "5:30 PM – 8:30 PM IST",
-    format: "Online Zoom Live",
-    image: "/images/antony_praveen.jpg",
-    link: "/claude_masterclass",
-    isExternal: false,
-    highlights: [
-      "Custom Model Context Protocol (MCP) server creation",
-      "Claude Code CLI & Automated Software Engineering",
-      "100% Tamil & English live interactive Q&A"
-    ]
-  },
-  {
-    id: "ai-secrets",
-    title: "AI Secrets Revealed & Business Automation",
-    category: "online",
-    tag: "Most Popular",
-    intro: "A specialized 3-hour foundational session covering ChatGPT personalization, prompt frameworks, and full business setup with 10+ practical AI tools.",
-    fees: "₹99",
-    originalFees: "₹1,999",
-    date: "Upcoming Saturday",
-    timing: "6:00 PM – 9:00 PM IST",
-    format: "Online Live Virtual",
-    image: imgEntrepreneur,
-    link: "/ai_masterclass",
-    isExternal: false,
-    highlights: [
-      "Brand identity generation: Name, logo, voice & video",
-      "Lead generation & automated customer follow-ups",
-      "Hands-on practice with top 10+ AI productivity tools"
-    ]
-  },
-  {
-    id: "upscale-offline",
-    title: "AI Business Principles (Chennai In-Person)",
-    category: "offline",
-    tag: "Offline Workshop (Chennai)",
-    intro: "Master the 9 pillars of Business Generative Models in an 8-hour executive deep dive. Build your complete automated AI system live at the venue.",
-    fees: "₹4,999",
-    originalFees: "₹9,999",
-    date: "Sunday, Oct 11, 2026",
-    timing: "9:00 AM – 5:30 PM IST",
-    format: "Hotel Vestin Park, Egmore",
-    image: "/images/upscale_offline_banner.png",
-    link: "/upscale",
-    isExternal: false,
-    highlights: [
-      "Live 1-on-1 machine debugging with Antony Praveen",
-      "Executive buffet lunch & morning/evening high tea included",
-      "Strictly limited to 30 seats for focused personal mentoring"
-    ]
-  },
-  {
-    id: "advanced-masterclass",
-    title: "Mastering AI Business Generative Models",
-    category: "online",
-    tag: "Executive Advanced",
-    intro: "The definitive 4-day intensive for founders, operators, and business leaders seeking multi-agent orchestration and automated customer funnels.",
-    fees: "₹4,999",
-    originalFees: "₹14,999",
-    date: "Live (4 Weekend Days)",
-    timing: "6:00 PM – 9:00 PM IST",
-    format: "Online Executive Studio",
-    image: imgAnalytics,
-    link: "/advanced_masterclass/",
-    isExternal: true,
-    highlights: [
-      "Enterprise autonomous workflows with Make & Zapier",
-      "High-converting AI sales copy and video generation",
-      "Strategic roadmap to scale operational margins by 2x"
-    ]
-  },
-  {
-    id: "academy",
-    title: "Tech Tycoon AI Academy (Lifetime Mentorship)",
-    category: "academy",
-    tag: "Pre-Register (50% Off)",
-    intro: "Continuous, lifetime curriculum covering cutting-edge AI agent orchestration, business generative frameworks, and continuous weekly updates.",
-    fees: "From ₹2,499",
-    originalFees: "₹4,999",
-    date: "Admissions Open",
-    timing: "Lifetime Access & Updates",
-    format: "Private Portal + Community",
-    image: "/images/AI_Secrets_Revealed_Banner.png",
-    link: "/academy",
-    isExternal: false,
-    highlights: [
-      "Lifetime access to all current and future curriculum modules",
-      "Private VIP WhatsApp network with Antony Praveen",
-      "Weekly live mastermind office hours and code updates"
-    ]
-  }
-];
 
 const partners = [
   "Claude 3.5 Sonnet", 
@@ -237,6 +116,111 @@ const faqs = [
   }
 ];
 
+/**
+ * Course card for the homepage catalog. Static landing pages (served from /public)
+ * use a plain <a> so the browser loads the real static page; SPA routes use <Link>.
+ */
+const CourseCard: React.FC<{ course: Course }> = ({ course }) => {
+  const ctaClass =
+    "w-full bg-slate-900 hover:bg-indigo-600 text-white font-bold py-3 rounded-xl text-xs flex items-center justify-center gap-2 transition-colors shadow-sm group/btn focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2";
+  const ctaLabel = (
+    <>
+      <span>View Course</span>
+      <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover/btn:translate-x-1" />
+    </>
+  );
+  const FormatIcon = course.category === "offline" ? MapPin : course.category === "mentorship" ? Users : course.category === "self-paced" ? Laptop : Video;
+
+  return (
+    <article className="bg-white rounded-3xl border border-slate-200/90 overflow-hidden shadow-sm hover:shadow-xl hover:shadow-indigo-900/5 hover:border-indigo-200 transition-all duration-300 hover:-translate-y-1 flex flex-col group">
+      {/* Thumbnail — fixed 16:9 so every card lines up */}
+      <div className="relative aspect-[16/9] overflow-hidden bg-slate-100">
+        <img
+          src={course.image}
+          alt={course.title}
+          loading="lazy"
+          decoding="async"
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent"></div>
+
+        <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-md text-slate-900 text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full shadow-sm">
+          {course.tag}
+        </div>
+
+        <div className="absolute bottom-3 left-3 flex items-center gap-1.5 text-white text-[11px] font-bold drop-shadow">
+          <Clock className="w-3.5 h-3.5" />
+          {course.duration}
+        </div>
+
+        {course.fees && (
+          <div className="absolute bottom-3 right-3 bg-indigo-600 text-white text-xs font-black px-3.5 py-1.5 rounded-xl shadow-md flex items-baseline gap-1.5">
+            {course.fees}
+            {course.originalFees && (
+              <span className="text-[10px] font-semibold text-indigo-200 line-through">{course.originalFees}</span>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Body */}
+      <div className="p-6 flex flex-col flex-1">
+        <div className="flex items-center gap-1.5 text-[11px] font-bold text-indigo-600 mb-3">
+          <FormatIcon className="w-3.5 h-3.5 shrink-0" />
+          <span className="truncate">{course.format}</span>
+        </div>
+
+        <h3 className="text-lg sm:text-xl font-bold text-slate-900 leading-snug mb-2.5 group-hover:text-indigo-600 transition-colors">
+          {course.title}
+        </h3>
+
+        <p className="text-[13px] text-slate-600 leading-relaxed line-clamp-3 mb-5">
+          {course.intro}
+        </p>
+
+        <ul className="space-y-2 mb-6">
+          {course.highlights.map((h, i) => (
+            <li key={i} className="flex items-start gap-2 text-xs text-slate-700 font-medium">
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5" />
+              <span>{h}</span>
+            </li>
+          ))}
+        </ul>
+
+        {/* Footer pinned to bottom so CTAs align across a row */}
+        <div className="mt-auto pt-4 border-t border-slate-100 space-y-3.5">
+          <div className="space-y-1.5 text-[11px] font-semibold text-slate-500">
+            {course.schedule && (
+              <div className="flex items-start gap-1.5">
+                <Calendar className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-px" />
+                <span className="text-slate-700">{course.schedule}</span>
+              </div>
+            )}
+            <div className="flex items-start gap-1.5">
+              <IndianRupee className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-px" />
+              <span>
+                {course.fees && <strong className="text-slate-900">{course.fees}</strong>}
+                {course.fees && course.feeNote && " · "}
+                {course.feeNote}
+              </span>
+            </div>
+          </div>
+
+          {course.isStatic ? (
+            <a href={course.link} className={ctaClass} aria-label={`View course: ${course.title}`}>
+              {ctaLabel}
+            </a>
+          ) : (
+            <Link to={course.link} className={ctaClass} aria-label={`View course: ${course.title}`}>
+              {ctaLabel}
+            </Link>
+          )}
+        </div>
+      </div>
+    </article>
+  );
+};
+
 const Index: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -290,9 +274,16 @@ const Index: React.FC = () => {
     setMobileMenuOpen(false);
   };
 
-  const filteredCourses = activeTab === "all" 
-    ? courses 
+  const filteredCourses = activeTab === "all"
+    ? courses
     : courses.filter(c => c.category === activeTab);
+
+  const categoryTabs = courseCategories
+    .map(cat => ({
+      ...cat,
+      count: cat.id === "all" ? courses.length : courses.filter(c => c.category === cat.id).length,
+    }))
+    .filter(cat => cat.count > 0);
 
   return (
     <div className="min-h-screen bg-[#FDFBF7] text-slate-900 font-sans overflow-x-hidden selection:bg-indigo-600 selection:text-white">
@@ -462,7 +453,7 @@ const Index: React.FC = () => {
                 onClick={() => scrollToSection("programs")} 
                 className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-7 py-4 rounded-xl shadow-lg shadow-indigo-600/25 transition-all hover:shadow-indigo-600/35 hover:-translate-y-0.5 active:scale-95 flex items-center justify-center gap-3 text-sm"
               >
-                <span>Explore All 5 Programs</span>
+                <span>Explore All {courses.length} Programs</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
               <button 
@@ -568,136 +559,65 @@ const Index: React.FC = () => {
       </div>
 
       {/* ── INTERACTIVE FILTERABLE COURSE CATALOG ── */}
-      <section id="programs" className="py-20 px-4 max-w-7xl mx-auto">
-        
+      {/* Course data lives in src/data/courses.ts — keep it in sync with each landing page. */}
+      <section id="programs" className="py-20 px-4 max-w-7xl mx-auto scroll-mt-24">
+
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-          <div>
+        <div className="flex flex-col gap-6 mb-10">
+          <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-600 text-[11px] font-bold uppercase tracking-wider mb-3">
-              Comprehensive Curriculum
+              <BookOpen className="w-3.5 h-3.5" />
+              All {courses.length} Programs In One Place
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight">
-              Featured <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">AI Programs</span>
+              Explore Our <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">AI Courses</span>
             </h2>
-            <p className="text-sm sm:text-base text-slate-600 font-normal mt-2 max-w-xl">
-              From beginner prompt engineering to high-performance agentic pipelines. Choose your program and secure your seat.
+            <p className="text-sm sm:text-base text-slate-600 font-normal mt-2 max-w-2xl">
+              From ₹99 live workshops to 30-day bootcamps, self-paced executive courses and 1-on-1 mentorship. Pick your program and open its page for the full syllabus and registration.
             </p>
           </div>
 
-          {/* Filter Pills */}
-          <div className="flex flex-wrap items-center gap-2 bg-slate-100/80 p-1.5 rounded-2xl border border-slate-200">
-            {[
-              { id: "all", label: "All Programs (5)" },
-              { id: "online", label: "Online Live (3)" },
-              { id: "offline", label: "In-Person Chennai (1)" },
-              { id: "academy", label: "AI Academy (1)" }
-            ].map(tab => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-                  activeTab === tab.id 
-                    ? "bg-white text-indigo-600 shadow-sm" 
-                    : "text-slate-600 hover:text-slate-900"
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
+          {/* Filter Pills — horizontally scrollable on mobile */}
+          <div className="-mx-4 px-4 sm:mx-0 sm:px-0 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <div role="tablist" aria-label="Filter courses" className="inline-flex items-center gap-2 bg-slate-100/80 p-1.5 rounded-2xl border border-slate-200 whitespace-nowrap">
+              {categoryTabs.map(tab => (
+                <button
+                  key={tab.id}
+                  role="tab"
+                  aria-selected={activeTab === tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                    activeTab === tab.id
+                      ? "bg-white text-indigo-600 shadow-sm"
+                      : "text-slate-600 hover:text-slate-900"
+                  }`}
+                >
+                  {tab.label} <span className={activeTab === tab.id ? "text-indigo-400" : "text-slate-400"}>({tab.count})</span>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
         {/* Course Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {filteredCourses.map((course) => (
-            <div 
-              key={course.id} 
-              className="bg-white rounded-3xl border border-slate-200/90 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between group"
-            >
-              <div>
-                {/* Thumbnail Header */}
-                <div className="relative h-48 sm:h-52 overflow-hidden bg-slate-100">
-                  <img 
-                    src={course.image} 
-                    alt={course.title} 
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent"></div>
-                  
-                  {/* Badge */}
-                  <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-md text-slate-900 text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full shadow-sm">
-                    {course.tag}
-                  </div>
-
-                  {/* Pricing Badge */}
-                  <div className="absolute bottom-3 right-3 bg-indigo-600 text-white text-xs font-black px-3.5 py-1.5 rounded-xl shadow-md">
-                    {course.fees}
-                  </div>
-                </div>
-
-                {/* Body Content */}
-                <div className="p-6">
-                  {/* Format & Schedule meta */}
-                  <div className="flex items-center justify-between text-[11px] font-bold text-slate-500 mb-3 pb-3 border-b border-slate-100">
-                    <span className="flex items-center gap-1.5 text-indigo-600">
-                      <Video className="w-3.5 h-3.5" />
-                      {course.format}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Clock className="w-3.5 h-3.5" />
-                      {course.timing}
-                    </span>
-                  </div>
-
-                  {/* Title */}
-                  <h3 className="text-xl font-bold text-slate-900 leading-snug mb-2.5 group-hover:text-indigo-600 transition-colors">
-                    {course.title}
-                  </h3>
-
-                  {/* Intro */}
-                  <p className="text-xs text-slate-600 leading-relaxed line-clamp-3 mb-5 font-normal">
-                    {course.intro}
-                  </p>
-
-                  {/* Key Highlights */}
-                  <div className="space-y-2 mb-6">
-                    {course.highlights.map((h, i) => (
-                      <div key={i} className="flex items-start gap-2 text-[11px] text-slate-700 font-medium">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5" />
-                        <span>{h}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Bottom Action Footer */}
-              <div className="p-6 pt-0">
-                <div className="mb-3.5 text-[11px] font-semibold text-slate-500 flex items-center gap-1.5">
-                  <Calendar className="w-3.5 h-3.5 text-slate-400" />
-                  <span>Next Batch: <strong className="text-slate-800">{course.date}</strong></span>
-                </div>
-
-                {course.isExternal ? (
-                  <a 
-                    href={course.link}
-                    className="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-3 rounded-xl text-xs flex items-center justify-center gap-2 transition-colors"
-                  >
-                    <span>View Curriculum & Details</span>
-                    <ExternalLink className="w-3.5 h-3.5" />
-                  </a>
-                ) : (
-                  <Link 
-                    to={course.link}
-                    className="w-full bg-slate-900 hover:bg-indigo-600 text-white font-bold py-3 rounded-xl text-xs flex items-center justify-center gap-2 transition-colors shadow-sm group/btn"
-                  >
-                    <span>{course.id === "bootcamp" ? "Enquire for Batch" : "View Details & Register"}</span>
-                    <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover/btn:translate-x-1" />
-                  </Link>
-                )}
-              </div>
-            </div>
+            <CourseCard key={course.id} course={course} />
           ))}
+        </div>
+
+        {/* Help line */}
+        <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-3 text-center text-sm text-slate-600">
+          <span>Not sure which program fits you?</span>
+          <a
+            href="https://wa.me/917010340494?text=Hi%20Tech%20Tycoon%20team,%20please%20help%20me%20choose%20the%20right%20course"
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2 font-bold text-emerald-700 hover:text-emerald-800 underline underline-offset-4"
+          >
+            <MessageSquare className="w-4 h-4" />
+            Ask us on WhatsApp
+          </a>
         </div>
       </section>
 
@@ -1032,11 +952,15 @@ const Index: React.FC = () => {
               Our Programs
             </h4>
             <ul className="space-y-2.5 text-xs text-slate-600 font-medium">
-              <li><Link to="/claude_masterclass" className="hover:text-indigo-600 transition-colors">Claude 3.5 Masterclass</Link></li>
-              <li><Link to="/ai_masterclass" className="hover:text-indigo-600 transition-colors">AI Secrets Revealed (₹99)</Link></li>
-              <li><Link to="/upscale" className="hover:text-indigo-600 transition-colors">AI Business Workshop (Chennai)</Link></li>
-              <li><a href="/advanced_masterclass/" className="hover:text-indigo-600 transition-colors">Executive Generative Models</a></li>
-              <li><Link to="/academy" className="hover:text-indigo-600 transition-colors">Tech Tycoon AI Academy</Link></li>
+              {courses.map(c => (
+                <li key={c.id}>
+                  {c.isStatic ? (
+                    <a href={c.link} className="hover:text-indigo-600 transition-colors">{c.title}</a>
+                  ) : (
+                    <Link to={c.link} className="hover:text-indigo-600 transition-colors">{c.title}</Link>
+                  )}
+                </li>
+              ))}
             </ul>
           </div>
 
