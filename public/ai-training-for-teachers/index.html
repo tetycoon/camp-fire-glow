@@ -1,0 +1,978 @@
+<!doctype html>
+<html lang="en-IN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- ============ SEO ============ -->
+  <title>AI Skills for Teachers and Professors | Tech Tycoon Digital Solution LLP</title>
+  <meta name="description" content="A practical AI skill session for teachers and professors. Plan lessons, build slides, set question papers and give feedback faster." />
+  <!-- Live address of this page -->
+  <link rel="canonical" href="https://course.techtycoon.in/ai-training-for-teachers/" />
+  <meta name="theme-color" content="#003884" />
+
+  <!-- ============ Social sharing ============ -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Tech Tycoon Digital Solution LLP" />
+  <meta property="og:title" content="AI Skills for Teachers and Professors" />
+  <meta property="og:description" content="Spend less time on paperwork. Spend more time teaching. A practical AI skill session for teachers and professors." />
+  <meta property="og:url" content="https://course.techtycoon.in/ai-training-for-teachers/" />
+  <meta property="og:image" content="https://course.techtycoon.in/ai-training-for-teachers/assets/og-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <link rel="icon" type="image/png" href="assets/favicon.png" />
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+
+  <!-- ============ Fonts: two families only ============ -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap" />
+
+  <link rel="stylesheet" href="css/styles.css" />
+
+  <!-- Runs before paint: marks JS as on, decides if the preloader should show -->
+  <script>
+    (function () {
+      var d = document.documentElement;
+      d.classList.add('js');
+      try {
+        var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var c = navigator.connection;
+        var slow = c && (c.saveData || /(^|-)2g/.test(c.effectiveType || ''));
+        // 'anim' hides elements that will animate in. js/main.js removes it if GSAP is missing.
+        if (!reduced) d.classList.add('anim');
+        if (!reduced && !slow && !sessionStorage.getItem('tt_preloader')) {
+          d.classList.add('preload');
+          sessionStorage.setItem('tt_preloader', '1');
+        }
+      } catch (e) {}
+      // Safety nets: never block or hide the page for long, even if scripts fail to load.
+      setTimeout(function () { d.classList.remove('preload'); }, 2600);
+      setTimeout(function () { if (!window.__ttReady) d.classList.remove('anim'); }, 3000);
+    })();
+  </script>
+
+  <!-- ============ Meta Pixel (placeholder) ============
+       1. Replace YOUR_PIXEL_ID below.
+       2. Remove the comment markers around the script.
+       The Lead event fires automatically after a successful form submit (see js/main.js).
+  <script>
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+    document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', 'YOUR_PIXEL_ID');
+    fbq('track', 'PageView');
+  </script>
+  -->
+</head>
+
+<body>
+  <!-- ============ Icon sprite (one line style) ============ -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="16" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+      <symbol id="i-hourglass" viewBox="0 0 24 24"><path d="M6 3h12M6 21h12M7.5 3v2.5c0 2.5 4.5 4 4.5 6.5S7.5 16 7.5 18.5V21M16.5 3v2.5c0 2.5-4.5 4-4.5 6.5s4.5 4 4.5 6.5V21"/></symbol>
+      <symbol id="i-monitor" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></symbol>
+      <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></symbol>
+      <symbol id="i-rupee" viewBox="0 0 24 24"><path d="M7 4h11M7 8.5h11M7 4h3.5a4.5 4.5 0 0 1 0 9H7l8 7"/></symbol>
+      <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+      <symbol id="i-arrow-down" viewBox="0 0 24 24"><path d="M12 5v14M6 13l6 6 6-6"/></symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15H4.5A1.5 1.5 0 0 1 3 13.5v-9A1.5 1.5 0 0 1 4.5 3h9A1.5 1.5 0 0 1 15 4.5V5"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+      <symbol id="i-flip" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 15.4-6.4L21 8M21 3v5h-5M21 12a9 9 0 0 1-15.4 6.4L3 16M3 21v-5h5"/></symbol>
+      <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6l8-3z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></symbol>
+      <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></symbol>
+      <symbol id="i-search-check" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="7"/><path d="M21 21l-5.5-5.5M7.5 10.5l2 2 3.5-3.5"/></symbol>
+      <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="10.5" width="16" height="10.5" rx="2.5"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></symbol>
+      <symbol id="i-chat" viewBox="0 0 24 24"><path d="M20 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20l1.2-4.2A8.5 8.5 0 1 1 20 11.5z"/></symbol>
+      <symbol id="i-replay" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 2.7-6.4L3 8M3 3v5h5"/></symbol>
+      <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3zM19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8L19 16z"/></symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+      <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+      <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></symbol>
+      <symbol id="i-grip" viewBox="0 0 24 24"><path d="M9 7l-4 5 4 5M15 7l4 5-4 5"/></symbol>
+      <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H20v14H5.5A1.5 1.5 0 0 0 4 18.5v-14zM4 18.5A1.5 1.5 0 0 0 5.5 20H20"/></symbol>
+      <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/></symbol>
+      <symbol id="i-message" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4V5z"/><path d="M8 9.5h8M8 12.5h5"/></symbol>
+      <symbol id="i-external" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></symbol>
+      <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol>
+      <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H6.5A1.5 1.5 0 0 0 5 4.5v15A1.5 1.5 0 0 0 6.5 21h11a1.5 1.5 0 0 0 1.5-1.5V8l-5-5z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></symbol>
+      <symbol id="i-pen" viewBox="0 0 24 24"><path d="M4 20l4.5-1 10-10a2.1 2.1 0 0 0-3-3l-10 10L4 20z"/><path d="M14 7.5l3 3"/></symbol>
+    </defs>
+  </svg>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- ============ 0. Preloader (first visit per session only) ============ -->
+  <div id="preloader" class="preloader" aria-hidden="true">
+    <div class="preloader-inner">
+      <img src="assets/logo-mark.png" alt="" width="72" height="72" class="preloader-mark" />
+      <p class="preloader-brand">Tech Tycoon</p>
+      <p class="preloader-count"><span id="preloader-num">0</span></p>
+    </div>
+    <button type="button" class="preloader-skip" id="preloader-skip">Skip</button>
+  </div>
+
+
+  <!-- ============ Header ============ -->
+  <header class="site-header" id="top">
+    <div class="container header-inner">
+      <a class="brand" href="#top" aria-label="Tech Tycoon Digital Solution LLP, back to top">
+        <img src="assets/logo-mark.png" alt="" width="40" height="40" class="brand-mark" />
+        <span class="brand-text">
+          <span class="brand-name">Tech Tycoon</span>
+          <span class="brand-sub">Digital Solution LLP</span>
+        </span>
+      </a>
+      <nav class="main-nav" aria-label="Main">
+        <a href="#problems">20 ways</a>
+        <a href="#demo">Live demo</a>
+        <a href="#session">The session</a>
+        <a href="#faq">FAQ</a>
+        <a href="#pricing">Pricing</a>
+      </nav>
+      <a class="btn btn-primary btn-sm" href="#pricing" data-register>Reserve My Seat</a>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- ============ 1. Hero ============ -->
+    <section class="hero" id="hero" aria-labelledby="hero-title" aria-describedby="hero-photo-desc">
+      <p class="sr-only" id="hero-photo-desc">Photo: a Tech Tycoon trainer leads a hands-on AI workshop for teachers and professors working on laptops.</p>
+      <div class="hero-bg" aria-hidden="true">
+        <div class="hero-media">
+          <img src="assets/hero-training-1600.jpg"
+               srcset="assets/hero-training-900.jpg 900w, assets/hero-training-1600.jpg 1600w"
+               sizes="100vw" width="1600" height="900" fetchpriority="high" decoding="async" alt="" />
+        </div>
+      </div>
+
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow hero-anim"><span class="hero-rec" aria-hidden="true"></span> AI Powered Professional Development · For Teachers &amp; Professors</p>
+
+          <h1 class="hero-title" id="hero-title">
+            <span class="line"><span class="line-inner">Transform the Way You Teach</span></span>
+            <span class="line"><span class="line-inner text-gradient">with AI.</span></span>
+          </h1>
+
+          <p class="hero-sub hero-anim">Upgrade your teaching skills with the power of Artificial Intelligence. Learn how to use AI to create engaging lessons, prepare smart presentations, simplify academic work, and deliver better learning experiences.</p>
+
+          <h2 class="hero-label hero-anim" id="hero-learn">What You Will Learn</h2>
+          <ul class="hero-benefits hero-anim" aria-labelledby="hero-learn">
+            <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span><strong>AI-Powered Teaching:</strong> Make everyday teaching smarter and more effective.</span></li>
+            <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span><strong>Smart Lesson Planning:</strong> Create lesson plans and teaching materials in minutes.</span></li>
+            <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span><strong>Presentation Creation:</strong> Build professional presentations with AI.</span></li>
+            <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span><strong>Assessment &amp; Evaluation:</strong> Create quizzes, assignments, and learning activities.</span></li>
+            <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span><strong>Academic Productivity:</strong> Save time and improve your daily professional workflow.</span></li>
+          </ul>
+
+          <!-- Each package card opens the registration popup with that option selected -->
+          <h2 class="hero-label hero-anim" id="hero-packages">Choose Your Learning Package</h2>
+          <div class="hero-fees hero-anim" role="group" aria-labelledby="hero-packages">
+            <button type="button" class="hero-fee" data-register data-package="class">
+              <span class="hero-fee-tag">Option 1</span>
+              <span class="hero-fee-price">₹299</span>
+              <span class="hero-fee-name">Class Only</span>
+            </button>
+            <button type="button" class="hero-fee hero-fee-featured" data-register data-package="class_doc">
+              <span class="hero-fee-tag">Option 2<span class="hero-fee-rec"> · Recommended</span></span>
+              <span class="hero-fee-price">₹799</span>
+              <span class="hero-fee-name">Class + Practical Learning Document</span>
+            </button>
+          </div>
+
+          <div class="hero-ctas hero-anim">
+            <a class="btn btn-primary btn-lg" href="#pricing" data-register>
+              Reserve Your Seat <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"/></svg>
+            </a>
+            <a class="btn btn-ghost btn-lg" href="#pricing">
+              Compare Packages
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 2. Who it is for ============ -->
+    <section class="roles" aria-label="Who this session is for">
+      <div class="marquee">
+        <ul class="marquee-track">
+          <li>School Teachers</li><li>College Lecturers</li><li>Professors</li><li>Heads of Department</li><li>Academic Coordinators</li><li>Trainers</li><li>Principals</li>
+        </ul>
+        <ul class="marquee-track" aria-hidden="true">
+          <li>School Teachers</li><li>College Lecturers</li><li>Professors</li><li>Heads of Department</li><li>Academic Coordinators</li><li>Trainers</li><li>Principals</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============ 3. The pain ============ -->
+    <section class="pain" aria-labelledby="pain-title">
+      <div class="container pain-inner">
+        <h2 class="pain-title" id="pain-title" data-reveal>Does your week look like this?</h2>
+        <ul class="pain-lines">
+          <li class="pain-line">Lesson plans <em>at night.</em></li>
+          <li class="pain-line">Question papers <em>before exams.</em></li>
+          <li class="pain-line">Feedback on <em>pile after pile</em> of assignments.</li>
+          <li class="pain-line">Reports, letters and files that <em>never end.</em></li>
+        </ul>
+      </div>
+      <div class="container pain-answer-wrap">
+        <p class="pain-answer">There is a <span class="text-gradient">smarter way</span> to start.</p>
+        <p class="pain-answer-sub" data-reveal>Let AI write the first draft. You check it, improve it and teach.</p>
+      </div>
+    </section>
+
+    <!-- ============ 4. The 20 problems (star section) ============ -->
+    <section class="problems" id="problems" aria-labelledby="problems-title">
+      <div class="problems-pin">
+        <div class="container problems-head">
+          <div>
+            <p class="eyebrow">The heart of the session</p>
+            <h2 class="section-title" id="problems-title" data-title>20 daily teaching problems.<br /><span class="text-gradient">20 ways AI can help.</span></h2>
+            <p class="problems-hint"><span class="hint-desktop">Scroll to move through the cards. </span>Click or tap a card to see a prompt you can copy and try.</p>
+          </div>
+          <div class="seen">
+            <p class="seen-num"><span id="seen-count">00</span><small>/20</small></p>
+            <p class="seen-label">ideas seen</p>
+            <div class="seen-bar" aria-hidden="true"><span id="seen-bar"></span></div>
+          </div>
+        </div>
+
+        <div class="container">
+          <div class="tabs" role="tablist" aria-label="Problem areas">
+            <button class="tab is-active" role="tab" aria-selected="true" aria-controls="ptrack" data-tab="teaching" id="tab-teaching">Teaching <span>8</span></button>
+            <button class="tab" role="tab" aria-selected="false" aria-controls="ptrack" data-tab="assessment" id="tab-assessment" tabindex="-1">Assessment <span>4</span></button>
+            <button class="tab" role="tab" aria-selected="false" aria-controls="ptrack" data-tab="admin" id="tab-admin" tabindex="-1">Admin and Communication <span>4</span></button>
+            <button class="tab" role="tab" aria-selected="false" aria-controls="ptrack" data-tab="research" id="tab-research" tabindex="-1">Research and Content <span>4</span></button>
+          </div>
+        </div>
+
+        <div class="ptrack-wrap">
+          <div class="ptrack" id="ptrack" role="tabpanel" aria-labelledby="tab-teaching">
+
+            <!-- Each card: front = problem + AI help, back = prompt starter -->
+            <article class="pcard" data-tab="teaching" data-num="1">
+              <div class="pcard-inner">
+                <div class="pcard-face pcard-front">
+                  <div class="pcard-top"><span class="pcard-num">01</span><span class="pcard-tag">Teaching</span></div>
+                  <h3 class="pcard-problem">Spending hours preparing lesson plans</h3>
+                  <div class="pcard-help"><p class="pcard-label">How AI can help</p><p>Generate structured lesson plans in minutes</p></div>
+                  <button class="pcard-flip" type="button" aria-label="See prompt for: lesson plans"><svg class="icon" aria-hidden="true"><use href="#i-flip"/></svg> See prompt</button>
+                </div>
+                <div class="pcard-face pcard-back">
+                  <p class="pcard-label">Prompt starter · Lesson plans</p>
+                  <p class="pcard-prompt">Create a 45 minute lesson plan on [topic] for [class]. Add objectives, activities and a quick check.</p>
+                  <div class="pcard-actions"><button class="btn-copy" type="button"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg> <span>Copy prompt</span></button><button class="pcard-unflip" type="button" aria-label="Back to problem 1"><svg class="icon" aria-hidden="true"><use href="#i-flip"/></svg> Back</button></div>
+                </div>
+              </div>
+            </article>
+
+            <article class="pcard" data-tab="teaching" data-num="2">
+              <div class="pcard-inner">
+                <div class="pcard-face pcard-front">
+                  <div class="pcard-top"><span class="pcard-num">02</span><span class="pcard-tag">Teaching</span></div>
+                  <h3 class="pcard-problem">Creating PowerPoint presentations</h3>
+                  <div class="pcard-help"><p class="pcard-label">How AI can help</p><p>Build slide outlines, content and visual ideas</p></div>
+                  <button class="pcard-flip" type="button" aria-label="See prompt for: presentations"><svg class="icon" aria-hidden="true"><use href="#i-flip"/></svg> See prompt</button>
+                </div>
+                <div class="pcard-face pcard-back">
+                  <p class="pcard-label">Prompt starter · Presentations</p>
+                  <p class="pcard-prompt">Make a 10 slide outline on [topic]. Give key points, one visual idea and speaker notes for each slide.</p>
+                  <div class="pcard-actions"><button class="btn-copy" type="button"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg> <span>Copy prompt</span></button><button class="pcard-unflip" type="button" aria-label="Back to problem 2"><svg class="icon" aria-hidden="true"><use href="#i-flip"/></svg> Back</button></div>
+                </div>
+              </div>
+            </article>
+
+            <article class="pcard" data-tab="assessment" data-num="3">
+              <div class="pcard-inner">
+                <div class="pcard-face pcard-front">
+                  <div class="pcard-top"><span class="pcard-num">03</span><span class="pcard-tag">Assessment</span></div>
+                  <h3 class="pcard-problem">Preparing question papers</h3>
+                  <div class="pcard-help"><p class="pcard-label">How AI can help</p><p>Create MCQs, short answers and essay questions</p></div>
+                  <button class="pcard-flip" type="button" aria-label="See prompt for: question papers"><svg class="icon" aria-hidden="true"><use href="#i-flip"/></svg> See prompt</button>
+                </div>
+                <div class="pcard-face pcard-back">
+                  <p class="pcard-label">Prompt starter · Question papers</p>
+                  <p class="pcard-prompt">Write 10 MCQs, 5 short answers and 2 essay questions on [topic] for [class]. Mark the difficulty.</p>
+                  <div class="pcard-actions"><button class="btn-copy" type="button"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg> <span>Copy prompt</span></button><button class="pcard-unflip" type="button" aria-label="Back to problem 3"><svg class="icon" aria-hidden="true"><use href="#i-flip"/></svg> Back</button></div>
+                </div>
+              </div>
+            </article>
+
+            <article class="pcard" data-tab="assessment" data-num="4">
+              <div class="pcard-inner">
+                <div class="pcard-face pcard-front">
+                  <div class="pcard-top"><span class="pcard-num">04</span><span class="pcard-tag">Assessment</span></div>
+                  <h3 class="pcard-problem">Evaluating student assignments</h3>
+                  <div class="pcard-help"><p class="pcard-label">How AI can help</p><p>Draft feedback using assessment rubrics</p></div>
+                  <button class="pcard-flip" type="button" aria-label="See prompt for: feedback"><svg class="icon" aria-hidden="true"><use href="#i-flip"/></svg> See prompt</button>
+                </div>
+                <div class="pcard-face pcard-back">
+                  <p class="pcard-label">Prompt starter · Feedback</p>
+                  <p class="pcard-prompt">Using this rubric, draft kind and specific feedback for the work below. Do not use student names.</p>
+                  <div class="pcard-actions"><button class="btn-copy" type="button"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg> <span>Copy prompt</span></button><button class="pcard-unflip" type="button" aria-label="Back to problem 4"><svg class="icon" aria-hidden="true"><use href="#i-flip"/></svg> Back</button></div>
+                </div>
+              </div>
+            </article>
+
+            <article class="pcard" data-tab="teaching" data-num="5">
+              <div class="pcard-inner">
+                <div class="pcard-face pcard-front">
+                  <div class="pcard-top"><span class="pcard-num">05</span><span class="pcard-tag">Teaching</span></div>
+                  <h3 class="pcard-problem">Preparing teaching materials</h3>
+                  <div class="pcard-help"><p class="pcard-label">How AI can help</p><p>Create notes, summaries and worksheets</p></div>
+                  <button class="pcard-flip" type="button" aria-label="See prompt for: teaching materials"><svg class="icon" aria-hidden="true"><use href="#i-flip"/></svg> See prompt</button>
+                </div>
+                <div class="pcard-face pcard-back">
+                  <p class="pcard-label">Prompt starter · Teaching materials</p>
+                  <p class="pcard-prompt">Make one page notes, a short summary and a 10 question worksheet on [topic].</p>
+                  <div class="pcard-actions"><button class="btn-copy" type="button"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg> <span>Copy prompt</span></button><button class="pcard-unflip" type="button" aria-label="Back to problem 5"><svg class="icon" aria-hidden="true"><use href="#i-flip"/></svg> Back</button></div>
+                </div>
+              </div>
+            </article>
+
+            <article class="pcard" data-tab="teaching" data-num="6">
+              <div class="pcard-inner">
+                <div class="pcard-face pcard-front">
+                  <div class="pcard-top"><span class="pcard-num">06</span><span class="pcard-tag">Teaching</span></div>
+                  <h3 class="pcard-problem">Explaining difficult concepts</h3>
+                  <div class="pcard-help"><p class="pcard-label">How AI can help</p><p>Generate simple explanations and examples</p></div>
+                  <button class="pcard-flip" type="button" aria-label="See prompt for: hard concepts"><svg class="icon" aria-hidden="true"><use href="#i-flip"/></svg> See prompt</button>
+                </div>
+                <div class="pcard-face pcard-back">
+                  <p class="pcard-label">Prompt starter · Hard concepts</p>
+                  <p class="pcard-prompt">Explain [concept] in simple words. Give two real life examples for [class].</p>
+                  <div class="pcard-actions"><button class="btn-copy" type="button"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg> <span>Copy prompt</span></button><button class="pcard-unflip" type="button" aria-label="Back to problem 6"><svg class="icon" aria-hidden="true"><use href="#i-flip"/></svg> Back</button></div>
+                </div>
+              </div>
+            </article>
+
+            <article class="pcard" data-tab="teaching" data-num="7">
+              <div class="pcard-inner">
+                <div class="pcard-face pcard-front">
+                  <div class="pcard-top"><span class="pcard-num">07</span><span class="pcard-tag">Teaching</span></div>
+                  <h3 class="pcard-problem">Teaching students with different learning levels</h3>
+                  <div class="pcard-help"><p class="pcard-label">How AI can help</p><p>Adapt materials for slow, average and advanced learners</p></div>
+                  <button class="pcard-flip" type="button" aria-label="See prompt for: learning levels"><svg class="icon" aria-hidden="true"><use href="#i-flip"/></svg> See prompt</button>
+                </div>
+                <div class="pcard-face pcard-back">
+                  <p class="pcard-label">Prompt starter · Learning levels</p>
+                  <p class="pcard-prompt">Rewrite this lesson for slow, average and advanced learners. Keep the same topic.</p>
+                  <div class="pcard-actions"><button class="btn-copy" type="button"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg> <span>Copy prompt</span></button><button class="pcard-unflip" type="button" aria-label="Back to problem 7"><svg class="icon" aria-hidden="true"><use href="#i-flip"/></svg> Back</button></div>
+                </div>
+              </div>
+            </article>
+
+            <article class="pcard" data-tab="teaching" data-num="8">
+              <div class="pcard-inner">
+                <div class="pcard-face pcard-front">
+                  <div class="pcard-top"><span class="pcard-num">08</span><span class="pcard-tag">Teaching</span></div>
+                  <h3 class="pcard-problem">Creating engaging classroom activities</h3>
+                  <div class="pcard-help"><p class="pcard-label">How AI can help</p><p>Design quizzes, games and group exercises</p></div>
+                  <button class="pcard-flip" type="button" aria-label="See prompt for: activities"><svg class="icon" aria-hidden="true"><use href="#i-flip"/></svg> See prompt</button>
+                </div>
+                <div class="pcard-face pcard-back">
+                  <p class="pcard-label">Prompt starter · Activities</p>
+                  <p class="pcard-prompt">Design a 15 minute group activity and a 5 question quiz game on [topic].</p>
+                  <div class="pcard-actions"><button class="btn-copy" type="button"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg> <span>Copy prompt</span></button><button class="pcard-unflip" type="button" aria-label="Back to problem 8"><svg class="icon" aria-hidden="true"><use href="#i-flip"/></svg> Back</button></div>
+                </div>
+              </div>
+            </article>
+
+            <article class="pcard" data-tab="admin" data-num="9">
+              <div class="pcard-inner">
+                <div class="pcard-face pcard-front">
+                  <div class="pcard-top"><span class="pcard-num">09</span><span class="pcard-tag">Admin</span></div>
+                  <h3 class="pcard-problem">Writing emails and official letters</h3>
+                  <div class="pcard-help"><p class="pcard-label">How AI can help</p><p>Draft professional communication</p></div>
+                  <button class="pcard-flip" type="button" aria-label="See prompt for: emails and letters"><svg class="icon" aria-hidden="true"><use href="#i-flip"/></svg> See prompt</button>
+                </div>
+                <div class="pcard-face pcard-back">
+                  <p class="pcard-label">Prompt starter · Emails and letters</p>
+                  <p class="pcard-prompt">Draft a polite and short email to [person] about [subject]. Keep it formal.</p>
+                  <div class="pcard-actions"><button class="btn-copy" type="button"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg> <span>Copy prompt</span></button><button class="pcard-unflip" type="button" aria-label="Back to problem 9"><svg class="icon" aria-hidden="true"><use href="#i-flip"/></svg> Back</button></div>
+                </div>
+              </div>
+            </article>
+
+            <article class="pcard" data-tab="assessment" data-num="10">
+              <div class="pcard-inner">
+                <div class="pcard-face pcard-front">
+                  <div class="pcard-top"><span class="pcard-num">10</span><span class="pcard-tag">Assessment</span></div>
+                  <h3 class="pcard-problem">Preparing student progress reports</h3>
+                  <div class="pcard-help"><p class="pcard-label">How AI can help</p><p>Summarize marks and suggest improvement areas</p></div>
+                  <button class="pcard-flip" type="button" aria-label="See prompt for: progress reports"><svg class="icon" aria-hidden="true"><use href="#i-flip"/></svg> See prompt</button>
+                </div>
+                <div class="pcard-face pcard-back">
+                  <p class="pcard-label">Prompt starter · Progress reports</p>
+                  <p class="pcard-prompt">Here are marks without names. Summarize them and suggest 3 ways to improve each group.</p>
+                  <div class="pcard-actions"><button class="btn-copy" type="button"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg> <span>Copy prompt</span></button><button class="pcard-unflip" type="button" aria-label="Back to problem 10"><svg class="icon" aria-hidden="true"><use href="#i-flip"/></svg> Back</button></div>
+                </div>
+              </div>
+            </article>
+
+            <article class="pcard" data-tab="admin" data-num="11">
+              <div class="pcard-inner">
+                <div class="pcard-face pcard-front">
+                  <div class="pcard-top"><span class="pcard-num">11</span><span class="pcard-tag">Admin</span></div>
+                  <h3 class="pcard-problem">Handling administrative paperwork</h3>
+                  <div class="pcard-help"><p class="pcard-label">How AI can help</p><p>Draft reports, meeting minutes and documentation</p></div>
+                  <button class="pcard-flip" type="button" aria-label="See prompt for: admin paperwork"><svg class="icon" aria-hidden="true"><use href="#i-flip"/></svg> See prompt</button>
+                </div>
+                <div class="pcard-face pcard-back">
+                  <p class="pcard-label">Prompt starter · Admin paperwork</p>
+                  <p class="pcard-prompt">Turn these notes into meeting minutes with actions, owners and dates.</p>
+                  <div class="pcard-actions"><button class="btn-copy" type="button"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg> <span>Copy prompt</span></button><button class="pcard-unflip" type="button" aria-label="Back to problem 11"><svg class="icon" aria-hidden="true"><use href="#i-flip"/></svg> Back</button></div>
+                </div>
+              </div>
+            </article>
+
+            <article class="pcard" data-tab="research" data-num="12">
+              <div class="pcard-inner">
+                <div class="pcard-face pcard-front">
+                  <div class="pcard-top"><span class="pcard-num">12</span><span class="pcard-tag">Research</span></div>
+                  <h3 class="pcard-problem">Finding reliable teaching resources</h3>
+                  <div class="pcard-help"><p class="pcard-label">How AI can help</p><p>Support research and resource discovery</p></div>
+                  <button class="pcard-flip" type="button" aria-label="See prompt for: resources"><svg class="icon" aria-hidden="true"><use href="#i-flip"/></svg> See prompt</button>
+                </div>
+                <div class="pcard-face pcard-back">
+                  <p class="pcard-label">Prompt starter · Resources</p>
+                  <p class="pcard-prompt">Suggest the types of reliable sources for teaching [topic]. Tell me what to check before I use them.</p>
+                  <div class="pcard-actions"><button class="btn-copy" type="button"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg> <span>Copy prompt</span></button><button class="pcard-unflip" type="button" aria-label="Back to problem 12"><svg class="icon" aria-hidden="true"><use href="#i-flip"/></svg> Back</button></div>
+                </div>
+              </div>
+            </article>
+
+            <article class="pcard" data-tab="teaching" data-num="13">
+              <div class="pcard-inner">
+                <div class="pcard-face pcard-front">
+                  <div class="pcard-top"><span class="pcard-num">13</span><span class="pcard-tag">Teaching</span></div>
+                  <h3 class="pcard-problem">Creating assignments and projects</h3>
+                  <div class="pcard-help"><p class="pcard-label">How AI can help</p><p>Develop practical tasks and project ideas</p></div>
+                  <button class="pcard-flip" type="button" aria-label="See prompt for: assignments"><svg class="icon" aria-hidden="true"><use href="#i-flip"/></svg> See prompt</button>
+                </div>
+                <div class="pcard-face pcard-back">
+                  <p class="pcard-label">Prompt starter · Assignments</p>
+                  <p class="pcard-prompt">Create a 2 week project on [topic] with steps, outputs and a marking guide.</p>
+                  <div class="pcard-actions"><button class="btn-copy" type="button"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg> <span>Copy prompt</span></button><button class="pcard-unflip" type="button" aria-label="Back to problem 13"><svg class="icon" aria-hidden="true"><use href="#i-flip"/></svg> Back</button></div>
+                </div>
+              </div>
+            </article>
+
+            <article class="pcard" data-tab="research" data-num="14">
+              <div class="pcard-inner">
+                <div class="pcard-face pcard-front">
+                  <div class="pcard-top"><span class="pcard-num">14</span><span class="pcard-tag">Research</span></div>
+                  <h3 class="pcard-problem">Managing large amounts of study material</h3>
+                  <div class="pcard-help"><p class="pcard-label">How AI can help</p><p>Summarize PDFs, textbooks and notes</p></div>
+                  <button class="pcard-flip" type="button" aria-label="See prompt for: study material"><svg class="icon" aria-hidden="true"><use href="#i-flip"/></svg> See prompt</button>
+                </div>
+                <div class="pcard-face pcard-back">
+                  <p class="pcard-label">Prompt starter · Study material</p>
+                  <p class="pcard-prompt">Summarize this chapter in 10 points. List 5 key terms with simple meanings.</p>
+                  <div class="pcard-actions"><button class="btn-copy" type="button"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg> <span>Copy prompt</span></button><button class="pcard-unflip" type="button" aria-label="Back to problem 14"><svg class="icon" aria-hidden="true"><use href="#i-flip"/></svg> Back</button></div>
+                </div>
+              </div>
+            </article>
+
+            <article class="pcard" data-tab="research" data-num="15">
+              <div class="pcard-inner">
+                <div class="pcard-face pcard-front">
+                  <div class="pcard-top"><span class="pcard-num">15</span><span class="pcard-tag">Research</span></div>
+                  <h3 class="pcard-problem">Preparing research papers</h3>
+                  <div class="pcard-help"><p class="pcard-label">How AI can help</p><p>Support literature review, outlines and language editing</p></div>
+                  <button class="pcard-flip" type="button" aria-label="See prompt for: research papers"><svg class="icon" aria-hidden="true"><use href="#i-flip"/></svg> See prompt</button>
+                </div>
+                <div class="pcard-face pcard-back">
+                  <p class="pcard-label">Prompt starter · Research papers</p>
+                  <p class="pcard-prompt">Help me outline a literature review on [topic]. I will check every citation myself.</p>
+                  <div class="pcard-actions"><button class="btn-copy" type="button"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg> <span>Copy prompt</span></button><button class="pcard-unflip" type="button" aria-label="Back to problem 15"><svg class="icon" aria-hidden="true"><use href="#i-flip"/></svg> Back</button></div>
+                </div>
+              </div>
+            </article>
+
+            <article class="pcard" data-tab="assessment" data-num="16">
+              <div class="pcard-inner">
+                <div class="pcard-face pcard-front">
+                  <div class="pcard-top"><span class="pcard-num">16</span><span class="pcard-tag">Assessment</span></div>
+                  <h3 class="pcard-problem">Analysing student performance</h3>
+                  <div class="pcard-help"><p class="pcard-label">How AI can help</p><p>Identify patterns in marks and attendance</p></div>
+                  <button class="pcard-flip" type="button" aria-label="See prompt for: student performance"><svg class="icon" aria-hidden="true"><use href="#i-flip"/></svg> See prompt</button>
+                </div>
+                <div class="pcard-face pcard-back">
+                  <p class="pcard-label">Prompt starter · Student performance</p>
+                  <p class="pcard-prompt">Look at this table of marks and attendance (no names). What patterns do you see?</p>
+                  <div class="pcard-actions"><button class="btn-copy" type="button"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg> <span>Copy prompt</span></button><button class="pcard-unflip" type="button" aria-label="Back to problem 16"><svg class="icon" aria-hidden="true"><use href="#i-flip"/></svg> Back</button></div>
+                </div>
+              </div>
+            </article>
+
+            <article class="pcard" data-tab="research" data-num="17">
+              <div class="pcard-inner">
+                <div class="pcard-face pcard-front">
+                  <div class="pcard-top"><span class="pcard-num">17</span><span class="pcard-tag">Content</span></div>
+                  <h3 class="pcard-problem">Creating educational videos</h3>
+                  <div class="pcard-help"><p class="pcard-label">How AI can help</p><p>Draft scripts, storyboards and captions</p></div>
+                  <button class="pcard-flip" type="button" aria-label="See prompt for: educational videos"><svg class="icon" aria-hidden="true"><use href="#i-flip"/></svg> See prompt</button>
+                </div>
+                <div class="pcard-face pcard-back">
+                  <p class="pcard-label">Prompt starter · Educational videos</p>
+                  <p class="pcard-prompt">Write a 3 minute video script on [topic]. Add scene notes and captions.</p>
+                  <div class="pcard-actions"><button class="btn-copy" type="button"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg> <span>Copy prompt</span></button><button class="pcard-unflip" type="button" aria-label="Back to problem 17"><svg class="icon" aria-hidden="true"><use href="#i-flip"/></svg> Back</button></div>
+                </div>
+              </div>
+            </article>
+
+            <article class="pcard" data-tab="admin" data-num="18">
+              <div class="pcard-inner">
+                <div class="pcard-face pcard-front">
+                  <div class="pcard-top"><span class="pcard-num">18</span><span class="pcard-tag">Admin</span></div>
+                  <h3 class="pcard-problem">Preparing for inspections and accreditation</h3>
+                  <div class="pcard-help"><p class="pcard-label">How AI can help</p><p>Organize evidence and draft documentation</p></div>
+                  <button class="pcard-flip" type="button" aria-label="See prompt for: accreditation"><svg class="icon" aria-hidden="true"><use href="#i-flip"/></svg> See prompt</button>
+                </div>
+                <div class="pcard-face pcard-back">
+                  <p class="pcard-label">Prompt starter · Accreditation</p>
+                  <p class="pcard-prompt">List the evidence I should collect for [criterion]. Draft a simple documentation outline.</p>
+                  <div class="pcard-actions"><button class="btn-copy" type="button"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg> <span>Copy prompt</span></button><button class="pcard-unflip" type="button" aria-label="Back to problem 18"><svg class="icon" aria-hidden="true"><use href="#i-flip"/></svg> Back</button></div>
+                </div>
+              </div>
+            </article>
+
+            <article class="pcard" data-tab="admin" data-num="19">
+              <div class="pcard-inner">
+                <div class="pcard-face pcard-front">
+                  <div class="pcard-top"><span class="pcard-num">19</span><span class="pcard-tag">Communication</span></div>
+                  <h3 class="pcard-problem">Communicating with parents and students</h3>
+                  <div class="pcard-help"><p class="pcard-label">How AI can help</p><p>Prepare clear notices and updates</p></div>
+                  <button class="pcard-flip" type="button" aria-label="See prompt for: parent updates"><svg class="icon" aria-hidden="true"><use href="#i-flip"/></svg> See prompt</button>
+                </div>
+                <div class="pcard-face pcard-back">
+                  <p class="pcard-label">Prompt starter · Parent updates</p>
+                  <p class="pcard-prompt">Draft a clear notice to parents about [event]. Add date, time and what to bring.</p>
+                  <div class="pcard-actions"><button class="btn-copy" type="button"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg> <span>Copy prompt</span></button><button class="pcard-unflip" type="button" aria-label="Back to problem 19"><svg class="icon" aria-hidden="true"><use href="#i-flip"/></svg> Back</button></div>
+                </div>
+              </div>
+            </article>
+
+            <article class="pcard" data-tab="teaching" data-num="20">
+              <div class="pcard-inner">
+                <div class="pcard-face pcard-front">
+                  <div class="pcard-top"><span class="pcard-num">20</span><span class="pcard-tag">Teaching</span></div>
+                  <h3 class="pcard-problem">Keeping up with new teaching methods</h3>
+                  <div class="pcard-help"><p class="pcard-label">How AI can help</p><p>Explore new activities and teaching approaches</p></div>
+                  <button class="pcard-flip" type="button" aria-label="See prompt for: new methods"><svg class="icon" aria-hidden="true"><use href="#i-flip"/></svg> See prompt</button>
+                </div>
+                <div class="pcard-face pcard-back">
+                  <p class="pcard-label">Prompt starter · New methods</p>
+                  <p class="pcard-prompt">Suggest 5 new teaching methods for [subject]. Give one classroom activity for each.</p>
+                  <div class="pcard-actions"><button class="btn-copy" type="button"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg> <span>Copy prompt</span></button><button class="pcard-unflip" type="button" aria-label="Back to problem 20"><svg class="icon" aria-hidden="true"><use href="#i-flip"/></svg> Back</button></div>
+                </div>
+              </div>
+            </article>
+
+          </div>
+        </div>
+      </div>
+      <p class="sr-only" aria-live="polite" id="copy-status"></p>
+    </section>
+
+    <!-- ============ 5. Live prompt demo ============ -->
+    <section class="demo section" id="demo" aria-labelledby="demo-title">
+      <div class="container demo-grid">
+        <div class="demo-copy">
+          <p class="eyebrow">Live prompt demo</p>
+          <h2 class="section-title" id="demo-title" data-title>One clear request. <span class="text-gradient">A first draft in seconds.</span></h2>
+          <p class="lead" data-reveal>Watch a simple prompt turn into a lesson plan you can edit. In the session, you will learn to write prompts like this for your own subject.</p>
+          <ul class="ticks" data-reveal>
+            <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> Say the task, the class and the time</li>
+            <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> Ask for the parts you need</li>
+            <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> Read, check and improve the draft</li>
+          </ul>
+        </div>
+        <div class="demo-window" data-reveal>
+          <div class="dw-bar" aria-hidden="true"><i></i><i></i><i></i><span>AI assistant</span></div>
+          <div class="dw-prompt">
+            <p class="dw-label">Your prompt</p>
+            <p class="dw-typed mono"><span class="sr-only">Create a 45 minute lesson plan on photosynthesis for Class 8. Add objectives, activities and a quick quiz.</span><span id="demo-typed" aria-hidden="true">Create a 45 minute lesson plan on photosynthesis for Class 8. Add objectives, activities and a quick quiz.</span><span class="caret" aria-hidden="true"></span></p>
+          </div>
+          <div class="dw-result" id="demo-result">
+            <p class="dw-label"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg> First draft</p>
+            <div class="dw-block">
+              <p class="dw-h">Objectives</p>
+              <p>Explain what photosynthesis is. Name what a plant takes in and gives out.</p>
+            </div>
+            <div class="dw-block">
+              <p class="dw-h">Starter activity · 5 min</p>
+              <p>Show two plants, one kept in light and one in the dark. Ask: what changed?</p>
+            </div>
+            <div class="dw-block">
+              <p class="dw-h">Main activity · 30 min</p>
+              <p>Short talk with a leaf diagram. Groups build the word equation with cards: carbon dioxide + water, with sunlight, gives glucose + oxygen.</p>
+            </div>
+            <div class="dw-block">
+              <p class="dw-h">Quick quiz · 10 min</p>
+              <p>1. Which gas do plants take in? 2. Where in the leaf does it happen? 3. What does chlorophyll do?</p>
+            </div>
+          </div>
+          <div class="dw-foot">
+            <p class="dw-note"><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg> Always check the output. Use sample data only.</p>
+            <button class="btn-replay" type="button" id="demo-replay"><svg class="icon" aria-hidden="true"><use href="#i-replay"/></svg> Replay</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 6. With and without AI ============ -->
+    <section class="compare section" aria-labelledby="compare-title">
+      <div class="container">
+        <div class="section-head center">
+          <p class="eyebrow">With and without AI</p>
+          <h2 class="section-title" id="compare-title" data-title>Same task. <span class="text-gradient">Two very different evenings.</span></h2>
+          <p class="lead" data-reveal>Task: <strong>Prepare a question paper.</strong> Drag the handle to compare.</p>
+        </div>
+
+        <div class="ba" id="ba" data-reveal style="--pos:50%">
+          <!-- With AI (full layer, sits underneath) -->
+          <div class="ba-layer ba-after">
+            <div class="ba-content ba-right">
+              <p class="ba-tag ba-tag-after"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg> With AI</p>
+              <p class="ba-big">Minutes</p>
+              <ul>
+                <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> Describe the topic, class and mix</li>
+                <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> Get MCQs, short answers and essay questions</li>
+                <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> Then you review and improve</li>
+              </ul>
+            </div>
+          </div>
+          <!-- Without AI (clipped layer on top) -->
+          <div class="ba-layer ba-before" aria-hidden="false">
+            <div class="ba-content ba-left">
+              <p class="ba-tag"><svg class="icon" aria-hidden="true"><use href="#i-hourglass"/></svg> Without AI</p>
+              <p class="ba-big">Hours</p>
+              <ul>
+                <li>Searching old papers and books</li>
+                <li>Copying questions one by one</li>
+                <li>Formatting again and again</li>
+              </ul>
+            </div>
+          </div>
+          <div class="ba-handle" id="ba-handle" role="slider" tabindex="0" aria-label="Compare without AI and with AI" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-valuetext="Half and half">
+            <span class="ba-knob"><svg class="icon" aria-hidden="true"><use href="#i-grip"/></svg></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 7. What happens in the session ============ -->
+    <section class="session section" id="session" aria-labelledby="session-title">
+      <div class="container session-grid">
+        <div class="session-head">
+          <p class="eyebrow">What happens in the session</p>
+          <h2 class="section-title" id="session-title" data-title>Five practical steps. <span class="text-gradient">From first prompt to action plan.</span></h2>
+          <p class="lead" data-reveal>No theory overload. You try everything yourself, on your own subject.</p>
+          <a class="btn btn-primary" href="#pricing" data-register data-reveal>Reserve My Seat <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
+        </div>
+
+        <ol class="timeline" id="timeline">
+          <span class="tl-line" aria-hidden="true"><span class="tl-fill"></span></span>
+          <li class="tl-step">
+            <span class="tl-dot">1</span>
+            <div><h3>See what AI can and cannot do</h3><p>Know where it helps and where it can go wrong.</p></div>
+          </li>
+          <li class="tl-step">
+            <span class="tl-dot">2</span>
+            <div><h3>Learn a simple prompt formula</h3><p>An easy way to ask AI for exactly what you need.</p></div>
+          </li>
+          <li class="tl-step">
+            <span class="tl-dot">3</span>
+            <div><h3>Practice on your own subject</h3><p>Bring a real topic and try it live, with help.</p></div>
+          </li>
+          <li class="tl-step">
+            <span class="tl-dot">4</span>
+            <div><h3>Build lesson plans, slides and question papers</h3><p>Make drafts you can improve and use in class.</p></div>
+          </li>
+          <li class="tl-step">
+            <span class="tl-dot">5</span>
+            <div><h3>Learn safe use, then leave with your action plan</h3><p>Know what to check, and what never to share.</p></div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============ 8. Use AI the right way ============ -->
+    <section class="responsible section" aria-labelledby="resp-title">
+      <div class="container">
+        <div class="section-head center">
+          <p class="eyebrow">Use AI the right way</p>
+          <h2 class="resp-title" id="resp-title" data-reveal>AI should support teachers, not replace their judgment.</h2>
+        </div>
+        <div class="resp-grid">
+          <article class="resp-card" data-reveal>
+            <span class="resp-icon"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg></span>
+            <h3>You stay in charge</h3>
+            <p>AI gives the first draft. You decide what is right for your class. Your judgment comes first.</p>
+          </article>
+          <article class="resp-card" data-reveal>
+            <span class="resp-icon"><svg class="icon" aria-hidden="true"><use href="#i-search-check"/></svg></span>
+            <h3>Check before you use</h3>
+            <p>Teachers must check generated facts, questions, feedback and research citations. AI can sound sure and still be wrong.</p>
+          </article>
+          <article class="resp-card" data-reveal>
+            <span class="resp-icon"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></span>
+            <h3>Protect student data</h3>
+            <p>Student data should not be uploaded into public AI tools without proper permission and safeguards. In our session we use sample data only.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 10. FAQ ============ -->
+    <section class="faq section" id="faq" aria-labelledby="faq-title">
+      <div class="container faq-grid">
+        <div class="faq-head">
+          <p class="eyebrow">FAQ</p>
+          <h2 class="section-title" id="faq-title" data-title>Common questions.</h2>
+          <p class="lead" data-reveal>Still unsure? Join our <a href="https://whatsapp.com/channel/0029VbABrzBH5JM0FIG97q2b" target="_blank" rel="noopener">WhatsApp channel</a> for updates.</p>
+        </div>
+        <div class="faq-list">
+          <div class="faq-item open" data-reveal>
+            <h3><button type="button" class="faq-q" aria-expanded="true" aria-controls="faq-a1" id="faq-q1">Do I need technical skills?<span class="faq-icon" aria-hidden="true"><svg class="icon"><use href="#i-plus"/></svg></span></button></h3>
+            <div class="faq-a" id="faq-a1" role="region" aria-labelledby="faq-q1"><div><p>No. If you can type and use a browser, you can follow along.</p></div></div>
+          </div>
+          <div class="faq-item" data-reveal>
+            <h3><button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a2" id="faq-q2">Will AI replace teachers?<span class="faq-icon" aria-hidden="true"><svg class="icon"><use href="#i-plus"/></svg></span></button></h3>
+            <div class="faq-a" id="faq-a2" role="region" aria-labelledby="faq-q2"><div><p>No. AI helps with drafts and paperwork. Your judgment and your care for students cannot be replaced.</p></div></div>
+          </div>
+          <div class="faq-item" data-reveal>
+            <h3><button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a3" id="faq-q3">Is it safe for student data?<span class="faq-icon" aria-hidden="true"><svg class="icon"><use href="#i-plus"/></svg></span></button></h3>
+            <div class="faq-a" id="faq-a3" role="region" aria-labelledby="faq-q3"><div><p>We teach safe use. Do not upload student data to public AI tools without proper permission and safeguards. We use sample data only.</p></div></div>
+          </div>
+          <div class="faq-item" data-reveal>
+            <h3><button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a4" id="faq-q4">Which tools will we use?<span class="faq-icon" aria-hidden="true"><svg class="icon"><use href="#i-plus"/></svg></span></button></h3>
+            <div class="faq-a" id="faq-a4" role="region" aria-labelledby="faq-q4"><div><p>Easy to start tools that you can keep using after the session. Details are shared before the session.</p></div></div>
+          </div>
+          <div class="faq-item" data-reveal>
+            <h3><button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a5" id="faq-q5">Is this for school and college?<span class="faq-icon" aria-hidden="true"><svg class="icon"><use href="#i-plus"/></svg></span></button></h3>
+            <div class="faq-a" id="faq-a5" role="region" aria-labelledby="faq-q5"><div><p>Yes. We show examples for both school teachers and college lecturers and professors.</p></div></div>
+          </div>
+          <div class="faq-item" data-reveal>
+            <h3><button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a6" id="faq-q6">What should I bring?<span class="faq-icon" aria-hidden="true"><svg class="icon"><use href="#i-plus"/></svg></span></button></h3>
+            <div class="faq-a" id="faq-a6" role="region" aria-labelledby="faq-q6"><div><p>A laptop or phone, internet access, and one real task from your work.</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 10b. Pricing ============ -->
+    <section class="pricing section" id="pricing" aria-labelledby="pricing-title">
+      <div class="container">
+        <div class="section-head center">
+          <p class="eyebrow">Pricing</p>
+          <h2 class="section-title" id="pricing-title" data-title>Choose Your Learning Package</h2>
+          <p class="lead" data-reveal>Start using practical AI skills in your teaching. Choose the learning package that suits you.</p>
+        </div>
+
+        <div class="price-grid">
+          <article class="price-card" data-reveal aria-labelledby="pkg1-name">
+            <div class="price-top">
+              <span class="price-icon"><svg class="icon" aria-hidden="true"><use href="#i-monitor"/></svg></span>
+              <h3 class="price-name" id="pkg1-name">Class Only</h3>
+            </div>
+            <p class="price"><span class="price-cur">₹</span>299</p>
+            <p class="price-note">One-time fee</p>
+            <ul class="price-list">
+              <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> Access to the AI skill session for teachers and professors.</li>
+              <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> Learn practical AI tools and skills for your daily work.</li>
+              <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> Understand how AI can support lesson plans, question papers and feedback.</li>
+              <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> See new ways AI can help you grow as an educator.</li>
+            </ul>
+            <button type="button" class="btn btn-outline btn-lg btn-block" data-package="class"><span class="btn-label">Register for ₹299</span></button>
+          </article>
+
+          <article class="price-card price-featured" data-reveal aria-labelledby="pkg2-name">
+            <span class="price-badge"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg> Recommended</span>
+            <div class="price-top">
+              <span class="price-icon"><svg class="icon" aria-hidden="true"><use href="#i-file"/></svg></span>
+              <h3 class="price-name" id="pkg2-name">Class + Practical Learning Document</h3>
+            </div>
+            <p class="price"><span class="price-cur">₹</span>799</p>
+            <p class="price-note">One-time fee</p>
+            <ul class="price-list">
+              <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> Access to the complete AI skill session.</li>
+              <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> Everything included in the Class Only package.</li>
+              <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> Additional learning document with useful AI tools, prompt starters, resources and learning materials.</li>
+              <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> Keep the document for future reference.</li>
+            </ul>
+            <button type="button" class="btn btn-primary btn-lg btn-block btn-on-dark" data-package="class_doc"><span class="btn-label">Register with Document <span class="nowrap">- ₹799</span></span></button>
+          </article>
+        </div>
+
+        <p class="pay-status" id="pay-status" role="alert"></p>
+
+        <p class="price-secure" data-reveal><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg> Secure payment through Razorpay. Your seat is confirmed after your payment is verified.</p>
+        <!-- TODO: link to your privacy policy -->
+        <p class="price-consent">By paying, you agree to be contacted on WhatsApp and email about this session. Read our <a href="#" data-todo="privacy-policy">privacy policy</a>.</p>
+
+        <!-- Confirmation: shown only after the server verifies the Razorpay payment -->
+        <div class="pay-confirm" id="pay-confirm" hidden tabindex="-1">
+          <span class="confirm-icon"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span>
+          <h3 class="confirm-title">Payment received. You are registered.</h3>
+          <dl class="receipt">
+            <div><dt>Package</dt><dd id="r-package"></dd></div>
+            <div><dt>Amount paid</dt><dd id="r-amount"></dd></div>
+            <div><dt>Payment ID</dt><dd id="r-payment" class="mono"></dd></div>
+          </dl>
+          <p>We will send the joining details to the WhatsApp number and email you used for payment. Please keep your payment ID for reference.</p>
+          <a class="btn btn-primary btn-lg" href="https://whatsapp.com/channel/0029VbABrzBH5JM0FIG97q2b" target="_blank" rel="noopener">
+            <svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg> Join the WhatsApp channel
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============ 12. Footer ============ -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <a class="brand brand-light" href="#top" aria-label="Tech Tycoon Digital Solution LLP, back to top">
+          <img src="assets/logo-mark.png" alt="" width="44" height="44" class="brand-mark" loading="lazy" />
+          <span class="brand-text">
+            <span class="brand-name">Tech Tycoon</span>
+            <span class="brand-sub">Digital Solution LLP</span>
+          </span>
+        </a>
+        <p>Practical AI skills for teachers and professors. Less paperwork, more teaching.</p>
+      </div>
+      <nav class="footer-links" aria-label="Footer">
+        <p class="footer-h">Links</p>
+        <a href="https://techtycoon.in" target="_blank" rel="noopener">techtycoon.in <svg class="icon" aria-hidden="true"><use href="#i-external"/></svg></a>
+        <a href="https://academy.techtycoon.in/" target="_blank" rel="noopener">academy.techtycoon.in <svg class="icon" aria-hidden="true"><use href="#i-external"/></svg></a>
+        <a href="https://whatsapp.com/channel/0029VbABrzBH5JM0FIG97q2b" target="_blank" rel="noopener">WhatsApp channel <svg class="icon" aria-hidden="true"><use href="#i-external"/></svg></a>
+      </nav>
+      <div class="footer-cta">
+        <p class="footer-h">Ready to save time?</p>
+        <a class="btn btn-primary" href="#pricing" data-register>Reserve My Seat <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <p>&copy; <span id="year">2026</span> Tech Tycoon Digital Solution LLP. All rights reserved.</p>
+      <p><a href="#" data-todo="privacy-policy">Privacy policy</a> · <a href="#" data-todo="terms">Terms</a></p>
+    </div>
+  </footer>
+
+  <!-- Sticky mobile CTA (appears after the hero) -->
+  <div class="sticky-cta" id="sticky-cta" aria-hidden="true">
+    <div class="sticky-cta-text"><strong>AI skills session</strong><span>[Date] · From ₹299</span></div>
+    <a class="btn btn-primary" href="#pricing" data-register tabindex="-1">Reserve My Seat</a>
+  </div>
+
+  <!-- ============ Registration popup (opens from every pricing and "Reserve My Seat" button) ============ -->
+  <dialog class="reg-modal" id="reg-modal" data-lenis-prevent aria-labelledby="reg-title" aria-describedby="reg-desc">
+    <div class="reg-card">
+      <button type="button" class="reg-close" data-reg-close aria-label="Close registration form"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+
+      <div class="reg-view" id="reg-form-view">
+        <p class="eyebrow"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg> AI skill session</p>
+        <h2 class="reg-title" id="reg-title">Register for the session</h2>
+        <p class="reg-desc" id="reg-desc">Choose your package and fill in your details. All fields are required.</p>
+
+        <form class="reg-form" id="reg-form" novalidate>
+          <fieldset class="reg-field reg-pkg" aria-describedby="reg-package-err">
+            <legend>Choose your package</legend>
+            <div class="reg-pkg-options">
+              <label class="reg-pkg-option">
+                <input type="radio" name="package" value="class" required />
+                <span class="reg-pkg-card">
+                  <span class="reg-pkg-tag">Option 1</span>
+                  <span class="reg-pkg-name">Class Only</span>
+                  <span class="reg-pkg-price">₹299</span>
+                </span>
+              </label>
+              <label class="reg-pkg-option">
+                <input type="radio" name="package" value="class_doc" />
+                <span class="reg-pkg-card">
+                  <span class="reg-pkg-tag">Option 2 · Recommended</span>
+                  <span class="reg-pkg-name">Class + Practical Learning Document</span>
+                  <span class="reg-pkg-price">₹799</span>
+                </span>
+              </label>
+            </div>
+            <p class="reg-err" id="reg-package-err" aria-live="polite"></p>
+          </fieldset>
+
+          <div class="reg-field">
+            <label for="reg-name">Full name</label>
+            <input id="reg-name" name="full_name" type="text" autocomplete="name" maxlength="80" required aria-describedby="reg-name-err" />
+            <p class="reg-err" id="reg-name-err" aria-live="polite"></p>
+          </div>
+
+          <div class="reg-field">
+            <label for="reg-mobile">Mobile number</label>
+            <div class="reg-phone">
+              <span class="reg-prefix" aria-hidden="true">+91</span>
+              <input id="reg-mobile" name="mobile" type="tel" inputmode="numeric" autocomplete="tel-national" maxlength="15" placeholder="98765 43210" required aria-describedby="reg-mobile-hint reg-mobile-err" />
+            </div>
+            <p class="reg-hint" id="reg-mobile-hint">10-digit Indian mobile number</p>
+            <p class="reg-err" id="reg-mobile-err" aria-live="polite"></p>
+          </div>
+
+          <div class="reg-field">
+            <label for="reg-email">Email address</label>
+            <input id="reg-email" name="email" type="email" autocomplete="email" maxlength="120" placeholder="you@example.com" required aria-describedby="reg-email-err" />
+            <p class="reg-err" id="reg-email-err" aria-live="polite"></p>
+          </div>
+
+          <!-- Spam trap: hidden from people, bots fill it in -->
+          <div class="reg-trap" aria-hidden="true">
+            <label for="reg-website">Website</label>
+            <input id="reg-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+          </div>
+
+          <div class="reg-summary" id="reg-summary" aria-live="polite">
+            <span class="reg-summary-label">Selected package</span>
+            <span class="reg-summary-value" id="reg-summary-value">Please choose a package</span>
+          </div>
+
+          <p class="reg-alert" id="reg-alert" role="alert" hidden></p>
+
+          <button type="submit" class="btn btn-primary btn-lg btn-block reg-submit" id="reg-submit">
+            <span class="btn-label">Register Now</span>
+          </button>
+          <p class="reg-note"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg> Secure payment through Razorpay. Your seat is confirmed after payment.</p>
+        </form>
+      </div>
+
+      <div class="reg-view reg-success" id="reg-success-view" hidden>
+        <span class="reg-success-icon" aria-hidden="true"><svg class="icon"><use href="#i-check"/></svg></span>
+        <h2 class="reg-title" id="reg-success-title" tabindex="-1">Payment received. You are registered.</h2>
+        <p class="reg-desc" id="reg-success-text">Thank you. We will send the joining details to your WhatsApp number and email.</p>
+        <dl class="receipt reg-receipt">
+          <div><dt>Package</dt><dd id="reg-r-package"></dd></div>
+          <div><dt>Amount paid</dt><dd id="reg-r-amount"></dd></div>
+          <div><dt>Payment ID</dt><dd id="reg-r-payment" class="mono"></dd></div>
+        </dl>
+        <a class="btn btn-primary btn-lg btn-block" href="https://whatsapp.com/channel/0029VbABrzBH5JM0FIG97q2b" target="_blank" rel="noopener"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg> Join the WhatsApp channel</a>
+        <button type="button" class="reg-text-btn" data-reg-close>Close</button>
+      </div>
+    </div>
+  </dialog>
+
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- ============ Scripts (motion libraries from CDN, page works without them) ============ -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+  <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js" defer></script>
+  <script src="js/main.js" defer></script>
+</body>
+</html>
