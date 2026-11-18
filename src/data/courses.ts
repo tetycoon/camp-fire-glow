@@ -33,7 +33,7 @@ export interface Course {
   link: string;
   /**
    * True for standalone pages served from /public (claude_masterclass, advanced_masterclass,
-   * working-professionals, ai-powered-career-development). These must be opened with a full
+   * working-professionals, ai-powered-career-development, ai-training-for-teachers). These must be opened with a full
    * page load so the browser gets the static page instead of a client-side SPA route.
    */
   isStatic: boolean;
@@ -187,6 +187,25 @@ export const courses: Course[] = [
       "AI fundamentals & popular AI tools",
       "Resume and portfolio creation using AI",
       "Beginner friendly — finish a project of your own",
+    ],
+  },
+  {
+    id: "ai-training-for-teachers",
+    title: "AI Skills for Teachers & Professors",
+    category: "online",
+    tag: "For Educators",
+    intro: "For school teachers, college lecturers and professors: use AI to create lesson plans, presentations, question papers and feedback in minutes — with safe, responsible use.",
+    fees: "From ₹299",
+    feeNote: "₹799 option adds recorded video & learning document",
+    duration: "1 Live Session",
+    format: "Online Live · Laptop or Phone",
+    image: "/ai-training-for-teachers/assets/hero-training-900.jpg",
+    link: "/ai-training-for-teachers/",
+    isStatic: true,
+    highlights: [
+      "Lesson plans, slides & question papers with AI",
+      "20 daily teaching tasks with ready prompts",
+      "Practise on your own subject · no tech skills needed",
     ],
   },
   {
