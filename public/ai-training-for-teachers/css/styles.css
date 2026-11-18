@@ -181,18 +181,53 @@ button { cursor: pointer; }
 
 /* ---------- Preloader ---------- */
 .preloader { display: none; }
+/* Styled after techtycoon.in/academy: glow blobs, spinning logo in a glass ring,
+   brand fade-in and a 2 s progress bar, then a 0.5 s fade out (js/main.js). */
 .preload .preloader {
-  display: flex; position: fixed; inset: 0; z-index: 300;
+  display: flex; position: fixed; inset: 0; z-index: 300; overflow: hidden;
   align-items: center; justify-content: center;
-  background: var(--navy-deep); color: #fff;
+  background: var(--navy-ink); color: #fff;
+  transition: opacity .5s ease-out;
 }
+.preloader.is-done { opacity: 0; }
 .preload body { overflow: hidden; }
-.preloader-inner { text-align: center; }
-.preloader-mark { margin: 0 auto 18px; animation: spin-in 1.2s var(--ease-out) both; }
-.preloader-brand { font-family: var(--font-head); font-weight: 700; font-size: clamp(28px, 5vw, 44px); letter-spacing: -.01em; }
-.preloader-count { font-family: var(--font-mono); color: var(--cyan); font-size: 15px; margin-top: 10px; letter-spacing: .1em; }
-.preloader-count::after { content: "%"; }
-.preloader-skip { position: absolute; right: 20px; bottom: 20px; background: transparent; color: rgba(255,255,255,.75); border: 1px solid rgba(255,255,255,.3); border-radius: 999px; padding: 8px 16px; font-size: 14px; }
+.preloader-blob {
+  position: absolute; width: 400px; height: 400px; border-radius: 50%;
+  filter: blur(80px); opacity: .22; animation: pre-float 8s ease-in-out infinite;
+}
+.preloader-blob-1 { top: -10%; left: -10%; background: var(--sky, #38B6FF); }
+.preloader-blob-2 { bottom: -10%; right: -10%; background: #5271FF; animation-delay: 1s; }
+.preloader-inner { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; }
+.preloader-logo {
+  padding: 30px; border-radius: 50%;
+  background: rgba(255, 255, 255, .05); border: 1px solid rgba(255, 255, 255, .1);
+  -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, .35);
+}
+.preloader-mark {
+  display: block; width: 80px; height: 80px; object-fit: contain;
+  filter: drop-shadow(0 0 15px rgba(56, 182, 255, .35));
+  animation: pre-spin 2s linear infinite;
+}
+.preloader-brand {
+  margin-top: 30px; font-family: var(--font-body); font-size: 24px; font-weight: 700;
+  opacity: 0; animation: pre-fade .5s ease-out .3s forwards;
+}
+.preloader-bar {
+  position: relative; overflow: hidden; margin-top: 20px; width: 200px; height: 6px;
+  border-radius: 999px; background: rgba(100, 116, 139, .25);
+}
+.preloader-bar span {
+  position: absolute; inset: 0; border-radius: inherit; transform-origin: left;
+  background: linear-gradient(90deg, #38B6FF, #5271FF, #38B6FF); background-size: 200% 100%;
+  animation: pre-fill 2s ease-in-out forwards, pre-shimmer 1.5s linear infinite;
+}
+.preloader-skip { position: absolute; z-index: 1; right: 20px; bottom: 20px; background: transparent; color: rgba(255,255,255,.75); border: 1px solid rgba(255,255,255,.3); border-radius: 999px; padding: 8px 16px; font-size: 14px; }
+@keyframes pre-float { 0%, 100% { transform: translate(0, 0) scale(1); } 33% { transform: translate(30px, -30px) scale(1.1); } 66% { transform: translate(-20px, 20px) scale(.9); } }
+@keyframes pre-spin { to { transform: rotate(360deg); } }
+@keyframes pre-fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes pre-fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes pre-shimmer { to { background-position: -200% 0; } }
 @keyframes spin-in { from { opacity: 0; transform: rotate(-90deg) scale(.6); } to { opacity: 1; transform: none; } }
 
 /* ---------- Hero ---------- */
@@ -306,29 +341,8 @@ button { cursor: pointer; }
 @keyframes marquee { to { transform: translate3d(-100%, 0, 0); } }
 
 /* ---------- Pain ---------- */
-/* Dark to light: the fade is tied to the bottom of the section,
-   so the answer line always sits on the light part at every screen size. */
-.pain {
-  --fade-end: 300px;
-  position: relative; color: #fff;
-  background: linear-gradient(180deg,
-    var(--navy-deep) 0,
-    var(--navy-deep) calc(100% - var(--fade-end) - 260px),
-    #3E6CC2 calc(100% - var(--fade-end) - 150px),
-    #CFE3FF calc(100% - var(--fade-end) - 40px),
-    var(--ice) calc(100% - var(--fade-end)));
-  padding-top: var(--section-y);
-}
-@media (min-width: 768px) { .pain { --fade-end: 400px; } }
-.pain-title { font-size: 14px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--cyan); margin-bottom: 28px; }
-.pain-lines { display: grid; gap: clamp(14px, 2.5vw, 26px); }
-.pain-line {
-  font-family: var(--font-head); font-weight: 600;
-  font-size: clamp(30px, 5.4vw, 64px); line-height: 1.08; letter-spacing: -.02em;
-  max-width: 18ch;
-}
-.pain-line em { font-style: normal; color: var(--cyan); }
-.pain-answer-wrap { padding-top: clamp(220px, 24vw, 280px); padding-bottom: var(--section-y); text-align: center; }
+.pain { position: relative; background: var(--ice); }
+.pain-answer-wrap { padding-top: var(--section-y); text-align: center; }
 .pain-answer {
   font-family: var(--font-head); font-weight: 700; color: var(--navy);
   font-size: clamp(36px, 6.4vw, 80px); line-height: 1.04; letter-spacing: -.025em;

@@ -147,36 +147,20 @@
     var pre = $('#preloader');
     if (!root.classList.contains('preload') || !pre) { done(); return; }
 
-    var num = $('#preloader-num');
     var finished = false;
 
+    // Fade out over 0.5 s (CSS transition on .is-done), then remove it.
     function finish() {
       if (finished) return;
       finished = true;
-      if (hasGsap) {
-        gsap.to(pre, {
-          yPercent: -100, duration: 0.7, ease: 'power4.inOut',
-          onComplete: function () { root.classList.remove('preload'); gsap.set(pre, { clearProps: 'all' }); }
-        });
-        setTimeout(done, 280);
-      } else {
-        root.classList.remove('preload');
-        done();
-      }
+      pre.classList.add('is-done');
+      setTimeout(function () { root.classList.remove('preload'); pre.classList.remove('is-done'); }, 500);
+      setTimeout(done, 200);
     }
 
     $('#preloader-skip').addEventListener('click', finish);
-    // Hard cap: the preloader never holds the page longer than this.
-    setTimeout(finish, 1500);
-
-    if (hasGsap) {
-      // If the page was slow to get here, keep the counter very short.
-      var dur = performance.now() > 1100 ? 0.3 : 0.9;
-      var o = { v: 0 };
-      gsap.to(o, { v: 100, duration: dur, ease: 'power2.out', onUpdate: function () { num.textContent = Math.round(o.v); }, onComplete: finish });
-    } else {
-      finish();
-    }
+    // Show for 2 s from when the page started loading (the progress bar fills in that time).
+    setTimeout(finish, Math.max(0, 2000 - performance.now()));
   }
 
   var heroStarted = false;
@@ -217,16 +201,10 @@
   }
 
   /* ---------------------------------------------------------
-     6. Pain section: lines light up, answer grows
+     6. "Smarter way" line grows as it scrolls into view
      --------------------------------------------------------- */
   function initPain() {
     if (!animate) return;
-    $$('.pain-line').forEach(function (line) {
-      gsap.fromTo(line, { opacity: 0.15 }, {
-        opacity: 1, ease: 'none',
-        scrollTrigger: { trigger: line, start: 'top 88%', end: 'top 55%', scrub: true }
-      });
-    });
     gsap.fromTo('.pain-answer', { scale: 0.82, opacity: 0.25 }, {
       scale: 1, opacity: 1, ease: 'none',
       scrollTrigger: { trigger: '.pain-answer', start: 'top 92%', end: 'top 50%', scrub: true }
