@@ -97,6 +97,16 @@ function getRazorpayKeyId(isIntl) {
   return configuredKey || (isIntl ? "rzp_live_gfoS1OjC8tvWjP" : "rzp_live_T2CbVONQc6qrqj");
 }
 
+function getRazorpayCredentials(isIntl) {
+  if (isIntl) {
+    const intlSecret = getOptionalScriptSecret("RAZORPAY_KEY_SECRET_INTL");
+    if (intlSecret) {
+      return { keyId: getRazorpayKeyId(true), keySecret: intlSecret, isIntl: true };
+    }
+  }
+  return { keyId: getRazorpayKeyId(false), keySecret: getScriptSecret("RAZORPAY_KEY_SECRET"), isIntl: false };
+}
+
 function isAuthorizedLiveTest(email, amount) {
   const cleanEmail = String(email || "").trim().toLowerCase();
   const numAmount = Number(amount) || 0;
@@ -165,10 +175,17 @@ function doPost(e) {
 
     // 3. New Registration & Order Creation
     if (body.name && body.email && body.phone) {
-      const orderId = createRazorpayOrder(body);
+      const orderResult = createRazorpayOrder(body);
+      const orderId = (orderResult && orderResult.orderId) ? orderResult.orderId : String(orderResult || "");
+      const razorpayKeyId = (orderResult && orderResult.keyId) ? orderResult.keyId : getRazorpayKeyId(false);
       saveToSheet(body, orderId);
       saveRegistrationToLandingLeads(body, orderId);
-      return createJsonResponse({ success: true, orderId: orderId, leadId: body.leadId || orderId });
+      return createJsonResponse({
+        success: true,
+        orderId: orderId,
+        razorpayKeyId: razorpayKeyId,
+        leadId: body.leadId || orderId
+      });
     }
 
     return createJsonResponse({ success: false, message: "Unknown action" });
@@ -191,8 +208,9 @@ function validateClaudeResourcesAmount(data) {
 
 function createRazorpayOrder(data) {
   const isInternational = Boolean(data.countryCode && data.countryCode !== "+91");
-  const keyId = getRazorpayKeyId(isInternational);
-  const keySecret = getScriptSecret(isInternational ? "RAZORPAY_KEY_SECRET_INTL" : "RAZORPAY_KEY_SECRET");
+  const creds = getRazorpayCredentials(isInternational);
+  const keyId = creds.keyId;
+  const keySecret = creds.keySecret;
   const validAmount = validateClaudeResourcesAmount(data);
   const hasChatGptAddon =
     Number(validAmount) >= 899 ||
@@ -229,7 +247,7 @@ function createRazorpayOrder(data) {
   if (response.getResponseCode() !== 200) {
     throw new Error("Razorpay Order Creation Failed: " + resText);
   }
-  return JSON.parse(resText).id;
+  return { orderId: JSON.parse(resText).id, keyId: keyId };
 }
 
 function verifyRazorpayPaymentSignature(orderId, paymentId, signature, isIntl) {
@@ -241,15 +259,17 @@ function verifyRazorpayPaymentSignature(orderId, paymentId, signature, isIntl) {
   if (!/^[0-9a-f]{64}$/.test(cleanSignature)) return false;
 
   const payload = cleanOrderId + "|" + cleanPaymentId;
-  const primaryKey = isIntl ? "RAZORPAY_KEY_SECRET_INTL" : "RAZORPAY_KEY_SECRET";
-  const secret = getScriptSecret(primaryKey);
-  const expectedSig = computeHmacSha256Hex(payload, secret);
+  const creds = getRazorpayCredentials(isIntl);
+  const expectedSig = computeHmacSha256Hex(payload, creds.keySecret);
   if (constantTimeEquals(expectedSig, cleanSignature)) return true;
 
-  const altSecret = getOptionalScriptSecret("RAZORPAY_KEY_SECRET_INTL");
-  if (altSecret) {
-    const altExpected = computeHmacSha256Hex(payload, altSecret);
-    if (constantTimeEquals(altExpected, cleanSignature)) return true;
+  const domesticSecret = getOptionalScriptSecret("RAZORPAY_KEY_SECRET");
+  if (domesticSecret && domesticSecret !== creds.keySecret) {
+    if (constantTimeEquals(computeHmacSha256Hex(payload, domesticSecret), cleanSignature)) return true;
+  }
+  const intlSecret = getOptionalScriptSecret("RAZORPAY_KEY_SECRET_INTL");
+  if (intlSecret && intlSecret !== creds.keySecret) {
+    if (constantTimeEquals(computeHmacSha256Hex(payload, intlSecret), cleanSignature)) return true;
   }
   return false;
 }
@@ -259,15 +279,24 @@ function verifyPaymentWithRazorpayServer(orderId, paymentId, expectedAmountInr, 
   const cleanPaymentId = String(paymentId || "").trim();
   const expectedPaise = Math.round(Number(expectedAmountInr) * 100);
 
-  const keyId = getRazorpayKeyId(isIntl);
-  const keySecret = getScriptSecret(isIntl ? "RAZORPAY_KEY_SECRET_INTL" : "RAZORPAY_KEY_SECRET");
-  const credentials = Utilities.base64Encode(keyId + ":" + keySecret);
+  const creds = getRazorpayCredentials(isIntl);
+  const credentials = Utilities.base64Encode(creds.keyId + ":" + creds.keySecret);
   const url = "https://api.razorpay.com/v1/payments/" + encodeURIComponent(cleanPaymentId);
-  const res = UrlFetchApp.fetch(url, {
+  let res = UrlFetchApp.fetch(url, {
     method: "get",
     headers: { Authorization: "Basic " + credentials, "Content-Type": "application/json" },
     muteHttpExceptions: true
   });
+
+  if (res.getResponseCode() !== 200 && creds.isIntl) {
+    const domCreds = getRazorpayCredentials(false);
+    const domAuth = Utilities.base64Encode(domCreds.keyId + ":" + domCreds.keySecret);
+    res = UrlFetchApp.fetch(url, {
+      method: "get",
+      headers: { Authorization: "Basic " + domAuth, "Content-Type": "application/json" },
+      muteHttpExceptions: true
+    });
+  }
 
   if (res.getResponseCode() !== 200) {
     throw new Error("Razorpay API rejected payment ID (" + res.getResponseCode() + ").");

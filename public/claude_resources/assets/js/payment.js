@@ -652,7 +652,9 @@
         }
 
         var isIntl = countryCode !== '+91';
-        var rzpKey = isIntl ? (C.razorpayKeyIntl || 'rzp_live_gfoS1OjC8tvWjP') : (C.razorpayKeyIn || 'rzp_live_T2CbVONQc6qrqj');
+        var rzpKey = (result && result.razorpayKeyId)
+          ? result.razorpayKeyId
+          : (isIntl ? (C.razorpayKeyIntl || 'rzp_live_gfoS1OjC8tvWjP') : (C.razorpayKeyIn || 'rzp_live_T2CbVONQc6qrqj'));
 
         var rzpOptions = {
           key: rzpKey,
