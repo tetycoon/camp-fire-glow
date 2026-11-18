@@ -26,7 +26,7 @@
     // Display only. The real amounts are fixed on the server.
     packages: {
       class: { label: 'Class Only', price: 299 },
-      class_doc: { label: 'Class + Practical Learning Document', price: 799 }
+      class_doc: { label: 'Class + Recorded Video Access + Practical Learning Document', price: 799 }
     },
 
     whatsappChannel: 'https://whatsapp.com/channel/0029VbABrzBH5JM0FIG97q2b'
@@ -141,28 +141,8 @@
   }
 
   /* ---------------------------------------------------------
-     4. Preloader and hero intro
+     4. Hero intro
      --------------------------------------------------------- */
-  function initPreloader(done) {
-    var pre = $('#preloader');
-    if (!root.classList.contains('preload') || !pre) { done(); return; }
-
-    var finished = false;
-
-    // Fade out over 0.5 s (CSS transition on .is-done), then remove it.
-    function finish() {
-      if (finished) return;
-      finished = true;
-      pre.classList.add('is-done');
-      setTimeout(function () { root.classList.remove('preload'); pre.classList.remove('is-done'); }, 500);
-      setTimeout(done, 200);
-    }
-
-    $('#preloader-skip').addEventListener('click', finish);
-    // Show for 2 s from when the page started loading (the progress bar fills in that time).
-    setTimeout(finish, Math.max(0, 2000 - performance.now()));
-  }
-
   var heroStarted = false;
   function heroIntro() {
     if (!animate || heroStarted) return;
@@ -172,6 +152,23 @@
     setTimeout(function () { if (tl.progress() < 1) tl.progress(1); }, 2500);
     tl.to('.hero .line-inner', { y: 0, duration: 0.9, ease: 'power4.out', stagger: 0.08 })
       .to('.hero-anim', { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', stagger: 0.08 }, 0.15);  }
+
+  /* ---------------------------------------------------------
+     4b. Session photos: CSS does the motion, this only marks
+         each photo as in view (no animation library needed)
+     --------------------------------------------------------- */
+  function initGallery() {
+    var photos = $$('.gallery .ph');
+    if (!photos.length) return;
+    function show(el) { el.classList.add('is-in'); }
+    if (!('IntersectionObserver' in window)) { photos.forEach(show); return; }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { show(e.target); io.unobserve(e.target); }
+      });
+    }, { rootMargin: '0px 0px -12% 0px', threshold: 0.15 });
+    photos.forEach(function (el) { io.observe(el); });
+  }
 
   /* ---------------------------------------------------------
      5. Section titles and scroll reveals
@@ -954,16 +951,13 @@
   safe('slider', initSlider);
   safe('timeline', initTimeline, true);
   safe('faq', initFaq);
+  safe('gallery', initGallery);
   safe('register', initRegister);
   safe('header', initHeader);
   safe('sticky cta', initStickyCta);
   safe('parallax', initParallax);
 
-  safe('preloader', function () {
-    initPreloader(function () { safe('hero intro', heroIntro, true); });
-  }, true);
-  // Belt and braces: the hero always starts, even if the preloader path fails.
-  setTimeout(function () { safe('hero intro', heroIntro, true); }, 1900);
+  safe('hero intro', heroIntro, true);
 
   // Fonts change text size, so measure again once they are ready.
   if (hasGsap) {
