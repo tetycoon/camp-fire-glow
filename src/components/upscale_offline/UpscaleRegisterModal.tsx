@@ -577,10 +577,10 @@ const UpscaleRegisterModal: React.FC = () => {
                                     />
                                     <label htmlFor="upscale-materials-session" className="cursor-pointer select-none leading-tight">
                                         <span className="block text-xs font-bold text-slate-800">
-                                            I want Materials session <span className="text-[10px] font-semibold text-slate-400">(Optional)</span>
+                                            I want this workshop Material as pdf <span className="text-[10px] font-semibold text-slate-400">(Optional)</span>
                                         </span>
                                         <span className="block text-[11px] font-medium text-blue-700 mt-0.5">
-                                            Bonus: Includes Claude Materials
+                                            Bonus: Included Claude Skill &amp; Prompting Hacks Material
                                         </span>
                                     </label>
                                 </div>
