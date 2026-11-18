@@ -49,8 +49,8 @@
         }
       } catch (e) {}
       // Safety nets: never block or hide the page for long, even if scripts fail to load.
-      setTimeout(function () { d.classList.remove('preload'); }, 2600);
-      setTimeout(function () { if (!window.__ttReady) d.classList.remove('anim'); }, 3000);
+      setTimeout(function () { d.classList.remove('preload'); }, 3000);
+      setTimeout(function () { if (!window.__ttReady) d.classList.remove('anim'); }, 3400);
     })();
   </script>
 
@@ -110,10 +110,12 @@
 
   <!-- ============ 0. Preloader (first visit per session only) ============ -->
   <div id="preloader" class="preloader" aria-hidden="true">
+    <span class="preloader-blob preloader-blob-1"></span>
+    <span class="preloader-blob preloader-blob-2"></span>
     <div class="preloader-inner">
-      <img src="assets/logo-mark.png" alt="" width="72" height="72" class="preloader-mark" />
+      <div class="preloader-logo"><img src="assets/logo-mark.png" alt="" width="80" height="80" class="preloader-mark" /></div>
       <p class="preloader-brand">Tech Tycoon</p>
-      <p class="preloader-count"><span id="preloader-num">0</span></p>
+      <div class="preloader-bar"><span></span></div>
     </div>
     <button type="button" class="preloader-skip" id="preloader-skip">Skip</button>
   </div>
@@ -213,16 +215,7 @@
     </section>
 
     <!-- ============ 3. The pain ============ -->
-    <section class="pain" aria-labelledby="pain-title">
-      <div class="container pain-inner">
-        <h2 class="pain-title" id="pain-title" data-reveal>Does your week look like this?</h2>
-        <ul class="pain-lines">
-          <li class="pain-line">Lesson plans <em>at night.</em></li>
-          <li class="pain-line">Question papers <em>before exams.</em></li>
-          <li class="pain-line">Feedback on <em>pile after pile</em> of assignments.</li>
-          <li class="pain-line">Reports, letters and files that <em>never end.</em></li>
-        </ul>
-      </div>
+    <section class="pain" aria-label="A smarter way to start">
       <div class="container pain-answer-wrap">
         <p class="pain-answer">There is a <span class="text-gradient">smarter way</span> to start.</p>
         <p class="pain-answer-sub" data-reveal>Let AI write the first draft. You check it, improve it and teach.</p>
