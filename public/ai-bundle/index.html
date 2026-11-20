@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <base href="/ai-bundle/" />
+  <link rel="canonical" href="https://course.techtycoon.in/ai-bundle/" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tech Tycoon Academy — 10+ Advanced AI Courses. One Platform.</title>
+  <meta name="description" content="10+ Advanced AI Courses. One Platform. Learn AI. Automate Your Work. Grow Your Business. Learn from Antony Praveen, AI Engineer, Founder & Trainer at Tech Tycoon Academy." />
+  <meta name="theme-color" content="#7DD3FC" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@125,800;125,900&family=Inter+Tight:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+
+  <!-- ===== Top bar ===== -->
+  <div class="topbar">
+    <span class="topbar__label">
+      <svg viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg>
+      Offer Ends In
+    </span>
+    <div class="topbar__timer" data-countdown>
+      <span><b data-m>30</b>m</span><i>:</i>
+      <span><b data-s>00</b>s</span>
+    </div>
+    <a href="#register" class="topbar__btn" data-register>
+      <svg viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg>
+      CLAIM ₹30,000 OFFER
+    </a>
+  </div>
+
+  <!-- ===== Scrolling strip ===== -->
+  <div class="strip" aria-hidden="true">
+    <div class="strip__track">
+      <span>LIVE OFFER</span><i>★</i><span>10+ ADVANCED AI COURSES</span><i>★</i><span>ONE PLATFORM</span><i>★</i><span>OFFER PRICE ONLY ₹30,000</span><i>★</i><span>LEARN WITH ANTONY PRAVEEN</span><i>★</i>
+      <span>LIVE OFFER</span><i>★</i><span>10+ ADVANCED AI COURSES</span><i>★</i><span>ONE PLATFORM</span><i>★</i><span>OFFER PRICE ONLY ₹30,000</span><i>★</i><span>LEARN WITH ANTONY PRAVEEN</span><i>★</i>
+    </div>
+  </div>
+
+  <!-- ===== Stage hero ===== -->
+  <section class="stage">
+    <div class="stage__viewport">
+      <div class="scene">
+        <div class="curtain curtain--left"></div>
+        <div class="curtain curtain--right"></div>
+
+        <svg class="scene__art" viewBox="0 0 1440 600" aria-hidden="true">
+          <defs>
+            <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+              <feGaussianBlur stdDeviation="6" result="b" />
+              <feMerge><feMergeNode in="b" /><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
+            </filter>
+            <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="0" dy="8" stdDeviation="9" flood-color="#0B1B3F" flood-opacity=".14" />
+            </filter>
+            <filter id="blur40"><feGaussianBlur stdDeviation="40" /></filter>
+            <radialGradient id="hexFill" cx="50%" cy="40%" r="60%">
+              <stop offset="0" stop-color="#FFFFFF" />
+              <stop offset="1" stop-color="#E3F0FA" />
+            </radialGradient>
+            <linearGradient id="beam" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#7DD3FC" stop-opacity=".75" />
+              <stop offset="1" stop-color="#7DD3FC" stop-opacity="0" />
+            </linearGradient>
+            <pattern id="truss" width="36" height="26" patternUnits="userSpaceOnUse">
+              <path d="M0 26 L18 0 L36 26" fill="none" stroke="#6B7C93" stroke-width="2" />
+            </pattern>
+            <linearGradient id="bandFace" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#CFDBE5" />
+              <stop offset=".55" stop-color="#E4ECF2" />
+              <stop offset="1" stop-color="#F3F8FB" />
+            </linearGradient>
+            <linearGradient id="hexBand" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#E9F0F5" />
+              <stop offset="1" stop-color="#D6E1EA" />
+            </linearGradient>
+          </defs>
+
+          <!-- haze -->
+          <ellipse cx="310" cy="300" rx="190" ry="260" fill="#BAE6FD" opacity=".55" filter="url(#blur40)" />
+          <ellipse cx="1130" cy="300" rx="190" ry="260" fill="#BAE6FD" opacity=".55" filter="url(#blur40)" />
+
+          <!-- light beams -->
+          <path class="beam" d="M237 52 L165 600 L315 600 Z" fill="url(#beam)" />
+          <path class="beam beam--2" d="M430 52 L372 600 L500 600 Z" fill="url(#beam)" />
+          <path class="beam beam--2" d="M1010 52 L940 600 L1068 600 Z" fill="url(#beam)" />
+          <path class="beam" d="M1203 52 L1125 600 L1275 600 Z" fill="url(#beam)" />
+
+          <!-- chevrons left + mirrored right -->
+          <g filter="url(#shadow)" stroke-linejoin="miter">
+            <polygon class="band" points="390,-20 150,290 390,620 448,620 208,290 448,-20" fill="url(#bandFace)" />
+            <polyline class="edge" points="390,-20 150,290 390,620" />
+            <polyline class="tube" fill="none" stroke="#38BDF8" stroke-width="7" filter="url(#glow)" points="448,-20 208,290 448,620" />
+            <polygon class="band" points="480,-20 240,290 480,620 532,620 292,290 532,-20" fill="url(#bandFace)" />
+            <polyline class="edge" points="480,-20 240,290 480,620" />
+            <polyline class="tube" fill="none" stroke="#38BDF8" stroke-width="7" filter="url(#glow)" points="532,-20 292,290 532,620" />
+            <polygon class="band" points="562,-20 322,290 562,620 608,620 368,290 608,-20" fill="url(#bandFace)" />
+            <polyline class="edge" points="562,-20 322,290 562,620" />
+            <polyline class="tube tube--thin" fill="none" stroke="#38BDF8" stroke-width="5" filter="url(#glow)" points="608,-20 368,290 608,620" />
+          </g>
+          <g filter="url(#shadow)" stroke-linejoin="miter" transform="translate(1440 0) scale(-1 1)">
+            <polygon class="band" points="390,-20 150,290 390,620 448,620 208,290 448,-20" fill="url(#bandFace)" />
+            <polyline class="edge" points="390,-20 150,290 390,620" />
+            <polyline class="tube" fill="none" stroke="#38BDF8" stroke-width="7" filter="url(#glow)" points="448,-20 208,290 448,620" />
+            <polygon class="band" points="480,-20 240,290 480,620 532,620 292,290 532,-20" fill="url(#bandFace)" />
+            <polyline class="edge" points="480,-20 240,290 480,620" />
+            <polyline class="tube" fill="none" stroke="#38BDF8" stroke-width="7" filter="url(#glow)" points="532,-20 292,290 532,620" />
+            <polygon class="band" points="562,-20 322,290 562,620 608,620 368,290 608,-20" fill="url(#bandFace)" />
+            <polyline class="edge" points="562,-20 322,290 562,620" />
+            <polyline class="tube tube--thin" fill="none" stroke="#38BDF8" stroke-width="5" filter="url(#glow)" points="608,-20 368,290 608,620" />
+          </g>
+
+          <!-- center hexagon -->
+          <polygon points="560,8 880,8 1046,290 880,572 560,572 394,290" fill="none" stroke="url(#hexBand)" stroke-width="40" filter="url(#shadow)" />
+          <polygon points="548,-12 892,-12 1069,290 892,592 548,592 371,290" fill="none" stroke="#FFFFFF" stroke-width="2" opacity=".9" />
+          <polygon points="590,52 850,52 996,290 850,528 590,528 444,290" fill="url(#hexFill)" />
+          <polygon class="ring" points="575,32 865,32 1020,290 865,548 575,548 420,290" fill="none" stroke="#38BDF8" stroke-width="8" filter="url(#glow)" />
+
+          <!-- truss + lights -->
+          <rect x="188" y="18" width="1064" height="26" fill="url(#truss)" />
+          <rect x="188" y="18" width="1064" height="26" fill="none" stroke="#6B7C93" stroke-width="3" />
+          <g fill="#3A475A">
+            <rect x="222" y="44" width="30" height="18" rx="3" /><rect x="415" y="44" width="30" height="18" rx="3" />
+            <rect x="995" y="44" width="30" height="18" rx="3" /><rect x="1188" y="44" width="30" height="18" rx="3" />
+          </g>
+          <g class="lamp" fill="#BAE6FD" filter="url(#glow)">
+            <circle cx="237" cy="64" r="5" /><circle cx="430" cy="64" r="5" /><circle cx="1010" cy="64" r="5" /><circle cx="1203" cy="64" r="5" />
+          </g>
+          <g fill="#3A475A">
+            <rect x="112" y="552" width="32" height="16" rx="3" /><rect x="314" y="552" width="32" height="16" rx="3" />
+            <rect x="1094" y="552" width="32" height="16" rx="3" /><rect x="1296" y="552" width="32" height="16" rx="3" />
+          </g>
+          <g class="lamp lamp--2" fill="#38BDF8" filter="url(#glow)">
+            <rect x="118" y="550" width="20" height="4" /><rect x="320" y="550" width="20" height="4" />
+            <rect x="1100" y="550" width="20" height="4" /><rect x="1302" y="550" width="20" height="4" />
+          </g>
+        </svg>
+
+        <div class="trainer">
+          <img src="assets/images/antony-praveen-cutout.png" alt="Antony Praveen" width="1023" height="1537" />
+        </div>
+
+        <div class="burst" aria-hidden="true">
+          <svg viewBox="0 0 160 160">
+            <polygon points="80.0,6.0 89.1,16.7 100.8,9.0 106.6,21.8 120.0,17.7 121.9,31.6 135.9,31.5 133.8,45.4 147.3,49.3 141.4,62.0 153.2,69.5 144.0,80.0 153.2,90.5 141.4,98.0 147.3,110.7 133.8,114.6 135.9,128.5 121.9,128.4 120.0,142.3 106.6,138.2 100.8,151.0 89.1,143.3 80.0,154.0 70.9,143.3 59.2,151.0 53.4,138.2 40.0,142.3 38.1,128.4 24.1,128.5 26.2,114.6 12.7,110.7 18.6,98.0 6.8,90.5 16.0,80.0 6.8,69.5 18.6,62.0 12.7,49.3 26.2,45.4 24.1,31.5 38.1,31.6 40.0,17.7 53.4,21.8 59.2,9.0 70.9,16.7" fill="#7DD3FC" stroke="#0B1B3F" stroke-width="3" stroke-linejoin="round" />
+            <circle class="burst__spin" cx="80" cy="80" r="54" fill="none" stroke="#0B1B3F" stroke-width="1.5" stroke-dasharray="3 4" />
+          </svg>
+          <span><b>EARLY<br />BIRD</b><small>OFFER</small></span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- floating bubbles (same pattern as reference) -->
+    <div class="sparks" aria-hidden="true">
+      <span style="left:18%;width:7px;height:7px;animation-delay:0s"></span>
+      <span style="left:26%;width:5px;height:5px;animation-delay:2.4s"></span>
+      <span style="left:33%;width:8px;height:8px;animation-delay:4.8s"></span>
+      <span style="left:40%;width:6px;height:6px;animation-delay:1.2s"></span>
+      <span style="left:46%;width:5px;height:5px;animation-delay:3.6s"></span>
+      <span style="left:54%;width:7px;height:7px;animation-delay:.6s"></span>
+      <span style="left:61%;width:6px;height:6px;animation-delay:5.4s"></span>
+      <span style="left:67%;width:8px;height:8px;animation-delay:2s"></span>
+      <span style="left:74%;width:5px;height:5px;animation-delay:4.2s"></span>
+      <span style="left:81%;width:7px;height:7px;animation-delay:1.6s"></span>
+      <span style="left:12%;width:6px;height:6px;animation-delay:3s"></span>
+      <span style="left:88%;width:6px;height:6px;animation-delay:5s"></span>
+    </div>
+
+    <div class="stage__caption">
+      <div class="lockup">
+        <b class="lockup__name">Antony Praveen</b>
+        <span class="lockup__bar"></span>
+        <span class="lockup__brand">
+          <img class="lockup__icon" src="assets/images/logo-icon.png" alt="" width="427" height="403" />
+          <img class="lockup__word" src="assets/images/logo-wordmark.png" alt="Tech Tycoon Academy" width="822" height="262" />
+        </span>
+      </div>
+      <div class="livepill">
+        <span class="livedot"><span class="livecore"></span></span>
+        <span class="livepill__full">AI ENGINEER <em>|</em> <b>Founder &amp; Trainer at Tech Tycoon Academy</b></span>
+        <span class="livepill__short">AI ENGINEER <em>|</em> <b>Founder &amp; Trainer</b></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Main ===== -->
+  <main class="main">
+    <h1 class="headline fade"><mark>10+ Advanced AI Courses.</mark> <span class="nowrap">One Platform.</span></h1>
+    <p class="subhead fade">Learn AI. Automate Your Work. Grow Your Business. <mark>Grow Your Career.</mark></p>
+
+    <p class="intro fade">Learn from <b>Antony Praveen</b>, AI Engineer, Founder &amp; Trainer at Tech Tycoon Academy.</p>
+    <p class="intro intro--2 fade">Get 10+ advanced AI courses in one platform and learn how to use AI for business, automation, marketing, content, and more.</p>
+
+    <p class="label fade">OFFER ENDS IN 30 MINUTES</p>
+    <div class="clock fade" data-countdown>
+      <div><b data-m>30</b><small>MINS</small></div>
+      <div class="clock__sec"><b data-s>00</b><small>SECS</small></div>
+    </div>
+
+    <a href="#register" class="cta cta--pulse fade" data-register>
+      <svg class="cta__bolt" viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg>
+      CLAIM ₹30,000 OFFER
+      <svg class="cta__arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
+
+    <p class="priceline fade" id="offer">
+      <i></i>
+      Early Bird Offer · Original Price <s>₹50,000</s> · Offer Price <b>₹30,000</b> · Save ₹20,000 (40% OFF)
+    </p>
+
+    <ul class="perks fade">
+      <li><svg viewBox="0 0 24 24"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/></svg>Zero coding</li>
+      <li><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2M3 13h18"/></svg>Business-first AI</li>
+      <li><svg viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg>10+ AI courses, one platform</li>
+      <li><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20V3H6.5A2.5 2.5 0 004 5.5v14z"/><path d="M4 19.5A2.5 2.5 0 006.5 22H20v-5M8 7h8M8 11h6"/></svg>Including learning material</li>
+    </ul>
+
+    <div class="courses fade">
+      <p class="courses__title">ALL COURSES INCLUDED</p>
+      <ul>
+        <li>Advanced Claude Masterclass</li>
+        <li>AI Business &amp; Generative Models</li>
+        <li>AI for Non-Tech Working Professionals</li>
+        <li>AI Graphic Designing</li>
+        <li>End-to-End AI Business Automation</li>
+        <li>AI Passive Income Setup</li>
+        <li>AI-Powered Digital Marketing</li>
+        <li>AI Financial Management</li>
+        <li>Prompt Engineering</li>
+        <li>AI Content Creation</li>
+      </ul>
+    </div>
+  </main>
+
+  <!-- ===== Footer ===== -->
+  <footer class="footer">
+    <img class="footer__logo" src="assets/images/logo-full.png" alt="Tech Tycoon Academy" width="822" height="725" />
+    <nav class="footer__links"><a href="#">Privacy Policy</a><a href="#">Terms &amp; Conditions</a></nav>
+    <p class="footer__note">This site is not a part of the Facebook website or Facebook Inc. Additionally, this site is NOT endorsed by Facebook in any way. FACEBOOK is a trademark of FACEBOOK, Inc.</p>
+    <p class="footer__copy">© <span id="year">2026</span> Tech Tycoon Academy. All Rights Reserved.</p>
+  </footer>
+
+  <!-- ===== Mobile sticky CTA ===== -->
+  <div class="sticky">
+    <a href="#register" class="cta cta--sticky" data-register>
+      <svg class="cta__bolt" viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg>
+      CLAIM ₹30,000 OFFER
+    </a>
+  </div>
+
+  <!-- ===== Registration modal ===== -->
+  <div class="reg" id="register" role="dialog" aria-modal="true" aria-labelledby="regTitle" hidden style="display:none">
+    <div class="reg__overlay" data-reg-close></div>
+    <div class="reg__card">
+      <button class="reg__close" type="button" aria-label="Close registration form" data-reg-close>
+        <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+
+      <div class="reg__head">
+        <img src="assets/images/logo-icon.png" alt="" width="427" height="403" />
+        <div>
+          <h2 id="regTitle">Register Now</h2>
+          <p>10+ Advanced AI Courses · One Platform</p>
+        </div>
+      </div>
+
+      <!-- form view -->
+      <form class="reg__form" id="regForm" novalidate>
+        <div class="field">
+          <label for="regName">Full Name</label>
+          <input id="regName" name="name" type="text" autocomplete="name" placeholder="Enter your full name" required />
+          <small class="field__err" data-err="name"></small>
+        </div>
+        <div class="field">
+          <label for="regEmail">Email Address</label>
+          <input id="regEmail" name="email" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com" required />
+          <small class="field__err" data-err="email"></small>
+        </div>
+        <div class="field">
+          <label for="regPhone">WhatsApp / Mobile Number</label>
+          <input id="regPhone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="10-digit mobile number" required />
+          <small class="field__err" data-err="phone"></small>
+        </div>
+        <div class="field">
+          <label for="regCoupon">Coupon Code</label>
+          <div class="coupon" id="couponBox">
+            <svg class="coupon__icon" viewBox="0 0 24 24"><path d="M20.6 13.4l-7.2 7.2a2 2 0 01-2.8 0L2 12V2h10l8.6 8.6a2 2 0 010 2.8z"/><circle cx="7" cy="7" r="1.5"/></svg>
+            <input id="regCoupon" name="coupon" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Enter coupon code" />
+            <span class="coupon__badge" id="couponBadge">Applied</span>
+            <button class="coupon__remove" id="couponRemove" type="button" aria-label="Remove coupon">
+              <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>
+            </button>
+          </div>
+          <small class="coupon__msg" id="couponMsg" aria-live="polite"></small>
+        </div>
+
+        <div class="summary" aria-live="polite">
+          <div class="summary__row"><span>Original Price</span><s>₹50,000</s></div>
+          <div class="summary__row" id="sumOffer"><span>Offer Price</span><b id="sumOfferVal">₹30,000</b></div>
+          <div class="summary__row summary__row--special" id="sumSpecial" hidden><span>AIANTONY Special Price</span><b>₹15,000</b></div>
+          <div class="summary__total"><span>Final Payable Price</span><b id="sumFinal">₹30,000</b></div>
+        </div>
+
+        <p class="reg__alert" id="regAlert" role="alert" hidden></p>
+
+        <button class="cta reg__submit" id="regSubmit" type="submit">
+          <span class="reg__spinner" aria-hidden="true"></span>
+          <span class="reg__label">REGISTER NOW</span>
+          <svg class="cta__arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+        <p class="reg__note">No payment is taken on this form.</p>
+      </form>
+
+      <!-- success view (only shown when the server confirms the registration) -->
+      <div class="reg__done" id="regDone" hidden>
+        <div class="reg__tick"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+        <h3>Registration received!</h3>
+        <p id="regDoneText"></p>
+        <button class="cta reg__submit" type="button" data-reg-close>DONE</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/register.js"></script>
+</body>
+</html>
