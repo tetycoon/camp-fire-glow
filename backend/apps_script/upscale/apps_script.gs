@@ -1025,7 +1025,7 @@ function sendMasterclassEmail(email, name, sessionDate, sessionTime, totalAmount
     emailOptions.attachments = [pdfAttachment];
   }
   MailApp.sendEmail(emailOptions);
-  return { invoiceNumber: fdInvoiceNo, courseTitle: courseTitle };
+  return { invoiceNumber: effectiveInvoiceNo, courseTitle: courseTitle };
 }
 
 function constantTimeEquals(a, b) {
