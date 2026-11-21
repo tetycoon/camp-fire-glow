@@ -23,7 +23,7 @@
   }
 
   // Countdown: 30 minutes from the visitor's first visit.
-  // The end time is saved once and never reset on refresh — it stops at 00:00.
+  // The end time is saved once and never reset on refresh - it stops at 00:00.
   var KEY = "tta_offer_end_30m", end = 0;
   try { end = parseInt(localStorage.getItem(KEY), 10) || 0; } catch (e) {}
   if (!end) {
@@ -49,7 +49,7 @@
 
   document.getElementById("year").textContent = new Date().getFullYear();
 
-  // Confetti burst on load — same pattern as reference: 26 from left, 26 from right, 30 falling from top
+  // Confetti burst on load - same pattern as reference: 26 from left, 26 from right, 30 falling from top
   if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     var colors = ["#0B1B3F", "#38BDF8", "#7DD3FC", "#0284C7", "#FFFFFF", "#BAE6FD"];
     var box = document.createElement("div");
