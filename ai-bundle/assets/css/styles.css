@@ -1,4 +1,4 @@
-/* Tech Tycoon Academy — light sky blue · white · dark navy */
+/* Tech Tycoon Academy - light sky blue / white / dark navy */
 :root {
   --sky-50: #F2F9FE;
   --sky-100: #E3F2FC;
@@ -111,7 +111,7 @@ a { color: inherit; }
 .curtain--left { left: 0; -webkit-mask-image: linear-gradient(90deg, #000 70%, transparent); mask-image: linear-gradient(90deg, #000 70%, transparent); }
 .curtain--right { right: 0; -webkit-mask-image: linear-gradient(270deg, #000 70%, transparent); mask-image: linear-gradient(270deg, #000 70%, transparent); }
 
-/* floating bubbles — reference .spark / floatup */
+/* floating bubbles - reference .spark / floatup */
 .sparks { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
 .sparks span {
   position: absolute; bottom: 40px; border-radius: 50%; opacity: 0;
@@ -125,7 +125,7 @@ a { color: inherit; }
   100% { transform: translateY(-560px) scale(1.1); opacity: 0; }
 }
 
-/* confetti burst on load — reference .cf popburst / confall */
+/* confetti burst on load - reference .cf popburst / confall */
 .confetti { position: fixed; inset: 0; z-index: 60; pointer-events: none; overflow: hidden; }
 .cf { position: absolute; bottom: -20px; opacity: 0; animation: popburst 3.4s cubic-bezier(.12,.75,.3,1) forwards; }
 .cf.l { left: -10px; }
@@ -142,9 +142,9 @@ a { color: inherit; }
   100% { opacity: 0; transform: translate(var(--x), 110vh) rotate(var(--r2)); }
 }
 
-/* trainer photo — placed like the reference cut-out, edges blended into the hexagon */
+/* trainer photo - placed like the reference cut-out, edges blended into the hexagon */
 .trainer {
-  /* fills the inner hexagon exactly (444–996 × 52–528 in scene units) */
+  /* fills the inner hexagon exactly (444-996 x 52-528 in scene units) */
   position: absolute; left: 444px; top: 52px; width: 552px; height: 476px;
   clip-path: polygon(26.45% 0, 73.55% 0, 100% 50%, 73.55% 100%, 26.45% 100%, 0 50%);
   -webkit-mask-image: linear-gradient(180deg, #000 68%, rgba(0,0,0,.15) 100%);
@@ -215,7 +215,7 @@ a { color: inherit; }
 
 /* ===== Main ===== */
 .main { max-width: 1160px; margin: 0 auto; padding: 18px 20px 46px; text-align: center; display: flex; flex-direction: column; align-items: center; }
-/* reference .hl: highlight draws in left → right */
+/* reference .hl: highlight draws in left -> right */
 mark {
   background: linear-gradient(var(--sky-300), var(--sky-300)) no-repeat 0 0 / 0% 100%;
   color: var(--ink);
@@ -478,7 +478,7 @@ img.footer__logo { display: block; width: 150px; height: auto; margin: 0 auto; }
   padding: 6px 10px; border-radius: 999px; background: #059669; color: #fff;
   font: 800 11px/1 var(--wide); font-stretch: 125%; letter-spacing: .04em;
 }
-.coupon__badge::before { content: "✓"; font-family: "Inter", sans-serif; }
+.coupon__badge::before { content: "\2713 "; font-family: "Inter", sans-serif; }
 .coupon__remove { position: absolute; right: 8px; width: 32px; height: 32px; border-radius: 8px; border: 0; background: var(--sky-100); cursor: pointer; display: none; place-items: center; }
 .coupon__remove:hover { background: #FEE2E2; }
 .coupon.is-applied input { border-color: #10B981; background: #F0FDF8; }
