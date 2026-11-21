@@ -48,7 +48,6 @@ export const AI_FILMMAKING_APPS_SCRIPT_URL =
   'https://script.google.com/macros/s/AKfycbzycz3SBGah4HEEMlCKGOBcU5wBg8zoY3QJFVO_1YwnPAFREa5zgogQqKo8JXMlTM4LBw/exec';
 
 const RAZORPAY_KEY_ID_IN = 'rzp_live_T2CbVONQc6qrqj';
-const RAZORPAY_KEY_ID_INTL = 'rzp_live_gfoS1OjC8tvWjP';
 
 const WHATSAPP_COMMUNITY_LINK = 'https://chat.whatsapp.com/GuJIGDcfIIfDZHlG0MduvM';
 const WHATSAPP_BOT_NUMBER = '917010340494';
@@ -628,7 +627,7 @@ const AiFilmmakingPage: React.FC = () => {
       }
 
       const isInternational = formData.countryCode !== '+91';
-      const activeKeyId = isInternational ? RAZORPAY_KEY_ID_INTL : RAZORPAY_KEY_ID_IN;
+      let activeKeyId = RAZORPAY_KEY_ID_IN;
       const fullPhone = `${formData.countryCode}${cleanDigits}`;
       const modeLabel = includePdfMaterial
         ? 'Live Masterclass + Session PDF & Material'
@@ -684,6 +683,9 @@ const AiFilmmakingPage: React.FC = () => {
             })
           });
           const orderJson = await orderRes.json();
+          if (orderJson && orderJson.keyId) {
+            activeKeyId = orderJson.keyId;
+          }
           if (orderJson && orderJson.orderId) {
             createdOrderId = orderJson.orderId;
           }

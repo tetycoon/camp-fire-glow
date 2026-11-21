@@ -76,7 +76,7 @@ const ConsultingBookingForm: React.FC<ConsultingBookingFormProps> = ({ onSuccess
   const [companyName, setCompanyName] = useState("");
   const [gstError, setGstError] = useState("");
 
-  const gstBreakdown = calculateGstBreakdown(CONSULTING_FEE);
+  const gstBreakdown = { baseAmount: CONSULTING_FEE, cgstAmount: 0, sgstAmount: 0, gstAmount: 0, totalAmount: CONSULTING_FEE };
 
   // Country Code State - Default to India (IN / +91)
   const defaultCountry = countryCodes.find(c => c.iso === "IN") || countryCodes.find(c => c.code === "+91") || countryCodes[0];
@@ -181,6 +181,7 @@ const ConsultingBookingForm: React.FC<ConsultingBookingFormProps> = ({ onSuccess
     const payableInr = isTestEmail ? 1 : gstBreakdown.totalAmount;
     const amountInPaise = payableInr * 100;
     let generatedOrderId = `ORD_CONSULT_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+    let activeKeyId = RAZORPAY_KEY_ID;
 
     const scriptUrl = window.CONSULTING_APPS_SCRIPT_URL || DEFAULT_CONSULTING_APPS_SCRIPT_URL;
 
@@ -213,6 +214,7 @@ const ConsultingBookingForm: React.FC<ConsultingBookingFormProps> = ({ onSuccess
             body: JSON.stringify(leadPayload)
           });
           const sheetResult = await sheetResponse.json();
+          if (sheetResult && sheetResult.keyId) { activeKeyId = sheetResult.keyId; }
           if (sheetResult && sheetResult.orderId) {
             generatedOrderId = sheetResult.orderId;
           }
@@ -236,7 +238,7 @@ const ConsultingBookingForm: React.FC<ConsultingBookingFormProps> = ({ onSuccess
 
       // 3. Razorpay Options
       const options = {
-        key: isInternational ? RAZORPAY_INTL_KEY_ID : RAZORPAY_KEY_ID,
+        key: activeKeyId,
         order_id: generatedOrderId.startsWith("order_") ? generatedOrderId : undefined,
         amount: amountInPaise,
         currency: "INR",

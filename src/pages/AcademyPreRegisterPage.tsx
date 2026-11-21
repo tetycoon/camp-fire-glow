@@ -148,6 +148,7 @@ export default function AcademyPreRegisterPage() {
       };
 
       let orderId = "";
+      let activeKeyId = RAZORPAY_KEY_ID;
       try {
         const orderRes = await fetch(APPS_SCRIPT_URL, {
           method: "POST",
@@ -156,6 +157,7 @@ export default function AcademyPreRegisterPage() {
         });
 
         const orderData = await orderRes.json();
+        if (orderData && orderData.keyId) { activeKeyId = orderData.keyId; }
         if (orderData && orderData.orderId) {
           orderId = orderData.orderId;
         }
@@ -170,7 +172,7 @@ export default function AcademyPreRegisterPage() {
       }
 
       const options = {
-        key: isInternational ? RAZORPAY_INTL_KEY_ID : RAZORPAY_KEY_ID,
+        key: activeKeyId,
         order_id: orderId || undefined,
         amount: amountInPaise,
         currency: "INR",

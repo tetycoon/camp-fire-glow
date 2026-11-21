@@ -137,7 +137,7 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
   const standardPrice = isInternational ? 13999 : 9999;
   const finalPrice = isInternational ? 8449 : 6449;
   const savings = standardPrice - finalPrice;
-  const gstBreakdown = calculateInclusiveGstBreakdown(finalPrice);
+  const gstBreakdown = { baseAmount: finalPrice, cgstAmount: 0, sgstAmount: 0, gstAmount: 0, totalAmount: finalPrice };
 
   const filteredCountries = countryCodes.filter(
     (c) =>
@@ -285,6 +285,7 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
     });
 
     let generatedOrderId = "ORD_BGM_" + Date.now();
+    let activeKeyId = RAZORPAY_KEY_ID;
 
     const leadPayload = {
       dateTime: currentDateTime,
@@ -316,6 +317,7 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
           body: JSON.stringify(leadPayload)
         });
         const sheetResult = await sheetResponse.json();
+        if (sheetResult && sheetResult.keyId) { activeKeyId = sheetResult.keyId; }
         if (sheetResult && sheetResult.orderId) {
           generatedOrderId = sheetResult.orderId;
         }
@@ -339,7 +341,7 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
 
       // 3. Configure Razorpay Options
       const options = {
-        key: isInternational ? RAZORPAY_INTL_KEY_ID : RAZORPAY_KEY_ID,
+        key: activeKeyId,
         order_id: generatedOrderId.startsWith("order_") ? generatedOrderId : undefined,
         amount: amountInPaise,
         currency: "INR",

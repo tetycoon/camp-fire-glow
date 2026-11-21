@@ -102,7 +102,7 @@ const ProfessionalRegistrationForm: React.FC = () => {
   const isVipApplied = appliedCoupon.toUpperCase() === "AMIABLE" || appliedCoupon.toUpperCase() === "TECHTYCOON";
   const finalPrice = isInternational ? 8449 : 6449;
   const discountAmount = standardPrice - finalPrice;
-  const gstBreakdown = calculateInclusiveGstBreakdown(finalPrice);
+  const gstBreakdown = { baseAmount: finalPrice, cgstAmount: 0, sgstAmount: 0, gstAmount: 0, totalAmount: finalPrice };
 
   // Phone validation
   const cleanPhone = formData.phone.replace(/\D/g, "");
@@ -247,6 +247,7 @@ const ProfessionalRegistrationForm: React.FC = () => {
     const payableInr = isTestEmail ? 1 : gstBreakdown.totalAmount;
     const amountInPaise = payableInr * 100;
     let generatedOrderId = `ORD_PROF_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+    let activeKeyId = RAZORPAY_KEY_ID;
 
     const scriptUrl = window.PROFESSIONALS_APPS_SCRIPT_URL || DEFAULT_APPS_SCRIPT_URL;
 
@@ -281,6 +282,7 @@ const ProfessionalRegistrationForm: React.FC = () => {
           body: JSON.stringify(leadPayload)
         });
         const sheetResult = await sheetResponse.json();
+        if (sheetResult && sheetResult.keyId) { activeKeyId = sheetResult.keyId; }
         if (sheetResult && sheetResult.orderId) {
           generatedOrderId = sheetResult.orderId;
         }
@@ -304,7 +306,7 @@ const ProfessionalRegistrationForm: React.FC = () => {
 
       // 3. Configure Razorpay Options
       const options = {
-        key: isInternational ? RAZORPAY_INTL_KEY_ID : RAZORPAY_KEY_ID,
+        key: activeKeyId,
         order_id: generatedOrderId.startsWith("order_") ? generatedOrderId : undefined,
         amount: amountInPaise,
         currency: "INR",

@@ -806,7 +806,7 @@ async function processPayment() {
     }
 
     const rzp = new Razorpay({
-      key: isInternational ? "rzp_live_gfoS1OjC8tvWjP" : "rzp_live_T2CbVONQc6qrqj",
+      key: result.keyId || "rzp_live_T2CbVONQc6qrqj",
       amount: amountToPay * 100,
       currency: "INR",
       name: "Tech Tycoon MasterClass",

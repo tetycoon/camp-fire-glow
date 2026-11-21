@@ -6,7 +6,7 @@ import { getMasterclassDateStrings } from "../../lib/masterclassDateUtils";
 import { calculateInclusiveGstBreakdown, isValidGstin, sanitizeTextInput, isAuthorizedTestEmail, VERIFIED_BACKEND_ENDPOINTS } from "../../lib/gstUtils";
 import GstPriceBreakdown from "../common/GstPriceBreakdown";
 
-const RAZORPAY_KEY_ID = "rzp_live_gfoS1OjC8tvWjP";
+const RAZORPAY_KEY_ID = "rzp_live_T2CbVONQc6qrqj";
 const GOOGLE_SHEET_URL = VERIFIED_BACKEND_ENDPOINTS.ai_masterclass;
 
 

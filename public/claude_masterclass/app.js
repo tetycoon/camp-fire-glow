@@ -752,7 +752,7 @@ async function handleFormSubmit(e) {
     submitBtn.disabled = true;
 
     const isInternational = countryCode !== '+91';
-    const razorpayKey = isInternational ? "rzp_live_gfoS1OjC8tvWjP" : "rzp_live_T2CbVONQc6qrqj";
+    let razorpayKey = "rzp_live_T2CbVONQc6qrqj";
 
     try {
         const { baseAmount, gstAmount } = getGstBreakdown();
@@ -787,6 +787,7 @@ async function handleFormSubmit(e) {
                 })
             });
             const data = await res.json();
+            if (data && data.keyId) { razorpayKey = data.keyId; }
             if (data && data.orderId) {
                 orderId = data.orderId;
 

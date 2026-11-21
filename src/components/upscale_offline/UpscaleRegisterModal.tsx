@@ -204,7 +204,7 @@ const UpscaleRegisterModal: React.FC = () => {
             }
 
             const options: RazorpayOptions = {
-                key: form.countryCode !== "+91" ? "rzp_live_gfoS1OjC8tvWjP" : RAZORPAY_KEY_ID,
+                key: result.keyId || RAZORPAY_KEY_ID,
                 order_id: result.orderId,
                 amount: finalAmount,
                 currency: "INR",
