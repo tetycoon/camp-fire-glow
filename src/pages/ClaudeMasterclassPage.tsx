@@ -584,7 +584,7 @@ const ClaudeMasterclassPage: React.FC = () => {
       }
 
       const isInternational = formData.countryCode !== '+91';
-      let razorpayKey = "rzp_live_T2CbVONQc6qrqj";
+      let razorpayKey = "rzp_live_gfoS1OjC8tvWjP";
 
       // Step 1: Call Google Apps Script Web App
       let orderId = "";

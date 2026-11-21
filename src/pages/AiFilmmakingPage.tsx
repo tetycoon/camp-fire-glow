@@ -47,7 +47,7 @@ import event6 from '../assets/event-6.jpg';
 export const AI_FILMMAKING_APPS_SCRIPT_URL =
   'https://script.google.com/macros/s/AKfycbzycz3SBGah4HEEMlCKGOBcU5wBg8zoY3QJFVO_1YwnPAFREa5zgogQqKo8JXMlTM4LBw/exec';
 
-const RAZORPAY_KEY_ID_IN = 'rzp_live_T2CbVONQc6qrqj';
+const RAZORPAY_KEY_ID_IN = 'rzp_live_gfoS1OjC8tvWjP';
 
 const WHATSAPP_COMMUNITY_LINK = 'https://chat.whatsapp.com/GuJIGDcfIIfDZHlG0MduvM';
 const WHATSAPP_BOT_NUMBER = '917010340494';

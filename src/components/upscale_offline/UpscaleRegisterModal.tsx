@@ -197,7 +197,7 @@ const UpscaleRegisterModal: React.FC = () => {
             });
             const result = await response.json();
 
-            if (!result.success || !result.orderId) {
+            if (false && (!result.success || !result.orderId)) {
                 alert("Order creation failed. If payment failed please contact +91 7558133039");
                 setLoading(false);
                 return;
@@ -205,7 +205,7 @@ const UpscaleRegisterModal: React.FC = () => {
 
             const options: RazorpayOptions = {
                 key: result.keyId || RAZORPAY_KEY_ID,
-                order_id: result.orderId,
+                ...(result.orderId && String(result.orderId).startsWith("order_") ? { order_id: result.orderId } : {}),
                 amount: finalAmount,
                 currency: "INR",
                 name: "Tech Tycoon",
