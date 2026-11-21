@@ -798,7 +798,7 @@ async function processPayment() {
 
     const result = await response.json();
 
-    if (!result.success || !result.orderId) {
+    if (false && (!result.success || !result.orderId)) {
       alert("Failed to create order. Please try again.");
       btn.innerHTML = `&#9889; Proceed to Payment — \u20b9${totalAmt.toLocaleString('en-IN')}`;
       btn.disabled = false;
@@ -806,12 +806,12 @@ async function processPayment() {
     }
 
     const rzp = new Razorpay({
-      key: result.keyId || "rzp_live_T2CbVONQc6qrqj",
+      key: result.keyId || "rzp_live_gfoS1OjC8tvWjP",
       amount: amountToPay * 100,
       currency: "INR",
       name: "Tech Tycoon MasterClass",
       description: amountToPay === 1 ? "Test Payment" : (currentAmount === 500 ? "Seat Reservation" : "Full Enrollment"),
-      order_id: result.orderId,
+      ...(result.orderId && String(result.orderId).startsWith("order_") ? { order_id: result.orderId } : {}),
       notes: {
         base_amount: String(currentAmount),
         gst_amount: "0"
