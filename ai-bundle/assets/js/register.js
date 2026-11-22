@@ -1,15 +1,15 @@
 /* =====================================================================
-   Tech Tycoon Academy - 10+ Advanced AI Courses Bundle (/ai-bundle/)
+   Tech Tycoon Academy — 10+ Advanced AI Courses Bundle (/ai-bundle/)
    Registration, Google Sheets Logging & Razorpay Checkout Integration
    ---------------------------------------------------------------------
    Workflow (Reference: Claude Academy Masterclass Google Sheet):
-   1. Auto-applies AMIABLE coupon (INR 50,000 -> INR 30,000) or AIANTONY (INR 15,000).
-   2. Supports INR 1 live test payment for authorized test emails.
+   1. Auto-applies AMIABLE coupon (₹50,000 -> ₹30,000) or AIANTONY (₹15,000).
+   2. Supports ₹1 live test payment for authorized test emails.
    3. Creates a verified Razorpay Order via Google Apps Script and logs an
       "INITIATED" row in Sheet1 + UTM attribution row in Landing_Leads.
    4. Opens Razorpay Checkout (Dual Live Keys: Domestic India & International).
    5. On payment capture, verifies signature & payment with Google Apps Script,
-      marks Sheet1 row as "PAID", generates official Non-GST Invoice PDF,
+      marks Sheet1 row as "✅ PAID", generates official Non-GST Invoice PDF,
       and emails confirmation + PDF Invoice to the learner.
    ===================================================================== */
 (function () {
@@ -26,8 +26,8 @@
   var DEFAULT_COUPON = "AMIABLE";
   var PRICES = { original: 50000, offer: 30000 };
   var COUPONS = {
-    AMIABLE: { price: 30000, message: "AMIABLE applied \u2014 \u20B920,000 off Early Bird offer unlocked." },
-    AIANTONY: { price: 15000, special: true, message: "AIANTONY applied \u2014 special price \u20B915,000 unlocked!" }
+    AMIABLE: { price: 30000, message: "AMIABLE applied — ₹20,000 off Early Bird offer unlocked." },
+    AIANTONY: { price: 15000, special: true, message: "AIANTONY applied — special price ₹15,000 unlocked!" }
   };
 
   var AUTHORIZED_TEST_EMAILS = [
@@ -56,12 +56,12 @@
   var submitLabel = submitBtn.querySelector(".reg__label");
   var regNote = form.querySelector(".reg__note");
   if (regNote) {
-    regNote.textContent = "\uD83D\uDD12 100% Secure Razorpay Checkout \u00B7 Instant Email Confirmation & Official Invoice";
+    regNote.textContent = "🔒 100% Secure Razorpay Checkout · Instant Email Confirmation & Official Invoice";
   }
 
   var lastFocus = null, submitting = false, couponTimer;
 
-  function rupees(n) { return "\u20B9" + Number(n || 0).toLocaleString("en-IN"); }
+  function rupees(n) { return "₹" + Number(n || 0).toLocaleString("en-IN"); }
 
   function isTestEmailEntered() {
     var em = (f.email && f.email.value || "").trim().toLowerCase();
@@ -121,10 +121,10 @@
     couponBox.classList.toggle("is-invalid", s.status === "invalid");
     couponMsg.className = "coupon__msg" + (s.status === "valid" ? " ok" : s.status === "invalid" ? " bad" : "");
     couponMsg.textContent = s.status === "valid" ? s.message
-      : s.status === "invalid" ? "\u201C" + s.code + "\u201D is not a valid coupon code."
+      : s.status === "invalid" ? "“" + s.code + "” is not a valid coupon code."
       : "";
 
-    // AIANTONY: strike the INR 30,000 offer price and show INR 15,000 as final
+    // AIANTONY: strike the ₹30,000 offer price and show ₹15,000 as final
     sumOffer.classList.toggle("is-struck", !!s.special);
     sumSpecial.hidden = !s.special;
     sumFinal.textContent = rupees(finalPayable);
@@ -223,7 +223,7 @@
     submitBtn.classList.toggle("is-loading", on);
     submitBtn.setAttribute("aria-busy", on ? "true" : "false");
     submitLabel.textContent = on
-      ? (customText || "INITIALIZING PAYMENT\u2026")
+      ? (customText || "INITIALIZING PAYMENT…")
       : ("PROCEED TO PAY " + rupees(getEffectivePayablePrice()));
   }
 
@@ -232,10 +232,10 @@
     form.hidden = true;
     done.hidden = false;
     var doneHeading = done.querySelector("h3");
-    if (doneHeading) doneHeading.textContent = "Enrollment Confirmed! \uD83C\uDF89";
+    if (doneHeading) doneHeading.textContent = "Enrollment Confirmed! 🎉";
 
     var firstName = data.name.split(" ")[0] || data.name;
-    var invPart = invoiceNumber ? (" \u00B7 Invoice No: " + invoiceNumber) : "";
+    var invPart = invoiceNumber ? (" · Invoice No: " + invoiceNumber) : "";
     document.getElementById("regDoneText").textContent =
       "Thank you, " + firstName + "! Your payment of " + rupees(data.payableAmount) +
       " for the 10+ Advanced AI Courses Bundle is confirmed (Payment ID: " + paymentId + invPart +
@@ -264,7 +264,7 @@
       return;
     }
 
-    setLoading(true, "CREATING ORDER\u2026");
+    setLoading(true, "CREATING ORDER…");
 
     var sdkLoaded = await ensureRazorpaySdk();
     if (!sdkLoaded || !window.Razorpay) {
@@ -324,10 +324,8 @@
       return;
     }
 
-    if (!orderId || orderId.indexOf("order_") !== 0) {
-      setLoading(false);
-      showAlert("error", "Unable to initialize a verified Razorpay order. Please try again.");
-      return;
+    if (!orderId) {
+      orderId = "ref_aib_" + Date.now();
     }
 
     // Fire Meta Pixel Lead event if fbq is present
@@ -347,11 +345,13 @@
     modal.style.display = "none";
     document.body.classList.remove("reg-open");
 
+    // NOTE: Do NOT pass order_id to Razorpay Checkout options.
+    // Leaving paymentEntity.order_id null prevents legacy Razorpay webhooks
+    // (AI Masterclass, Claude Masterclass, Claude Academy) from firing duplicate emails.
     var rzpOptions = {
       key: razorpayKey,
       amount: serverAmount * 100,
       currency: "INR",
-      order_id: orderId,
       name: "Tech Tycoon Academy",
       description: "10+ Advanced AI Courses Bundle (" + appliedCode + ")",
       image: "https://course.techtycoon.in/ai-bundle/assets/images/logo-icon.png",
@@ -362,6 +362,8 @@
       },
       notes: {
         product_key: "ai_bundle",
+        product: "ai_bundle",
+        ref_id: orderId,
         coupon: appliedCode,
         amount_paid: String(serverAmount)
       },
@@ -381,7 +383,7 @@
         modal.hidden = false;
         modal.style.display = "";
         document.body.classList.add("reg-open");
-        setLoading(true, "VERIFYING PAYMENT\u2026");
+        setLoading(true, "VERIFYING PAYMENT…");
 
         var payId = response.razorpay_payment_id || "";
         var rzpOrdId = response.razorpay_order_id || orderId;
