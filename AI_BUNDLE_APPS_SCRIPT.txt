@@ -72,6 +72,7 @@ const PRICING_CONFIG = {
 };
 
 const INCLUDED_COURSES = [
+  "Advance Filmmaking Mastery & Video Editing",
   "Advanced Claude Masterclass",
   "AI Business & Generative Models",
   "AI for Non-Tech Working Professionals",
