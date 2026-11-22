@@ -462,17 +462,18 @@ function doPost(e) {
     // 4. Direct Razorpay Server Webhook (payment.captured / order.paid)
     if (body.event === "payment.captured" || body.event === "order.paid") {
       const paymentEntity = body.payload && body.payload.payment && body.payload.payment.entity;
-      if (!paymentEntity || !paymentEntity.order_id || !paymentEntity.id) {
+      if (!paymentEntity || !paymentEntity.id) {
         return createJsonResponse({ success: false, error: "Invalid webhook payment entity" });
       }
       const notes = paymentEntity.notes || {};
       const noteProductKey = String(notes.product_key || notes.product || body.target_product || "").trim().toLowerCase();
-      if (noteProductKey && noteProductKey !== EXPECTED_PRODUCT_KEY && noteProductKey !== "ai-bundle") {
+      if (noteProductKey !== EXPECTED_PRODUCT_KEY && noteProductKey !== "ai-bundle") {
         writeToLogs("ISOLATION_SKIP", "Ignored non-ai_bundle webhook (" + noteProductKey + "): " + paymentEntity.id);
         return createJsonResponse({ success: false, ignored: true });
       }
+      const effectiveOrderRef = paymentEntity.order_id || notes.ref_id || notes.order_ref || ("ref_aib_" + paymentEntity.id.replace(/^pay_/, ""));
       const res = processVerifiedBundlePayment(
-        paymentEntity.order_id,
+        effectiveOrderRef,
         paymentEntity.id,
         false,
         paymentEntity.amount ? Math.round(Number(paymentEntity.amount) / 100) : undefined,
@@ -486,25 +487,29 @@ function doPost(e) {
       return createJsonResponse(res);
     }
 
-    // 5. New Registration & Razorpay Order Creation (Triggered when user submits Register Now modal)
+    // 5. New Registration & Order Reference Creation (Triggered when user submits Register Now modal)
+    // NOTE: Uses a clean sheet reference ID ("ref_aib_...") instead of a Razorpay /v1/orders order_id
+    // so Razorpay's legacy webhooks on other Google Sheets (AI Masterclass, Claude Masterclass, Claude Academy)
+    // see paymentEntity.order_id === null and immediately skip sending duplicate emails!
     if (body.name && body.email && body.phone && !body.object) {
       const pricing = resolveBundlePricing(body);
-      let orderResult = {
-        orderId: "order_direct_" + Utilities.getUuid().replace(/-/g, "").substring(0, 14),
-        keyId: getRazorpayKeyId(false)
-      };
-      try {
-        orderResult = createRazorpayOrder(body, pricing);
-      } catch (orderErr) {
-        writeToLogs("ORDER_CREATE_FALLBACK", orderErr.message);
-      }
-      saveToSheet(body, orderResult.orderId, pricing);
-      saveRegistrationToLandingLeads(body, orderResult.orderId, pricing);
+      const phoneStr = String(body.phone || "").trim();
+      const countryCode = String(body.countryCode || "").trim();
+      const isInternational = Boolean(
+        body.isInternational === true ||
+        (countryCode && countryCode !== "+91") ||
+        (phoneStr.startsWith("+") && !phoneStr.startsWith("+91"))
+      );
+      const refOrderId = "ref_aib_" + Utilities.getUuid().replace(/-/g, "").substring(0, 14);
+      const keyId = getRazorpayKeyId(isInternational);
+
+      saveToSheet(body, refOrderId, pricing);
+      saveRegistrationToLandingLeads(body, refOrderId, pricing);
 
       return createJsonResponse({
         success: true,
-        orderId: orderResult.orderId,
-        razorpayKeyId: orderResult.keyId,
+        orderId: refOrderId,
+        razorpayKeyId: keyId,
         amount: pricing.payableAmount,
         currency: "INR",
         couponCode: pricing.couponCode,
@@ -626,8 +631,8 @@ function verifyPaymentWithRazorpayServer(orderId, paymentId, expectedAmountInr, 
   const cleanPaymentId = String(paymentId || "").trim();
   const expectedPaise = Math.round(Number(expectedAmountInr) * 100);
 
-  const creds = getRazorpayCredentials(isIntl);
-  const credentials = Utilities.base64Encode(creds.keyId + ":" + creds.keySecret);
+  let creds = getRazorpayCredentials(isIntl);
+  let credentials = Utilities.base64Encode(creds.keyId + ":" + creds.keySecret);
   const url = "https://api.razorpay.com/v1/payments/" + encodeURIComponent(cleanPaymentId);
   let res = UrlFetchApp.fetch(url, {
     method: "get",
@@ -636,11 +641,11 @@ function verifyPaymentWithRazorpayServer(orderId, paymentId, expectedAmountInr, 
   });
 
   if (res.getResponseCode() !== 200 && creds.isIntl) {
-    const domCreds = getRazorpayCredentials(false);
-    const domAuth = Utilities.base64Encode(domCreds.keyId + ":" + domCreds.keySecret);
+    creds = getRazorpayCredentials(false);
+    credentials = Utilities.base64Encode(creds.keyId + ":" + creds.keySecret);
     res = UrlFetchApp.fetch(url, {
       method: "get",
-      headers: { Authorization: "Basic " + domAuth, "Content-Type": "application/json" },
+      headers: { Authorization: "Basic " + credentials, "Content-Type": "application/json" },
       muteHttpExceptions: true
     });
   }
@@ -652,10 +657,19 @@ function verifyPaymentWithRazorpayServer(orderId, paymentId, expectedAmountInr, 
   if (!payment || payment.id !== cleanPaymentId) {
     throw new Error("Payment record mismatch.");
   }
-  if (payment.order_id !== cleanOrderId) {
+  if (cleanOrderId.indexOf("order_") === 0 && cleanOrderId.indexOf("order_direct") !== 0 && payment.order_id && payment.order_id !== cleanOrderId) {
     throw new Error("Payment belongs to a different order.");
   }
-  if (payment.status !== "captured" && payment.status !== "authorized") {
+  if (payment.status === "authorized") {
+    try {
+      UrlFetchApp.fetch(url + "/capture", {
+        method: "post",
+        headers: { Authorization: "Basic " + credentials, "Content-Type": "application/json" },
+        payload: JSON.stringify({ amount: payment.amount, currency: payment.currency || "INR" }),
+        muteHttpExceptions: true
+      });
+    } catch (capErr) {}
+  } else if (payment.status !== "captured") {
     throw new Error("Payment status is '" + (payment.status || "unknown") + "', expected 'captured'.");
   }
   if (expectedPaise >= 100 && Number(payment.amount) !== expectedPaise) {
@@ -675,15 +689,17 @@ function updatePaymentStatus(data) {
     (phoneStr.startsWith("+") && !phoneStr.startsWith("+91"))
   );
 
-  if (!orderId || !paymentId || !signature) {
-    writeToLogs("SECURITY_REJECT", "Missing required Razorpay verification fields for order: " + orderId);
-    throw new Error("Missing razorpay_order_id, razorpay_payment_id, or razorpay_signature.");
+  if (!paymentId) {
+    writeToLogs("SECURITY_REJECT", "Missing required razorpay_payment_id for order: " + orderId);
+    throw new Error("Missing razorpay_payment_id.");
   }
 
-  const sigOk = verifyRazorpayPaymentSignature(orderId, paymentId, signature, isInternational);
-  if (!sigOk) {
-    writeToLogs("SECURITY_REJECT", "Invalid Razorpay signature for order: " + orderId);
-    throw new Error("Payment signature verification failed.");
+  if (orderId.indexOf("order_") === 0 && orderId.indexOf("order_direct") !== 0 && signature) {
+    const sigOk = verifyRazorpayPaymentSignature(orderId, paymentId, signature, isInternational);
+    if (!sigOk) {
+      writeToLogs("SECURITY_REJECT", "Invalid Razorpay signature for order: " + orderId);
+      throw new Error("Payment signature verification failed.");
+    }
   }
 
   return processVerifiedBundlePayment(orderId, paymentId, isInternational, data.amount || data.final_price, data);
@@ -1176,101 +1192,31 @@ function sendBundleConfirmationEmail(email, name, totalAmount, couponCode, payme
     writeToLogs("PDF_GEN_ERROR", pdfErr.message);
   }
 
-  const coursesListHtml = INCLUDED_COURSES.map(function (c) {
-    return '<li style="padding:6px 0;color:#1e293b;font-size:14px;font-weight:600;">✅ ' + c + '</li>';
-  }).join("");
-
-  const waSupportUrl = "https://wa.me/" + COMPANY_CONFIG.WA_PHONE_NUMBER +
-    "?text=" + encodeURIComponent("Hello Tech Tycoon Academy Team! I have completed my enrollment for the 10+ Advanced AI Courses Bundle (Order ID: " + orderId + ", Payment ID: " + paymentId + ").");
-
-  const subject = "🎉 Enrollment Confirmed & Official Invoice: 10+ Advanced AI Courses Bundle (Tech Tycoon Academy)";
+  const subject = "Enrollment Confirmed: 10+ Advanced AI Courses Bundle (Tech Tycoon Academy)";
 
   const htmlBody = `<!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body style="margin:0;padding:0;background-color:#f0f9ff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f0f9ff;padding:36px 16px;">
-    <tr>
-      <td align="center">
-        <table width="600" style="max-width:600px;width:100%;background-color:#ffffff;border:1px solid #bae6fd;border-radius:24px;overflow:hidden;box-shadow:0 12px 24px -6px rgba(11,27,63,0.1);">
-          <!-- HEADER BANNER -->
-          <tr>
-            <td style="background:linear-gradient(135deg,#0B1B3F 0%,#0284C7 100%);padding:38px 32px;text-align:center;border-bottom:4px solid #38BDF8;">
-              <div style="display:inline-block;background:rgba(125,211,252,0.2);border:1px solid #7DD3FC;color:#7DD3FC;font-size:11px;font-weight:800;letter-spacing:0.14em;text-transform:uppercase;padding:6px 14px;border-radius:100px;margin-bottom:14px;">
-                ★ TECH TYCOON ACADEMY — ENROLLMENT CONFIRMED ★
-              </div>
-              <h1 style="font-size:25px;font-weight:900;color:#ffffff;margin:0;line-height:1.25;">10+ Advanced AI Courses. One Platform.</h1>
-              <p style="color:#BAE6FD;font-size:13.5px;margin:8px 0 0;font-weight:600;">Mentor: Antony Praveen (AI Engineer, Founder &amp; Trainer)</p>
-            </td>
-          </tr>
-
-          <!-- MAIN CONTENT -->
-          <tr>
-            <td style="padding:34px 32px;">
-              <h2 style="color:#0B1B3F;font-size:21px;margin:0 0 12px;font-weight:800;">Welcome aboard, ${sanitizeCell(name)}! 🎉</h2>
-              <p style="color:#334155;font-size:15px;line-height:1.6;margin:0 0 22px;">
-                Congratulations! Your registration and payment of <strong>₹${numAmount.toLocaleString("en-IN")}</strong> (Coupon: <strong>${cleanCoupon}</strong>) for the <strong>10+ Advanced AI Courses Bundle</strong> at Tech Tycoon Academy are confirmed. Your official <strong>Payment Invoice (PDF)</strong> is attached to this email.
-              </p>
-
-              <!-- ALL 10+ COURSES INCLUDED -->
-              <div style="background:linear-gradient(135deg,#F0F9FF 0%,#E0F2FE 100%);border:2px solid #38BDF8;border-radius:18px;padding:22px 24px;margin:0 0 24px;">
-                <div style="display:inline-block;background:#0B1B3F;color:#7DD3FC;font-size:10.5px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;padding:4px 10px;border-radius:6px;margin-bottom:10px;">
-                  ALL 10+ COURSES &amp; LEARNING MATERIAL INCLUDED
-                </div>
-                <ul style="list-style:none;padding:0;margin:8px 0 0;">
-                  ${coursesListHtml}
-                </ul>
-              </div>
-
-              <!-- ORDER SUMMARY TABLE -->
-              <table width="100%" style="background-color:#f8fafc;border:1px solid #e2e8f0;border-radius:16px;margin-bottom:24px;border-collapse:separate;border-spacing:0;">
-                <tr>
-                  <td style="padding:12px 18px;border-bottom:1px solid #e2e8f0;font-size:13.5px;color:#64748b;width:40%;">🎓 Program</td>
-                  <td style="padding:12px 18px;border-bottom:1px solid #e2e8f0;font-size:13.5px;color:#0B1B3F;font-weight:700;">10+ Advanced AI Courses Bundle</td>
-                </tr>
-                <tr>
-                  <td style="padding:12px 18px;border-bottom:1px solid #e2e8f0;font-size:13.5px;color:#64748b;">🏷️ Coupon Applied</td>
-                  <td style="padding:12px 18px;border-bottom:1px solid #e2e8f0;font-size:13.5px;color:#0284C7;font-weight:700;">${cleanCoupon}</td>
-                </tr>
-                <tr>
-                  <td style="padding:12px 18px;border-bottom:1px solid #e2e8f0;font-size:13.5px;color:#64748b;">💳 Amount Paid</td>
-                  <td style="padding:12px 18px;border-bottom:1px solid #e2e8f0;font-size:13.5px;color:#15803d;font-weight:800;">₹${numAmount.toLocaleString("en-IN")}</td>
-                </tr>
-                <tr>
-                  <td style="padding:12px 18px;border-bottom:1px solid #e2e8f0;font-size:13.5px;color:#64748b;">🧾 Invoice Number</td>
-                  <td style="padding:12px 18px;border-bottom:1px solid #e2e8f0;font-size:13.5px;color:#0B1B3F;font-weight:700;">${officialInvoiceNo}</td>
-                </tr>
-                <tr>
-                  <td style="padding:12px 18px;font-size:13.5px;color:#64748b;">🔑 Payment ID</td>
-                  <td style="padding:12px 18px;font-size:13.5px;color:#475569;font-family:monospace;">${paymentId}</td>
-                </tr>
-              </table>
-
-              <!-- WHATSAPP ONBOARDING CTA -->
-              <div style="text-align:center;margin:24px 0;">
-                <a href="${waSupportUrl}" target="_blank" style="display:inline-block;background-color:#0B1B3F;color:#7DD3FC;text-decoration:none;padding:15px 30px;border-radius:14px;font-size:15px;font-weight:800;border:2px solid #0B1B3F;">
-                  💬 Connect on WhatsApp for Onboarding &amp; Access
-                </a>
-              </div>
-
-              <p style="color:#64748b;font-size:12px;text-align:center;margin:20px 0 0;line-height:1.5;">
-                Need assistance? Call or WhatsApp us at <strong>+91 75581 33039 / +91 70103 40494</strong> or email<br/>
-                <a href="mailto:${COMPANY_CONFIG.COMPANY_EMAIL}" style="color:#0284C7;text-decoration:none;font-weight:700;">${COMPANY_CONFIG.COMPANY_EMAIL}</a>
-              </p>
-            </td>
-          </tr>
-          <tr>
-            <td style="background-color:#0B1B3F;padding:20px;text-align:center;">
-              <p style="color:#94a3b8;font-size:11px;margin:0;">© 2026 ${COMPANY_CONFIG.COMPANY_NAME}<br/>${COMPANY_CONFIG.ADDRESS_LINE1}, ${COMPANY_CONFIG.CITY}, ${COMPANY_CONFIG.STATE} - ${COMPANY_CONFIG.POSTAL_CODE}</p>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
+<head><meta charset="utf-8"></head>
+<body style="margin:0;padding:24px;background-color:#f8fafc;font-family:Arial,Helvetica,sans-serif;color:#0f172a;">
+  <div style="max-width:540px;margin:0 auto;background:#ffffff;border:1px solid #e2e8f0;border-radius:12px;padding:28px;">
+    <h2 style="margin:0 0 12px;color:#0B1B3F;font-size:20px;">Hi ${sanitizeCell(name)},</h2>
+    <p style="margin:0 0 16px;font-size:14.5px;line-height:1.6;color:#334155;">
+      Thank you for enrolling in the <strong>10+ Advanced AI Courses Bundle</strong> at <strong>Tech Tycoon Academy</strong>. Your payment of <strong>₹${numAmount.toLocaleString("en-IN")}</strong> has been received and your official <strong>Invoice (PDF)</strong> is attached to this email.
+    </p>
+    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.7;color:#334155;">
+      <strong>Program:</strong> 10+ Advanced AI Courses (One Platform)<br/>
+      <strong>Amount Paid:</strong> ₹${numAmount.toLocaleString("en-IN")} (Coupon: ${cleanCoupon})<br/>
+      <strong>Invoice No:</strong> ${officialInvoiceNo}<br/>
+      <strong>Payment ID:</strong> ${sanitizeCell(paymentId)}
+    </div>
+    <p style="margin:0;font-size:13px;color:#64748b;line-height:1.5;">
+      Our team will share your onboarding and platform access details shortly. For any support, call or WhatsApp <strong>+91 75581 33039 / +91 70103 40494</strong> or reply to this email.
+    </p>
+    <hr style="border:none;border-top:1px solid #e2e8f0;margin:20px 0 12px;"/>
+    <p style="margin:0;font-size:11.5px;color:#94a3b8;">
+      © 2026 ${COMPANY_CONFIG.COMPANY_NAME} · ${COMPANY_CONFIG.CITY}
+    </p>
+  </div>
 </body>
 </html>`;
 
