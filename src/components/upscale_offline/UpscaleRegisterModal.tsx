@@ -7,7 +7,7 @@ import logo from "@/assets/tech_tycoon_logo.png";
 import GstPriceBreakdown from "../common/GstPriceBreakdown";
 import { InvoicePrintParams, calculateGstBreakdown, isAuthorizedTestEmail, isValidEmail, isValidGstin, openPrintableGstInvoice, registerVerifiedInvoiceRecord, sanitizeTextInput } from "@/lib/gstUtils";
 
-const RAZORPAY_KEY_ID = "rzp_live_T2CbVONQc6qrqj"; 
+
 const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbzPxPpp0ksCcE6IY8mUlzcu0jqY1RSfhCl2Locq1iOYbbe5beBeeQ6uefCV93Nxy8rbsg/exec";
 
 function loadRazorpayScript(): Promise<boolean> {
@@ -175,7 +175,7 @@ const UpscaleRegisterModal: React.FC = () => {
             name: sanitizedName + (seatsCount > 1 ? ` (+ ${seatsCount - 1} Seats)` : ""),
             email: sanitizedEmail,
             phone: `${form.countryCode}${form.phone}`,
-            countryCode: form.countryCode,
+            countryCode: form.countryCode, isInternational: form.countryCode !== "+91",
             userType: sanitizeTextInput(form.profession || "Professional", 80),
             language: "Chennai Offline",
             baseAmount: isTestEmail ? 1 : finalPayableInr,
@@ -197,14 +197,14 @@ const UpscaleRegisterModal: React.FC = () => {
             });
             const result = await response.json();
 
-            if (false && (!result.success || !result.orderId)) {
+            if (!result.success || !result.orderId || !result.keyId) {
                 alert("Order creation failed. If payment failed please contact +91 7558133039");
                 setLoading(false);
                 return;
             }
 
             const options: RazorpayOptions = {
-                key: result.keyId || RAZORPAY_KEY_ID,
+                key: result.keyId,
                 ...(result.orderId && String(result.orderId).startsWith("order_") ? { order_id: result.orderId } : {}),
                 amount: finalAmount,
                 currency: "INR",

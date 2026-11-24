@@ -41,8 +41,8 @@ interface AIBGMRegisterModalProps {
 
 // Live Deployed Apps Script URL
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwGaOKJYsQiHuhueRVy_iosxeKKO1qPj748jnUqkfwnmYmvgxWdkHiXB4cON6wF4iXnaA/exec";
-const RAZORPAY_KEY_ID = "rzp_live_T2CbVONQc6qrqj";
-const RAZORPAY_INTL_KEY_ID = "rzp_live_gfoS1OjC8tvWjP";
+
+
 
 const PROFESSION_OPTIONS = [
   "Business Owner / Founder",
@@ -285,7 +285,7 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
     });
 
     let generatedOrderId = "ORD_BGM_" + Date.now();
-    let activeKeyId = RAZORPAY_KEY_ID;
+    let activeKeyId = "";
 
     const leadPayload = {
       dateTime: currentDateTime,
@@ -339,6 +339,7 @@ const AIBGMRegisterModal: React.FC<AIBGMRegisterModalProps> = ({ isOpen, onClose
         return;
       }
 
+      if (!activeKeyId) { alert("Unable to initialize payment gateway. Please try again."); setIsSubmitting(false); return; }
       // 3. Configure Razorpay Options
       const options = {
         key: activeKeyId,

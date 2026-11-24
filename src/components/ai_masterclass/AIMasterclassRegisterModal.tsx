@@ -9,7 +9,7 @@ import { calculateInclusiveGstBreakdown, isValidGstin, sanitizeTextInput, isAuth
 import GstPriceBreakdown from "../common/GstPriceBreakdown";
 import antonyImg from "@/assets/antony_full.jpg";
 
-const RAZORPAY_KEY_ID = "rzp_live_T2CbVONQc6qrqj";
+
 const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycby0fX7tjbOciJbg0Mw1SRMhlazBe4FG1Ko-f5mIFCW6Y7zGKHGZjdUZQKXclfye1FzegA/exec";
 
 
@@ -216,14 +216,14 @@ const AIMasterclassRegisterModal: React.FC = () => {
                     name: safeName + (seatsCount > 1 ? ` (+ ${seatsCount - 1} Seats)` : ""),
                     email: safeEmail,
                     phone: `${form.countryCode}${form.phone.replace(/\D/g, "")}`,
-                    countryCode: form.countryCode,
+                    countryCode: form.countryCode, isInternational: form.countryCode !== "+91",
                     language: form.language,
                     batch: `Masterclass 2026 (Live Online)` + (includePdfMaterial ? " + Resource Toolkit (₹499)" : ""),
                     preferredSlot: "Tentative Every Friday (5:30 PM - 8:30 PM IST)",
                     hasPdfMaterial: includePdfMaterial ? "YES" : "NO",
                     course: includePdfMaterial ? "AI Secrets Revealed Masterclass + Resource Toolkit" : "AI Secrets Revealed Masterclass",
-                    baseAmount: isTestEmail ? 1 : baseSessionAmount,
-                    gstAmount: isTestEmail ? 0 : gstAmount,
+                    baseAmount: isTestEmail ? 1 : (form.countryCode !== "+91" ? totalAmount : baseSessionAmount),
+                    gstAmount: (isTestEmail || form.countryCode !== "+91") ? 0 : gstAmount,
                     amount: isTestEmail ? 1 : totalAmount,
                     sessionDate: "Tentative Every Friday",
                     sessionTime: "Evening 5:30 PM - 8:30 PM IST",
@@ -235,7 +235,7 @@ const AIMasterclassRegisterModal: React.FC = () => {
 
             const result = await response.json();
 
-            if (!result.success || !result.orderId) {
+            if (!result.success || !result.orderId || !result.keyId) {
                 alert(`Order creation failed: ${result.error || "Please check your network and try again."}\nIf payment failed please contact +91 7558133039`);
                 setLoading(false);
                 return;
@@ -282,7 +282,7 @@ const AIMasterclassRegisterModal: React.FC = () => {
             }
 
             const options: RazorpayOptions = {
-                key: result.keyId || RAZORPAY_KEY_ID,
+                key: result.keyId,
                 order_id: result.orderId,
                 amount: finalAmount,
                 currency: "INR",
@@ -335,8 +335,8 @@ const AIMasterclassRegisterModal: React.FC = () => {
                                 preferredSlot: "Tentative Every Friday (5:30 PM - 8:30 PM IST)",
                                 sessionDate: "Tentative Every Friday",
                                 sessionTime: "Evening 5:30 PM - 8:30 PM IST",
-                                baseAmount: isTestEmail ? 1 : baseSessionAmount,
-                                gstAmount: isTestEmail ? 0 : gstAmount,
+                                baseAmount: isTestEmail ? 1 : (form.countryCode !== "+91" ? totalAmount : baseSessionAmount),
+                                gstAmount: (isTestEmail || form.countryCode !== "+91") ? 0 : gstAmount,
                                 amount: isTestEmail ? 1 : totalAmount,
                                 companyName: safeCompany,
                                 gstin: safeGstin,

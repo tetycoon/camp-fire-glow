@@ -47,7 +47,7 @@ import event6 from '../assets/event-6.jpg';
 export const AI_FILMMAKING_APPS_SCRIPT_URL =
   'https://script.google.com/macros/s/AKfycbzycz3SBGah4HEEMlCKGOBcU5wBg8zoY3QJFVO_1YwnPAFREa5zgogQqKo8JXMlTM4LBw/exec';
 
-const RAZORPAY_KEY_ID_IN = 'rzp_live_gfoS1OjC8tvWjP';
+const RAZORPAY_KEY_ID_IN = '';
 
 const WHATSAPP_COMMUNITY_LINK = 'https://chat.whatsapp.com/GuJIGDcfIIfDZHlG0MduvM';
 const WHATSAPP_BOT_NUMBER = '917010340494';
@@ -627,7 +627,7 @@ const AiFilmmakingPage: React.FC = () => {
       }
 
       const isInternational = formData.countryCode !== '+91';
-      let activeKeyId = RAZORPAY_KEY_ID_IN;
+      let activeKeyId = '';
       const fullPhone = `${formData.countryCode}${cleanDigits}`;
       const modeLabel = includePdfMaterial
         ? 'Live Masterclass + Session PDF & Material'
@@ -667,8 +667,8 @@ const AiFilmmakingPage: React.FC = () => {
               userType: formData.profession,
               isInternational,
               amount: totalAmount,
-              baseAmount: accounting.base,
-              gstAmount: accounting.gstTotal,
+              baseAmount: isInternational ? totalAmount : accounting.base,
+              gstAmount: isInternational ? 0 : accounting.gstTotal,
               hasPdfMaterial: includePdfMaterial ? 'YES' : 'NO',
               course: includePdfMaterial
                 ? '3-Hours AI Filmmaking & Video Generation Live Webinar + Session PDF & Material'
@@ -756,6 +756,10 @@ const AiFilmmakingPage: React.FC = () => {
             });
           } catch (_) {}
         }
+      }
+
+      if (!activeKeyId) {
+        throw new Error('Unable to initialize payment gateway. Please try again.');
       }
 
       // 2. Open Razorpay Checkout Modal

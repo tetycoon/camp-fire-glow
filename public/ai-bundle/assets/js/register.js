@@ -18,8 +18,6 @@
   var REG_CONFIG = {
     // Deployed AI_BUNDLE_APPS_SCRIPT Web App URL:
     endpoint: window.AI_BUNDLE_APPS_SCRIPT_URL || "https://script.google.com/macros/s/AKfycby-UAe8purdGqxjPjR607F0WS_A3wN0aMzfBPDqqBbWy20xtTEXO_3w5rFFpZNZWdus_w/exec",
-    razorpayKeyIn: "rzp_live_T2CbVONQc6qrqj",
-    razorpayKeyIntl: "rzp_live_gfoS1OjC8tvWjP",
     timeoutMs: 25000
   };
 
@@ -301,7 +299,7 @@
     };
 
     var orderId = "";
-    var razorpayKey = data.isInternational ? REG_CONFIG.razorpayKeyIntl : REG_CONFIG.razorpayKeyIn;
+    var razorpayKey = "";
     var serverAmount = data.payableAmount;
 
     try {
@@ -316,7 +314,10 @@
         throw new Error((orderJson && orderJson.error) || "Could not initialize payment order.");
       }
       orderId = orderJson.orderId || "";
-      if (orderJson.razorpayKeyId) razorpayKey = orderJson.razorpayKeyId;
+      razorpayKey = orderJson.keyId || orderJson.razorpayKeyId || "";
+      if (!razorpayKey) {
+        throw new Error("Razorpay Key ID was not returned by the server.");
+      }
       if (orderJson.amount) serverAmount = Number(orderJson.amount);
     } catch (err) {
       setLoading(false);

@@ -37,8 +37,8 @@ declare global {
 const DEFAULT_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzuTE9PUoTneN4PF0TKhHwrDXZEfSo-92Ly10dHFd8pGsY1DzjmBa6A5A3aTCRSd6TpFQ/exec";
 const SPREADSHEET_ID = "1RpwPPMH6nf8CsIAfITF1gNc5gBNhq7CJ0zckotAgq4I";
 
-const RAZORPAY_KEY_ID = "rzp_live_T2CbVONQc6qrqj";
-const RAZORPAY_INTL_KEY_ID = "rzp_live_gfoS1OjC8tvWjP";
+
+
 
 const PROFESSION_OPTIONS = [
   "Operations / Project Manager",
@@ -247,7 +247,7 @@ const ProfessionalRegistrationForm: React.FC = () => {
     const payableInr = isTestEmail ? 1 : gstBreakdown.totalAmount;
     const amountInPaise = payableInr * 100;
     let generatedOrderId = `ORD_PROF_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
-    let activeKeyId = RAZORPAY_KEY_ID;
+    let activeKeyId = "";
 
     const scriptUrl = window.PROFESSIONALS_APPS_SCRIPT_URL || DEFAULT_APPS_SCRIPT_URL;
 
@@ -304,6 +304,7 @@ const ProfessionalRegistrationForm: React.FC = () => {
         return;
       }
 
+      if (!activeKeyId) { alert("Unable to initialize payment gateway. Please try again."); setIsSubmitting(false); return; }
       // 3. Configure Razorpay Options
       const options = {
         key: activeKeyId,

@@ -33,8 +33,8 @@ declare global {
 const DEFAULT_CONSULTING_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzF4e05xth7Kdzx8gJKXI-vqPgKUSacLE8aGRT8hvg-7B75qvQw_gYwmRacsq3cNIsD/exec";
 const CONSULTING_SPREADSHEET_ID = "1LP37n3zb1d0UkXjddQBCKqmSU0j5-HvPSI-Rda36E3s";
 
-const RAZORPAY_KEY_ID = "rzp_live_T2CbVONQc6qrqj";
-const RAZORPAY_INTL_KEY_ID = "rzp_live_gfoS1OjC8tvWjP";
+
+
 
 const CONSULTING_FEE = 2500; // ₹2,500 per 1 Hour session (+ 18% GST = ₹2,950)
 
@@ -181,7 +181,7 @@ const ConsultingBookingForm: React.FC<ConsultingBookingFormProps> = ({ onSuccess
     const payableInr = isTestEmail ? 1 : gstBreakdown.totalAmount;
     const amountInPaise = payableInr * 100;
     let generatedOrderId = `ORD_CONSULT_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
-    let activeKeyId = RAZORPAY_KEY_ID;
+    let activeKeyId = "";
 
     const scriptUrl = window.CONSULTING_APPS_SCRIPT_URL || DEFAULT_CONSULTING_APPS_SCRIPT_URL;
 
@@ -190,7 +190,7 @@ const ConsultingBookingForm: React.FC<ConsultingBookingFormProps> = ({ onSuccess
       dateTime: currentDateTime,
       name: sanitizedName,
       email: sanitizedEmail,
-      phone: fullPhone,
+      countryCode: selectedCountry.code, isInternational, phone: fullPhone,
       profession: `${finalProfession} (${formData.topic})`,
       baseAmount: isTestEmail ? 1 : gstBreakdown.baseAmount,
       gstAmount: isTestEmail ? 0 : gstBreakdown.gstAmount,
@@ -236,6 +236,7 @@ const ConsultingBookingForm: React.FC<ConsultingBookingFormProps> = ({ onSuccess
         return;
       }
 
+      if (!activeKeyId) { alert("Unable to initialize payment gateway. Please try again."); setIsSubmitting(false); return; }
       // 3. Razorpay Options
       const options = {
         key: activeKeyId,
@@ -283,7 +284,7 @@ const ConsultingBookingForm: React.FC<ConsultingBookingFormProps> = ({ onSuccess
               isInternational,
               email: sanitizedEmail,
               name: sanitizedName,
-              phone: fullPhone,
+              countryCode: selectedCountry.code, phone: fullPhone,
               profession: `${finalProfession} (${formData.topic})`,
               baseAmount: isTestEmail ? 1 : gstBreakdown.baseAmount,
               gstAmount: isTestEmail ? 0 : gstBreakdown.gstAmount,
@@ -323,7 +324,7 @@ const ConsultingBookingForm: React.FC<ConsultingBookingFormProps> = ({ onSuccess
               amount: verifiedAmount,
               name: sanitizedName,
               email: sanitizedEmail,
-              phone: fullPhone,
+              countryCode: selectedCountry.code, phone: fullPhone,
               topic: formData.topic,
               verifiedInvoice
             });

@@ -805,8 +805,9 @@ async function processPayment() {
       return;
     }
 
+    if (!result.keyId) { alert("Unable to initialize payment gateway. Please try again."); btn.innerHTML = `&#9889; Proceed to Payment — \u20b9${totalAmt.toLocaleString('en-IN')}`; btn.disabled = false; return; }
     const rzp = new Razorpay({
-      key: result.keyId || "rzp_live_gfoS1OjC8tvWjP",
+      key: result.keyId,
       amount: amountToPay * 100,
       currency: "INR",
       name: "Tech Tycoon MasterClass",

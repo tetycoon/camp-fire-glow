@@ -14,8 +14,8 @@ declare global {
 }
 
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwl1WKBrQxxMRbz7aj6GBUNbmR4ePHshhrBwcNjhxorIayQpMTmHaHHT_MvTroQ-ZrFbA/exec";
-const RAZORPAY_KEY_ID = "rzp_live_T2CbVONQc6qrqj";
-const RAZORPAY_INTL_KEY_ID = "rzp_live_gfoS1OjC8tvWjP";
+
+
 
 export default function AcademyPreRegisterPage() {
   const navigate = useNavigate();
@@ -148,7 +148,7 @@ export default function AcademyPreRegisterPage() {
       };
 
       let orderId = "";
-      let activeKeyId = RAZORPAY_KEY_ID;
+      let activeKeyId = "";
       try {
         const orderRes = await fetch(APPS_SCRIPT_URL, {
           method: "POST",
@@ -171,6 +171,7 @@ export default function AcademyPreRegisterPage() {
         }).catch(() => {});
       }
 
+      if (!activeKeyId) { alert("Unable to initialize payment gateway. Please try again."); setIsSubmitting(false); return; }
       const options = {
         key: activeKeyId,
         order_id: orderId || undefined,

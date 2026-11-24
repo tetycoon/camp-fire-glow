@@ -584,7 +584,7 @@ const ClaudeMasterclassPage: React.FC = () => {
       }
 
       const isInternational = formData.countryCode !== '+91';
-      let razorpayKey = "rzp_live_gfoS1OjC8tvWjP";
+      let razorpayKey = "";
 
       // Step 1: Call Google Apps Script Web App
       let orderId = "";
@@ -620,6 +620,7 @@ const ClaudeMasterclassPage: React.FC = () => {
         console.warn("Could not generate order ID from backend, falling back to direct Razorpay modal", err);
       }
 
+      if (!razorpayKey) { alert("Unable to initialize payment gateway. Please try again."); setIsSubmitting(false); return; }
       // Step 2: Open Razorpay Live Payment Modal
       const options: any = {
         key: razorpayKey,

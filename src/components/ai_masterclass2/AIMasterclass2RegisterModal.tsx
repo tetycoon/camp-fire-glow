@@ -6,7 +6,7 @@ import { getMasterclassDateStrings } from "../../lib/masterclassDateUtils";
 import { calculateInclusiveGstBreakdown, isValidGstin, sanitizeTextInput, isAuthorizedTestEmail, VERIFIED_BACKEND_ENDPOINTS } from "../../lib/gstUtils";
 import GstPriceBreakdown from "../common/GstPriceBreakdown";
 
-const RAZORPAY_KEY_ID = "rzp_live_T2CbVONQc6qrqj";
+
 const GOOGLE_SHEET_URL = VERIFIED_BACKEND_ENDPOINTS.ai_masterclass;
 
 
@@ -114,11 +114,11 @@ const AIMasterclass2RegisterModal: React.FC = () => {
                     name: safeName,
                     email: safeEmail,
                     phone: `${form.countryCode}${form.phone}`,
-                    countryCode: form.countryCode,
+                    countryCode: form.countryCode, isInternational: form.countryCode !== "+91",
                     language: form.language,
                     batch: `Masterclass 2026 (${form.timing})`,
-                    baseAmount: isTestEmail ? 1 : baseSessionAmount,
-                    gstAmount: isTestEmail ? 0 : gstAmount,
+                    baseAmount: isTestEmail ? 1 : (form.countryCode !== "+91" ? totalAmount : baseSessionAmount),
+                    gstAmount: (isTestEmail || form.countryCode !== "+91") ? 0 : gstAmount,
                     amount: isTestEmail ? 1 : totalAmount,
                     companyName: safeCompany,
                     gstin: safeGstin,
@@ -129,14 +129,14 @@ const AIMasterclass2RegisterModal: React.FC = () => {
 
             const result = await response.json();
 
-            if (!result.success || !result.orderId) {
+            if (!result.success || !result.orderId || !result.keyId) {
                 alert("Failed to create order. If payment failed please contact +91 7558133039");
                 setLoading(false);
                 return;
             }
 
             const options: RazorpayOptions = {
-                key: RAZORPAY_KEY_ID,
+                key: result.keyId,
                 order_id: result.orderId,
                 amount: finalAmount,
                 currency: "INR",
@@ -185,8 +185,8 @@ const AIMasterclass2RegisterModal: React.FC = () => {
                                 timing: form.timing,
                                 sessionDate: regularDate,
                                 sessionTime: form.timing,
-                                baseAmount: isTestEmail ? 1 : baseSessionAmount,
-                                gstAmount: isTestEmail ? 0 : gstAmount,
+                                baseAmount: isTestEmail ? 1 : (form.countryCode !== "+91" ? totalAmount : baseSessionAmount),
+                                gstAmount: (isTestEmail || form.countryCode !== "+91") ? 0 : gstAmount,
                                 amount: isTestEmail ? 1 : totalAmount,
                                 companyName: safeCompany,
                                 gstin: safeGstin
