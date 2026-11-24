@@ -752,7 +752,7 @@ async function handleFormSubmit(e) {
     submitBtn.disabled = true;
 
     const isInternational = countryCode !== '+91';
-    let razorpayKey = "rzp_live_gfoS1OjC8tvWjP";
+    let razorpayKey = "";
 
     try {
         const { baseAmount, gstAmount } = getGstBreakdown();
@@ -826,6 +826,7 @@ async function handleFormSubmit(e) {
             return;
         }
 
+        if (!razorpayKey) { alert("Unable to initialize payment gateway. Please try again."); submitBtn.innerHTML = originalText; submitBtn.disabled = false; return; }
         // Step 2: Open Razorpay Modal
         const options = {
             key: razorpayKey,
