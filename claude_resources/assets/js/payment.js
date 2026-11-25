@@ -616,11 +616,13 @@
       regSubmitBtn.innerHTML = '<span class="pay-spinner" style="width:16px;height:16px;border-width:2px;display:inline-block;vertical-align:middle;margin-right:8px;"></span> Connecting to Payment...';
 
       // 1. Create official Razorpay Order via Google Apps Script
+      var isIntl = countryCode !== '+91';
       var leadPayload = {
         name: nameVal,
         email: emailVal,
         phone: fullPhone,
         countryCode: countryCode,
+        isInternational: isIntl,
         amount: currentPayable,
         coupon: appliedCouponText,
         addon: addonText,
@@ -651,10 +653,12 @@
           return;
         }
 
-        var isIntl = countryCode !== '+91';
-        var rzpKey = (result && result.razorpayKeyId)
-          ? result.razorpayKeyId
-          : (isIntl ? (C.razorpayKeyIntl || 'rzp_live_gfoS1OjC8tvWjP') : (C.razorpayKeyIn || 'rzp_live_T2CbVONQc6qrqj'));
+        var rzpKey = (result && (result.keyId || result.razorpayKeyId)) || '';
+        if (!rzpKey) {
+          alert('Payment initiation failed: Razorpay Key ID was not returned by the server.');
+          resetSubmitBtn();
+          return;
+        }
 
         var rzpOptions = {
           key: rzpKey,
@@ -692,6 +696,7 @@
               name: nameVal,
               phone: fullPhone,
               countryCode: countryCode,
+              isInternational: isIntl,
               amount: currentPayable,
               addon: addonText,
               hasPdfMaterial: isAddonSelected ? 'YES' : 'NO',
