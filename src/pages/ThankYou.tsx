@@ -126,7 +126,9 @@ const ThankYou = () => {
         .join("\n");
 
     const waChatLink = `https://wa.me/917010340494?text=${encodeURIComponent(prefilledMessage)}`;
-    const WA_COMMUNITY_LINK = "https://chat.whatsapp.com/EpsuzpxGz6F98ml2GUBejC";
+    const WA_COMMUNITY_LINK = isClaude 
+        ? "https://chat.whatsapp.com/GgMP8b9Z5HIKn5duwqgnwU" 
+        : "https://chat.whatsapp.com/EpsuzpxGz6F98ml2GUBejC";
 
     useEffect(() => {
         // Track Purchase event exactly once upon landing
