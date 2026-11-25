@@ -66,26 +66,19 @@ const AIMasterclassNavbar: React.FC = () => {
                             <Building2 className="w-3.5 h-3.5 text-slate-500" />
                             <span>Corporate Hub</span>
                         </a>
-                        <a
-                            href="https://chat.whatsapp.com/EpsuzpxGz6F98ml2GUBejC"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center justify-center gap-2 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white text-xs sm:text-sm font-bold px-4 py-2.5 rounded-xl transition-all duration-200 shadow-md shadow-amber-600/25 cursor-pointer"
+                        <button
+                            disabled
+                            className="flex items-center justify-center gap-2 bg-slate-200 text-slate-500 text-xs sm:text-sm font-bold px-4 py-2.5 rounded-xl cursor-not-allowed"
                         >
                             <span>Admissions Paused</span>
-                        </a>
+                        </button>
                     </div>
 
                     {/* Mobile Quick Action Button + Menu Button */}
                     <div className="flex items-center gap-2 md:hidden">
-                        <a
-                            href="https://chat.whatsapp.com/EpsuzpxGz6F98ml2GUBejC"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="bg-gradient-to-r from-amber-600 to-orange-600 text-white text-xs font-bold px-3 py-2 rounded-lg shadow-sm"
-                        >
+                        <span className="bg-slate-200 text-slate-500 text-xs font-bold px-3 py-2 rounded-lg">
                             Paused
-                        </a>
+                        </span>
                         <button
                             className="text-slate-900 hover:text-blue-600 transition-colors p-1.5 cursor-pointer"
                             onClick={() => setOpen(!open)}
@@ -116,15 +109,9 @@ const AIMasterclassNavbar: React.FC = () => {
                         <button onClick={() => scrollTo("faq")} className="text-left py-2.5 border-b border-slate-100">
                             Frequently Asked Questions
                         </button>
-                        <a
-                            href="https://chat.whatsapp.com/EpsuzpxGz6F98ml2GUBejC"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={() => setOpen(false)}
-                            className="w-full bg-gradient-to-r from-amber-600 to-orange-600 text-white text-sm font-bold px-5 py-3 rounded-xl mt-2 shadow-md shadow-amber-600/20 text-center block"
-                        >
-                            Admissions Paused — Join WhatsApp
-                        </a>
+                        <div className="w-full bg-slate-200 text-slate-500 text-sm font-bold px-5 py-3 rounded-xl mt-2 text-center">
+                            Admissions Paused
+                        </div>
                     </div>
                 </div>
             )}

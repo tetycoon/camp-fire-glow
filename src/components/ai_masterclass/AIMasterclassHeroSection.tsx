@@ -100,16 +100,12 @@ const AIMasterclassHeroSection: React.FC = () => {
 
                         {/* CTA Buttons */}
                         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
-                            <a
-                                href="https://chat.whatsapp.com/EpsuzpxGz6F98ml2GUBejC"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white text-base sm:text-lg font-bold px-8 py-4 rounded-xl flex items-center justify-center gap-3 transition-all shadow-lg shadow-amber-600/30 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
+                            <button
+                                disabled
+                                className="bg-slate-200 text-slate-500 text-base sm:text-lg font-bold px-8 py-4 rounded-xl flex items-center justify-center gap-3 cursor-not-allowed"
                             >
-                                <MessageSquare className="w-5 h-5 text-white" />
-                                <span>Join Waitlist (WhatsApp Community)</span>
-                                <ArrowRight className="w-4 h-4 text-white" />
-                            </a>
+                                <span>Admissions Paused</span>
+                            </button>
 
                             <button
                                 onClick={() => scrollTo("modules")}
@@ -181,7 +177,7 @@ const AIMasterclassHeroSection: React.FC = () => {
                                     <div>
                                         <div className="text-xs font-bold text-amber-950">Status: Sessions Paused</div>
                                         <div className="text-[11px] font-medium text-amber-800 leading-snug mt-0.5">
-                                            We are currently not conducting live sessions. Join the community to be notified when future sessions resume.
+                                            We are currently not conducting live sessions. Admissions are temporarily on hold.
                                         </div>
                                     </div>
                                 </div>
@@ -189,15 +185,12 @@ const AIMasterclassHeroSection: React.FC = () => {
 
                             {/* Ticket Price & Direct CTA */}
                             <div className="pt-2 border-t border-slate-100">
-                                <a
-                                    href="https://chat.whatsapp.com/EpsuzpxGz6F98ml2GUBejC"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="w-full bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white font-bold text-sm py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 shadow-md shadow-amber-600/25 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer"
+                                <button
+                                    disabled
+                                    className="w-full bg-slate-200 text-slate-500 font-bold text-sm py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 cursor-not-allowed"
                                 >
-                                    <span>Admissions Paused — Join WhatsApp</span>
-                                    <ArrowRight className="w-4 h-4 text-white" />
-                                </a>
+                                    <span>Admissions Paused</span>
+                                </button>
                             </div>
                         </div>
                     </div>

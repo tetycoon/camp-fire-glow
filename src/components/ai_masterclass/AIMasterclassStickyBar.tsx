@@ -33,7 +33,7 @@ const AIMasterclassStickyBar: React.FC = () => {
                             </span>
                             <span className="text-[11px] font-bold text-amber-700 uppercase tracking-wider">AI MASTERCLASS SESSIONS ON HOLD</span>
                         </div>
-                        <p className="text-sm font-bold text-slate-900 tracking-tight">Admissions Temporarily Paused • Join WhatsApp Community for Next Batch</p>
+                        <p className="text-sm font-bold text-slate-900 tracking-tight">Admissions Temporarily Paused • Sessions On Hold</p>
                     </div>
 
                     <div className="h-8 w-px bg-slate-200" />
@@ -52,15 +52,12 @@ const AIMasterclassStickyBar: React.FC = () => {
                     </div>
 
                     <div className="flex items-center gap-3">
-                        <a
-                            href="https://chat.whatsapp.com/EpsuzpxGz6F98ml2GUBejC"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white text-xs sm:text-sm font-bold px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl shadow-md shadow-amber-600/25 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center gap-2 cursor-pointer whitespace-nowrap"
+                        <button
+                            disabled
+                            className="bg-slate-200 text-slate-500 text-xs sm:text-sm font-bold px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl cursor-not-allowed whitespace-nowrap"
                         >
-                            <span>Join WhatsApp Community</span>
-                            <ArrowRight className="w-3.5 h-3.5 text-white" />
-                        </a>
+                            <span>Admissions Paused</span>
+                        </button>
                     </div>
                 </div>
             </div>

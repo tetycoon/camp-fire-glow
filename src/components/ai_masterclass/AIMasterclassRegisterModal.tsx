@@ -534,7 +534,7 @@ const AIMasterclassRegisterModal: React.FC = () => {
                                 <div>
                                     <p className="font-bold text-amber-900">Live Session Schedule: Currently Paused</p>
                                     <p className="text-[11px] text-amber-800 mt-0.5 leading-relaxed font-medium">
-                                        We are currently not conducting live AI Masterclass sessions. Checkouts and new registrations are on hold. Join our WhatsApp Community to get notified when new cohorts are scheduled.
+                                        We are currently not conducting live AI Masterclass sessions. Checkouts and new registrations are temporarily on hold.
                                     </p>
                                 </div>
                             </div>
@@ -721,11 +721,11 @@ const AIMasterclassRegisterModal: React.FC = () => {
                             </div>
 
                             <button
-                                type="submit"
-                                disabled={loading}
-                                className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-sm sm:text-base py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-blue-600/25 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 cursor-pointer disabled:opacity-70"
+                                type="button"
+                                disabled
+                                className="w-full bg-slate-300 text-slate-500 font-bold text-sm sm:text-base py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 cursor-not-allowed"
                             >
-                                {loading ? <Loader2 className="animate-spin w-4 h-4" /> : `Proceed to Payment — ₹${totalAmount} (Incl. 18% GST)`}
+                                Admissions Currently Paused
                             </button>
 
                             <div className="flex items-center justify-center gap-1.5 text-[10px] text-slate-500 font-bold uppercase tracking-wider pb-1">

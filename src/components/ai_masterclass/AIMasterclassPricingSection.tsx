@@ -79,15 +79,12 @@ const AIMasterclassPricingSection: React.FC = () => {
                         </div>
 
                         <div className="p-7 sm:p-9 pt-0">
-                            <a
-                                href="https://chat.whatsapp.com/EpsuzpxGz6F98ml2GUBejC"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="w-full bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white font-bold text-base py-4 px-6 rounded-xl transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer mb-3"
+                            <button
+                                disabled
+                                className="w-full bg-slate-200 text-slate-500 font-bold text-base py-4 px-6 rounded-xl cursor-not-allowed flex items-center justify-center gap-2 mb-3"
                             >
-                                <span>Admissions Paused — Join Waitlist</span>
-                                <ArrowRight className="w-4 h-4 text-white" />
-                            </a>
+                                <span>Admissions Paused</span>
+                            </button>
                             <div className="flex items-center justify-center gap-1.5 text-[11px] font-semibold text-amber-700">
                                 <ShieldCheck className="w-3.5 h-3.5 text-amber-600" /> Live masterclass sessions currently on hold
                             </div>
@@ -166,15 +163,12 @@ const AIMasterclassPricingSection: React.FC = () => {
                         </div>
 
                         <div className="p-7 sm:p-9 pt-0">
-                            <a
-                                href="https://chat.whatsapp.com/EpsuzpxGz6F98ml2GUBejC"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="w-full bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-bold text-base py-4 px-6 rounded-xl transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer mb-3"
+                            <button
+                                disabled
+                                className="w-full bg-slate-700 text-slate-400 font-bold text-base py-4 px-6 rounded-xl cursor-not-allowed flex items-center justify-center gap-2 mb-3"
                             >
-                                <span>Admissions Paused — Join Waitlist</span>
-                                <ArrowRight className="w-4 h-4 text-white" />
-                            </a>
+                                <span>Admissions Paused</span>
+                            </button>
                             <div className="flex items-center justify-center gap-1.5 text-[11px] font-semibold text-amber-400">
                                 <ShieldCheck className="w-3.5 h-3.5 text-amber-400" /> Live masterclass sessions currently on hold
                             </div>

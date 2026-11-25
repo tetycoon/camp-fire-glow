@@ -18,17 +18,14 @@ const AIMasterclassBonusesSection: React.FC = () => {
                             Live 3-Hour Workshop + ₹9,997 Toolkit = <span className="text-blue-400">₹499</span>
                         </h3>
                         <p className="text-sm text-slate-300 mb-6 max-w-2xl mx-auto">
-                            Live 3-Hour virtual masterclass + complete digital resource suite. Tentatively planned Every Friday (Evening 5:30 PM - 8:30 PM IST), with exact session links scheduled in our official WhatsApp Community. Official GST invoice provided.
+                            Live 3-Hour virtual masterclass + complete digital resource suite. Live masterclass sessions are currently on hold.
                         </p>
-                        <a
-                            href="https://chat.whatsapp.com/EpsuzpxGz6F98ml2GUBejC"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-bold text-base px-8 py-4 rounded-xl shadow-lg transition-all cursor-pointer inline-flex items-center gap-2"
+                        <button
+                            disabled
+                            className="bg-slate-700 text-slate-400 font-bold text-base px-8 py-4 rounded-xl cursor-not-allowed inline-flex items-center gap-2"
                         >
-                            <span>Admissions Paused — Join WhatsApp Community</span>
-                            <ArrowRight className="w-4 h-4 text-white" />
-                        </a>
+                            <span>Admissions Paused</span>
+                        </button>
                     </div>
                 </div>
             </div>
