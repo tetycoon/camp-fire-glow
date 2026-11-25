@@ -20,13 +20,15 @@ const AIMasterclassBonusesSection: React.FC = () => {
                         <p className="text-sm text-slate-300 mb-6 max-w-2xl mx-auto">
                             Live 3-Hour virtual masterclass + complete digital resource suite. Tentatively planned Every Friday (Evening 5:30 PM - 8:30 PM IST), with exact session links scheduled in our official WhatsApp Community. Official GST invoice provided.
                         </p>
-                        <button
-                            onClick={() => openRegisterModal({ includePdfMaterial: true })}
-                            className="bg-blue-600 hover:bg-blue-500 text-white font-bold text-base px-8 py-4 rounded-xl shadow-lg shadow-blue-600/25 transition-all cursor-pointer inline-flex items-center gap-2"
+                        <a
+                            href="https://chat.whatsapp.com/EpsuzpxGz6F98ml2GUBejC"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-bold text-base px-8 py-4 rounded-xl shadow-lg transition-all cursor-pointer inline-flex items-center gap-2"
                         >
-                            <span>Enroll & Claim Resource Suite — ₹499</span>
+                            <span>Admissions Paused — Join WhatsApp Community</span>
                             <ArrowRight className="w-4 h-4 text-white" />
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>

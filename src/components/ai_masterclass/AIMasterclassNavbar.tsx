@@ -66,23 +66,26 @@ const AIMasterclassNavbar: React.FC = () => {
                             <Building2 className="w-3.5 h-3.5 text-slate-500" />
                             <span>Corporate Hub</span>
                         </a>
-                        <button
-                            onClick={openRegisterModal}
-                            className="flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-xs sm:text-sm font-bold px-5 py-2.5 rounded-xl transition-all duration-200 shadow-md shadow-blue-600/25 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
+                        <a
+                            href="https://chat.whatsapp.com/EpsuzpxGz6F98ml2GUBejC"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-center gap-2 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white text-xs sm:text-sm font-bold px-4 py-2.5 rounded-xl transition-all duration-200 shadow-md shadow-amber-600/25 cursor-pointer"
                         >
-                            <span>Enroll for ₹99</span>
-                            <ArrowRight className="w-3.5 h-3.5 text-white" />
-                        </button>
+                            <span>Admissions Paused</span>
+                        </a>
                     </div>
 
                     {/* Mobile Quick Action Button + Menu Button */}
                     <div className="flex items-center gap-2 md:hidden">
-                        <button
-                            onClick={openRegisterModal}
-                            className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs font-bold px-3.5 py-2 rounded-lg shadow-sm"
+                        <a
+                            href="https://chat.whatsapp.com/EpsuzpxGz6F98ml2GUBejC"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="bg-gradient-to-r from-amber-600 to-orange-600 text-white text-xs font-bold px-3 py-2 rounded-lg shadow-sm"
                         >
-                            Enroll — ₹99
-                        </button>
+                            Paused
+                        </a>
                         <button
                             className="text-slate-900 hover:text-blue-600 transition-colors p-1.5 cursor-pointer"
                             onClick={() => setOpen(!open)}
@@ -113,12 +116,15 @@ const AIMasterclassNavbar: React.FC = () => {
                         <button onClick={() => scrollTo("faq")} className="text-left py-2.5 border-b border-slate-100">
                             Frequently Asked Questions
                         </button>
-                        <button
-                            onClick={() => { openRegisterModal(); setOpen(false); }}
-                            className="w-full bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold px-5 py-3 rounded-xl mt-2 shadow-md shadow-blue-600/20"
+                        <a
+                            href="https://chat.whatsapp.com/EpsuzpxGz6F98ml2GUBejC"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={() => setOpen(false)}
+                            className="w-full bg-gradient-to-r from-amber-600 to-orange-600 text-white text-sm font-bold px-5 py-3 rounded-xl mt-2 shadow-md shadow-amber-600/20 text-center block"
                         >
-                            Enroll For Masterclass — ₹99
-                        </button>
+                            Admissions Paused — Join WhatsApp
+                        </a>
                     </div>
                 </div>
             )}

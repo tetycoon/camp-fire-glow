@@ -49,13 +49,13 @@ const AIMasterclassHeroSection: React.FC = () => {
                     {/* Left Column: Core Value Proposition */}
                     <div className="lg:col-span-7 flex flex-col items-start text-left">
                         {/* Executive Program Badge */}
-                        <div className="inline-flex items-center gap-2.5 mb-5 px-4 py-1.5 rounded-full bg-slate-900/95 text-white shadow-md shadow-slate-900/10 border border-slate-800/80 backdrop-blur-md">
+                        <div className="inline-flex items-center gap-2.5 mb-5 px-4 py-1.5 rounded-full bg-amber-950/95 text-white shadow-md shadow-amber-950/10 border border-amber-800/80 backdrop-blur-md">
                             <span className="relative flex h-2 w-2">
-                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                                <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-400"></span>
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-400"></span>
                             </span>
-                            <span className="text-[11px] font-bold uppercase tracking-widest text-slate-100">
-                                EXECUTIVE 3-HOUR LIVE WORKSHOP • BILINGUAL (TAMIL & ENGLISH)
+                            <span className="text-[11px] font-bold uppercase tracking-widest text-amber-200">
+                                SESSIONS CURRENTLY ON HOLD • ADMISSIONS PAUSED
                             </span>
                         </div>
 
@@ -100,14 +100,16 @@ const AIMasterclassHeroSection: React.FC = () => {
 
                         {/* CTA Buttons */}
                         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
-                            <button
-                                onClick={openRegisterModal}
-                                className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-base sm:text-lg font-bold px-8 py-4 rounded-xl flex items-center justify-center gap-3 transition-all shadow-lg shadow-blue-600/30 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
+                            <a
+                                href="https://chat.whatsapp.com/EpsuzpxGz6F98ml2GUBejC"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white text-base sm:text-lg font-bold px-8 py-4 rounded-xl flex items-center justify-center gap-3 transition-all shadow-lg shadow-amber-600/30 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
                             >
-                                <span>Register for Masterclass — ₹99</span>
-                                <span className="text-blue-200 line-through text-sm font-semibold">₹999</span>
+                                <MessageSquare className="w-5 h-5 text-white" />
+                                <span>Join Waitlist (WhatsApp Community)</span>
                                 <ArrowRight className="w-4 h-4 text-white" />
-                            </button>
+                            </a>
 
                             <button
                                 onClick={() => scrollTo("modules")}
@@ -118,8 +120,9 @@ const AIMasterclassHeroSection: React.FC = () => {
                             </button>
                         </div>
 
-                        <div className="flex items-center gap-2 mt-3.5 text-xs font-semibold text-slate-500">
-                            <ShieldCheck className="w-4 h-4 text-blue-600" /> Verified Corporate Checkout via Razorpay • Official GST Tax Invoice Included
+                        <div className="flex items-center gap-2 mt-3.5 text-xs font-semibold text-amber-800 bg-amber-50 px-3.5 py-2 rounded-xl border border-amber-200/80">
+                            <ShieldCheck className="w-4 h-4 text-amber-600 shrink-0" />
+                            <span>Live masterclass sessions are currently not being conducted. Registrations are on hold.</span>
                         </div>
                     </div>
 
@@ -134,8 +137,8 @@ const AIMasterclassHeroSection: React.FC = () => {
                                     <Building2 className="w-3.5 h-3.5 text-blue-600" />
                                     EXECUTIVE DELEGATE PASS
                                 </span>
-                                <span className="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200/80 px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Subsidized Seat
+                                <span className="inline-flex items-center gap-1.5 bg-amber-100 text-amber-800 border border-amber-300 px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span> Admissions Paused
                                 </span>
                             </div>
 
@@ -156,7 +159,7 @@ const AIMasterclassHeroSection: React.FC = () => {
                                         <Languages className="w-4 h-4" />
                                     </div>
                                     <div>
-                                        <div className="text-sm font-bold text-slate-900">Tamil & English (Bilingual)</div>
+                                        <div className="text-sm font-bold text-slate-900">Tamil &amp; English (Bilingual)</div>
                                         <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Clear, Practical Business Delivery</div>
                                     </div>
                                 </div>
@@ -167,18 +170,18 @@ const AIMasterclassHeroSection: React.FC = () => {
                                     </div>
                                     <div>
                                         <div className="text-sm font-bold text-slate-900">Live Online Classroom</div>
-                                        <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Interactive Q&A With Antony Praveen</div>
+                                        <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Interactive Q&amp;A With Antony Praveen</div>
                                     </div>
                                 </div>
 
-                                <div className="flex items-start gap-3 p-3 rounded-xl bg-emerald-50/80 border border-emerald-200/80">
-                                    <div className="w-9 h-9 rounded-lg bg-white border border-emerald-200 text-emerald-600 flex items-center justify-center shrink-0 shadow-2xs">
+                                <div className="flex items-start gap-3 p-3 rounded-xl bg-amber-50/80 border border-amber-200/80">
+                                    <div className="w-9 h-9 rounded-lg bg-white border border-amber-200 text-amber-600 flex items-center justify-center shrink-0 shadow-2xs">
                                         <MessageSquare className="w-4 h-4" />
                                     </div>
                                     <div>
-                                        <div className="text-xs font-bold text-emerald-950">Schedule: Tentative Every Friday</div>
-                                        <div className="text-[11px] font-medium text-emerald-700 leading-snug mt-0.5">
-                                            Evening 5:30 PM – 8:30 PM IST • Upcoming live links &amp; updates shared in our official WhatsApp Community.
+                                        <div className="text-xs font-bold text-amber-950">Status: Sessions Paused</div>
+                                        <div className="text-[11px] font-medium text-amber-800 leading-snug mt-0.5">
+                                            We are currently not conducting live sessions. Join the community to be notified when future sessions resume.
                                         </div>
                                     </div>
                                 </div>
@@ -186,13 +189,15 @@ const AIMasterclassHeroSection: React.FC = () => {
 
                             {/* Ticket Price & Direct CTA */}
                             <div className="pt-2 border-t border-slate-100">
-                                <button
-                                    onClick={openRegisterModal}
-                                    className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-sm py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 shadow-md shadow-blue-600/25 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer"
+                                <a
+                                    href="https://chat.whatsapp.com/EpsuzpxGz6F98ml2GUBejC"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="w-full bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white font-bold text-sm py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 shadow-md shadow-amber-600/25 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer"
                                 >
-                                    <span>Register for Masterclass — ₹99</span>
+                                    <span>Admissions Paused — Join WhatsApp</span>
                                     <ArrowRight className="w-4 h-4 text-white" />
-                                </button>
+                                </a>
                             </div>
                         </div>
                     </div>

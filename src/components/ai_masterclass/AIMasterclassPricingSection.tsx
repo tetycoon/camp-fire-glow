@@ -50,14 +50,14 @@ const AIMasterclassPricingSection: React.FC = () => {
                                 Inclusive of 18% GST (Final Fee ₹99)
                             </p>
 
-                            <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5 mb-6 text-xs text-slate-600 space-y-1.5">
+                            <div className="bg-amber-50 border border-amber-200 rounded-xl p-3.5 mb-6 text-xs text-amber-900 space-y-1.5">
                                 <div className="flex items-center justify-between">
-                                    <span>Schedule:</span>
-                                    <span className="font-bold text-slate-900">Tentative Every Friday (5:30 PM - 8:30 PM IST)</span>
+                                    <span>Status:</span>
+                                    <span className="font-bold text-amber-700">Admissions Paused</span>
                                 </div>
                                 <div className="flex items-center justify-between">
                                     <span>Medium:</span>
-                                    <span className="font-bold text-slate-900">Live Online (Tamil & English)</span>
+                                    <span className="font-bold text-slate-900">Live Online (On Hold)</span>
                                 </div>
                             </div>
 
@@ -79,15 +79,17 @@ const AIMasterclassPricingSection: React.FC = () => {
                         </div>
 
                         <div className="p-7 sm:p-9 pt-0">
-                            <button
-                                onClick={() => openRegisterModal()}
-                                className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-base py-4 px-6 rounded-xl transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 cursor-pointer mb-3"
+                            <a
+                                href="https://chat.whatsapp.com/EpsuzpxGz6F98ml2GUBejC"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="w-full bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white font-bold text-base py-4 px-6 rounded-xl transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer mb-3"
                             >
-                                <span>Enroll for Live Session — ₹99</span>
+                                <span>Admissions Paused — Join Waitlist</span>
                                 <ArrowRight className="w-4 h-4 text-white" />
-                            </button>
-                            <div className="flex items-center justify-center gap-1.5 text-[11px] font-semibold text-slate-500">
-                                <ShieldCheck className="w-3.5 h-3.5 text-slate-600" /> Razorpay 256-Bit SSL • Official GST Tax Invoice
+                            </a>
+                            <div className="flex items-center justify-center gap-1.5 text-[11px] font-semibold text-amber-700">
+                                <ShieldCheck className="w-3.5 h-3.5 text-amber-600" /> Live masterclass sessions currently on hold
                             </div>
                         </div>
                     </div>
@@ -125,12 +127,12 @@ const AIMasterclassPricingSection: React.FC = () => {
 
                             <div className="bg-slate-800/80 border border-slate-700 rounded-xl p-3.5 mb-6 text-xs text-slate-300 space-y-1.5">
                                 <div className="flex items-center justify-between">
-                                    <span>Schedule:</span>
-                                    <span className="font-bold text-white">Tentative Every Friday (5:30 PM - 8:30 PM IST)</span>
+                                    <span>Status:</span>
+                                    <span className="font-bold text-amber-400">Admissions Paused</span>
                                 </div>
                                 <div className="flex items-center justify-between">
-                                    <span>Toolkit Delivery:</span>
-                                    <span className="font-bold text-white">Sent Directly to Email</span>
+                                    <span>Live Session:</span>
+                                    <span className="font-bold text-slate-400">Cohorts On Hold</span>
                                 </div>
                             </div>
 
@@ -164,15 +166,17 @@ const AIMasterclassPricingSection: React.FC = () => {
                         </div>
 
                         <div className="p-7 sm:p-9 pt-0">
-                            <button
-                                onClick={() => openRegisterModal({ includePdfMaterial: true })}
-                                className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-base py-4 px-6 rounded-xl transition-all shadow-lg shadow-blue-600/35 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 cursor-pointer mb-3"
+                            <a
+                                href="https://chat.whatsapp.com/EpsuzpxGz6F98ml2GUBejC"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="w-full bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-bold text-base py-4 px-6 rounded-xl transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer mb-3"
                             >
-                                <span>Enroll with Resource Toolkit — ₹499</span>
+                                <span>Admissions Paused — Join Waitlist</span>
                                 <ArrowRight className="w-4 h-4 text-white" />
-                            </button>
-                            <div className="flex items-center justify-center gap-1.5 text-[11px] font-semibold text-slate-400">
-                                <ShieldCheck className="w-3.5 h-3.5 text-blue-400" /> Razorpay 256-Bit SSL • Instant Digital Asset Access
+                            </a>
+                            <div className="flex items-center justify-center gap-1.5 text-[11px] font-semibold text-amber-400">
+                                <ShieldCheck className="w-3.5 h-3.5 text-amber-400" /> Live masterclass sessions currently on hold
                             </div>
                         </div>
                     </div>

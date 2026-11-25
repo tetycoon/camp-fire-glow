@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { CheckCircle2, Loader2, ShieldCheck, X, Search, MessageSquare } from "lucide-react";
+import { CheckCircle2, Loader2, ShieldCheck, X, Search, MessageSquare, AlertCircle } from "lucide-react";
 import { useAIMasterclassRegisterModal } from "./AIMasterclassRegisterModalContext";
 import { RazorpayOptions } from "@/types/razorpay";
 import { getMasterclassDateStrings } from "../../lib/masterclassDateUtils";
@@ -235,7 +235,7 @@ const AIMasterclassRegisterModal: React.FC = () => {
 
             const result = await response.json();
 
-            if (!result.success || !result.orderId || !result.keyId) {
+            if (!result.success || !result.orderId) {
                 alert(`Order creation failed: ${result.error || "Please check your network and try again."}\nIf payment failed please contact +91 7558133039`);
                 setLoading(false);
                 return;
@@ -529,12 +529,12 @@ const AIMasterclassRegisterModal: React.FC = () => {
 
                         <form onSubmit={handleSubmit} className="space-y-3">
                             {/* Live Session Schedule Information Card */}
-                            <div className="p-3.5 rounded-xl bg-blue-50/80 border border-blue-200/90 text-blue-950 text-xs flex items-start gap-2.5">
-                                <MessageSquare className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
+                            <div className="p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-950 text-xs flex items-start gap-2.5">
+                                <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
                                 <div>
-                                    <p className="font-bold text-slate-900">Live Session Schedule: Tentative Every Friday</p>
-                                    <p className="text-[11px] text-blue-700 mt-0.5 leading-relaxed font-medium">
-                                        Evening 5:30 PM – 8:30 PM IST. Upcoming live session dates, meeting links &amp; schedule updates are announced inside our exclusive WhatsApp Community right after registration.
+                                    <p className="font-bold text-amber-900">Live Session Schedule: Currently Paused</p>
+                                    <p className="text-[11px] text-amber-800 mt-0.5 leading-relaxed font-medium">
+                                        We are currently not conducting live AI Masterclass sessions. Checkouts and new registrations are on hold. Join our WhatsApp Community to get notified when new cohorts are scheduled.
                                     </p>
                                 </div>
                             </div>
