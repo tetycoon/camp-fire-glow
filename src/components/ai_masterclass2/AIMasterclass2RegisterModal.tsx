@@ -7,7 +7,7 @@ import { calculateInclusiveGstBreakdown, isValidGstin, sanitizeTextInput, isAuth
 import GstPriceBreakdown from "../common/GstPriceBreakdown";
 
 
-const GOOGLE_SHEET_URL = VERIFIED_BACKEND_ENDPOINTS.ai_masterclass;
+const GOOGLE_SHEET_URL = VERIFIED_BACKEND_ENDPOINTS.advanced_masterclass;
 
 
 function loadRazorpayScript(): Promise<boolean> {

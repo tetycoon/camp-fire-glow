@@ -395,6 +395,58 @@ function doGet(e) {
 // ------------------------------------------------------------
 // 2. WEBHOOK: POST (Leads, Payments, & Incoming Messages)
 // ------------------------------------------------------------
+
+function isAiMasterclassPayload(data, paymentEntity) {
+  const notes = (paymentEntity && paymentEntity.notes) || (data && data.notes) || {};
+  const productKey = String(
+    (data && (data.product_key || data.productKey || data.target_product)) ||
+    notes.product_key || notes.productKey || notes.target_product || ""
+  ).trim().toLowerCase();
+
+  const pageUrl = String(
+    (data && (data.pageUrl || data.page_url)) ||
+    notes.page_url || notes.pageUrl || ""
+  ).trim().toLowerCase();
+
+  const course = String(
+    (data && (data.course || data.batch)) ||
+    notes.course ||
+    (paymentEntity && paymentEntity.description) || ""
+  ).trim().toLowerCase();
+
+  // Explicit foreign products & sub-routes to block from entering AI Masterclass sheet
+  const foreignKeywords = [
+    "ai_filmmaking", "filmmaking", "video_generation", "ai-video",
+    "claude", "claude_masterclass", "claude-masterclass",
+    "ai_masterclass2", "ai-masterclass2", "masterclass2", "masterclass 2", "advanced_masterclass", "advanced-masterclass",
+    "academy", "pre_register", "preregister",
+    "bootcamp",
+    "upscale",
+    "ai_bgm", "aibgm",
+    "consulting", "1on1", "professionals", "professional"
+  ];
+
+  for (let i = 0; i < foreignKeywords.length; i++) {
+    const k = foreignKeywords[i];
+    if (productKey === k || productKey.indexOf(k) !== -1) {
+      return { isMatch: false, reason: "Belongs to " + k + " (product key: " + productKey + ")" };
+    }
+    if (pageUrl.indexOf("/" + k) !== -1 || pageUrl.indexOf("/" + k.replace(/_/g, "-")) !== -1) {
+      return { isMatch: false, reason: "Belongs to " + k + " (page URL: " + pageUrl + ")" };
+    }
+    if (course.indexOf(k) !== -1) {
+      return { isMatch: false, reason: "Belongs to " + k + " (course: " + course + ")" };
+    }
+  }
+
+  // If a product key is specified and is not ai_masterclass, reject
+  if (productKey && productKey !== "ai_masterclass" && productKey !== EXPECTED_PRODUCT_KEY) {
+    return { isMatch: false, reason: "Non-matching product key: " + productKey };
+  }
+
+  return { isMatch: true };
+}
+
 function doPost(e) {
   const rawData = (e && e.postData && e.postData.contents) ? e.postData.contents : "{}";
   writeToLogs("RAW_WEBHOOK", rawData.substring(0, 500));
@@ -405,6 +457,11 @@ function doPost(e) {
     // Landing gate leads must be handled before the generic name/email/phone branch,
     // which would otherwise create a Razorpay order for a lead that supplied an email.
     if (body.action === "saveLandingLead") {
+      const pCheck = isAiMasterclassPayload(body, null);
+      if (!pCheck.isMatch) {
+        writeToLogs("LANDING_LEAD_ISOLATION_SKIP", "Ignored foreign lead: " + pCheck.reason);
+        return createJsonResponse({ success: false, ignored: true, reason: pCheck.reason });
+      }
       return createJsonResponse(saveLandingLead(body));
     }
 
@@ -420,10 +477,10 @@ function doPost(e) {
 
     if (body.event === "payment.captured" || body.event === "order.paid") {
       const paymentEntity = body.payload && body.payload.payment && body.payload.payment.entity;
-      const noteProductKey = String((paymentEntity && paymentEntity.notes && paymentEntity.notes.product_key) || body.target_product || "").trim().toLowerCase();
-      if (noteProductKey === "ai_filmmaking") {
-        writeToLogs("ISOLATION_SKIP", "Ignored ai_filmmaking payment in ai_masterclass: " + (paymentEntity && paymentEntity.id));
-        return createJsonResponse({ success: false, ignored: true, reason: "Belongs to ai_filmmaking, not ai_masterclass" });
+      const pCheck = isAiMasterclassPayload(body, paymentEntity);
+      if (!pCheck.isMatch) {
+        writeToLogs("ISOLATION_SKIP", "Ignored foreign payment in ai_masterclass: " + pCheck.reason + " [Payment: " + (paymentEntity && paymentEntity.id) + "]");
+        return createJsonResponse({ success: false, ignored: true, reason: pCheck.reason });
       }
       if (!paymentEntity || !paymentEntity.order_id || !paymentEntity.id) {
         return createJsonResponse({ success: false, error: "Invalid webhook payment entity" });
@@ -450,6 +507,11 @@ function doPost(e) {
     }
 
     if (body.name && body.email && body.phone && !body.object) {
+      const pCheck = isAiMasterclassPayload(body, null);
+      if (!pCheck.isMatch) {
+        writeToLogs("ISOLATION_REJECT", "Rejected registration from foreign page: " + (body.pageUrl || "") + " (" + pCheck.reason + ")");
+        return createJsonResponse({ success: false, error: "This endpoint only processes AI Masterclass registrations (" + pCheck.reason + ")" });
+      }
       const orderId = createRazorpayOrder(body);
       saveToSheet(body, orderId);
       saveRegistrationToLandingLeads(body, orderId);
@@ -1798,6 +1860,11 @@ function repairMisalignedMasterclassRows(sheet) {
 }
 
 function saveToSheet(data, orderId) {
+  const pCheck = isAiMasterclassPayload(data, null);
+  if (!pCheck.isMatch) {
+    writeToLogs("SHEET_ISOLATION_SKIP", "Prevented saveToSheet: " + pCheck.reason);
+    return;
+  }
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   let sheet = ss.getSheetByName(SHEET_NAME_REG) || ss.getSheets()[0];
   repairMisalignedMasterclassRows(sheet);
