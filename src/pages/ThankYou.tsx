@@ -106,6 +106,7 @@ const ThankYou = () => {
     const amount = stateData.amount || "";
     const noGst = Boolean(stateData.noGst || String(course).toLowerCase().includes("academy"));
     const isClaude = Boolean(String(course).toLowerCase().includes("claude") || location.pathname.includes("claude") || searchParams.get("course")?.toLowerCase().includes("claude"));
+    const isFilmmaking = Boolean(String(course).toLowerCase().includes("filmmaking") || String(course).toLowerCase().includes("video") || location.pathname.includes("filmmaking") || location.pathname.includes("video"));
 
     // Build the prefilled WhatsApp message triggering Meta WhatsApp Automation in Apps Script
     const prefilledMessage = [
@@ -126,8 +127,12 @@ const ThankYou = () => {
         .join("\n");
 
     const waChatLink = `https://wa.me/917010340494?text=${encodeURIComponent(prefilledMessage)}`;
+    // Dedicated WhatsApp Community link per campaign
+    // https://chat.whatsapp.com/EpsuzpxGz6F98ml2GUBejC is strictly for AI Masterclass
     const WA_COMMUNITY_LINK = isClaude 
         ? "https://chat.whatsapp.com/GgMP8b9Z5HIKn5duwqgnwU" 
+        : isFilmmaking
+        ? "https://chat.whatsapp.com/GuJIGDcfIIfDZHlG0MduvM"
         : "https://chat.whatsapp.com/EpsuzpxGz6F98ml2GUBejC";
 
     useEffect(() => {

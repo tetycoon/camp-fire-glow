@@ -275,7 +275,7 @@ const WHATSAPP_CONFIG = {
   PHONE_NUMBER: "917010340494",
   SUPPORT_PHONE: "916379209689",
   WA_GROUP_LINK: getOptionalScriptSecret("WA_GROUP_LINK_FILMMAKING") || "https://chat.whatsapp.com/GuJIGDcfIIfDZHlG0MduvM",
-  WA_COMMUNITY_LINK: "https://chat.whatsapp.com/EpsuzpxGz6F98ml2GUBejC",
+  WA_COMMUNITY_LINK: "https://chat.whatsapp.com/GuJIGDcfIIfDZHlG0MduvM",
   POSTER_URL: getOptionalScriptSecret("POSTER_URL_FILMMAKING") || ""
 };
 
