@@ -213,7 +213,7 @@ const WHATSAPP_CONFIG = {
   WA_GROUP_LINK_CLAUDE_ONLINE: "https://chat.whatsapp.com/GgMP8b9Z5HIKn5duwqgnwU", // Claude Online Group
   WA_GROUP_LINK_CLAUDE_OFFLINE: "https://chat.whatsapp.com/DMp2tRRhjwN1fziYujeQhb", // Claude Offline Group
   POSTER_URL: "https://course.techtycoon.in/images/AI_Secrets_Revealed_Banner.png",
-  WA_GROUP_LINK_FILMMAKING: getOptionalScriptSecret("WA_GROUP_LINK_FILMMAKING") || "https://chat.whatsapp.com/EpsuzpxGz6F98ml2GUBejC",
+  WA_GROUP_LINK_FILMMAKING: getOptionalScriptSecret("WA_GROUP_LINK_FILMMAKING") || "https://chat.whatsapp.com/GuJIGDcfIIfDZHlG0MduvM",
   POSTER_URL_FILMMAKING: getOptionalScriptSecret("POSTER_URL_FILMMAKING") || "",
   AI_FILMMAKING_WEBHOOK_URL: "https://script.google.com/macros/s/AKfycbzycz3SBGah4HEEMlCKGOBcU5wBg8zoY3QJFVO_1YwnPAFREa5zgogQqKo8JXMlTM4LBw/exec"
 };

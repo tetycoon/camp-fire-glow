@@ -866,6 +866,22 @@ const AiFilmmakingPage: React.FC = () => {
                 );
               } catch (_) {}
             }
+            if (typeof (window as any).gtag === 'function') {
+              try {
+                (window as any).gtag('event', 'purchase', {
+                  transaction_id: payId,
+                  value: totalAmount,
+                  currency: 'INR',
+                  items: [{
+                    item_name: includePdfMaterial
+                      ? '3-Hours AI Filmmaking Live Webinar + Resource ToolKit'
+                      : '3-Hours AI Filmmaking & Video Generation Live Webinar',
+                    price: totalAmount,
+                    quantity: 1
+                  }]
+                });
+              } catch (_) {}
+            }
           }
 
           setVerifiedPayment({
