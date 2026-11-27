@@ -41,8 +41,27 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/claude_resources/assets/css/styles.css?v=20261117a">
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <!-- Meta Pixel Code -->
+  <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1077721348415196');
+    fbq('track', 'PageView');
+  </script>
+  <!-- End Meta Pixel Code -->
 </head>
 <body>
+  <!-- Meta Pixel (noscript) -->
+  <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1077721348415196&ev=PageView&noscript=1"
+  /></noscript>
+  <!-- End Meta Pixel (noscript) -->
   <!-- Icon sprite -->
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
     <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3v18M3 12h18M5.6 5.6l12.8 12.8M18.4 5.6L5.6 18.4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
@@ -585,6 +604,6 @@
 
   <script src="/claude_resources/assets/js/config.js?v=20261113e"></script>
   <script src="/claude_resources/assets/js/main.js?v=20261113e"></script>
-  <script src="/claude_resources/assets/js/payment.js?v=20261118a"></script>
+  <script src="/claude_resources/assets/js/payment.js?v=20261127a"></script>
 </body>
 </html>

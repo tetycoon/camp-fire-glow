@@ -28,6 +28,21 @@
 
   var currentPayable = DISCOUNTED_PRICE;
   var currentCouponApplied = true;
+  var leadFiredThisVisit = false;
+  var firedPurchaseIds = {};
+
+  function trackMetaEvent(eventName, params, opts) {
+    try {
+      if (typeof window.fbq !== 'function') return;
+      if (opts && opts.eventID) {
+        window.fbq('track', eventName, params || {}, { eventID: String(opts.eventID) });
+      } else {
+        window.fbq('track', eventName, params || {});
+      }
+    } catch (e) {
+      // Never let analytics/pixel blockers interfere with checkout
+    }
+  }
 
   // DOM Elements - Registration Dialog
   var regDialog = document.getElementById('reg-dialog');
@@ -611,18 +626,24 @@
       var addonText = isAddonSelected ? 'Yes - ChatGPT Hacks (+₹400)' : 'No';
       var productName = isAddonSelected ? 'Ultimate Claude Skills + ChatGPT Hacks Bundle' : 'Ultimate Claude Skills';
 
+      if (!leadFiredThisVisit) {
+        leadFiredThisVisit = true;
+        trackMetaEvent('Lead', {
+          content_name: productName,
+          content_category: 'Claude Resources'
+        });
+      }
+
       // Set button to loading
       regSubmitBtn.disabled = true;
       regSubmitBtn.innerHTML = '<span class="pay-spinner" style="width:16px;height:16px;border-width:2px;display:inline-block;vertical-align:middle;margin-right:8px;"></span> Connecting to Payment...';
 
       // 1. Create official Razorpay Order via Google Apps Script
-      var isIntl = countryCode !== '+91';
       var leadPayload = {
         name: nameVal,
         email: emailVal,
         phone: fullPhone,
         countryCode: countryCode,
-        isInternational: isIntl,
         amount: currentPayable,
         coupon: appliedCouponText,
         addon: addonText,
@@ -653,18 +674,19 @@
           return;
         }
 
-        var rzpKey = (result && (result.keyId || result.razorpayKeyId)) || '';
-        if (!rzpKey) {
-          alert('Payment initiation failed: Razorpay Key ID was not returned by the server.');
-          resetSubmitBtn();
-          return;
-        }
+        var isIntl = countryCode !== '+91';
+        var rzpKey = (result && result.razorpayKeyId)
+          ? result.razorpayKeyId
+          : (isIntl ? (C.razorpayKeyIntl || 'rzp_live_gfoS1OjC8tvWjP') : (C.razorpayKeyIn || 'rzp_live_T2CbVONQc6qrqj'));
+
+        var paidAmount = Number(currentPayable);
+        var orderCurrency = (result && result.currency) || 'INR';
 
         var rzpOptions = {
           key: rzpKey,
           order_id: result.orderId,
-          amount: currentPayable * 100, // paise
-          currency: 'INR',
+          amount: Math.round(paidAmount * 100), // paise
+          currency: orderCurrency,
           name: 'TechTycoon',
           description: (isAddonSelected ? 'Claude Skills + ChatGPT Hacks' : '250+ Ultimate Claude Skills'),
           image: 'https://course.techtycoon.in/claude_resources/assets/img/logo-techtycoon.png',
@@ -677,7 +699,7 @@
             product: 'claude_resources',
             coupon: appliedCouponText,
             addon: addonText,
-            paid_price: String(currentPayable)
+            paid_price: String(paidAmount)
           },
           theme: {
             color: '#FF7A47'
@@ -686,6 +708,25 @@
             var paymentId = response.razorpay_payment_id || '';
             var orderId = response.razorpay_order_id || result.orderId || '';
             var signature = response.razorpay_signature || '';
+
+            // Fire Meta Pixel Purchase once per paymentId (never on failed/cancelled/pending)
+            if (paymentId) {
+              var purchaseKey = 'meta_purchase_' + paymentId;
+              var alreadyFired = !!firedPurchaseIds[paymentId];
+              if (!alreadyFired) {
+                try { alreadyFired = !!window.sessionStorage.getItem(purchaseKey); } catch (e) {}
+              }
+              if (!alreadyFired) {
+                firedPurchaseIds[paymentId] = true;
+                try { window.sessionStorage.setItem(purchaseKey, '1'); } catch (e) {}
+                trackMetaEvent('Purchase', {
+                  value: paidAmount,
+                  currency: orderCurrency,
+                  content_name: productName,
+                  content_type: 'product'
+                }, { eventID: paymentId });
+              }
+            }
 
             var successPayload = JSON.stringify({
               paymentSuccess: true,
@@ -696,7 +737,6 @@
               name: nameVal,
               phone: fullPhone,
               countryCode: countryCode,
-              isInternational: isIntl,
               amount: currentPayable,
               addon: addonText,
               hasPdfMaterial: isAddonSelected ? 'YES' : 'NO',
