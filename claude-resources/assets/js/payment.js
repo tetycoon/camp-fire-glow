@@ -28,8 +28,32 @@
 
   var currentPayable = DISCOUNTED_PRICE;
   var currentCouponApplied = true;
+  var currentCountryIso = 'IN';
   var leadFiredThisVisit = false;
   var firedPurchaseIds = {};
+
+  function applyMetaAdvancedMatching(name, email, fullPhone, countryIso) {
+    try {
+      if (typeof window.fbq !== 'function') return;
+      var userData = {};
+      var cleanEmail = String(email || '').trim().toLowerCase();
+      var cleanPhone = String(fullPhone || '').replace(/\D/g, '');
+      var parts = String(name || '').trim().toLowerCase().split(/\s+/).filter(Boolean);
+      var cleanCountry = String(countryIso || '').trim().toLowerCase();
+
+      if (cleanEmail) userData.em = cleanEmail;
+      if (cleanPhone) userData.ph = cleanPhone;
+      if (parts.length > 0) userData.fn = parts[0];
+      if (parts.length > 1) userData.ln = parts.slice(1).join(' ');
+      if (cleanCountry) userData.country = cleanCountry;
+
+      if (Object.keys(userData).length > 0) {
+        window.fbq('init', '1077721348415196', userData);
+      }
+    } catch (e) {
+      // Never let analytics/pixel blockers interfere with checkout
+    }
+  }
 
   function trackMetaEvent(eventName, params, opts) {
     try {
@@ -272,6 +296,7 @@
 
     function selectCountry(c) {
       selectedIso = c.iso;
+      currentCountryIso = c.iso || 'IN';
       regCountryCode.value = c.code;
       if (flagEl) flagEl.textContent = c.flag;
       if (codeEl) codeEl.textContent = c.code;
@@ -625,6 +650,8 @@
       var isAddonSelected = !!(regAddonChatgpt && regAddonChatgpt.checked);
       var addonText = isAddonSelected ? 'Yes - ChatGPT Hacks (+₹400)' : 'No';
       var productName = isAddonSelected ? 'Ultimate Claude Skills + ChatGPT Hacks Bundle' : 'Ultimate Claude Skills';
+
+      applyMetaAdvancedMatching(nameVal, emailVal, fullPhone, currentCountryIso);
 
       if (!leadFiredThisVisit) {
         leadFiredThisVisit = true;
