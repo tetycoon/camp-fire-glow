@@ -918,6 +918,12 @@ async function handleFormSubmit(e) {
         };
 
         const rzp = new Razorpay(options);
+        rzp.on('payment.failed', function (response) {
+            console.error('Razorpay payment failed:', response.error);
+            alert('Payment failed: ' + (response.error && response.error.description ? response.error.description : 'Payment could not be processed.'));
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+        });
         rzp.open();
 
     } catch (err) {
