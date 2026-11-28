@@ -389,6 +389,10 @@ function doGet(e) {
   if (params.action === 'reconcilePending' || params.action === 'reconcile') {
     return createJsonResponse(reconcilePendingPayments());
   }
+
+  if (params.action === 'recoverLogs' || params.action === 'recoverMissing') {
+    return createJsonResponse(recoverMissingRowsFromLogs());
+  }
   
   if (params.action === 'whatsapp') {
     markWhatsappClicked(params.orderId);
@@ -2390,4 +2394,226 @@ function saveLandingLeadFromRegistration(data, orderId) {
   ]);
   SpreadsheetApp.flush();
 }
+
+/**
+ * RECOVER MISSING ROWS FROM LOGS TAB INTO SHEET1 & LANDING_LEADS
+ * Automatically scans the 'Logs' tab for webhook payloads, payments, and registrations
+ * that were logged but failed to insert into 'Sheet1' due to network or ID errors.
+ */
+function recoverMissingRowsFromLogs() {
+  const ss = getClaudeSpreadsheet();
+  const regSheet = ss.getSheetByName(SHEET_NAME_REG) || ss.getSheets()[0];
+  const logSheet = ss.getSheetByName(SHEET_NAME_LOGS);
+  const leadsSheet = getLandingLeadsSheet(ss);
+
+  if (!logSheet || logSheet.getLastRow() <= 1) {
+    Logger.log("No logs found to recover.");
+    return { success: true, addedCount: 0, updatedCount: 0, message: "Logs sheet is empty or not found." };
+  }
+
+  // 1. Collect existing orderIds, paymentIds, and phone/email from Sheet1
+  const regValues = regSheet.getDataRange().getValues();
+  const existingOrders = {};
+  const existingPayments = {};
+  for (let i = 1; i < regValues.length; i++) {
+    const oId = String(regValues[i][8] || "").trim();
+    const pId = String(regValues[i][9] || "").trim();
+    if (oId) existingOrders[oId] = i + 1;
+    if (pId) existingPayments[pId] = i + 1;
+  }
+
+  // 2. Scan Logs tab
+  const logValues = logSheet.getDataRange().getValues();
+  const initiatedMap = {}; // orderId or phone/email -> data
+  const paidMap = {};      // orderId or paymentId -> data
+
+  for (let i = 1; i < logValues.length; i++) {
+    const row = logValues[i];
+    const logTime = row[0] instanceof Date ? row[0] : new Date(row[0]);
+    const event = String(row[1] || "").trim();
+    const rawDetails = String(row[2] || "").trim();
+
+    if (!rawDetails) continue;
+
+    let parsed = null;
+    try {
+      if (rawDetails.startsWith("{")) {
+        parsed = JSON.parse(rawDetails);
+      }
+    } catch (e) {
+      parsed = extractFieldsFromTruncatedLog(rawDetails);
+    }
+    if (!parsed) {
+      parsed = extractFieldsFromTruncatedLog(rawDetails);
+    }
+    if (!parsed) continue;
+
+    const orderId = String(parsed.orderId || parsed.order_id || parsed.razorpay_order_id || (parsed.payload && parsed.payload.payment && parsed.payload.payment.entity && parsed.payload.payment.entity.order_id) || "").trim();
+    const paymentId = String(parsed.paymentId || parsed.payment_id || parsed.razorpay_payment_id || parsed.id || (parsed.payload && parsed.payload.payment && parsed.payload.payment.entity && parsed.payload.payment.entity.id) || "").trim();
+    const entity = (parsed.payload && parsed.payload.payment && parsed.payload.payment.entity) || {};
+    const notes = entity.notes || parsed.notes || {};
+
+    const isPaymentCaptured = Boolean(
+      parsed.paymentSuccess === true ||
+      parsed.action === "payment_success" ||
+      parsed.event === "payment.captured" ||
+      parsed.event === "order.paid" ||
+      (paymentId && paymentId.startsWith("pay_"))
+    );
+
+    const name = parsed.name || notes.name || entity.notes?.name || "";
+    const email = parsed.email || notes.email || entity.email || "";
+    const phone = parsed.phone || notes.phone || entity.contact || "";
+    const profession = parsed.profession || notes.profession || "General";
+    const amount = parsed.amount || entity.amount || 999;
+
+    if (isPaymentCaptured) {
+      const key = orderId || paymentId || (email + "_" + phone);
+      if (key) {
+        paidMap[key] = {
+          time: logTime,
+          orderId: orderId,
+          paymentId: paymentId,
+          amount: amount,
+          name: name,
+          email: email,
+          phone: phone,
+          profession: profession,
+          data: parsed
+        };
+      }
+    } else if (orderId || (name && (email || phone))) {
+      const key = orderId || (email + "_" + phone);
+      initiatedMap[key] = {
+        time: logTime,
+        orderId: orderId,
+        name: name,
+        email: email,
+        phone: phone,
+        profession: profession,
+        amount: amount,
+        data: parsed
+      };
+    }
+  }
+
+  let addedCount = 0;
+  let updatedCount = 0;
+
+  // 3. Recover missing PAID registrations
+  for (const key in paidMap) {
+    const p = paidMap[key];
+    const matchingOrder = p.orderId ? existingOrders[p.orderId] : null;
+    const matchingPay = p.paymentId ? existingPayments[p.paymentId] : null;
+
+    if (matchingOrder || matchingPay) {
+      const targetRow = matchingOrder || matchingPay;
+      const currentStatus = String(regValues[targetRow - 1][7] || "");
+      if (!currentStatus.includes("PAID")) {
+        regSheet.getRange(targetRow, 8).setValue("✅ PAID");
+        if (p.paymentId) regSheet.getRange(targetRow, 10).setValue(p.paymentId);
+        updatedCount++;
+      }
+    } else {
+      // Missing completely: Append to Sheet1
+      const initMatch = initiatedMap[p.orderId] || initiatedMap[p.email + "_" + p.phone] || {};
+      const finalName = p.name || initMatch.name || "Participant";
+      const finalEmail = p.email || initMatch.email || "";
+      const finalPhone = p.phone || initMatch.phone || "";
+      const finalProfession = p.profession || initMatch.profession || "General";
+      let finalAmount = p.amount ? Number(p.amount) : (initMatch.amount ? Number(initMatch.amount) : 999);
+      if (finalAmount > 10000) finalAmount = finalAmount / 100; // paise to rupees
+
+      const sessionDisplay = finalAmount >= 4000 ? "Offline Session (In-Person Chennai)" : "Online Session (Zoom Live)";
+
+      regSheet.appendRow([
+        p.time || new Date(),
+        sanitizeCell(finalName),
+        sanitizeCell(finalEmail),
+        "'" + String(finalPhone).replace(/[^\d+\-\s]/g, ""),
+        sanitizeCell(finalProfession),
+        sessionDisplay,
+        finalAmount,
+        "✅ PAID",
+        p.orderId || "",
+        p.paymentId || "",
+        "PENDING",
+        "NO", "NO", "NO", "NO", "NO", "NO", "NO", "NO",
+        "RECOVERED_FROM_LOGS"
+      ]);
+      if (p.orderId) existingOrders[p.orderId] = regSheet.getLastRow();
+      if (p.paymentId) existingPayments[p.paymentId] = regSheet.getLastRow();
+      addedCount++;
+    }
+  }
+
+  // 4. Recover missing INITIATED registrations
+  for (const key in initiatedMap) {
+    const init = initiatedMap[key];
+    if (init.orderId && existingOrders[init.orderId]) continue;
+
+    // Check duplicate email & phone
+    let isDupe = false;
+    for (let i = 1; i < regValues.length; i++) {
+      if (init.orderId && String(regValues[i][8]).trim() === init.orderId) { isDupe = true; break; }
+      if (init.email && String(regValues[i][2]).toLowerCase().trim() === init.email.toLowerCase().trim()) {
+        isDupe = true; break;
+      }
+    }
+    if (isDupe) continue;
+
+    let finalAmount = init.amount ? Number(init.amount) : 999;
+    if (finalAmount > 10000) finalAmount = finalAmount / 100;
+    const sessionDisplay = finalAmount >= 4000 ? "Offline Session (In-Person Chennai)" : "Online Session (Zoom Live)";
+
+    regSheet.appendRow([
+      init.time || new Date(),
+      sanitizeCell(init.name || ""),
+      sanitizeCell(init.email || ""),
+      "'" + String(init.phone || "").replace(/[^\d+\-\s]/g, ""),
+      sanitizeCell(init.profession || "General"),
+      sessionDisplay,
+      finalAmount,
+      "INITIATED",
+      init.orderId || "",
+      "",
+      "PENDING",
+      "NO", "NO", "NO", "NO", "NO", "NO", "NO", "NO",
+      "RECOVERED_FROM_LOGS"
+    ]);
+    if (init.orderId) existingOrders[init.orderId] = regSheet.getLastRow();
+    addedCount++;
+  }
+
+  SpreadsheetApp.flush();
+  const summaryMsg = "Recovery Complete: " + addedCount + " missing row(s) added, " + updatedCount + " row(s) updated to PAID.";
+  Logger.log(summaryMsg);
+  return { success: true, addedCount: addedCount, updatedCount: updatedCount, message: summaryMsg };
+}
+
+function extractFieldsFromTruncatedLog(str) {
+  try {
+    if (!str || typeof str !== "string") return null;
+    const res = {};
+    const extract = function(key) {
+      const m = str.match(new RegExp('"' + key + '"\\s*:\\s*"([^"]+)"')) ||
+                str.match(new RegExp('"' + key + '"\\s*:\\s*([0-9]+)'));
+      return m ? m[1] : null;
+    };
+    res.orderId = extract("orderId") || extract("order_id") || extract("razorpay_order_id");
+    res.paymentId = extract("paymentId") || extract("payment_id") || extract("razorpay_payment_id") || extract("id");
+    res.name = extract("name");
+    res.email = extract("email");
+    res.phone = extract("phone") || extract("contact");
+    res.amount = extract("amount");
+    res.profession = extract("profession");
+    if (str.includes("payment.captured") || str.includes("paymentSuccess") || (res.paymentId && res.paymentId.startsWith("pay_"))) {
+      res.paymentSuccess = true;
+    }
+    return (res.orderId || res.paymentId || res.name || res.email) ? res : null;
+  } catch (e) {
+    return null;
+  }
+}
+
 
