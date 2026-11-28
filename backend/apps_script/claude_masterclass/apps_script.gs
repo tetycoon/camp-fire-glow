@@ -2159,11 +2159,23 @@ function reconcileClaudeMasterclassRows() {
 /**
  * Custom UI Menu inside Google Sheets for easy one-click management
  */
+
+function menuRecoverMissingRowsFromLogs() {
+  const ui = SpreadsheetApp.getUi();
+  try {
+    const res = recoverMissingRowsFromLogs();
+    ui.alert("Recovery Complete", "Added " + res.addedCount + " missing rows and updated " + res.updatedCount + " records from Logs tab.", ui.ButtonSet.OK);
+  } catch (err) {
+    ui.alert("Recovery Error", err.message, ui.ButtonSet.OK);
+  }
+}
+
 function onOpen() {
   try {
     SpreadsheetApp.getUi()
       .createMenu("🎓 Claude Masterclass")
       .addItem("⚡ Reconcile All Stuck Payments (Check Razorpay & Send Invoices)", "menuReconcileStuckPayments")
+        .addItem("🔄 Recover Missing Rows from Logs Tab", "menuRecoverMissingRowsFromLogs")
       .addItem("✅ Mark Selected Row as PAID & Send Invoice", "menuMarkSelectedRowPaidAndSendInvoice")
       .addItem("📧 Resend Invoice to Selected Row", "menuResendInvoiceToSelectedRow")
       .addToUi();
