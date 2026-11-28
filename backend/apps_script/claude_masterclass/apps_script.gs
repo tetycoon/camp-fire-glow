@@ -107,7 +107,7 @@ function getRazorpayKeyId(isIntl) {
     if (configuredKey && configuredKey.startsWith("rzp_test_")) {
       throw new Error("TEST_CREDENTIALS_IN_PRODUCTION: Test Razorpay credentials cannot be used in production environment.");
     }
-    return configuredKey || (isIntl ? "rzp_live_gfoS1OjC8tvWjP" : "rzp_live_T2CbVONQc6qrqj");
+    return configuredKey || "rzp_live_gfoS1OjC8tvWjP";
   }
   return configuredKey || (isIntl ? "rzp_test_intl_local" : "rzp_test_local");
 }
