@@ -5,7 +5,7 @@
  * ============================================================================
  */
 
-const DEFAULT_SPREADSHEET_ID = "1JA3FZf8xkpZ8GjuYiETXz9R0ivfW8O_rf3PZIzQum9g";
+const DEFAULT_SPREADSHEET_ID = "1JA3FZf8xkpZ8GjuYiETXz9R0ivfW80-rf3PZIzQum9g";
 const SPREADSHEET_ID = null;
 const SHEET_NAME_REG = "Sheet1";
 const SHEET_NAME_LOGS = "Logs";
@@ -507,6 +507,11 @@ function doPost(e) {
       if (!isClaudeRegistration(body)) return createJsonResponse({ success: false, message: "Ignored non-Claude lead" });
       const orderId = createRazorpayOrder(body);
       saveToSheet(body, orderId);
+      try {
+        saveLandingLeadFromRegistration(body, orderId);
+      } catch (errLead) {
+        writeToLogs("LEAD_SAVE_WARN", errLead.message);
+      }
       return createJsonResponse({ success: true, orderId: orderId });
     }
 

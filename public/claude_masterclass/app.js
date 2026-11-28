@@ -302,7 +302,7 @@ function getUpcomingMasterclassWeekend() {
         satDateText: 'Day 1: Saturday',
         sunDateText: 'Day 2: Sunday',
         shortRange: 'Saturday & Sunday',
-        dateRange: dateRange,
+        dateRange: 'Every Saturday & Sunday',
         fullDisplay: 'Every Saturday & Sunday'
     };
 }
