@@ -752,7 +752,7 @@ async function handleFormSubmit(e) {
     submitBtn.disabled = true;
 
     const isInternational = countryCode !== '+91';
-    let razorpayKey = isInternational ? "rzp_live_gfoS1OjC8tvWjP" : "rzp_live_T2CbVONQc6qrqj";
+    let razorpayKey = "rzp_live_gfoS1OjC8tvWjP";
 
     try {
         const { baseAmount, gstAmount } = getGstBreakdown();
@@ -826,7 +826,7 @@ async function handleFormSubmit(e) {
             return;
         }
 
-        if (!razorpayKey) { razorpayKey = isInternational ? "rzp_live_gfoS1OjC8tvWjP" : "rzp_live_T2CbVONQc6qrqj"; }
+        if (!razorpayKey) { razorpayKey = "rzp_live_gfoS1OjC8tvWjP"; }
         // Step 2: Open Razorpay Modal
         const options = {
             key: razorpayKey,
