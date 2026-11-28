@@ -516,7 +516,9 @@ function doPost(e) {
       } catch (errLead) {
         writeToLogs("LEAD_SAVE_WARN", errLead.message);
       }
-      return createJsonResponse({ success: true, orderId: orderId });
+      const isIntl = Boolean(body.isInternational || (body.countryCode && body.countryCode !== "+91"));
+      const keyId = getRazorpayKeyId(isIntl);
+      return createJsonResponse({ success: true, orderId: orderId, keyId: keyId });
     }
 
     if (body.object === "whatsapp_business_account") {
